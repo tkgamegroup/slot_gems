@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://0d8hp6hk1n5m"]
+
+[ext_resource type="Script" path="res://ui_settlement.gd" id="1_ow0da"]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+script = ExtResource("1_ow0da")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+
+[node name="Label3" type="Label" parent="."]
+visible = false
+layout_mode = 2

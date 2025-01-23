@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://cpv0mxnsh1ct3"]
+
+[ext_resource type="Script" path="res://ui_cell.gd" id="1_c8dfl"]
+[ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="1_u21nl"]
+[ext_resource type="Texture2D" uid="uid://cm6ylnaxbthm4" path="res://images/burning.png" id="3_0hnpo"]
+[ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="3_85h73"]
+[ext_resource type="Texture2D" uid="uid://bhcfbybb53f87" path="res://images/pined.png" id="3_ewl36"]
+
+[node name="UiCell" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_u21nl")
+script = ExtResource("1_c8dfl")
+
+[node name="Burn" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_0hnpo")
+
+[node name="Item" type="Sprite2D" parent="."]
+visible = false
+
+[node name="Active" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_85h73")
+
+[node name="Pin" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_ewl36")
