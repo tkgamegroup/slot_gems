@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=4 uid="uid://dwej6ct7krwbs"]
+
+[ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_rhlpu"]
+[ext_resource type="Script" path="res://ui_pattern.gd" id="1_wvl8u"]
+[ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/outline-o.png" id="2_osotj"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tcs51"]
+texture = ExtResource("2_osotj")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/modulate = Color(0.439723, 0.4455, 0.388146, 1)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u7fud"]
+texture = ExtResource("1_rhlpu")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/modulate = Color(0.439049, 0.439049, 0.439049, 1)
+
+[sub_resource type="TileSet" id="TileSet_e64fm"]
+tile_shape = 3
+tile_offset_axis = 1
+tile_size = Vector2i(32, 32)
+sources/1 = SubResource("TileSetAtlasSource_u7fud")
+sources/0 = SubResource("TileSetAtlasSource_tcs51")
+
+[node name="UiPattern" type="Control"]
+custom_minimum_size = Vector2(52, 72)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 52.0
+offset_bottom = 72.0
+script = ExtResource("1_wvl8u")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+scale = Vector2(0.5, 0.5)
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQAAAAAAAAACAAEAAQAAAAAAAAADAAEAAQAAAAAAAAACAAAAAQAAAAAAAAADAAAAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAABAAEAAQAAAAAAAAABAAIAAQAAAAAAAAABAAMAAQAAAAAAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAADAAIAAQAAAAAAAAADAAMAAQAAAAAAAAA=")
+tile_set = SubResource("TileSet_e64fm")

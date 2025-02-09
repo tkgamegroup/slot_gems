@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://5q2yf8c3na3w"]
+
+[ext_resource type="Shader" path="res://rim.gdshader" id="1_mij57"]
+
+[resource]
+shader = ExtResource("1_mij57")

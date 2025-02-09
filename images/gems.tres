@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=7 format=3 uid="uid://baf3431damatq"]
+[gd_resource type="SpriteFrames" load_steps=27 format=3 uid="uid://baf3431damatq"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_7rmke"]
 [ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/red.png" id="1_idk0h"]
@@ -6,6 +6,26 @@
 [ext_resource type="Texture2D" uid="uid://do6b6cyshhe7t" path="res://images/green.png" id="3_w0oe6"]
 [ext_resource type="Texture2D" uid="uid://vtgmwfo14dwb" path="res://images/blue.png" id="4_xcprq"]
 [ext_resource type="Texture2D" uid="uid://detq17jac6g76" path="res://images/purple.png" id="5_xhjfj"]
+[ext_resource type="Texture2D" uid="uid://cvfk28bu2f3m" path="res://images/mine.png" id="7_do3k2"]
+[ext_resource type="Texture2D" uid="uid://dlx4xe6lwgyhe" path="res://images/chain_bomb.png" id="8_w2cg1"]
+[ext_resource type="Texture2D" uid="uid://6a7h0coty37w" path="res://images/virus.png" id="9_chmpc"]
+[ext_resource type="Texture2D" uid="uid://b5sxnv8vfemc4" path="res://images/lightning.png" id="10_ttqdi"]
+[ext_resource type="Texture2D" uid="uid://bdrka1bbrx4tx" path="res://images/color_palette.png" id="11_1njtr"]
+[ext_resource type="Texture2D" uid="uid://djiwq88rqxx33" path="res://images/fire.png" id="12_1te6e"]
+[ext_resource type="Texture2D" uid="uid://b7l4i2yq2fbq4" path="res://images/black_hole.png" id="13_o5i0q"]
+[ext_resource type="Texture2D" uid="uid://nutkg5fwjbtq" path="res://images/white_hole.png" id="14_l1yq6"]
+[ext_resource type="Texture2D" uid="uid://ccv6yol4gb1h0" path="res://images/dog.png" id="15_31rn8"]
+[ext_resource type="Texture2D" uid="uid://bw36kvtsp3hoe" path="res://images/cat.png" id="16_md2r6"]
+[ext_resource type="Texture2D" uid="uid://cxv61ebf7mm4d" path="res://images/rooster.png" id="17_ku3jf"]
+[ext_resource type="Texture2D" uid="uid://d2t4kfvd0f4i7" path="res://images/hotdog.png" id="18_qoobw"]
+[ext_resource type="Texture2D" uid="uid://daprtyhdnlx7c" path="res://images/lai_cut.png" id="19_2ph7n"]
+[ext_resource type="Texture2D" uid="uid://c8uxxafh66nc6" path="res://images/magnet.png" id="20_pjhhh"]
+[ext_resource type="Texture2D" uid="uid://cjlf2mtfw5vvs" path="res://images/rainbow.png" id="21_1xkcy"]
+[ext_resource type="Texture2D" uid="uid://y3h3ck823tgj" path="res://images/ruby.png" id="22_h0bmx"]
+[ext_resource type="Texture2D" uid="uid://w0ddkb6yn7aa" path="res://images/citrine.png" id="23_4f0ru"]
+[ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/emerald.png" id="24_x8hpp"]
+[ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="25_lje4q"]
+[ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="26_2j0kg"]
 
 [resource]
 animations = [{
@@ -27,6 +47,66 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("5_xhjfj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_do3k2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_w2cg1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_chmpc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ttqdi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_1njtr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_1te6e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_o5i0q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_l1yq6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_31rn8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_md2r6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_ku3jf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_qoobw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_2ph7n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_pjhhh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_1xkcy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_h0bmx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_4f0ru")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_x8hpp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_lje4q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_2j0kg")
 }],
 "loop": true,
 "name": &"default",

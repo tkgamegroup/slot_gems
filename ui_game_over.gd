@@ -20,7 +20,7 @@ func enter():
 	
 func _ready() -> void:
 	new_run.pressed.connect(func():
-		Game.sound.sfx_click.play()
+		Sounds.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		Game.ui_blocker.hide()
@@ -29,9 +29,9 @@ func _ready() -> void:
 		self.hide()
 		Game.start_new_game()
 	)
-	new_run.mouse_entered.connect(Game.sound.sfx_select.play)
+	#new_run.mouse_entered.connect(Sounds.sfx_select.play)
 	main_menu_button.pressed.connect(func():
-		Game.sound.sfx_click.play()
+		Sounds.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		Game.ui_blocker.hide()
@@ -41,6 +41,8 @@ func _ready() -> void:
 		Game.board.cleanup()
 		Game.game_ui.hide()
 		Game.game_root.hide()
+		Game.status_bar.hide()
+		Game.patterns_bar.hide()
 		Game.title_ui.enter()
 	)
-	main_menu_button.mouse_entered.connect(Game.sound.sfx_select.play)
+	#main_menu_button.mouse_entered.connect(Sounds.sfx_select.play)

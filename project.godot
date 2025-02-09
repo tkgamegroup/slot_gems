@@ -21,14 +21,20 @@ buses/default_bus_layout="res://audio_bus_layout.tres"
 
 [autoload]
 
-Game="*res://game.gd"
 Math="*res://math.gd"
+Sounds="*res://sounds.gd"
+Animations="*res://animations.gd"
+Effects="*res://effects.gd"
+Game="*res://game.gd"
+Tooltip="*res://tooltip.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="viewport"
+mouse_cursor/custom_image="res://images/pointer.png"
+mouse_cursor/custom_image_hotspot=Vector2(15, 4)
 
 [rendering]
 
