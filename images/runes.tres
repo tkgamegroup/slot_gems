@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://bgpse251ihp38"]
+
+[ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_fku6t"]
+[ext_resource type="Texture2D" uid="uid://85hryca4vmrv" path="res://images/rune_star.png" id="2_hgpr5"]
+[ext_resource type="Texture2D" uid="uid://c33kirg1xcqjn" path="res://images/rune_circle.png" id="3_b2h5i"]
+[ext_resource type="Texture2D" uid="uid://upnp0wg2wxl4" path="res://images/rune_diamond.png" id="4_rnjfy"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_fku6t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_hgpr5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_b2h5i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_rnjfy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]

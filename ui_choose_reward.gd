@@ -31,13 +31,11 @@ func choose(idx : int):
 	callback = Callable.create(null, "")
 	tween.tween_callback(img.queue_free)
 	tween.tween_callback(func():
-		Game.ui_blocker.hide()
 		self.hide()
 	)
 
 func enter(rewards : Array[Dictionary], _callback : Callable):
 	callback = _callback
-	Game.ui_blocker.show()
 	self.show()
 	buttons_list.show()
 	for n in reward_list.get_children():

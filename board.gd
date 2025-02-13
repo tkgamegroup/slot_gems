@@ -26,6 +26,7 @@ var unused_gems : Array[Gem] = []
 var active_gems : Array[Gem] = []
 var active_serial : int = 0
 var eliminated_gems : Dictionary[String, int] = {}
+var skill_effects : Array[Pair]
 
 signal processed_finished
 
@@ -111,7 +112,10 @@ func set_gem_at(c : Vector2i, g : Gem):
 		g.coord = c
 	set_state_at(c, Cell.State.Normal)
 	var ui = Game.get_cell_ui(c)
-	ui.frame = g.image_id if g else 0
+	if g:
+		ui.gem.set_image(g.type, g.rune, g.image_id)
+	else:
+		ui.gem.set_image(0, 0, 0)
 	return og
 
 func gem_score_at(c : Vector2i):
@@ -193,8 +197,8 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			var g = get_gem_at(c)
 			var ui = uis[i]
 			var ptc = ptcs[i]
-			ui.scale = Vector2(1.5, 1.5)
-			ui.z_index = 1
+			ui.gem.bg_sp.scale = Vector2(1.5, 1.5)
+			ui.gem.z_index = 1
 			ptc.position = get_pos(c)
 			ptc.emitting = true
 			ptc.color = Gem.color(g.type)
@@ -203,13 +207,12 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 	)
 	tween.tween_method(func(t):
 		for ui in uis:
-			if !ui.is_active:
-				ui.scale = Vector2(t, t)
+			ui.gem.bg_sp.scale = Vector2(t, t)
 	, 1.5, 1.0, 0.3 * Game.animation_speed)
 	tween.tween_callback(func():
 		for i in coords.size():
 			var c = coords[i]
-			uis[i].z_index = 0
+			uis[i].gem.z_index = 0
 			ptcs[i].queue_free()
 			if !cell_at(c).pined:
 				set_state_at(c, Cell.State.Consumed)
@@ -229,20 +232,28 @@ func activate(gem : Gem, reason : ActiveReason, source = null):
 			var ui = Game.get_cell_ui(gem.coord)
 			ui.set_active(true)
 
-func process_effect(gem : Gem):
-	var ui = Game.get_cell_ui(gem.coord)
+func process_active_gem(g : Gem):
+	var ui = Game.get_cell_ui(g.coord)
 	Sounds.sfx_vibra.play()
 	var tween = Game.get_tree().create_tween()
-	Animations.fade_out(ui, tween, ui.scale.x, 1.5)
-	if gem.on_process.is_valid():
-		gem.on_process.call(self, tween)
+	Animations.fade_out(ui.gem.image, tween, ui.gem.image.scale.x, 1.5)
+	if g.on_process.is_valid():
+		g.on_process.call(self, tween)
 	tween.tween_callback(func():
-		gem.active = false
+		g.active = false
 		ui.set_active(false)
 		active_gems.remove_at(0)
-		set_gem_at(gem.coord, null)
-		ui.scale = Vector2(1.0, 1.0)
-		ui.self_modulate.a = 1.0
+		set_gem_at(g.coord, null)
+		ui.gem.image.scale = Vector2(1.0, 1.0)
+		ui.gem.image.self_modulate.a = 1.0
+		clear_consumed()
+		fill_blanks()
+	)
+
+func process_skill_effect(s : Skill, rune_coords : Dictionary[int, Array]):
+	var tween = Game.get_tree().create_tween()
+	tween.tween_callback(func():
+		skill_effects.remove_at(0)
 		clear_consumed()
 		fill_blanks()
 	)
@@ -447,9 +458,14 @@ func search_patterns():
 						Sounds.sfx_tom.play()
 						score *= p.mult
 						
+						p.add_exp(1)
 						Game.add_combo()
 						Game.add_score(score, txt_pos / res.size())
 					)
+					for s in Game.skills:
+						var rune_coords = s.check(res)
+						if !rune_coords.is_empty():
+							skill_effects.append(Pair.new(s, rune_coords))
 					eliminate(res, tween, ActiveReason.Pattern, p)
 					Game.animation_speed *= 0.98
 					Game.animation_speed = max(0.05, Game.animation_speed)
@@ -463,12 +479,16 @@ func search_patterns():
 				active_serial = 0
 				eliminated_gems.clear()
 			else:
-				process_effect(active_gems[0])
+				process_active_gem(active_gems[0])
 		)
 	else:
 		tween.tween_callback(func():
 			clear_consumed()
-			fill_blanks()
+			if skill_effects.is_empty():
+				fill_blanks()
+			else:
+				var s = skill_effects[0]
+				process_skill_effect(s.first, s.second)
 		)
 	Game.animation_speed *= 0.95
 	Game.animation_speed = max(0.05, Game.animation_speed)

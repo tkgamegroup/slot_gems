@@ -2,7 +2,7 @@ shader_type canvas_item;
 
 void fragment() {
 	vec2 iResolution = 1.0 / TEXTURE_PIXEL_SIZE;
-	
+
 	vec2 uv_g = vec2(ivec2(UV * iResolution)) / iResolution;
 	vec2 uv_c = uv_g - vec2(0.5, 0.5);
 	float L = texture(TEXTURE, UV + vec2(-0.5, 0.0) / iResolution).a;
@@ -14,4 +14,3 @@ void fragment() {
 	COLOR = mix(texture(TEXTURE, UV), mix(vec4(0.0, 0.0, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0), step(fract(ang * 10.0 + TIME), 0.5)), edge);
 	//COLOR = texture(TEXTURE, UV);
 }
-

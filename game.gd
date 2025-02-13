@@ -19,6 +19,7 @@ const UiLevelClear = preload("res://ui_level_clear.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
 const UiGemsViewer = preload("res://ui_gems_viewer.gd")
 const popup_txt_pb = preload("res://popup_txt.tscn")
+const skill_pb = preload("res://ui_skill.tscn")
 const pattern_pb = preload("res://ui_pattern.tscn")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
@@ -38,12 +39,14 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var game_ui : UiGame = $/root/Main/UI/Game
 @onready var shop_ui : UiShop = $/root/Main/UI/Shop
 @onready var status_bar : Control = $/root/Main/UI/StatusBar
+@onready var skills_bar : Control = $/root/Main/UI/SkillsBar
+@onready var skills_list : Control = $/root/Main/UI/SkillsBar/MarginContainer/VBoxContainer
 @onready var patterns_bar : Control = $/root/Main/UI/PatternsBar
 @onready var patterns_list : Control = $/root/Main/UI/PatternsBar/MarginContainer/VBoxContainer
 @onready var level_text : Label = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Label
-@onready var gold_text : Label = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Label2
-@onready var bag_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Button
-@onready var gear_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Button2
+@onready var gold_text : Label = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer/Label2
+@onready var bag_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2/Button
+@onready var gear_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2/Button2
 @onready var in_game_menu_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Button2
 @onready var options_ui : UiOptions = $/root/Main/UI/Options
 @onready var in_game_menu_ui : UiInGameMenu = $/root/Main/UI/InGameMenu
@@ -78,6 +81,7 @@ var grabs_num : int:
 		game_ui.grabs_num_text.text = "%d" % grabs_num
 var grabs_num_per_level : int
 var board : Board
+var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
 var gem_bouns_scores : Array[int]
@@ -114,11 +118,11 @@ var rainbow_mult : float = 1.0
 var level : int:
 	set(v):
 		level = v
-		level_text.text = "Level %d  " % level
+		level_text.text = "Level %d" % level
 var gold : int:
 	set(v):
 		gold = v
-		gold_text.text = "%dG  " % gold
+		gold_text.text = "%d" % gold
 var history : History = History.new()
 
 var animation_speed = 1.0
@@ -212,19 +216,44 @@ func add_status(s : String, col : Color):
 		status_tween = null
 	)
 
+func add_skill(s : Skill):
+	var ui = skill_pb.instantiate()
+	ui.setup(s)
+	skills_list.add_child(ui)
+	s.ui = ui
+	skills.append(s)
+
 func add_pattern(p : Pattern):
 	var ui = pattern_pb.instantiate()
-	ui.setup(p.coords)
+	ui.setup(p)
 	ui.scale = Vector2(0.5, 0.5)
 	patterns_list.add_child(ui)
+	p.ui = ui
 	patterns.append(p)
+
+func get_level_score(lv : int):
+	match lv:
+		1:
+			return 1
+		2:
+			return 300
+		3:
+			return 600
+		4:
+			return 1000
+		5:
+			return 1500
+		6:
+			return 2400
+		7:
+			return 4000
+		8:
+			return 6000
 
 func start_new_game():
 	gem_bouns_scores.clear()
 	for i in Gem.Type.Count:
 		gem_bouns_scores.append(0)
-	score = 0
-	target_score = 10000
 	rolls_per_level = 4
 	pins_num_per_level = 5
 	activates_num_per_level = 5
@@ -232,6 +261,15 @@ func start_new_game():
 	level = 0
 	gold = 10
 	history.init()
+	
+	skills.clear()
+	for n in skills_list.get_children():
+		skills_list.remove_child(n)
+		n.queue_free()
+	var skill0 = Skill.new()
+	skill0.requirements.append(Pair.new(1, 3))
+	skill0.spawn_name = "Bomb"
+	add_skill(skill0)
 	
 	patterns.clear()
 	for n in patterns_list.get_children():
@@ -260,37 +298,51 @@ func start_new_game():
 	add_pattern(patt2)
 	
 	gems.clear()
-	for i in 200:
-		var g = Gem.new()
-		g.setup("cat")
-		gems.append(g)
-	for i in 200:
-		var g = Gem.new()
-		g.setup("yellow")
-		gems.append(g)
-	for i in 200:
-		var g = Gem.new()
-		g.setup("green")
-		gems.append(g)
-	for i in 200:
-		var g = Gem.new()
-		g.setup("blue")
-		gems.append(g)
-	for i in 200:
-		var g = Gem.new()
-		g.setup("purple")
-		gems.append(g)
+	for j in 3:
+		for i in 66:
+			var g = Gem.new()
+			g.setup("Red")
+			g.rune = j + 1
+			gems.append(g)
+	for j in 3:
+		for i in 66:
+			var g = Gem.new()
+			g.setup("Orange")
+			g.rune = j + 1
+			gems.append(g)
+	for j in 3:
+		for i in 66:
+			var g = Gem.new()
+			g.setup("Green")
+			g.rune = j + 1
+			gems.append(g)
+	for j in 3:
+		for i in 66:
+			var g = Gem.new()
+			g.setup("Blue")
+			g.rune = j + 1
+			gems.append(g)
+	for j in 3:
+		for i in 66:
+			var g = Gem.new()
+			g.setup("Pink")
+			g.rune = j + 1
+			gems.append(g)
 	
 	status_bar.show()
+	skills_bar.show()
 	patterns_bar.show()
 	
 	var tween = get_tree().create_tween()
 	var p0 = status_bar.position
 	status_bar.position = p0 - Vector2(0, 100)
 	tween.tween_property(status_bar, "position", p0, 0.8)
-	var p1 = patterns_bar.position
-	patterns_bar.position = p1 + Vector2(100, 0)
-	tween.parallel().tween_property(patterns_bar, "position", p1, 0.8)
+	var p1 = skills_bar.position
+	skills_bar.position = p1 - Vector2(100, 0)
+	tween.parallel().tween_property(skills_bar, "position", p1, 0.8)
+	var p2 = patterns_bar.position
+	patterns_bar.position = p2 + Vector2(100, 0)
+	tween.parallel().tween_property(patterns_bar, "position", p2, 0.8)
 	
 	board = Board.new()
 	board.processed_finished.connect(func(task_name : String):
@@ -322,6 +374,8 @@ func start_new_game():
 
 func new_level():
 	level += 1
+	score = 0
+	target_score = get_level_score(level)
 	
 	set_props(Props.None)
 	rolls = rolls_per_level
@@ -357,7 +411,7 @@ func toggle_in_game_menu():
 		ui_blocker.hide()
 		in_game_menu_ui.hide()
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.is_pressed():
 			if event.keycode == KEY_ESCAPE:
@@ -416,14 +470,18 @@ func _input(event: InputEvent) -> void:
 					dragging_cell = Vector2i(-1, -1)
 					drag_ui.hide()
 	elif event is InputEventMouseMotion:
-		if board:
+		if board && game_root.visible:
 			var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
 			var cc = c - board.central_coord + Vector2i(board.cx / 2, board.cy / 2)
 			if cc.x >= 0 && cc.x < board.cx && cc.y >= 0 && cc.y < board.cy:
 				hover_ui.show()
 				hover_ui.position = tilemap.map_to_local(c)
+				var g = board.get_gem_at(cc)
+				if g:
+					Tooltip.show(g.name, g.get_description(), 0.5)
 			else:
 				hover_ui.hide()
+				Tooltip.close()
 			if drag_ui.visible:
 				drag_ui.position = event.position
 

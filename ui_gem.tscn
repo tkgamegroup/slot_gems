@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://s5ehr1388thk"]
+
+[ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="1_qae8s"]
+[ext_resource type="Script" path="res://ui_gem.gd" id="2_pbann"]
+[ext_resource type="SpriteFrames" uid="uid://bgpse251ihp38" path="res://images/runes.tres" id="3_3slly"]
+
+[node name="UiGem" type="Node2D"]
+script = ExtResource("2_pbann")
+
+[node name="BG" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_qae8s")
+
+[node name="Runes" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.745098)
+sprite_frames = ExtResource("3_3slly")
+
+[node name="Image" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_qae8s")

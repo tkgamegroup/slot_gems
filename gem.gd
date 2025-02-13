@@ -6,19 +6,31 @@ enum Type
 {
 	None,
 	Red,
-	Yellow,
+	Orange,
 	Green,
 	Blue,
-	Purple,
+	Pink,
 	Count = 5
 }
 
+enum Rune
+{
+	None,
+	Star,
+	Circle,
+	Diamond
+}
+
+const gem_frames : SpriteFrames = preload("res://images/gems.tres")
+const runes_frames : SpriteFrames = preload("res://images/runes.tres")
+
 var type : int = Type.None
+var rune : int = Rune.None
 
 var name : String
 var image_id : int
 var base_score : int = 1
-var display_name : String
+var bonus_score : int = 0
 var description : String
 var category : String
 var coord : Vector2i = Vector2i(-1, -1)
@@ -31,85 +43,76 @@ var on_combo : Callable
 
 var extra = {}
 
-const gem_frames : SpriteFrames = preload("res://images/gems.tres")
-
 static func color(t : int) -> Color:
 	match t:
 		Type.None: return Color(0, 0, 0, 0)
-		Type.Red: return Color(123.0 / 255.0, 0.0 / 255.0, 0.0 / 255.0)
-		Type.Yellow: return Color(211.0 / 255.0, 205.0 / 255.0, 70.0 / 255.0)
-		Type.Green: return Color(32.0 / 255.0, 163.0 / 255.0, 5.0 / 255.0)
-		Type.Blue: return Color(5.0 / 255.0, 87.0 / 255.0, 163.0 / 255.0)
-		Type.Purple: return Color(115.0 / 255.0, 5.0 / 255.0, 163.0 / 255.0)
+		Type.Red: return Color(214.0 / 255.0, 19.0 / 255.0, 25.0 / 255.0)
+		Type.Orange: return Color(255.0 / 255.0, 186.0 / 255.0, 7.0 / 255.0)
+		Type.Green: return Color(157.0 / 255.0, 192.0 / 255.0, 64.0 / 255.0)
+		Type.Blue: return Color(143.0 / 255.0, 223.0 / 255.0, 246.0 / 255.0)
+		Type.Pink: return Color(230.0 / 255.0, 53.0 / 255.0, 108.0 / 255.0)
 	return Color.WHITE
 
-static func get_name_list(base : int = 0):
-	var ret = []
-	ret.append("red")
-	ret.append("yellow")
-	ret.append("green")
-	ret.append("blue")
-	ret.append("purple")
-	ret.append("mine")
-	ret.append("c4")
-	ret.append("virus")
-	ret.append("lightning")
-	ret.append("fire")
-	ret.append("black_hole")
-	ret.append("white_hole")
-	ret.append("dog")
-	ret.append("cat")
-	ret.append("rooster")
-	ret.append("hotdog")
-	ret.append("lai_cut")
-	ret.append("magnet")
-	ret.append("rainbow")
-	ret.append("ruby")
-	ret.append("citrine")
-	ret.append("emerald")
-	ret.append("sapphire")
-	ret.append("amethyst")
-	if base > 0:
-		ret = ret.slice(base)
-	return ret
+static func rune_name(r : int):
+	match r:
+		Rune.Star: return "Star"
+		Rune.Circle: return "Circle"
+		Rune.Diamond: return "Diamond"
+	return ""
+
+static func rune_icon(r : int):
+	match r:
+		Rune.Star: return "res://images/rune_star.png"
+		Rune.Circle: return "res://images/rune_circle.png"
+		Rune.Diamond: return "res://images/rune_diamond.png"
+	return ""
+
+static var name_list : Array[String]
+
+static func get_name_list(base : int = 0, num : int = 10000):
+	if name_list.is_empty():
+		name_list.append("Red")
+		name_list.append("Orange")
+		name_list.append("Green")
+		name_list.append("Blue")
+		name_list.append("Pink")
+		name_list.append("Bomb")
+	return name_list.slice(base, base + num)
 
 func get_base_score():
 	var ret = base_score
 	ret += Game.gem_bouns_scores[type - 1]
 	return ret
 
+func get_description():
+	return "Rune: %s\nScore: %d%s\n%s" % [rune_name(rune), get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else "", description]
+
 func setup(n : String):
 	name = n
-	if name == "red":
+	if name == "Red":
 		image_id = 1
-		display_name = "Red"
-		description = "#No Special Effect#"
+		description = ""
 		category = "Normal"
 		type = Type.Red
-	elif name == "yellow":
+	elif name == "Orange":
 		image_id = 2
-		display_name = "Yellow"
-		description = "#No Special Effect#"
-		type = Type.Yellow
-	elif name == "green":
+		description = ""
+		type = Type.Orange
+	elif name == "Green":
 		image_id = 3
-		display_name = "Green"
-		description = "#No Special Effect#"
+		description = ""
 		type = Type.Green
-	elif name == "blue":
+	elif name == "Blue":
 		image_id = 4
-		display_name = "Blue"
-		description = "#No Special Effect#"
+		description = ""
 		type = Type.Blue
-	elif name == "purple":
+	elif name == "Pink":
 		image_id = 5
-		display_name = "Purple"
-		description = "#No Special Effect#"
-		type = Type.Purple
-	elif name == "mine":
+		description = ""
+		type = Type.Pink
+	elif name == "Bomb":
 		image_id = 6
-		display_name = "Mine"
-		description = "Activate: Eliminate 1-ring cells."
+		description = "Activate: Eliminate cells in 1-ring."
 		category = "Bomb"
 		type = Type.Red
 		on_process = func(b : Board, tween : Tween):
@@ -145,15 +148,13 @@ func setup(n : String):
 				Game.add_score(score, pos)
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "c4":
+	elif name == "C4":
 		image_id = 0
-		display_name = "C4"
 		description = "Activate: Eliminate 2-rings cells. \nMust activate by 'Bomb'"
 		category = "Bomb"
 		type = Type.Red
-	elif name == "chain_bomb":
+	elif name == "Chain Bomb":
 		image_id = 7
-		display_name = "Chain Bomb"
 		description = "Activate: activate a random nearby gem. \nWhen combos hits 4, activate this"
 		category = "Bomb"
 		type = Type.Red
@@ -173,9 +174,8 @@ func setup(n : String):
 		on_combo = func(b : Board, combo : int):
 			if combo >= 4:
 				b.activate_item(self, Board.ActiveReason.Item, self)
-	elif name == "virus":
+	elif name == "Virus":
 		image_id = 8
-		display_name = "Virus"
 		description = "Activate: Eliminate all connected cells with the same color of this."
 		category = "Normal"
 		type = Type.Red
@@ -204,9 +204,8 @@ func setup(n : String):
 				Game.add_score(score, b.get_pos(coord))
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "lightning":
+	elif name == "Lightning":
 		image_id = 9
-		display_name = "Lightning"
 		description = "Activate: If there is another active 'lightning', draw a line to that one, then eliminate cells within the line."
 		category = "Normal"
 		type = Type.Red
@@ -253,9 +252,8 @@ func setup(n : String):
 				tween.tween_callback(func():
 					Sounds.sfx_lighting_fail.play()
 				)
-	elif name == "color_palette":
+	elif name == "Color Palette":
 		image_id = 10
-		display_name = "Color Palette"
 		description = "Wild"
 		category = "Normal"
 		type = Type.Red
@@ -270,17 +268,15 @@ func setup(n : String):
 			)
 		on_place = func(b : Board):
 			b.activate_item(self, Board.ActiveReason.Item, self)
-	elif name == "fire":
+	elif name == "Fire":
 		image_id = 11
-		display_name = "Fire"
 		description = "Activate: Sets the cell to burning state."
 		category = "Normal"
 		type = Type.Red
 		on_active = func(b : Board, reason : int, source):
 			b.set_state_at(coord, Cell.State.Burning)
-	elif name == "black_hole":
+	elif name == "Black Hole":
 		image_id = 12
-		display_name = "Black Hole"
 		description = "Activate: If this is the last gem activated this roll, eliminate all cells on board."
 		category = "Normal"
 		type = Type.Red
@@ -300,9 +296,8 @@ func setup(n : String):
 						Game.add_score(score, pos)
 				)
 				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "white_hole":
+	elif name == "White Hole":
 		image_id = 13
-		display_name = "White Hole"
 		description = "Activate: If this is the first gem activated this roll, eliminate all cells on board."
 		category = "Normal"
 		type = Type.Red
@@ -325,9 +320,8 @@ func setup(n : String):
 						Game.add_score(score, pos)
 				)
 				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "dog":
+	elif name == "Dog":
 		image_id = 14
-		display_name = "Dog"
 		description = "Get 1 base score more for each animal eliminated this roll."
 		category = "Animal"
 		type = Type.Red
@@ -340,11 +334,11 @@ func setup(n : String):
 				Game.add_combo()
 				Game.add_score(score, pos)
 			)
-	elif name == "cat":
+	elif name == "Cat":
 		image_id = 15
-		display_name = "Cat"
 		description = "+4 mult, if you have eliminated other types of animals this roll, get 1 mult less for each type."
 		category = "Animal"
+		type = Type.Blue
 		on_process = func(b : Board, tween : Tween):
 			tween.tween_callback(func():
 				var pos = b.get_pos(coord)
@@ -355,9 +349,8 @@ func setup(n : String):
 					Game.add_combo()
 					Game.add_score(score, pos)
 			)
-	elif name == "rooster":
+	elif name == "Rooster":
 		image_id = 16
-		display_name = "Rooster"
 		description = "Activate: activate another 3 animals."
 		category = "Animal"
 		type = Type.Red
@@ -376,19 +369,17 @@ func setup(n : String):
 					if num == 0:
 						break
 			)
-	elif name == "hotdog":
+	elif name == "Hotdog":
 		image_id = 17
-		display_name = "Hotdog"
-		description = "#No Special Effect#"
+		description = ""
 		category = "Food"
 		type = Type.Red
 		on_active = func(b : Board, reason : int, source):
 			var pos = b.get_pos(coord)
 			Game.add_combo()
 			Game.add_score(50, pos)
-	elif name == "lai_cut":
+	elif name == "Lai Cut":
 		image_id = 18
-		display_name = "Lai Cut"
 		description = "Activate: If there is no other 'Lai Cut' on board, eliminate a row on a random direction."
 		category = "Normal"
 		type = Type.Red
@@ -427,9 +418,8 @@ func setup(n : String):
 					Game.add_score(score, pos)
 				)
 				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "magnet":
+	elif name == "Magnet":
 		image_id = 19
-		display_name = "Magnet"
 		description = "Activate: Move 2-rings activable gems toward this."
 		category = "Normal"
 		type = Type.Red
@@ -454,17 +444,15 @@ func setup(n : String):
 						for c in ring_empty_places:
 							empty_places.append(c)
 			)
-	elif name == "rainbow":
+	elif name == "Rainbow":
 		image_id = 20
-		display_name = "Rainbow"
 		description = "Activate: Get 1.5 times to the earned score until this roll."
 		category = "Normal"
 		type = Type.Red
 		on_active = func(b : Board, reason : int, source):
 			Game.rainbow_mult *= 1.5
-	elif name == "ruby":
+	elif name == "Ruby":
 		image_id = 21
-		display_name = "Ruby"
 		description = "Activate: Red type gems' base score +1."
 		category = "Normal"
 		type = Type.Red
@@ -473,20 +461,18 @@ func setup(n : String):
 			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Red:
 				b.gem_scores[Gem.Type.Red] += 1
 				Game.add_status("Red +1", b.gem_col(Gem.Type.Red))
-	elif name == "citrine":
+	elif name == "Citrine":
 		image_id = 22
-		display_name = "Citrine"
-		description = "Activate: Yellow type gems' base score +1."
+		description = "Activate: Orange type gems' base score +1."
 		category = "Normal"
 		type = Type.Red
 		on_active = func(b : Board, reason : int, source):
 			var gem = b.get_gem_at(coord)
-			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Yellow:
-				b.gem_scores[Gem.Type.Yellow] += 1
-				Game.add_status("Yellow +1", b.gem_col(Gem.Type.Yellow))
-	elif name == "emerald":
+			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Orange:
+				b.gem_scores[Gem.Type.Orange] += 1
+				Game.add_status("Orange +1", b.gem_col(Gem.Type.Orange))
+	elif name == "Emerald":
 		image_id = 23
-		display_name = "Emerald"
 		description = "Activate: Green type gems' base score +1."
 		category = "Normal"
 		type = Type.Red
@@ -495,9 +481,8 @@ func setup(n : String):
 			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Green:
 				b.gem_scores[Gem.Type.Green] += 1
 				Game.add_status("Green +1", b.gem_col(Gem.Type.Green))
-	elif name == "sapphire":
+	elif name == "Sapphire":
 		image_id = 24
-		display_name = "Sapphire"
 		description = "Activate: Blue type gems' base score +1."
 		category = "Normal"
 		type = Type.Red
@@ -506,14 +491,13 @@ func setup(n : String):
 			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Blue:
 				b.gem_scores[Gem.Type.Blue] += 1
 				Game.add_status("Blue +1", b.gem_col(Gem.Type.Blue))
-	elif name == "amethyst":
+	elif name == "Amethyst":
 		image_id = 25
-		display_name = "Amethyst"
-		description = "Activate: Purple type gems' base score +1."
+		description = "Activate: Pink type gems' base score +1."
 		category = "Normal"
 		type = Type.Red
 		on_active = func(b : Board, reason : int, source):
 			var gem = b.get_gem_at(coord)
-			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Purple:
-				b.gem_scores[Gem.Type.Purple] += 1
-				Game.add_status("Purple +1", b.gem_col(Gem.Type.Purple))
+			if reason == Board.ActiveReason.Pattern && gem == Gem.Type.Pink:
+				b.gem_scores[Gem.Type.Pink] += 1
+				Game.add_status("Pink +1", b.gem_col(Gem.Type.Pink))

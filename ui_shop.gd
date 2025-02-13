@@ -9,11 +9,12 @@ const item_pb = preload("res://ui_shop_item.tscn")
 func buy_gem(g : Gem, img : AnimatedSprite2D):
 	var tween = Game.get_tree().create_tween()
 	var p0 = img.global_position
-	var p2 = Game.bag_button.get_global_rect().get_center()
-	var p1 = p2 + Vector2(0, 100)
+	var p3 = Game.bag_button.get_global_rect().get_center()
+	var p1 = lerp(p0, p3, 0.1) + Vector2(0, 150)
+	var p2 = lerp(p0, p3, 0.9) + Vector2(0, 100)
 	tween.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
 	tween.parallel().tween_method(func(t):
-		img.global_position = Math.quadratic_bezier(p0, p1, p2, t)
+		img.global_position = Math.cubic_bezier(p0, p1, p2, p3, t)
 	, 0.0, 1.0, 0.7)
 	tween.tween_callback(func():
 		Game.gems.append(g)

@@ -22,6 +22,7 @@ func _ready() -> void:
 		Game.game_ui.hide()
 		Game.game_root.hide()
 		Game.status_bar.hide()
+		Game.skills_bar.hide()
 		Game.patterns_bar.hide()
 		Game.title_ui.enter()
 	)
