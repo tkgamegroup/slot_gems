@@ -18,11 +18,12 @@ enum Rune
 	None,
 	Star,
 	Circle,
-	Diamond
+	Diamond,
+	Count = 3
 }
 
 const gem_frames : SpriteFrames = preload("res://images/gems.tres")
-const runes_frames : SpriteFrames = preload("res://images/runes.tres")
+const rune_frames : SpriteFrames = preload("res://images/runes.tres")
 
 var type : int = Type.None
 var rune : int = Rune.None
@@ -35,6 +36,7 @@ var description : String
 var category : String
 var coord : Vector2i = Vector2i(-1, -1)
 var active : bool = false
+var temporary : bool = false
 
 var on_process : Callable
 var on_place : Callable
@@ -58,7 +60,7 @@ static func rune_name(r : int):
 		Rune.Star: return "Star"
 		Rune.Circle: return "Circle"
 		Rune.Diamond: return "Diamond"
-	return ""
+	return "None"
 
 static func rune_icon(r : int):
 	match r:
@@ -115,6 +117,7 @@ func setup(n : String):
 		description = "Activate: Eliminate cells in 1-ring."
 		category = "Bomb"
 		type = Type.Red
+		rune = Rune.None
 		on_process = func(b : Board, tween : Tween):
 			var coords : Array[Vector2i] = []
 			for c in b.offset_neighbors(coord):

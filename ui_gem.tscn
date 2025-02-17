@@ -10,8 +10,7 @@ script = ExtResource("2_pbann")
 [node name="BG" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_qae8s")
 
-[node name="Runes" type="AnimatedSprite2D" parent="."]
-modulate = Color(1, 1, 1, 0.745098)
+[node name="Rune" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("3_3slly")
 
 [node name="Image" type="AnimatedSprite2D" parent="."]

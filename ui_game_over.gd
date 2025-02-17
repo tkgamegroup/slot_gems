@@ -8,6 +8,7 @@ extends Control
 @onready var main_menu_button : Button = $VBoxContainer/Button2
 
 func enter():
+	Tooltip.close()
 	Game.ui_blocker.show()
 	self.show()
 	max_roll_text.text = "%d" % Game.history.max_roll

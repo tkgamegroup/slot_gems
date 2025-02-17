@@ -1,5 +1,7 @@
 extends Control
 
+const UiProp = preload("res://ui_prop.gd")
+
 @onready var score_text : Label = $Label
 @onready var combos_fire : Sprite2D = $Sprite2D
 @onready var combos_fire_shader : ShaderMaterial = combos_fire.material
@@ -10,12 +12,9 @@ extends Control
 @onready var rolls_text : Label = $Panel/Label
 @onready var action_tip_text : AdvancedLabel = $ActionTip
 @onready var props_bar : Control = $HBoxContainer
-@onready var pin_button : Button = $HBoxContainer/Button2
-@onready var pins_num_text : Label = $HBoxContainer/Button2/Label
-@onready var activate_button : Button = $HBoxContainer/Button3
-@onready var activates_num_text : Label = $HBoxContainer/Button3/Label
-@onready var grab_button : Button = $HBoxContainer/Button4
-@onready var grabs_num_text : Label = $HBoxContainer/Button4/Label
+@onready var pin_ui : UiProp = $HBoxContainer/UiProp
+@onready var activate_ui : UiProp = $HBoxContainer/UiProp2
+@onready var grab_ui : UiProp = $HBoxContainer/UiProp3
 
 func enter():
 	self.show()
@@ -44,15 +43,15 @@ func _ready() -> void:
 		Sounds.sfx_roll.play()
 		Game.roll()
 	)
-	pin_button.pressed.connect(func():
+	pin_ui.button.pressed.connect(func():
 		Sounds.sfx_click.play()
 		Game.set_props(Game.Props.Pin)
 	)
-	activate_button.pressed.connect(func():
+	activate_ui.button.pressed.connect(func():
 		Sounds.sfx_click.play()
 		Game.set_props(Game.Props.Activate)
 	)
-	grab_button.pressed.connect(func():
+	grab_ui.button.pressed.connect(func():
 		Sounds.sfx_click.play()
 		Game.set_props(Game.Props.Grab)
 	)

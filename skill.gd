@@ -6,7 +6,7 @@ const UiSkill = preload("res://ui_skill.gd")
 
 var requirements : Array[Pair]
 var requirement_map : Dictionary[int, int]
-var spawn_name : String
+var spawn_gem : Gem = null
 var ui : UiSkill = null
 
 func add_requirement(rune : int, count : int):
@@ -20,9 +20,6 @@ func get_requirement_icons(w : int):
 			ret += "[img width=%d]%s[/img]" % [w, Gem.rune_icon(p.first)]
 	return ret
 
-func get_spawn_name():
-	pass
-
 func check(coords : Array[Vector2i]):
 	var runes = {}
 	for c in coords:
@@ -34,11 +31,12 @@ func check(coords : Array[Vector2i]):
 	var ret = {}
 	var ok = true
 	for r in requirement_map:
-		if requirement_map[r] > runes[r].size():
+		if !runes.has(r) || requirement_map[r] > runes[r].size():
 			ok = false
 			break
 		else:
 			ret[r] = runes[r]
+			ret[r].resize(requirement_map[r])
 	if ok:
 		return ret
 	return {}

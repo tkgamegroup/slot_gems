@@ -1,4 +1,4 @@
-[gd_scene load_steps=119 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=125 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_i3igf"]
@@ -31,6 +31,7 @@
 [ext_resource type="Script" path="res://ui_options.gd" id="14_kw2dv"]
 [ext_resource type="Script" path="res://ui_in_game_menu.gd" id="15_clbdl"]
 [ext_resource type="AudioStream" uid="uid://c4s22wdn5gxo4" path="res://sounds/level_clear.wav" id="15_guqny"]
+[ext_resource type="AudioStream" uid="uid://dprs6ie463ffp" path="res://sounds/bubble.wav" id="15_iwwqi"]
 [ext_resource type="AudioStream" uid="uid://c3fkob8w6mgrd" path="res://sounds/start_burning.wav" id="16_6pavh"]
 [ext_resource type="Script" path="res://ui_game_over.gd" id="16_iphee"]
 [ext_resource type="AudioStream" uid="uid://b73xkcur0fkfi" path="res://sounds/end_burning.wav" id="17_tmu32"]
@@ -67,7 +68,13 @@
 [ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/emerald.png" id="46_3tj5g"]
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="47_lomq7"]
 [ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="48_awy03"]
+[ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
 [ext_resource type="Texture2D" uid="uid://d20mcqrv3je2s" path="res://images/can.png" id="58_f74dl"]
+[ext_resource type="Script" path="res://ui_status_bar.gd" id="59_nqrtl"]
+[ext_resource type="Texture2D" uid="uid://bhccry11chopd" path="res://images/expand_board.png" id="59_us2ab"]
+[ext_resource type="Texture2D" uid="uid://dlntaesp0urpa" path="res://images/trash_bin.png" id="60_63e6s"]
+[ext_resource type="Script" path="res://ui_skills_bar.gd" id="63_mpmib"]
+[ext_resource type="Script" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
@@ -249,10 +256,6 @@ corner_radius_top_right = 8
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nldc7"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h88cs"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sr7rw"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_deavr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uwew2"]
@@ -263,6 +266,8 @@ border_color = Color(1, 1, 1, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2e5sw"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1kryo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rdvh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nladd"]
 bg_color = Color(0, 0, 0, 0.392157)
@@ -377,10 +382,10 @@ shader_parameter/scan_line_amount = 0.1
 shader_parameter/warp_amount = 0.1
 shader_parameter/noise_amount = 0.03
 shader_parameter/interference_amount = 1.0
-shader_parameter/grille_amount = 0.1
-shader_parameter/grille_size = 1.5
-shader_parameter/vignette_amount = 0.336
-shader_parameter/vignette_intensity = 0.4
+shader_parameter/grille_amount = 0.03
+shader_parameter/grille_size = 1.0
+shader_parameter/vignette_amount = 0.4
+shader_parameter/vignette_intensity = 0.2
 shader_parameter/aberation_amount = 0.5
 shader_parameter/roll_line_amount = 0.05
 shader_parameter/roll_speed = -0.5
@@ -466,6 +471,12 @@ stream = ExtResource("11_0r14j")
 max_polyphony = 10
 bus = &"SFX"
 
+[node name="Bubble" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("15_iwwqi")
+volume_db = -5.0
+max_polyphony = 10
+bus = &"SFX"
+
 [node name="Explode" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("12_773c0")
 max_polyphony = 10
@@ -501,6 +512,7 @@ stream = ExtResource("6_lm7v5")
 bus = &"Music"
 
 [node name="Game" type="Node2D" parent="."]
+visible = false
 
 [node name="TileMapLayer" type="TileMapLayer" parent="Game"]
 tile_set = SubResource("TileSet_m0hyf")
@@ -803,74 +815,23 @@ offset_bottom = -68.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Button2" type="Button" parent="UI/Game/HBoxContainer"]
+[node name="UiProp" parent="UI/Game/HBoxContainer" instance=ExtResource("55_0a5p1")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/align_to_largest_stylebox = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_h88cs")
+
+[node name="Button" parent="UI/Game/HBoxContainer/UiProp" index="0"]
 icon = ExtResource("31_kgos7")
-icon_alignment = 1
 
-[node name="Label" type="Label" parent="UI/Game/HBoxContainer/Button2"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -7.0
-offset_top = -17.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 12
-text = "0"
-
-[node name="Button3" type="Button" parent="UI/Game/HBoxContainer"]
+[node name="UiProp2" parent="UI/Game/HBoxContainer" instance=ExtResource("55_0a5p1")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/align_to_largest_stylebox = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_sr7rw")
+
+[node name="Button" parent="UI/Game/HBoxContainer/UiProp2" index="0"]
 icon = ExtResource("32_e8bxs")
-icon_alignment = 1
 
-[node name="Label" type="Label" parent="UI/Game/HBoxContainer/Button3"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -7.0
-offset_top = -17.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 12
-text = "0"
-
-[node name="Button4" type="Button" parent="UI/Game/HBoxContainer"]
+[node name="UiProp3" parent="UI/Game/HBoxContainer" instance=ExtResource("55_0a5p1")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/align_to_largest_stylebox = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_sr7rw")
-icon = ExtResource("35_m1l3k")
-icon_alignment = 1
 
-[node name="Label" type="Label" parent="UI/Game/HBoxContainer/Button4"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -7.0
-offset_top = -17.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 12
-text = "0"
+[node name="Button" parent="UI/Game/HBoxContainer/UiProp3" index="0"]
+icon = ExtResource("35_m1l3k")
 
 [node name="Shop" type="Control" parent="UI"]
 visible = false
@@ -969,6 +930,25 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_2e5sw")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_1kryo")
 text = "Next Level"
 
+[node name="Button2" type="Button" parent="UI/Shop"]
+layout_mode = 0
+offset_left = 932.0
+offset_top = 164.0
+offset_right = 1084.0
+offset_bottom = 204.0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5rdvh")
+text = "Expand Board 20G"
+icon = ExtResource("59_us2ab")
+
+[node name="Button3" type="Button" parent="UI/Shop"]
+layout_mode = 0
+offset_left = 984.0
+offset_top = 214.0
+offset_right = 1186.0
+offset_bottom = 254.0
+text = "Remove 5 Gems 20G"
+icon = ExtResource("60_63e6s")
+
 [node name="StatusBar" type="PanelContainer" parent="UI"]
 visible = false
 anchors_preset = 1
@@ -978,6 +958,7 @@ offset_left = -114.0
 offset_bottom = 50.0
 grow_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_nladd")
+script = ExtResource("59_nqrtl")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/StatusBar"]
 layout_mode = 2
@@ -1043,6 +1024,7 @@ offset_right = 40.0
 offset_bottom = 20.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ylmsd")
+script = ExtResource("63_mpmib")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/SkillsBar"]
 layout_mode = 2
@@ -1068,6 +1050,7 @@ offset_bottom = 20.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pnuwf")
+script = ExtResource("64_x2fcq")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/PatternsBar"]
 layout_mode = 2
@@ -1420,7 +1403,6 @@ fit_content = true
 autowrap_mode = 2
 
 [node name="PostProcessing" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="PostProcessing"]
 material = SubResource("ShaderMaterial_axmio")
@@ -1431,3 +1413,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 metadata/_edit_use_anchors_ = true
+
+[editable path="UI/Game/HBoxContainer/UiProp"]
+[editable path="UI/Game/HBoxContainer/UiProp2"]
+[editable path="UI/Game/HBoxContainer/UiProp3"]

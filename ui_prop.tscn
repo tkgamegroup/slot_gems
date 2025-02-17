@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://0k6g2b1qldhp"]
+
+[ext_resource type="Script" path="res://ui_prop.gd" id="1_l02xr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_naec8"]
+
+[node name="UiProp" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_l02xr")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/align_to_largest_stylebox = 0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_naec8")
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="Button"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -17.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 12
+text = "0"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(4, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+color = Color(0.678944, 0.678944, 0.678944, 1)
