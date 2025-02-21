@@ -27,6 +27,7 @@ Animations="*res://animations.gd"
 Effects="*res://effects.gd"
 Game="*res://game.gd"
 Tooltip="*res://tooltip.gd"
+Test="*res://test.gd"
 
 [display]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=125 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=126 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_i3igf"]
@@ -69,12 +69,13 @@
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="47_lomq7"]
 [ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="48_awy03"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
-[ext_resource type="Texture2D" uid="uid://d20mcqrv3je2s" path="res://images/can.png" id="58_f74dl"]
 [ext_resource type="Script" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Texture2D" uid="uid://bhccry11chopd" path="res://images/expand_board.png" id="59_us2ab"]
 [ext_resource type="Texture2D" uid="uid://dlntaesp0urpa" path="res://images/trash_bin.png" id="60_63e6s"]
 [ext_resource type="Script" path="res://ui_skills_bar.gd" id="63_mpmib"]
+[ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
 [ext_resource type="Script" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
+[ext_resource type="Script" path="res://ui_blocker.gd" id="68_a5ll1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
@@ -269,16 +270,6 @@ border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rdvh"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nladd"]
-bg_color = Color(0, 0, 0, 0.392157)
-corner_radius_bottom_left = 8
-expand_margin_left = 8.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ejirs"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtaia"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylmsd"]
 bg_color = Color(0, 0, 0, 0.392157)
 corner_radius_top_right = 16
@@ -359,6 +350,16 @@ expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0hxn"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nladd"]
+bg_color = Color(0, 0, 0, 0.392157)
+corner_radius_bottom_left = 8
+expand_margin_left = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ejirs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtaia"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfs7b"]
 bg_color = Color(0, 0, 0, 0.784314)
 border_width_left = 1
@@ -379,9 +380,9 @@ expand_margin_bottom = 4.0
 shader = ExtResource("4_8t4hj")
 shader_parameter/resolution = Vector2(1280, 720)
 shader_parameter/scan_line_amount = 0.1
-shader_parameter/warp_amount = 0.1
+shader_parameter/warp_amount = 0.05
 shader_parameter/noise_amount = 0.03
-shader_parameter/interference_amount = 1.0
+shader_parameter/interference_amount = 0.0
 shader_parameter/grille_amount = 0.03
 shader_parameter/grille_size = 1.0
 shader_parameter/vignette_amount = 0.4
@@ -949,71 +950,6 @@ offset_bottom = 254.0
 text = "Remove 5 Gems 20G"
 icon = ExtResource("60_63e6s")
 
-[node name="StatusBar" type="PanelContainer" parent="UI"]
-visible = false
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -114.0
-offset_bottom = 50.0
-grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_nladd")
-script = ExtResource("59_nqrtl")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/StatusBar"]
-layout_mode = 2
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/StatusBar/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="UI/StatusBar/MarginContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/StatusBar/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
-
-[node name="TextureRect" type="TextureRect" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("58_f74dl")
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/StatusBar/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/align_to_largest_stylebox = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_ejirs")
-icon = ExtResource("30_fg5n8")
-icon_alignment = 1
-
-[node name="Button2" type="Button" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2"]
-layout_mode = 2
-theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
-icon = ExtResource("38_us2c3")
-icon_alignment = 1
-
 [node name="SkillsBar" type="PanelContainer" parent="UI"]
 visible = false
 anchors_preset = 4
@@ -1071,6 +1007,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_620me")
+script = ExtResource("68_a5ll1")
 
 [node name="Options" type="PanelContainer" parent="UI"]
 visible = false
@@ -1173,6 +1110,11 @@ layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "Main Menu"
 
+[node name="Button4" type="Button" parent="UI/InGameMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
+text = "Start Test Avg Score"
+
 [node name="GameOver" type="PanelContainer" parent="UI"]
 visible = false
 anchors_preset = 8
@@ -1204,7 +1146,7 @@ columns = 2
 
 [node name="Label" type="Label" parent="UI/GameOver/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Max Roll"
+text = "Max Roll Score"
 
 [node name="Label2" type="Label" parent="UI/GameOver/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -1312,7 +1254,7 @@ theme_override_constants/separation = 64
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/ChooseReward/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 16
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="UI/ChooseReward/VBoxContainer"]
 layout_mode = 2
@@ -1372,12 +1314,92 @@ size_flags_vertical = 3
 layout_mode = 2
 columns = 22
 
-[node name="Button" type="Button" parent="UI/GemsViewer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/GemsViewer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button2" type="Button" parent="UI/GemsViewer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
+text = "Comfirm"
+
+[node name="Button" type="Button" parent="UI/GemsViewer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "Close"
+
+[node name="StatusBar" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -164.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nladd")
+script = ExtResource("59_nqrtl")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/StatusBar"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/StatusBar/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="UI/StatusBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 22
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/StatusBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 22
+
+[node name="TextureRect" type="TextureRect" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("63_yshj5")
+expand_mode = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/StatusBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/align_to_largest_stylebox = 0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ejirs")
+icon = ExtResource("30_fg5n8")
+icon_alignment = 1
+
+[node name="Button2" type="Button" parent="UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
+icon = ExtResource("38_us2c3")
+icon_alignment = 1
 
 [node name="Tooltip" type="PanelContainer" parent="UI"]
 visible = false
@@ -1413,6 +1435,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 metadata/_edit_use_anchors_ = true
+
+[node name="TestTimer" type="Timer" parent="."]
+wait_time = 2.0
 
 [editable path="UI/Game/HBoxContainer/UiProp"]
 [editable path="UI/Game/HBoxContainer/UiProp2"]

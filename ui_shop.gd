@@ -9,14 +9,9 @@ const item_pb = preload("res://ui_shop_item.tscn")
 
 func buy_gem(g : Gem, img : AnimatedSprite2D):
 	var tween = Game.get_tree().create_tween()
-	var p0 = img.global_position
-	var p3 = Game.bag_button.get_global_rect().get_center()
-	var p1 = lerp(p0, p3, 0.1) + Vector2(0, 150)
-	var p2 = lerp(p0, p3, 0.9) + Vector2(0, 100)
 	tween.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
-	tween.parallel().tween_method(func(t):
-		img.global_position = Math.cubic_bezier(p0, p1, p2, p3, t)
-	, 0.0, 1.0, 0.7)
+	tween.parallel()
+	Animations.curve_to(tween, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
 	tween.tween_callback(func():
 		Game.gems.append(g)
 		img.queue_free()
@@ -34,7 +29,7 @@ func enter():
 	tween.parallel().tween_property(next_button, "position", p1, 0.3)
 	
 	var list = Gem.get_name_list(5)
-	for i in 8:
+	for i in 0:
 		tween.tween_interval(0.1)
 		tween.tween_callback(func():
 			var ui = item_pb.instantiate()
@@ -68,8 +63,8 @@ func _ready() -> void:
 	)
 	#next_button.mouse_entered.connect(Sounds.sfx_select.play)
 	buy_board_size_button.pressed.connect(func():
-		Game.ui_blocker.show()
-		Game.outlines_root.reparent(Game.ui_blocker)
+		Game.blocker_ui.enter()
+		Game.outlines_root.reparent(Game.blocker_ui)
 		
 		var cx_mult = Game.board.cx_mult
 		var cx = Game.board_size * 2 * cx_mult
@@ -95,7 +90,7 @@ func _ready() -> void:
 		txt2.add_theme_font_size_override("font_size", 24)
 		hbox.add_child(txt2)
 		txt2.hide()
-		Game.ui_blocker.add_child(margin)
+		Game.blocker_ui.add_child(margin)
 		margin.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 		
 		var tween = Game.get_tree().create_tween()
@@ -153,7 +148,7 @@ func _ready() -> void:
 		, 1.0, 0.0, 0.5)
 		tween.tween_callback(func():
 			margin.queue_free()
-			Game.ui_blocker.hide()
+			Game.blocker_ui.exit()
 			Game.outlines_root.modulate.a = 1.0
 			Game.outlines_root.reparent(Game.game_root)
 			Game.game_root.move_child(Game.outlines_root, 1)

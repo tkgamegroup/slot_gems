@@ -1,7 +1,7 @@
 extends Control
 
 @onready var bg : Control = $BG
-@onready var icon_img : AnimatedSprite2D = $BG/Icon
+@onready var icon_img : Sprite2D = $BG/Icon
 @onready var title_txt : Label = $BG/Label
 @onready var desc_txt : Label = $BG/Label2
 @onready var cate_txt : Label = $BG/Label3
@@ -13,10 +13,10 @@ func setup(_data : Dictionary):
 
 func _ready() -> void:
 	if !data.is_empty():
-		icon_img.frame = data.icon
+		icon_img.texture = load(data.icon)
 		title_txt.text = data.title
 		desc_txt.text = data.description
-		cate_txt.text = data.category
+		cate_txt.text = ""
 	
 	mouse_entered.connect(func():
 		Sounds.sfx_select.play()

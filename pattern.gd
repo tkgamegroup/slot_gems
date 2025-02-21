@@ -12,7 +12,7 @@ var max_exp : int = 5
 var ui : UiPattern = null
 
 static func get_max_exp(_lv : int):
-	return _lv * 5
+	return int(pow(1.5, _lv - 1) * 5)
 
 func search(board : Board, off : Vector2i) -> Array[Vector2i]:
 	var res : Array[Vector2i] = []
@@ -39,6 +39,7 @@ func add_exp(v : int):
 	exp += v
 	while exp >= max_exp:
 		lv += 1
+		mult += 1
 		exp -= max_exp
 		max_exp = get_max_exp(lv)
 	if ui:

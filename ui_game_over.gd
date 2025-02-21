@@ -1,6 +1,6 @@
 extends Control
 
-@onready var max_roll_text : Label = $VBoxContainer/GridContainer/Label2
+@onready var max_roll_score_text : Label = $VBoxContainer/GridContainer/Label2
 @onready var rolls_text : Label = $VBoxContainer/GridContainer/Label4
 @onready var level_text : Label = $VBoxContainer/GridContainer/Label6
 @onready var seed_text : Label = $VBoxContainer/GridContainer/Label8
@@ -9,25 +9,29 @@ extends Control
 
 func enter():
 	Tooltip.close()
-	Game.ui_blocker.show()
+	Game.blocker_ui.enter()
 	self.show()
-	max_roll_text.text = "%d" % Game.history.max_roll
+	max_roll_score_text.text = "%d" % Game.history.max_roll_score
 	rolls_text.text = "%d" % Game.history.rolls
 	level_text.text = "%d" % Game.level
 	seed_text.text = ""
 	var tween = get_tree().create_tween()
-	var sb : StyleBoxFlat = Game.ui_blocker.get_theme_stylebox("panel")
+	var sb : StyleBoxFlat = Game.blocker_ui.get_theme_stylebox("panel")
 	tween.tween_property(sb, "bg_color", Color(1.0, 0.2, 0.2, 0.5), 0.5)
-	
+
+func exit():
+	Game.blocker_ui.exit()
+	self.hide()
+
 func _ready() -> void:
 	new_run.pressed.connect(func():
 		Sounds.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
-		Game.ui_blocker.hide()
-		var sb : StyleBoxFlat = Game.ui_blocker.get_theme_stylebox("panel")
+		Game.blocker_ui.exit()
+		var sb : StyleBoxFlat = Game.blocker_ui.get_theme_stylebox("panel")
 		sb.bg_color = Color(0.0, 0.0, 0.0, 80.0 / 255.0)
-		self.hide()
+		exit()
 		Game.start_new_game()
 	)
 	#new_run.mouse_entered.connect(Sounds.sfx_select.play)
@@ -35,10 +39,10 @@ func _ready() -> void:
 		Sounds.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
-		Game.ui_blocker.hide()
-		var sb : StyleBoxFlat = Game.ui_blocker.get_theme_stylebox("panel")
+		Game.blocker_ui.exit()
+		var sb : StyleBoxFlat = Game.blocker_ui.get_theme_stylebox("panel")
 		sb.bg_color = Color(0.0, 0.0, 0.0, 80.0 / 255.0)
-		self.hide()
+		exit()
 		Game.board.cleanup()
 		Game.game_ui.hide()
 		Game.game_root.hide()

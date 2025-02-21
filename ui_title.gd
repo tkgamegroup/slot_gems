@@ -63,13 +63,12 @@ func _ready() -> void:
 	collections_button.mouse_entered.connect(Sounds.sfx_select.play)
 	options_button.pressed.connect(func():
 		Sounds.sfx_click.play()
-		Game.ui_blocker.show()
-		Game.options_ui.show()
+		Game.options_ui.enter()
 	)
 	options_button.mouse_entered.connect(Sounds.sfx_select.play)
 	quit_button.pressed.connect(func():
 		Sounds.sfx_click.play()
-		Game.ui_blocker.show()
+		Game.blocker_ui.enter()
 		var tween = get_tree().create_tween()
 		tween.tween_interval(0.3)
 		tween.tween_callback(func():

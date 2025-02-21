@@ -5,6 +5,15 @@ extends Control
 @onready var fullscreen_checkbox : CheckBox = $VBoxContainer/GridContainer/CheckBox
 @onready var close_button : Button = $VBoxContainer/Button
 
+func enter():
+	Tooltip.close()
+	Game.blocker_ui.enter()
+	self.show()
+
+func exit():
+	Game.blocker_ui.exit()
+	self.hide()
+	
 func _ready() -> void:
 	sfx_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(Sounds.sfx_bus_index, linear_to_db(v))
@@ -24,7 +33,6 @@ func _ready() -> void:
 	fullscreen_checkbox.set_pressed_no_signal(DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN) 
 	close_button.pressed.connect(func():
 		Sounds.sfx_click.play()
-		Game.ui_blocker.hide()
-		self.hide()
+		exit()
 	)
 	#close_button.mouse_entered.connect(Sounds.sfx_select.play)

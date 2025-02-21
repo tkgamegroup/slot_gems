@@ -22,20 +22,22 @@ func choose(idx : int):
 			tween.parallel().tween_property(ui, "position", ui.position + Vector2(0, 1000), 0.2)
 	var ui : Control = reward_list.get_child(idx)
 	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var img : AnimatedSprite2D = ui.icon_img
+	var img : Sprite2D = ui.icon_img
 	tween.tween_callback(func():
 		img.reparent(self)
 	)
 	tween.tween_property(ui, "modulate:a", 0, 0.2)
+	tween.parallel().tween_property(img, "position", ui.get_rect().get_center(), 0.3)
 	callback.call(idx, tween, img)
 	callback = Callable.create(null, "")
 	tween.tween_callback(img.queue_free)
 	tween.tween_callback(func():
-		self.hide()
+		exit()
 	)
 
-func enter(rewards : Array[Dictionary], _callback : Callable):
+func enter(rewards : Array, _callback : Callable):
 	callback = _callback
+	Game.blocker_ui.enter()
 	self.show()
 	buttons_list.show()
 	for n in reward_list.get_children():
@@ -51,6 +53,10 @@ func enter(rewards : Array[Dictionary], _callback : Callable):
 					choose(i)
 		)
 		reward_list.add_child(ui)
+
+func exit():
+	Game.blocker_ui.exit()
+	self.hide()
 
 func _ready() -> void:
 	hide_button.pressed.connect(func():

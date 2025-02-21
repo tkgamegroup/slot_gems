@@ -36,10 +36,3 @@ func set_active(v : bool):
 		gem.image_sp.material = null
 		text.text = ""
 		text.hide()
-
-func _process(delta: float) -> void:
-	if is_active:
-		var t = Time.get_ticks_msec() / 1000.0
-		t = fmod(t, 2.0)
-		if t < 0.5:
-			gem.image_sp.rotation_degrees = sin((0.5 + 8.0 * t) * PI) * 5.0

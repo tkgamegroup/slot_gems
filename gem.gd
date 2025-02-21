@@ -45,7 +45,17 @@ var on_combo : Callable
 
 var extra = {}
 
-static func color(t : int) -> Color:
+static func type_name(t : int):
+	match t:
+		Type.None: return "None"
+		Type.Red: return "Red"
+		Type.Orange: return "Orange"
+		Type.Green: return "Green"
+		Type.Blue: return "Blue"
+		Type.Pink: return "Pink"
+	return ""
+
+static func type_color(t : int) -> Color:
 	match t:
 		Type.None: return Color(0, 0, 0, 0)
 		Type.Red: return Color(214.0 / 255.0, 19.0 / 255.0, 25.0 / 255.0)
@@ -54,6 +64,15 @@ static func color(t : int) -> Color:
 		Type.Blue: return Color(143.0 / 255.0, 223.0 / 255.0, 246.0 / 255.0)
 		Type.Pink: return Color(230.0 / 255.0, 53.0 / 255.0, 108.0 / 255.0)
 	return Color.WHITE
+
+static func type_img(t : int):
+	match t:
+		Type.Red: return "res://images/red.png"
+		Type.Orange: return "res://images/orange.png"
+		Type.Green: return "res://images/green.png"
+		Type.Blue: return "res://images/blue.png"
+		Type.Pink: return "res://images/pink.png"
+	return ""
 
 static func rune_name(r : int):
 	match r:
