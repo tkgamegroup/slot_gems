@@ -1,6 +1,6 @@
 extends PanelContainer
 
-@onready var list : Control = $MarginContainer/VBoxContainer
+@onready var list : Control = $MarginContainer/List
 
 func appear():
 	self.show()

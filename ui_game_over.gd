@@ -8,7 +8,7 @@ extends Control
 @onready var main_menu_button : Button = $VBoxContainer/Button2
 
 func enter():
-	Tooltip.close()
+	STooltip.close()
 	Game.blocker_ui.enter()
 	self.show()
 	max_roll_score_text.text = "%d" % Game.history.max_roll_score
@@ -25,7 +25,7 @@ func exit():
 
 func _ready() -> void:
 	new_run.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		Game.blocker_ui.exit()
@@ -34,9 +34,9 @@ func _ready() -> void:
 		exit()
 		Game.start_new_game()
 	)
-	#new_run.mouse_entered.connect(Sounds.sfx_select.play)
+	#new_run.mouse_entered.connect(SSound.sfx_select.play)
 	main_menu_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		Game.blocker_ui.exit()
@@ -51,4 +51,4 @@ func _ready() -> void:
 		Game.patterns_bar.hide()
 		Game.title_ui.enter()
 	)
-	#main_menu_button.mouse_entered.connect(Sounds.sfx_select.play)
+	#main_menu_button.mouse_entered.connect(SSound.sfx_select.play)

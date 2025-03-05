@@ -11,7 +11,7 @@ func buy_gem(g : Gem, img : AnimatedSprite2D):
 	var tween = Game.get_tree().create_tween()
 	tween.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
 	tween.parallel()
-	Animations.curve_to(tween, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
+	SAnimation.cubic_curve_to(tween, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
 	tween.tween_callback(func():
 		Game.gems.append(g)
 		img.queue_free()
@@ -28,8 +28,8 @@ func enter():
 	next_button.position = p1  + Vector2(0, 300)
 	tween.parallel().tween_property(next_button, "position", p1, 0.3)
 	
-	var list = Gem.get_name_list(5)
-	for i in 0:
+	var list = ["Bomb", "Ruby", "Citrine", "Emerald", "Sapphire", "Amethyst"]
+	for i in 8:
 		tween.tween_interval(0.1)
 		tween.tween_callback(func():
 			var ui = item_pb.instantiate()
@@ -39,9 +39,9 @@ func enter():
 			ui.setup(g.image_id, gold)
 			ui.gui_input.connect(func(event : InputEvent):
 				if event is InputEventMouseButton:
-					if event.pressed:
+					if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 						if Game.gold >= gold:
-							Sounds.sfx_coin.play()
+							SSound.sfx_coin.play()
 							Game.gold -= gold
 							var img = ui.image
 							img.reparent(self)
@@ -57,11 +57,11 @@ func _ready() -> void:
 		slot_uis.append(find_child("Slot%d" % i))
 	
 	next_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		self.hide()
 		Game.new_level()
 	)
-	#next_button.mouse_entered.connect(Sounds.sfx_select.play)
+	#next_button.mouse_entered.connect(SSound.sfx_select.play)
 	buy_board_size_button.pressed.connect(func():
 		Game.blocker_ui.enter()
 		Game.outlines_root.reparent(Game.blocker_ui)
@@ -80,7 +80,7 @@ func _ready() -> void:
 		txt0.text = "Board Size: %dX%d" % [cx, cy]
 		txt0.add_theme_font_size_override("font_size", 24)
 		hbox.add_child(txt0)
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		var txt1 = Label.new()
 		txt1.text = "=>"
 		txt1.add_theme_font_size_override("font_size", 24)
@@ -117,13 +117,13 @@ func _ready() -> void:
 		
 		tween.tween_interval(0.5)
 		tween.tween_callback(func():
-			Sounds.sfx_click.play()
+			SSound.sfx_click.play()
 			txt1.show()
 			margin.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 		)
 		tween.tween_interval(0.5)
 		tween.tween_callback(func():
-			Sounds.sfx_click.play()
+			SSound.sfx_click.play()
 			txt2.show()
 			margin.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 		)

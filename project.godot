@@ -21,13 +21,14 @@ buses/default_bus_layout="res://audio_bus_layout.tres"
 
 [autoload]
 
-Math="*res://math.gd"
-Sounds="*res://sounds.gd"
-Animations="*res://animations.gd"
-Effects="*res://effects.gd"
+SMath="*res://math_system.gd"
+SSound="*res://sound_system.gd"
+SAnimation="*res://animation_system.gd"
+SEffect="*res://effect_system.gd"
 Game="*res://game.gd"
-Tooltip="*res://tooltip.gd"
-Test="*res://test.gd"
+SUtils="*res://utils.gd"
+STooltip="*res://tooltip_system.gd"
+STest="*res://test_system.gd"
 
 [display]
 

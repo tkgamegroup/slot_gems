@@ -4,9 +4,10 @@ extends Control
 @onready var options_button : Button = $VBoxContainer/Button2
 @onready var main_menu_button : Button = $VBoxContainer/Button3
 @onready var test_avg_score_button : Button = $VBoxContainer/Button4
+@onready var command_line : LineEdit = $VBoxContainer/LineEdit
 
 func enter():
-	Tooltip.close()
+	STooltip.close()
 	Game.blocker_ui.enter()
 	self.show()
 
@@ -36,5 +37,14 @@ func _ready() -> void:
 	)
 	test_avg_score_button.pressed.connect(func():
 		exit()
-		Test.start_test_avg_score(100)
+		STest.start_test_avg_score(100)
+	)
+	command_line.text_submitted.connect(func(cl : String):
+		var tks = cl.split(" ", false)
+		if !tks.is_empty():
+			var cmd = tks[0]
+			if cmd == "test_matching":
+				var coord = Vector2i(int(tks[1]), int(tks[2]))
+				for p in Game.patterns:
+					p.search(Game.board, coord)
 	)

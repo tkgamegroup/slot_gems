@@ -10,6 +10,7 @@ enum State
 }
 
 var gem : Gem = null
+var item : Item = null
 var state : int = 0
 var pined : bool = false
 var index : int

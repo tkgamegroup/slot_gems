@@ -19,7 +19,7 @@ func _ready() -> void:
 		cate_txt.text = ""
 	
 	mouse_entered.connect(func():
-		Sounds.sfx_select.play()
+		SSound.sfx_select.play()
 		bg.position.y = -20
 	)
 	mouse_exited.connect(func():

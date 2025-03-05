@@ -15,27 +15,38 @@ static func get_max_exp(_lv : int):
 	return int(pow(1.5, _lv - 1) * 5)
 
 func search(board : Board, off : Vector2i) -> Array[Vector2i]:
-	var res : Array[Vector2i] = []
+	var ocoords : Array[Vector2i] = []
 	if coords.size() < 2:
-		return res
+		return [] as Array[Vector2i]
 	var base_c = board.offset_to_cube(off)
-	var cc = board.cube_to_offset(base_c)
-	var first_g = board.get_gem_at(board.cube_to_offset(base_c + coords[0]))
-	if !first_g || first_g.active:
-		return res
-	var first_v = first_g.type
+	for c in coords:
+		ocoords.append(board.cube_to_offset(base_c + c))
+	var gems = []
+	for c in ocoords:
+		var g = board.get_gem_at(c)
+		if g:
+			gems.append(g)
+	if gems.size() < coords.size():
+		return [] as Array[Vector2i]
+	var first_v = Gem.Type.None
+	for g in gems:
+		if g.type != Gem.Type.Wild:
+			first_v = g.type
+			break
+	if first_v == Gem.Type.None:
+		return ocoords
 	var all_same = true
-	for i in range(1, coords.size()):
-		var g = board.get_gem_at(board.cube_to_offset(base_c + coords[i]))
-		if !g || g.active || g.type != first_v:
+	for g in gems:
+		if !(g.type == Gem.Type.Wild || g.type == first_v):
 			all_same = false
 			break
 	if all_same:
-		for c in coords:
-			res.append(board.cube_to_offset(base_c + c))
-	return res
+		return ocoords
+	return [] as Array[Vector2i]
 
 func add_exp(v : int):
+	var old_lv = lv
+	var old_mult = mult
 	exp += v
 	while exp >= max_exp:
 		lv += 1
@@ -45,3 +56,16 @@ func add_exp(v : int):
 	if ui:
 		ui.exp_bar.max_value = max_exp
 		ui.exp_bar.value = exp
+		if lv > old_lv:
+			var ctrl = Control.new()
+			var lb = Label.new()
+			lb.text = "LV +1\nMult +%d" % (mult - old_mult)
+			lb.modulate.a = 0.2
+			ctrl.add_child(lb)
+			ui.add_child(ctrl)
+			ctrl.position = ui.get_rect().size * 0.5
+			lb.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
+			var tween = Game.get_tree().create_tween()
+			tween.tween_property(lb, "modulate:a", 1.0, 0.3)
+			tween.tween_interval(1.0)
+			tween.tween_callback(lb.queue_free)

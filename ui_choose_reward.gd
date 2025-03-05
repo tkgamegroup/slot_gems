@@ -11,7 +11,7 @@ const reward_pb = preload("res://ui_reward.tscn")
 var callback : Callable
 
 func choose(idx : int):
-	Sounds.sfx_click.play()
+	SSound.sfx_click.play()
 	buttons_list.hide()
 	var tween = Game.get_tree().create_tween()
 	var n = reward_list.get_child_count()
@@ -49,7 +49,7 @@ func enter(rewards : Array, _callback : Callable):
 		ui.setup(r)
 		ui.gui_input.connect(func(event : InputEvent):
 			if event is InputEventMouseButton:
-				if event.pressed:
+				if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 					choose(i)
 		)
 		reward_list.add_child(ui)
@@ -60,11 +60,11 @@ func exit():
 
 func _ready() -> void:
 	hide_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 	)
 	reroll_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 	)
 	skip_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 	)

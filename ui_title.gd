@@ -49,25 +49,25 @@ func enter():
 
 func _ready() -> void:
 	new_game_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		var tween = exit()
 		tween.tween_callback(func():
 			Game.start_new_game()
 		)
 	)
-	new_game_button.mouse_entered.connect(Sounds.sfx_select.play)
+	new_game_button.mouse_entered.connect(SSound.sfx_select.play)
 	collections_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		
 	)
-	collections_button.mouse_entered.connect(Sounds.sfx_select.play)
+	collections_button.mouse_entered.connect(SSound.sfx_select.play)
 	options_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		Game.options_ui.enter()
 	)
-	options_button.mouse_entered.connect(Sounds.sfx_select.play)
+	options_button.mouse_entered.connect(SSound.sfx_select.play)
 	quit_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		Game.blocker_ui.enter()
 		var tween = get_tree().create_tween()
 		tween.tween_interval(0.3)
@@ -75,4 +75,4 @@ func _ready() -> void:
 			get_tree().quit()
 		)
 	)
-	quit_button.mouse_entered.connect(Sounds.sfx_select.play)
+	quit_button.mouse_entered.connect(SSound.sfx_select.play)

@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://dwotnjqiayas6"]
+
+[ext_resource type="Shader" path="res://wild.gdshader" id="1_qupmt"]
+
+[sub_resource type="Gradient" id="Gradient_w4hyo"]
+offsets = PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1)
+colors = PackedColorArray(0.839216, 0.0745098, 0.0980392, 1, 1, 0.729412, 0.027451, 1, 0.615686, 0.752941, 0.25098, 1, 0.560784, 0.87451, 0.964706, 1, 0.901961, 0.207843, 0.423529, 1, 0.839216, 0.0745098, 0.0980392, 1)
+metadata/_snap_count = 5
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_aa3ec"]
+gradient = SubResource("Gradient_w4hyo")
+
+[resource]
+shader = ExtResource("1_qupmt")
+shader_parameter/ramp_texture = SubResource("GradientTexture1D_aa3ec")
+shader_parameter/offset = 1000.0

@@ -2,21 +2,21 @@ extends Control
 
 @onready var bg : Control = $BG
 @onready var image : AnimatedSprite2D = $BG/AnimatedSprite2D
-@onready var gold_text : Label = $Label
+@onready var coin_text : Label = $Label
 
 var image_id : int
-var gold : int
+var coins : int
 
-func setup(_image_id : int, _gold : int):
+func setup(_image_id : int, _coins : int):
 	image_id = _image_id
-	gold = _gold
+	coins = _coins
 
 func _ready() -> void:
 	image.frame = image_id
-	gold_text.text = "%dG" % gold
+	coin_text.text = "%dG" % coins
 	
 	mouse_entered.connect(func():
-		Sounds.sfx_select.play()
+		SSound.sfx_select.play()
 		bg.position.y -= 10
 	)
 	mouse_exited.connect(func():
@@ -24,7 +24,7 @@ func _ready() -> void:
 	)
 	
 	bg.scale = Vector2(0.0, 0.0)
-	gold_text.hide()
+	coin_text.hide()
 	var tween = Game.get_tree().create_tween()
 	tween.tween_property(bg, "scale", Vector2(1.0, 1.0), 0.3)
-	tween.tween_callback(gold_text.show)
+	tween.tween_callback(coin_text.show)

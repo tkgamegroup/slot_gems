@@ -8,6 +8,7 @@
 bg_color = Color(0, 0, 0, 0.196078)
 
 [node name="UiSkill" type="PanelContainer"]
+custom_minimum_size = Vector2(48, 104)
 offset_right = 48.0
 offset_bottom = 104.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_shhvf")
@@ -38,5 +39,5 @@ mouse_filter = 1
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/Control"]
 scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("3_127je")
-frame = 6
+frame = 5
 centered = false

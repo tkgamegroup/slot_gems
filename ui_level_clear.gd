@@ -8,14 +8,14 @@ const gem_ui = preload("res://ui_gem.tscn")
 @onready var settlement_list : VBoxContainer = $VBoxContainer
 @onready var particles = $CPUParticles2D
 var rewards_count = 0
-var gold = 0
+var coins = 0
 
 func enter():
-	Sounds.sfx_level_clear.play()
-	Tooltip.close()
+	SSound.sfx_level_clear.play()
+	STooltip.close()
 	Game.blocker_ui.enter()
 	self.show()
-	gold = 0
+	coins = 0
 	while settlement_list.get_child_count() > 2:
 		var n = settlement_list.get_child(1)
 		settlement_list.remove_child(n)
@@ -33,7 +33,7 @@ func enter():
 		settlement_list.add_child(ui_s)
 		settlement_list.move_child(ui_s, settlement_list.get_child_count() - 2)
 	)
-	gold += 5
+	coins += 5
 	tween.tween_interval(0.6)
 	tween.tween_callback(func():
 		var ui_s = settlement_ui.instantiate()
@@ -42,7 +42,7 @@ func enter():
 		settlement_list.add_child(ui_s)
 		settlement_list.move_child(ui_s, settlement_list.get_child_count() - 2)
 	)
-	gold += Game.rolls
+	coins += Game.rolls
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		rewards_count += 1
@@ -52,7 +52,7 @@ func enter():
 		rich_txt.bbcode_enabled = true
 		rich_txt.fit_content = true
 		rich_txt.autowrap_mode = TextServer.AUTOWRAP_OFF
-		rich_txt.text = "Take %d[img]res://images/coin.png[/img]" % gold
+		rich_txt.text = "Take %d[img]res://images/coin.png[/img]" % coins
 		rich_txt.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		reward_btn.add_child(rich_txt)
 		reward_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -60,14 +60,14 @@ func enter():
 		settlement_list.move_child(reward_btn, settlement_list.get_child_count() - 2)
 		rich_txt.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
 		reward_btn.pressed.connect(func():
-			Sounds.sfx_coin.play()
+			SSound.sfx_coin.play()
 			reward_btn.get_parent().remove_child(reward_btn)
 			reward_btn.queue_free()
 			rewards_count -= 1
 			if rewards_count == 0:
 				continue_button.disabled = false
 			
-			Game.gold += gold
+			Game.coins += coins
 		)
 	)
 	tween.tween_interval(0.5)
@@ -104,7 +104,7 @@ func enter():
 				if idx == 0:
 					tween.tween_callback(func():
 						var arr = []
-						for i in Gem.Type.Count:
+						for i in 5:
 							var r = {}
 							var name = Gem.type_name(i + 1)
 							r.icon = Gem.type_img(i + 1)
@@ -117,11 +117,11 @@ func enter():
 								if idx != -1:
 									tween3.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
 									tween3.parallel()
-									Animations.curve_to(tween3, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
+									SAnimation.cubic_curve_to(tween3, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
 									tween3.tween_callback(func():
 										for i in 5:
 											var g = Gem.new()
-											g.setup(Gem.type_name(idx + 1))
+											g.type = idx + 1
 											g.rune = randi_range(1, Gem.Rune.Count)
 											g.base_score = 4
 											Game.gems.append(g)
@@ -133,7 +133,7 @@ func enter():
 					)
 				elif idx == 1:
 					tween.tween_callback(func():
-						Game.gems_viewer_ui.enter(5, "Select up to 5 gems to Remove", func(gems):
+						Game.bag_viewer_ui.enter(5, "Select up to 5 gems to Remove", func(gems):
 							var bag_pos = Game.bag_button.get_global_rect().get_center()
 							var base_pos = self.get_global_rect().get_center() + Vector2(-16 * (gems.size() - 1), 200)
 							var uis = []
@@ -151,7 +151,7 @@ func enter():
 									var ui = uis[i]
 									ui.show()
 									var tween3 = get_tree().create_tween()
-									Animations.curve_to(tween3, ui, base_pos + i * Vector2(32, 0), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
+									SAnimation.cubic_curve_to(tween3, ui, base_pos + i * Vector2(32, 0), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
 								)
 							tween2.tween_interval(1.0)
 							tween2.tween_callback(func():
@@ -182,11 +182,11 @@ func exit():
 
 func _ready() -> void:
 	continue_button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
 		Game.game_ui.exit()
 		Game.shop_ui.enter()
 	)
-	#continue_button.mouse_entered.connect(Sounds.sfx_select.play)
+	#continue_button.mouse_entered.connect(SSound.sfx_select.play)

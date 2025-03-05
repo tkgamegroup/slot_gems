@@ -1,5 +1,12 @@
 extends Node
 
+enum Stage
+{
+	Deploy,
+	Rolling,
+	Matching
+}
+
 enum Props
 {
 	None,
@@ -11,6 +18,7 @@ enum Props
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
 const UiGame = preload("res://ui_game.gd")
+const UiHand = preload("res://ui_hand.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
 const UiSkillsBar = preload("res://ui_skills_bar.gd")
@@ -21,10 +29,9 @@ const UiInGameMenu = preload("res://ui_in_game_menu.gd")
 const UiGameOver = preload("res://ui_game_over.gd")
 const UiLevelClear = preload("res://ui_level_clear.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
-const UiGemsViewer = preload("res://ui_gems_viewer.gd")
+const UiBagViewer = preload("res://ui_bag_viewer.gd")
 const popup_txt_pb = preload("res://popup_txt.tscn")
 const skill_pb = preload("res://ui_skill.tscn")
-const pattern_pb = preload("res://ui_pattern.tscn")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
 const activate_cursor = preload("res://images/magic_stick.png")
@@ -35,32 +42,33 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var game_root : Node2D = $/root/Main/Game
 @onready var tilemap : TileMapLayer = $/root/Main/Game/TileMapLayer
 @onready var outlines_root : Node2D = $/root/Main/Game/Outlines
+@onready var underlay : Node2D = $/root/Main/Game/Underlay
 @onready var cells_root : Node2D = $/root/Main/Game/Cells
 @onready var overlay : Node2D = $/root/Main/Game/Overlay
 @onready var hover_ui : Sprite2D = $/root/Main/Game/Hover
 @onready var drag_ui : AnimatedSprite2D = $/root/Main/Game/Drag
 @onready var title_ui : UiTitle = $/root/Main/UI/Title
 @onready var game_ui : UiGame = $/root/Main/UI/Game
+@onready var hand_ui : UiHand = $/root/Main/UI/Game/Panel/HBoxContainer/Hand
 @onready var shop_ui : UiShop = $/root/Main/UI/Shop
 @onready var status_bar_ui : UiStatusBar = $/root/Main/UI/StatusBar
 @onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/SkillsBar
 @onready var patterns_bar_ui : UiPatternsBar = $/root/Main/UI/PatternsBar
 @onready var blocker_ui : UiBlocker = $/root/Main/UI/Blocker
-@onready var level_text : Label = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Label
-@onready var gold_text : Label = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer/Label2
-@onready var bag_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2/Button
-@onready var gear_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2/Button2
-@onready var in_game_menu_button : Button = $/root/Main/UI/StatusBar/MarginContainer/HBoxContainer/Button2
 @onready var options_ui : UiOptions = $/root/Main/UI/Options
 @onready var in_game_menu_ui : UiInGameMenu = $/root/Main/UI/InGameMenu
 @onready var game_over_ui : UiGameOver = $/root/Main/UI/GameOver
 @onready var level_clear_ui : UiLevelClear = $/root/Main/UI/LevelClear
 @onready var choose_reward_ui : UiChooseReward = $/root/Main/UI/ChooseReward
-@onready var gems_viewer_ui : UiGemsViewer = $/root/Main/UI/GemsViewer
+@onready var bag_viewer_ui : UiBagViewer = $/root/Main/UI/BagViewer
 
-var protected_controls : Array[Control] = []
 var dragging_cell : Vector2i = Vector2i(-1, -1)
 
+func release_dragging():
+	dragging_cell = Vector2i(-1, -1)
+	drag_ui.hide()
+
+var stage : int = Stage.Deploy
 var rolls : int:
 	set(v):
 		rolls = v
@@ -99,15 +107,20 @@ var board_size : int = 4
 var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
+var unused_gems : Array[Gem] = []
 var gem_bouns_scores : Array[int]
+var items : Array[Item]
+var unused_items : Array[Item] = []
+func update_score_text():
+	game_ui.score_text.text = "Score: %d/%d (x%.1f)" % [score, target_score, score_mult]
 var score : int:
 	set(v):
 		score = v
-		game_ui.score_text.text = "Score: %d/%d" % [score, target_score]
+		update_score_text()
 var target_score : int:
 	set(v):
 		target_score = v
-		game_ui.score_text.text = "Score: %d/%d" % [score, target_score]
+		update_score_text()
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
@@ -129,26 +142,26 @@ var combos : int = 0:
 			combos_tween.tween_callback(func():
 				combos_tween = null
 			)
-var rainbow_mult : float = 1.0
+var base_score_mult : float = 1.0:
+	set(v):
+		base_score_mult = v
+		SUtils.calc_value_with_modifiers(self, "score_mult")
+var score_mult : float = base_score_mult:
+	set(v):
+		score_mult = v
+		update_score_text()
 var level : int:
 	set(v):
 		level = v
-		level_text.text = "Level %d" % level
-var gold : int:
+		status_bar_ui.level_text.text = "Level %d" % level
+var coins : int:
 	set(v):
-		gold = v
-		gold_text.text = "%d" % gold
+		coins = v
+		status_bar_ui.coin_text.text = "%d" % coins
+var buffs : Array[Buff]
 var history : History = History.new()
 
 var animation_speed = 1.0
-
-func begin_protect_controls():
-	for c in protected_controls:
-		c.disabled = true
-
-func end_protect_controls():
-	for c in protected_controls:
-		c.disabled = false
 
 func set_props(t : int):
 	props = t
@@ -173,6 +186,28 @@ func set_props(t : int):
 func get_cell_ui(c : Vector2i) -> UiCell:
 	return cells_root.get_child(c.y * board.cx + c.x)
 
+func get_gem(g : Gem = null):
+	if g:
+		unused_gems.erase(g)
+		return g
+	return SMath.pick_and_remove(unused_gems)
+
+func release_gem(gem : Gem):
+	gem.coord = Vector2i(-1, -1)
+	for b in gem.buffs:
+		b.die()
+	gem.buffs.clear()
+	unused_gems.append(gem)
+
+func get_item(i : Item = null):
+	if i:
+		unused_items.erase(i)
+		return i
+	return SMath.pick_and_remove(unused_items)
+
+func release_item(item : Item):
+	unused_items.append(item)
+
 func add_combo():
 	combos += 1
 	var burning_cells = []
@@ -181,10 +216,9 @@ func add_combo():
 			var c = Vector2i(x, y)
 			if board.get_state_at(c) == Cell.State.Burning:
 				burning_cells.append(c)
-			var g = board.get_gem_at(c)
-			if g:
-				if g.on_combo.is_valid():
-					g.on_combo.call(self, combos)
+			var i = board.get_item_at(c)
+			if i && i.on_combo.is_valid():
+				i.on_combo.call(self, combos)
 	for c in burning_cells:
 		for cc in board.offset_neighbors(c):
 			if board.get_state_at(cc) != Cell.State.Burning:
@@ -197,7 +231,7 @@ func float_text(txt : String, pos : Vector2):
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
 	lb.text = txt
-	ui.z_index = 1
+	ui.z_index = 10
 	overlay.add_child(ui)
 	var tween = get_tree().create_tween()
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
@@ -207,13 +241,13 @@ func float_text(txt : String, pos : Vector2):
 	)
 
 func add_score(base : int, pos : Vector2):
-	var mult = int(combos * rainbow_mult)
+	var mult = int(combos * score_mult)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
-	lb.text = "%dx%d" % [base, mult]
-	ui.z_index = 1
+	lb.text = "%dx%d" % [base, int(mult * score_mult)]
+	ui.z_index = 10
 	overlay.add_child(ui)
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
@@ -221,9 +255,9 @@ func add_score(base : int, pos : Vector2):
 	, 1.0, 0.0, 1.0)
 	tween.parallel().tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(func():
-		var total_score = base * mult
-		lb.text = "%d" % total_score
-		score += total_score
+		var s = base * int(mult * score_mult)
+		lb.text = "%d" % s
+		score += s
 	)
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
 	tween.parallel().tween_property(ui, "scale", Vector2(0.8, 0.8), 0.5)
@@ -264,12 +298,8 @@ func add_skill(s : Skill):
 	skills.append(s)
 
 func add_pattern(p : Pattern):
-	var ui = pattern_pb.instantiate()
-	ui.setup(p)
-	ui.scale = Vector2(0.5, 0.5)
-	patterns_bar_ui.list.add_child(ui)
-	p.ui = ui
 	patterns.append(p)
+	patterns_bar_ui.add_ui(p)
 
 func get_level_score(lv : int):
 	match lv:
@@ -299,16 +329,13 @@ func start_new_game():
 	activates_num_per_level = 0
 	grabs_num_per_level = 0
 	level = 0
-	gold = 10
+	coins = 10
 	history.init()
 	
 	skills.clear()
 	skills_bar_ui.clear()
 	var skill0 = Skill.new()
 	skill0.add_requirement(1, 3)
-	var g_bomb = Gem.new()
-	g_bomb.setup("Bomb")
-	skill0.spawn_gem = g_bomb
 	#add_skill(skill0)
 	
 	patterns.clear()
@@ -337,43 +364,76 @@ func start_new_game():
 	
 	gems.clear()
 	for j in 3:
-		for i in 66:
+		for i in 72:
 			var g = Gem.new()
-			g.setup("Red")
+			g.type = Gem.Type.Red
 			g.rune = j + 1
 			gems.append(g)
 	for j in 3:
-		for i in 66:
+		for i in 72:
 			var g = Gem.new()
-			g.setup("Orange")
+			g.type = Gem.Type.Orange
 			g.rune = j + 1
 			gems.append(g)
 	for j in 3:
-		for i in 66:
+		for i in 72:
 			var g = Gem.new()
-			g.setup("Green")
+			g.type = Gem.Type.Green
 			g.rune = j + 1
 			gems.append(g)
 	for j in 3:
-		for i in 66:
+		for i in 72:
 			var g = Gem.new()
-			g.setup("Blue")
+			g.type = Gem.Type.Blue
 			g.rune = j + 1
 			gems.append(g)
 	for j in 3:
-		for i in 66:
+		for i in 72:
 			var g = Gem.new()
-			g.setup("Pink")
+			g.type = Gem.Type.Pink
 			g.rune = j + 1
 			gems.append(g)
+	
+	items.clear()
+	for i in 3:
+		var item = Item.new()
+		item.setup("Dye: Red")
+		items.append(item)
+	for i in 3:
+		var item = Item.new()
+		item.setup("Dye: Orange")
+		items.append(item)
+	for i in 3:
+		var item = Item.new()
+		item.setup("Dye: Green")
+		items.append(item)
+	for i in 3:
+		var item = Item.new()
+		item.setup("Dye: Blue")
+		items.append(item)
+	for i in 3:
+		var item = Item.new()
+		item.setup("Dye: Pink")
+		items.append(item)
+	for i in 100:
+		var item = Item.new()
+		item.setup("Bomb")
+		items.append(item)
 	
 	status_bar_ui.appear()
 	skills_bar_ui.appear()
 	patterns_bar_ui.appear()
 	
 	board = Board.new()
-	board.processed_finished.connect(func(task_name : String):
-		end_protect_controls()
+	board.rolling_finished.connect(func():
+		stage = Stage.Deploy
+		if rolls > 0:
+			game_ui.roll_button.disabled = false
+		game_ui.play_button.disabled = false
+		hand_ui.disabled = false
+	)
+	board.matching_finished.connect(func():
+		stage = Stage.Deploy
 		animation_speed = 1.0
 		history.update()
 		
@@ -391,12 +451,17 @@ func start_new_game():
 				combos_tween = null
 			)
 		
-		if rolls == 0 && score < target_score:
+		if rolls == 0 && hand_ui.is_empty() && score < target_score:
 			set_props(Props.None)
 			game_over_ui.enter()
-		if score >= target_score:
+		elif score >= target_score:
 			set_props(Props.None)
 			level_clear_ui.enter()
+		else:
+			if rolls > 0:
+				game_ui.roll_button.disabled = false
+			game_ui.play_button.disabled = false
+			hand_ui.disabled = false
 	)
 	
 	new_level()
@@ -415,8 +480,9 @@ func setup():
 	activates_num = activates_num_per_level
 	grabs_num = grabs_num_per_level
 	
-	Sounds.sfx_board_setup.play()
+	SSound.sfx_board_setup.play()
 	board.setup(board_size, 3)
+	hand_ui.setup()
 	
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
@@ -432,19 +498,63 @@ func setup():
 
 func roll():
 	if rolls > 0:
+		stage = Stage.Rolling
 		rolls -= 1
-		begin_protect_controls()
-		rainbow_mult = 1.0
+		score_mult = 1.0
 		animation_speed = 1.0
 		board.roll()
+		game_ui.roll_button.disabled = true
+		game_ui.play_button.disabled = true
+		hand_ui.discard()
+		hand_ui.roll()
+		hand_ui.disabled = true
 		history.rolls += 1
+
+func play():
+	stage = Stage.Matching
+	game_ui.roll_button.disabled = true
+	game_ui.play_button.disabled = true
+	hand_ui.disabled = true
+	board.matching()
 
 func toggle_in_game_menu():
 	if !in_game_menu_ui.visible:
-		Tooltip.close()
+		STooltip.close()
 		in_game_menu_ui.enter()
 	else:
 		in_game_menu_ui.exit()
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_pressed():
+			if event.button_index == MOUSE_BUTTON_RIGHT:
+				set_props(Props.None)
+				release_dragging()
+		if event.is_released():
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if board:
+					var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
+					c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
+					if board.is_valid(c):
+						if !game_ui.action_tip_text.disabled && dragging_cell.x != -1 && dragging_cell.y != -1:
+							if props == Props.Grab:
+								if grabs_num > 0 && (dragging_cell.x != c.x || dragging_cell.y != c.y):
+									var g0 = board.get_gem_at(dragging_cell)
+									var g1 = board.get_gem_at(c)
+									board.set_gem_at(dragging_cell, g1)
+									board.set_gem_at(c, g0)
+									board.matching()
+									grabs_num -= 1
+					release_dragging()
+	elif event is InputEventMouseMotion:
+		if board && game_root.visible:
+			var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
+			var cc = c - board.central_coord + Vector2i(board.cx / 2, board.cy / 2)
+			if board.is_valid(cc):
+				hover_ui.show()
+				hover_ui.position = tilemap.map_to_local(c)
+			else:
+				hover_ui.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -460,7 +570,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				if board:
 					var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
 					c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
-					if c.x >= 0 && c.x < board.cx && c.y >= 0 && c.y < board.cy:
+					if board.is_valid(c):
 						if !game_ui.action_tip_text.disabled:
 							if props == Props.Pin:
 								if pins_num > 0 && board.pin(c):
@@ -468,10 +578,9 @@ func _unhandled_input(event: InputEvent) -> void:
 							elif props == Props.Activate:
 								if activates_num > 0:
 									var g = board.get_gem_at(c)
-									if g:
-										begin_protect_controls()
-										board.activate(g, Board.ActiveReason.RcAction)
-										board.search_patterns()
+									if g && g.item:
+										board.activate(g.item, c, Board.ActiveReason.RcAction)
+										board.matching()
 										activates_num -= 1
 							elif props == Props.Grab:
 								if grabs_num > 0:
@@ -481,41 +590,23 @@ func _unhandled_input(event: InputEvent) -> void:
 										drag_ui.frame = g.image_id
 										drag_ui.position = event.position
 										drag_ui.show()
-			elif event.button_index == MOUSE_BUTTON_RIGHT:
-				set_props(Props.None)
-				dragging_cell = Vector2i(-1, -1)
-				drag_ui.hide()
-		elif event.is_released():
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				if board:
-					var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
-					c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
-					if c.x >= 0 && c.x < board.cx && c.y >= 0 && c.y < board.cy:
-						if !game_ui.action_tip_text.disabled && dragging_cell.x != -1 && dragging_cell.y != -1:
-							if props == Props.Grab:
-								if grabs_num > 0 && (dragging_cell.x != c.x || dragging_cell.y != c.y):
-									begin_protect_controls()
-									var g0 = board.get_gem_at(dragging_cell)
-									var g1 = board.get_gem_at(c)
-									board.set_gem_at(dragging_cell, g1)
-									board.set_gem_at(c, g0)
-									board.search_patterns()
-									grabs_num -= 1
-					dragging_cell = Vector2i(-1, -1)
-					drag_ui.hide()
 	elif event is InputEventMouseMotion:
 		if board && game_root.visible:
 			var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
-			var cc = c - board.central_coord + Vector2i(board.cx / 2, board.cy / 2)
-			if cc.x >= 0 && cc.x < board.cx && cc.y >= 0 && cc.y < board.cy:
-				hover_ui.show()
-				hover_ui.position = tilemap.map_to_local(c)
-				var g = board.get_gem_at(cc)
+			c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
+			if board.is_valid(c):
+				var cc = board.offset_to_cube(c)
+				game_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
+				var g = board.get_gem_at(c)
 				if g:
-					Tooltip.show(g.name, g.get_description(), 0.5)
+					var arr = g.get_tooltip()
+					var i = board.get_item_at(c)
+					if i:
+						arr.append_array(i.get_tooltip())
+					STooltip.show(arr, 0.5)
 			else:
-				hover_ui.hide()
-				Tooltip.close()
+				game_ui.debug_text.text = ""
+				STooltip.close()
 			if drag_ui.visible:
 				drag_ui.position = event.position
 
@@ -528,15 +619,6 @@ func _ready() -> void:
 	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
 	noise.frequency = 0.2
 	noise.seed = randi()
-	
-	bag_button.pressed.connect(func():
-		Sounds.sfx_click.play()
-		gems_viewer_ui.enter()
-	)
-	gear_button.pressed.connect(func():
-		Sounds.sfx_click.play()
-		toggle_in_game_menu()
-	)
 
 func _process(delta: float) -> void:
 	noise_coord += 1.0 * delta

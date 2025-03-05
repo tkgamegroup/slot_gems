@@ -5,16 +5,21 @@ const UiProp = preload("res://ui_prop.gd")
 @onready var score_text : Label = $Label
 @onready var combos_fire : Sprite2D = $Sprite2D
 @onready var combos_fire_shader : ShaderMaterial = combos_fire.material
-@onready var combos_text : Label = $Control/Label3
-@onready var status_text : Label = $Control2/Label
+@onready var combos_text : Label = $Control/Combo
+@onready var status_text : Label = $Control2/Status
 @onready var roll_panel : Control = $Panel
-@onready var roll_button : Button = $Panel/Button
-@onready var rolls_text : Label = $Panel/Label
+@onready var roll_button : Button = $Panel/HBoxContainer/Roll
+@onready var rolls_text : Label = $Panel/HBoxContainer/VBoxContainer/Rolls
+@onready var play_button  : Button = $Panel/HBoxContainer/Play
 @onready var action_tip_text : AdvancedLabel = $ActionTip
 @onready var props_bar : Control = $HBoxContainer
 @onready var pin_ui : UiProp = $HBoxContainer/UiProp
 @onready var activate_ui : UiProp = $HBoxContainer/UiProp2
 @onready var grab_ui : UiProp = $HBoxContainer/UiProp3
+@onready var debug_text : Label = $DebugText
+
+var preview_matchings : Array[Node2D]
+var preview_tween : Tween = null
 
 func enter():
 	self.show()
@@ -38,23 +43,79 @@ func exit():
 	self.hide()
 
 func _ready() -> void:
+	score_text.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Score", "Current: %d\nTarget: %d\nMultipler: %.1f" % [Game.score, Game.target_score, Game.score_mult])])
+	)
+	score_text.mouse_exited.connect(func():
+		STooltip.close()
+	)
 	roll_button.pressed.connect(func():
-		Sounds.sfx_slot_button.play()
-		Sounds.sfx_roll.play()
+		SSound.sfx_slot_button.play()
+		SSound.sfx_roll.play()
+		roll_button.disabled = true
 		Game.roll()
 	)
+	roll_button.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Roll", "Roll the board!")])
+	)
+	roll_button.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	play_button.pressed.connect(func():
+		SSound.sfx_click.play()
+		play_button.disabled = true
+		Game.play()
+	)
+	play_button.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Play", "Start matching patterns.")])
+		for n in preview_matchings:
+			n.queue_free()
+			Game.overlay.remove_child(n)
+		preview_matchings.clear()
+		if preview_tween:
+			preview_tween.kill()
+			preview_tween = null
+		preview_tween = get_tree().create_tween()
+		for y in Game.board.cy:
+			for x in Game.board.cx:
+				for p in Game.patterns:
+					var res : Array[Vector2i] = p.search(Game.board, Vector2i(x, y))
+					if !res.is_empty():
+						var n = Node2D.new()
+						var pts = SUtils.get_cells_border(res)
+						for i in range(0, pts.size(), 2):
+							var l = Line2D.new()
+							l.default_color = Color(0.0, 0.0, 0.0, 1.0)
+							l.width = 3
+							l.points = [pts[i], pts[i + 1]]
+							n.add_child(l)
+							n.modulate.a = 0.0
+						preview_tween.tween_property(n, "modulate:a", 1.0, 0.2)
+						preview_matchings.append(n)
+						Game.overlay.add_child(n)
+		preview_tween.tween_callback(func():
+			preview_tween = null
+		)
+	)
+	play_button.mouse_exited.connect(func():
+		STooltip.close()
+		for n in preview_matchings:
+			n.queue_free()
+			Game.overlay.remove_child(n)
+		if preview_tween:
+			preview_tween.kill()
+			preview_tween = null
+		preview_matchings.clear()
+	)
 	pin_ui.button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		Game.set_props(Game.Props.Pin)
 	)
 	activate_ui.button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		Game.set_props(Game.Props.Activate)
 	)
 	grab_ui.button.pressed.connect(func():
-		Sounds.sfx_click.play()
+		SSound.sfx_click.play()
 		Game.set_props(Game.Props.Grab)
 	)
-	
-	Game.protected_controls.append(roll_button)
-	Game.protected_controls.append(action_tip_text)

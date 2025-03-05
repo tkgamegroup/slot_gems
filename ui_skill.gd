@@ -21,8 +21,11 @@ func _ready() -> void:
 			ctrl.add_child(sp)
 			runes_list.add_child(ctrl)
 	self.mouse_entered.connect(func():
-		Tooltip.show("Skill", "When you finished a pattern, and have enough runes (%s), spawn a %s.\n--------------------------------\n[font_size=24]%s[/font_size]\n%s" % [skill.get_requirement_icons(16), skill.spawn_gem.name, skill.spawn_gem.name, skill.spawn_gem.get_description()])
+		var arr : Array[Pair] = []
+		arr.append(Pair.new("Skill", "When you finished a pattern, and have enough runes (%s), spawn a %s" % [skill.get_requirement_icons(16), skill.spawn_gem.name]))
+		arr.append_array(skill.spawn_gem.get_tooltip())
+		STooltip.show(arr)
 	)
 	self.mouse_exited.connect(func():
-		Tooltip.close()
+		STooltip.close()
 	)
