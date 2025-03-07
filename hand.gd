@@ -13,6 +13,8 @@ var disabled : bool = false:
 		else:
 			modulate = Color(1.0, 1.0, 1.0, 1.0)
 
+signal rolling_finished
+
 func is_empty():
 	return get_child_count() == 0
 
@@ -45,22 +47,51 @@ func discard():
 		tween.tween_property(n, "position", n.position + Vector2(0, 100), 0.2)
 		tween.tween_callback(n.queue_free)
 
+func get_item_count():
+	return get_child_count()
+
+func get_item(idx : int) -> UiSlot:
+	if idx >= 0 && idx < get_child_count():
+		return get_child(idx)
+	return null
+
+func use_item(ui : UiSlot, c : Vector2i):
+	if Game.board.is_valid(c):
+		var g = Game.board.get_gem_at(c)
+		var i = Game.board.get_item_at(c)
+		if g && !i:
+			Game.board.set_item_at(c, ui.item)
+			ui.queue_free()
+			return true
+	return false
+
 func roll():
 	for n in get_children():
 		n.queue_free()
 		remove_child(n)
 	var tween = get_tree().create_tween()
-	for i in 5:
+	for i in min(8, Game.unused_items.size()):
 		tween.tween_interval(0.15)
 		tween.tween_callback(func():
 			var ui = draw()
-			ui.position.y = 50
+			if ui:
+				ui.position.y = 50
 		)
+	tween.tween_callback(func():
+		rolling_finished.emit()
+	)
 
-func setup():
+func cleanup():
+	for n in get_children():
+		n.queue_free()
+		remove_child(n)
 	Game.unused_items.clear()
 	for i in Game.items:
 		Game.unused_items.append(i)
+	
+
+func setup():
+	cleanup()
 	
 	disabled = true
 
@@ -72,7 +103,7 @@ func _process(delta: float) -> void:
 	var w = 32 * n + gap * (n - 1)
 	var x_off = 0
 	for i in n:
-		var ui = get_child(i)
+		var ui = get_item(i)
 		if ui != dragging:
 			ui.position = lerp(ui.position, Vector2(x_off, 0.0), 0.2)
 			x_off += 32 + gap
@@ -90,11 +121,6 @@ func _input(event: InputEvent) -> void:
 					if Game.board:
 						var c = Game.tilemap.local_to_map(Game.tilemap.get_local_mouse_position())
 						c -= Game.board.central_coord - Vector2i(Game.board.cx / 2, Game.board.cy / 2)
-						if c.x >= 0 && c.x < Game.board.cx && c.y >= 0 && c.y < Game.board.cy:
-							var g = Game.board.get_gem_at(c)
-							var i = Game.board.get_item_at(c)
-							if g && !i:
-								Game.board.set_item_at(c, dragging.item)
-								dragging.queue_free()
-								dragging = null
+						if use_item(dragging, c):
+							dragging = null
 				release_dragging()

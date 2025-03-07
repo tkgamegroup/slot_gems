@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=31 format=3 uid="uid://c18w0067lhwqr"]
+[gd_resource type="SpriteFrames" load_steps=32 format=3 uid="uid://c18w0067lhwqr"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_khjgj"]
 [ext_resource type="Texture2D" uid="uid://bpbwgcoq21dfi" path="res://images/bomb.png" id="1_qe4ah"]
@@ -29,6 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="19_a3f8e"]
 [ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="20_sn50c"]
 [ext_resource type="Texture2D" uid="uid://y4ekq5j45dc4" path="res://images/idol.png" id="24_xti05"]
+[ext_resource type="Texture2D" uid="uid://btep6kxjkhpwf" path="res://images/magician.png" id="25_ujc0v"]
 [ext_resource type="Texture2D" uid="uid://btpt25u6agnw4" path="res://images/volcano.png" id="30_7yekr"]
 
 [resource]
@@ -105,6 +106,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("24_xti05")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_ujc0v")
 }, {
 "duration": 1.0,
 "texture": ExtResource("16_8vf0g")

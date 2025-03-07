@@ -319,14 +319,26 @@ func setup(n : String):
 		description = "Active: activate 3 items."
 		category = "Animal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			tween.tween_callback(func():
-				var cands = b.find(func(gem : Gem, item : Item):
-					return item && !item.active
-				)
-				for c in SMath.pick_n(cands, 3):
-					var item = b.get_item_at(c)
-					b.activate_item(item, Board.ActiveReason.Item, self)
+			var cands = b.find(func(gem : Gem, item : Item):
+				if item && !item.active:
+					return true
+				return false
 			)
+			if !cands.is_empty():
+				var pos = b.get_pos(coord)
+				var targets = SMath.pick_n(cands, 3) 
+				tween.tween_callback(func():
+					for c in targets:
+						var l = SEffect.leading_line_pb.instantiate()
+						l.setup(pos, b.get_pos(c), 0.3, 0.3)
+						l.z_index = 3
+						Game.cells_root.add_child(l)
+				)
+				tween.tween_interval(0.3)
+				tween.tween_callback(func():
+					for c in targets:
+						b.activate(b.get_item_at(c), c, Board.ActiveReason.Item, self)
+				)
 	elif name == "Hotdog":
 		image_id = 19
 		description = ""
@@ -402,10 +414,10 @@ func setup(n : String):
 			)
 	elif name == "Rainbow":
 		image_id = 22
-		description = "Active: Get 1.5x score mult this matching."
+		description = "Active: Get 1.5x score mult this matching stage."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","modify_mult":1.5})
+			Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","modify_mult":1.5}, Buff.Duration.ThisMatchingStage)
 			return true
 	elif name == "Idol":
 		image_id = 23
@@ -431,55 +443,72 @@ func setup(n : String):
 						g.base_score -= 1
 			)
 	elif name == "Magician":
-		image_id = 23
+		image_id = 24
 		description = "Active: Turn 3 gems to wild."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var cands = b.find(func(gem : Gem, item : Item):
-				pass
+				if gem && gem.type != Gem.Type.Wild:
+					return true
+				return false
 			)
+			if !cands.is_empty():
+				var pos = b.get_pos(coord)
+				var targets = SMath.pick_n(cands, 3) 
+				tween.tween_callback(func():
+					for c in targets:
+						var l = SEffect.leading_line_pb.instantiate()
+						l.setup(pos, b.get_pos(c), 0.3, 0.3)
+						l.z_index = 3
+						Game.cells_root.add_child(l)
+				)
+				tween.tween_interval(0.3)
+				tween.tween_callback(func():
+					for c in targets:
+						Buff.create(b.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
+				)
 	elif name == "Ruby":
-		image_id = 24
+		image_id = 25
 		description = "Eliminate: Red type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			b.gem_scores[Gem.Type.Red] += 1
+			Game.gem_bouns_scores[Gem.Type.Red - 1] += 1
 			Game.add_status("Red +1", b.gem_col(Gem.Type.Red))
 			return true
 	elif name == "Citrine":
-		image_id = 25
+		image_id = 26
 		description = "Eliminate: Orange type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			b.gem_scores[Gem.Type.Orange] += 1
+			Game.gem_bouns_scores[Gem.Type.Orange - 1] += 1
 			Game.add_status("Orange +1", b.gem_col(Gem.Type.Orange))
 			return true
 	elif name == "Emerald":
-		image_id = 26
+		image_id = 27
 		description = "Eliminate: Green type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			b.gem_scores[Gem.Type.Green] += 1
+			Game.gem_bouns_scores[Gem.Type.Green - 1] += 1
 			Game.add_status("Green +1", b.gem_col(Gem.Type.Green))
 			return true
 	elif name == "Sapphire":
-		image_id = 27
+		image_id = 28
 		description = "Eliminate: Blue type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			b.gem_scores[Gem.Type.Blue] += 1
+			Game.gem_bouns_scores[Gem.Type.Blue - 1] += 1
 			Game.add_status("Blue +1", b.gem_col(Gem.Type.Blue))
 			return true
 	elif name == "Amethyst":
-		image_id = 28
+		image_id = 29
 		description = "Eliminate: Pink type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			b.gem_scores[Gem.Type.Pink] += 1
+			Game.gem_bouns_scores[Gem.Type.Pink - 1] += 1
 			Game.add_status("Pink +1", b.gem_col(Gem.Type.Pink))
 			return true
 	elif name == "Volcano":
-		image_id = 29
+		image_id = 30
 		description = "Active: Eliminate 3 random cells in 2-ring. Repeat 2 times."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):

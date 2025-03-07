@@ -13,12 +13,14 @@ enum Type
 enum Duration
 {
 	ThisMatchingStage,
-	ThisLevel
+	ThisLevel,
+	Eternal
 }
 
 var id : int
 var type : int
 var host = null
+var duration : int
 var data : Dictionary
 
 var on_remove : Callable
@@ -38,10 +40,11 @@ func die():
 				type = Type.None
 				SUtils.calc_value_with_modifiers(host, data["target"])
 
-static func create(host, type : int, parms : Dictionary):
+static func create(host, type : int, parms : Dictionary, duration : int = Duration.ThisMatchingStage):
 	var b = Buff.new()
 	b.type = type
 	b.host = host
+	b.duration = duration
 	host.buffs.append(b)
 	uid += 1
 	match type:
@@ -69,8 +72,24 @@ static func create_custom(host, _on_gain : Callable, _on_remove : Callable):
 	uid += 1
 	return uid
 
-static func find_typed_buff(host, type : int):
+static func find_typed(host, type : int):
 	for b in host.buffs:
 		if b.type == type:
 			return b
 	return null
+
+static func clear(host, duration : int):
+	SMath.remove_if(host.buffs, func(b : Buff):
+		if b.duration == duration:
+			b.die()
+			return true
+		return false
+	)
+
+static func clear_if_not(host, duration : int):
+	SMath.remove_if(host.buffs, func(b : Buff):
+		if b.duration != duration:
+			b.die()
+			return true
+		return false
+	)

@@ -2,6 +2,7 @@ extends Node
 
 enum Stage
 {
+	Preparing,
 	Deploy,
 	Rolling,
 	Matching
@@ -18,7 +19,7 @@ enum Props
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
 const UiGame = preload("res://ui_game.gd")
-const UiHand = preload("res://ui_hand.gd")
+const Hand = preload("res://hand.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
 const UiSkillsBar = preload("res://ui_skills_bar.gd")
@@ -49,7 +50,7 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var drag_ui : AnimatedSprite2D = $/root/Main/Game/Drag
 @onready var title_ui : UiTitle = $/root/Main/UI/Title
 @onready var game_ui : UiGame = $/root/Main/UI/Game
-@onready var hand_ui : UiHand = $/root/Main/UI/Game/Panel/HBoxContainer/Hand
+@onready var hand : Hand = $/root/Main/UI/Game/Panel/HBoxContainer/Hand
 @onready var shop_ui : UiShop = $/root/Main/UI/Shop
 @onready var status_bar_ui : UiStatusBar = $/root/Main/UI/StatusBar
 @onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/SkillsBar
@@ -194,9 +195,7 @@ func get_gem(g : Gem = null):
 
 func release_gem(gem : Gem):
 	gem.coord = Vector2i(-1, -1)
-	for b in gem.buffs:
-		b.die()
-	gem.buffs.clear()
+	Buff.clear_if_not(gem, Buff.Duration.Eternal)
 	unused_gems.append(gem)
 
 func get_item(i : Item = null):
@@ -304,21 +303,21 @@ func add_pattern(p : Pattern):
 func get_level_score(lv : int):
 	match lv:
 		1:
-			return 100
+			return 1000000
 		2:
-			return 300
+			return 3000000
 		3:
-			return 600
+			return 6000000
 		4:
-			return 1000
+			return 10000000
 		5:
-			return 1500
+			return 15000000
 		6:
-			return 2400
+			return 24000000
 		7:
-			return 4000
+			return 40000000
 		8:
-			return 6000
+			return 60000000
 
 func start_new_game():
 	gem_bouns_scores.clear()
@@ -330,7 +329,6 @@ func start_new_game():
 	grabs_num_per_level = 0
 	level = 0
 	coins = 10
-	history.init()
 	
 	skills.clear()
 	skills_bar_ui.clear()
@@ -395,29 +393,29 @@ func start_new_game():
 			gems.append(g)
 	
 	items.clear()
-	for i in 3:
+	for i in 1:
 		var item = Item.new()
 		item.setup("Dye: Red")
 		items.append(item)
-	for i in 3:
+	for i in 1:
 		var item = Item.new()
 		item.setup("Dye: Orange")
 		items.append(item)
-	for i in 3:
+	for i in 1:
 		var item = Item.new()
 		item.setup("Dye: Green")
 		items.append(item)
-	for i in 3:
+	for i in 1:
 		var item = Item.new()
 		item.setup("Dye: Blue")
 		items.append(item)
-	for i in 3:
+	for i in 1:
 		var item = Item.new()
 		item.setup("Dye: Pink")
 		items.append(item)
-	for i in 100:
+	for i in 1:
 		var item = Item.new()
-		item.setup("Bomb")
+		item.setup("Lai Cut")
 		items.append(item)
 	
 	status_bar_ui.appear()
@@ -425,17 +423,22 @@ func start_new_game():
 	patterns_bar_ui.appear()
 	
 	board = Board.new()
+	board.setup_finished.connect(func():
+		hand.roll()
+	)
 	board.rolling_finished.connect(func():
 		stage = Stage.Deploy
 		if rolls > 0:
 			game_ui.roll_button.disabled = false
 		game_ui.play_button.disabled = false
-		hand_ui.disabled = false
+		hand.disabled = false
 	)
 	board.matching_finished.connect(func():
 		stage = Stage.Deploy
 		animation_speed = 1.0
 		history.update()
+		
+		Buff.clear(self, Buff.Duration.ThisMatchingStage)
 		
 		combos = 0
 		if game_ui.combos_text.visible:
@@ -451,38 +454,44 @@ func start_new_game():
 				combos_tween = null
 			)
 		
-		if rolls == 0 && hand_ui.is_empty() && score < target_score:
-			set_props(Props.None)
+		if rolls == 0 && hand.is_empty() && score < target_score:
+			level_end()
 			game_over_ui.enter()
 		elif score >= target_score:
-			set_props(Props.None)
+			level_end()
 			level_clear_ui.enter()
 		else:
 			if rolls > 0:
 				game_ui.roll_button.disabled = false
 			game_ui.play_button.disabled = false
-			hand_ui.disabled = false
+			hand.disabled = false
+	)
+	hand.rolling_finished.connect(func():
+		stage = Stage.Deploy
+		game_ui.roll_button.disabled = false
 	)
 	
 	new_level()
 
-func new_level():
-	level += 1
+func new_level(dont_advance : bool = false):
 	score = 0
-	target_score = get_level_score(level)
+	if !dont_advance:
+		level += 1
+		target_score = get_level_score(level)
 	
-	setup()
-
-func setup():
+	stage = Stage.Preparing
+	
 	set_props(Props.None)
 	rolls = rolls_per_level
 	pins_num = pins_num_per_level
 	activates_num = activates_num_per_level
 	grabs_num = grabs_num_per_level
 	
+	history.init()
+	
 	SSound.sfx_board_setup.play()
 	board.setup(board_size, 3)
-	hand_ui.setup()
+	hand.setup()
 	
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
@@ -496,6 +505,10 @@ func setup():
 	game_root.show()
 	game_ui.enter()
 
+func level_end():
+	set_props(Props.None)
+	Buff.clear(self, Buff.Duration.ThisLevel)
+
 func roll():
 	if rolls > 0:
 		stage = Stage.Rolling
@@ -505,16 +518,14 @@ func roll():
 		board.roll()
 		game_ui.roll_button.disabled = true
 		game_ui.play_button.disabled = true
-		hand_ui.discard()
-		hand_ui.roll()
-		hand_ui.disabled = true
+		hand.disabled = true
 		history.rolls += 1
 
 func play():
 	stage = Stage.Matching
 	game_ui.roll_button.disabled = true
 	game_ui.play_button.disabled = true
-	hand_ui.disabled = true
+	hand.disabled = true
 	board.matching()
 
 func toggle_in_game_menu():

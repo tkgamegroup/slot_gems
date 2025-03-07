@@ -33,6 +33,14 @@ func pick_n(arr : Array, n : int) -> Array:
 			break
 	return ret
 
+func remove_if(arr : Array, cb : Callable):
+	var targets = []
+	for i in arr:
+		if cb.call(i):
+			targets.append(i)
+	for t in targets:
+		arr.erase(t)
+
 func quadratic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, t: float):
 	var q0 = p0.lerp(p1, t)
 	var q1 = p1.lerp(p2, t)

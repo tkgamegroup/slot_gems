@@ -35,6 +35,7 @@ var eliminated_items : Dictionary[String, int] = {}
 var skill_effects : Array[Pair]
 var auras : Array[Item]
 
+signal setup_finished
 signal rolling_finished
 signal matching_finished
 
@@ -348,11 +349,11 @@ func process_skill_effects():
 		)
 
 func cleanup():
-	cells.clear()
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
 			set_gem_at(c, null)
+	cells.clear()
 	Game.unused_gems.clear()
 	for g in Game.gems:
 		Game.unused_gems.append(g)
@@ -402,6 +403,7 @@ func setup(_hf_cy : int, _cx_multipler : int):
 				lb2.position = cell.position + Vector2(-10, 2)
 				Game.overlay.add_child(lb2)
 	
+	num_tasks = 0
 	var updated = {}
 	var pc = Game.tilemap.map_to_local(central_coord)
 	var tween = Game.get_tree().create_tween()
@@ -431,7 +433,7 @@ func setup(_hf_cy : int, _cx_multipler : int):
 					tween2.tween_callback(func():
 						num_tasks -= 1
 						if num_tasks == 0:
-							Game.game_ui.roll_button.disabled = false
+							setup_finished.emit()
 					)
 				)
 		tween.tween_interval(0.1)
@@ -467,9 +469,11 @@ func roll():
 			var c = Vector2i(xx, yy)
 			if !cell_at(c).pined:
 				set_gem_at(c, null)
+				set_item_at(c, null)
 	
 	Game.combos = 0
 	
+	num_tasks = 0
 	var tween = Game.get_tree().create_tween()
 	for x in cx:
 		tween.tween_callback(func():
@@ -532,7 +536,7 @@ func matching():
 	for y in cy:
 		for x in cx:
 			for p in Game.patterns:
-				var res : Array[Vector2i] = p.search(self, Vector2i(x, y))
+				var res : Array[Vector2i] = p.match_with(self, Vector2i(x, y))
 				if !res.is_empty():
 					no_patterns = false
 					tween.tween_callback(func():

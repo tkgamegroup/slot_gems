@@ -1,6 +1,6 @@
 extends Control
 
-@onready var max_roll_score_text : Label = $VBoxContainer/GridContainer/Label2
+@onready var max_matching_score_text : Label = $VBoxContainer/GridContainer/Label2
 @onready var rolls_text : Label = $VBoxContainer/GridContainer/Label4
 @onready var level_text : Label = $VBoxContainer/GridContainer/Label6
 @onready var seed_text : Label = $VBoxContainer/GridContainer/Label8
@@ -11,7 +11,7 @@ func enter():
 	STooltip.close()
 	Game.blocker_ui.enter()
 	self.show()
-	max_roll_score_text.text = "%d" % Game.history.max_roll_score
+	max_matching_score_text.text = "%d" % Game.history.max_matching_score
 	rolls_text.text = "%d" % Game.history.rolls
 	level_text.text = "%d" % Game.level
 	seed_text.text = ""

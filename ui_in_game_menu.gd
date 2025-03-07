@@ -46,5 +46,5 @@ func _ready() -> void:
 			if cmd == "test_matching":
 				var coord = Vector2i(int(tks[1]), int(tks[2]))
 				for p in Game.patterns:
-					p.search(Game.board, coord)
+					p.match_with(Game.board, coord)
 	)

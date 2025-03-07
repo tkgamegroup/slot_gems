@@ -79,7 +79,7 @@ func _ready() -> void:
 		for y in Game.board.cy:
 			for x in Game.board.cx:
 				for p in Game.patterns:
-					var res : Array[Vector2i] = p.search(Game.board, Vector2i(x, y))
+					var res : Array[Vector2i] = p.match_with(Game.board, Vector2i(x, y))
 					if !res.is_empty():
 						var n = Node2D.new()
 						var pts = SUtils.get_cells_border(res)

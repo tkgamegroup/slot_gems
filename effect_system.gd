@@ -8,6 +8,7 @@ const slash_frames : SpriteFrames = preload("res://images/slash.tres")
 const fireball_image : Texture = preload("res://images/fireball.png")
 const distortion = preload("res://fx_distortion.tscn")
 const lightning = preload("res://fx_lightning.tscn")
+const leading_line_pb = preload("res://leading_line.tscn")
 
 func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()

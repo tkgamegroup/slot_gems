@@ -47,6 +47,16 @@ static func type_name(t : int):
 		Type.Wild: return "Wild"
 	return ""
 
+static func name_to_type(s : String):
+	match s:
+		"None": return Type.None
+		"Red": return Type.Red
+		"Orange": return Type.Orange
+		"Green": return Type.Green
+		"Blue": return Type.Blue
+		"Pink": return Type.Pink
+		"Wild": return Type.Wild
+
 static func type_color(t : int) -> Color:
 	match t:
 		Type.None: return Color(0, 0, 0, 0)
@@ -86,7 +96,7 @@ func get_base_score():
 	return ret
 
 func get_name():
-	var b = Buff.find_typed_buff(self, Buff.Type.ChangeColor)
+	var b = Buff.find_typed(self, Buff.Type.ChangeColor)
 	if b:
 		return "[color=GRAY][s]%s[/s][/color] %s" % [type_name(b.data["original_color"]), type_name(type)]
 	return type_name(type)

@@ -67,7 +67,7 @@
 [ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/emerald.png" id="46_3tj5g"]
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="47_lomq7"]
 [ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="48_awy03"]
-[ext_resource type="Script" path="res://ui_hand.gd" id="53_mnqjw"]
+[ext_resource type="Script" path="res://hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
 [ext_resource type="Script" path="res://ui_status_bar.gd" id="59_nqrtl"]
@@ -792,7 +792,7 @@ disabled = true
 text = "Roll"
 
 [node name="Hand" type="Control" parent="UI/Game/Panel/HBoxContainer"]
-custom_minimum_size = Vector2(200, 40)
+custom_minimum_size = Vector2(320, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -1481,7 +1481,6 @@ mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="TestTimer" type="Timer" parent="."]
-wait_time = 2.0
 
 [editable path="UI/Game/HBoxContainer/UiProp"]
 [editable path="UI/Game/HBoxContainer/UiProp2"]

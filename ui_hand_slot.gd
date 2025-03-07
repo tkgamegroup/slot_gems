@@ -7,7 +7,7 @@ var item : Item = null
 func _ready() -> void:
 	sp.frame = item.image_id
 	mouse_entered.connect(func():
-		if Game.hand_ui.dragging != self:
+		if Game.hand.dragging != self:
 			SSound.sfx_select.play()
 			STooltip.show(item.get_tooltip())
 	)
