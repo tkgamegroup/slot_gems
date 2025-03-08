@@ -16,6 +16,9 @@ func clear():
 	for n in gem_list.get_children():
 		n.queue_free()
 		gem_list.remove_child(n)
+	for n in item_list.get_children():
+		n.queue_free()
+		item_list.remove_child(n)
 
 func enter(_select_num : int = 0, select_prompt : String = "", _select_callback : Callable = Callable()):
 	clear()

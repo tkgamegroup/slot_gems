@@ -350,12 +350,12 @@ func setup(n : String):
 			return true
 	elif name == "Lai Cut":
 		image_id = 20
-		description = "Active: If there is no other 'Lai Cut' on board, eliminate a row on a random direction."
+		description = "Active: If there is no inactive 'Lai Cut' on board, eliminate a row on a random direction."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var no_others = b.find(func(gem : Gem, item : Item):
-				return item && item.name == "lai_cut"
-			).size() == 1
+			var no_others =  b.find(func(gem : Gem, item : Item):
+				return item && item.name == "Lai Cut"
+			).is_empty()
 			if no_others:
 				var cc = b.offset_to_cube(coord)
 				var coords : Array[Vector2i] = []

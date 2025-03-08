@@ -88,7 +88,6 @@ func cleanup():
 	Game.unused_items.clear()
 	for i in Game.items:
 		Game.unused_items.append(i)
-	
 
 func setup():
 	cleanup()

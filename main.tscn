@@ -975,7 +975,7 @@ offset_left = 984.0
 offset_top = 214.0
 offset_right = 1186.0
 offset_bottom = 254.0
-text = "Remove 5 Gems 20G"
+text = "Remove Item 5G"
 icon = ExtResource("60_63e6s")
 
 [node name="SkillsBar" type="PanelContainer" parent="UI"]
@@ -1477,6 +1477,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+rotation = -5.39886e-05
 mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 

@@ -71,6 +71,9 @@ static func cube_to_offset(c : Vector3i):
 func cube_distance(a : Vector3i, b : Vector3i):
 	return (abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)) / 2
 
+func offset_distance(a : Vector2i, b : Vector2i):
+	return cube_distance(offset_to_cube(a), offset_to_cube(b))
+
 func cube_lerp(a : Vector3i, b : Vector3i, v : float):
 	return Vector3i(round(lerp(a.x, b.x, v)), round(lerp(a.y, b.y, v)), round(lerp(a.z, b.z, v)))
 
@@ -136,12 +139,12 @@ func set_gem_at(c : Vector2i, g : Gem):
 	var og = cell.gem
 	if og:
 		for a in auras:
-			a.on_aura.call(AuraEvent.Exit, og)
+			a.on_aura.call(AuraEvent.Exit, self, c)
 		Game.release_gem(og)
 	cell.gem = g
 	if g:
 		for a in auras:
-			a.on_aura.call(AuraEvent.Enter, g)
+			a.on_aura.call(AuraEvent.Enter, self, c)
 		g.coord = c
 	Game.get_cell_ui(c).set_gem_image(g.type if g else 0, g.rune if g else 0)
 	return og

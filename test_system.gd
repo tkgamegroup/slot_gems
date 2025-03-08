@@ -35,7 +35,10 @@ func new_test(tasks : int, type : int):
 	task_num = tasks
 	task_type = type
 	task_index = 0
-	step = TaskSteps.ToRoll
+	if Game.game_ui.play_button.disabled:
+		step = TaskSteps.ToRoll
+	else:
+		step = TaskSteps.ToMatch
 	level_score = 0
 	level_combos = 0
 	matching_results.clear()
@@ -101,8 +104,8 @@ func time_out():
 							file.store_string("matching %d: %d score, %d combos\n" % [i, p.first, p.second])
 						file.store_string("================\n")
 						file.store_string("Avg Level Score: %.1f, Avg Level Combos: %.2f\n" % [float(total_score) / (task_index + 1), float(total_combos) / (task_index + 1)])
-						file.store_string("Max Matching Score: %d, Min Matching Score: %d\n" % [max_matching_score, min_matching_score])
-						file.store_string("Max Matching Combos: %d, Min Matching Combos: %d\n" % [max_matching_combos, min_matching_combos])
+						file.store_string("Min, Max Matching Score: %d, %d\n" % [min_matching_score, max_matching_score])
+						file.store_string("Min, Max Matching Combos: %d, %d\n" % [min_matching_combos, max_matching_combos])
 						file.close()
 						matching_results.clear()
 						level_score = 0
@@ -117,42 +120,62 @@ func time_out():
 						step = TaskSteps.ToMatch
 						Game.roll()
 				elif step == TaskSteps.ToMatch:
+					var bd = Game.board
 					var cx = Game.board.cx
 					var cy = Game.board.cy
-					for i in Game.hand.get_item_count():
-						var ui = Game.hand.get_item(i)
-						var item = ui.item
-						var used = false
-						if item.name.begins_with("Dye: "):
-							var color = Gem.name_to_type(item.name.substr(5))
-							for y in cy:
-								for x in cx:
-									var c = Vector2i(x, y)
-									for p in Game.patterns:
-										var res : Array[Vector2i] = p.differ(Game.board, c, color)
-										if !res.is_empty() && Game.hand.use_item(ui, res[0]):
-											used = true
-											break
-									if used:
-										break
-								if used:
-									break
-						elif item.on_process.is_valid():
-							for y in cy:
-								for x in cx:
-									var c = Vector2i(x, y)
-									for p in Game.patterns:
-										var res : Array[Vector2i] = p.match_with(Game.board, c)
-										for cc in res:
-											if Game.hand.use_item(ui, cc):
-												used = true
-												break
-										if used:
-											break
-									if used:
-										break
-								if used:
-									break
+					var center = Vector2i(cx / 2, cy / 2)
+					if Game.hand.get_item_count() > 0:
+						var dye_places : Array[Array] = []
+						for i in Gem.Type.Count - 1:
+							dye_places.append([])
+						for y in cy:
+							for x in cx:
+								var c = Vector2i(x, y)
+								for p in Game.patterns:
+									for col in Gem.Type.Count - 1:
+										var res : Array[Vector2i] = p.differ(bd, c, col + 1)
+										if !res.is_empty():
+											dye_places[col].append(res[0])
+						for i in Game.hand.get_item_count():
+							var ui = Game.hand.get_item(i)
+							var item = ui.item
+							if item.name.begins_with("Dye: "):
+								var color = Gem.name_to_type(item.name.substr(5))
+								var arr = dye_places[color - 1]
+								if !arr.is_empty():
+									Game.hand.use_item(ui, SMath.pick_and_remove(arr))
+						var activater_places : Array[Vector2i] = []
+						for y in cy:
+							for x in cx:
+								var c = Vector2i(x, y)
+								for p in Game.patterns:
+									var res : Array[Vector2i] = p.match_with(bd, c)
+									for cc in res:
+										activater_places.append(cc)
+						activater_places.sort_custom(func(a, b):
+							var d1 = bd.offset_distance(a, center)
+							var d2 = bd.offset_distance(b, center)
+							return d1 < d2
+						)
+						var aura_places = []
+						for y in cy:
+							for x in cx:
+								var c = Vector2i(x, y)
+								if !activater_places.has(c):
+									aura_places.append(c)
+						for i in Game.hand.get_item_count():
+							var ui = Game.hand.get_item(i)
+							var item = ui.item
+							if item.on_process.is_valid():
+								if !activater_places.is_empty():
+									Game.hand.use_item(ui, activater_places[0])
+									activater_places.remove_at(0)
+						for i in Game.hand.get_item_count():
+							var ui = Game.hand.get_item(i)
+							var item = ui.item
+							if item.on_aura.is_valid():
+								if !aura_places.is_empty():
+									Game.hand.use_item(ui, SMath.pick_and_remove(aura_places))
 					step = TaskSteps.GetResult
 					Game.play()
 				elif step == TaskSteps.GetResult:

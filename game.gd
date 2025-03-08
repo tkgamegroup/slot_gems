@@ -415,7 +415,7 @@ func start_new_game():
 		items.append(item)
 	for i in 1:
 		var item = Item.new()
-		item.setup("Lai Cut")
+		item.setup("Flag")
 		items.append(item)
 	
 	status_bar_ui.appear()
