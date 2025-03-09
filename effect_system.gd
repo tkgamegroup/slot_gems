@@ -14,6 +14,7 @@ func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : floa
 	var sp = AnimatedSprite2D.new()
 	sp.position = pos
 	sp.sprite_frames = explosion_frames
+	sp.speed_scale = 0.5 / duration
 	sp.scale = size / 32.0
 	sp.play("default")
 	sp.z_index = z_index
@@ -27,6 +28,7 @@ func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : 
 	var sp = AnimatedSprite2D.new()
 	sp.position = pos
 	sp.sprite_frames = big_explosion_frames
+	sp.speed_scale = 0.5 / duration
 	sp.scale = size / 64.0
 	sp.play("default")
 	sp.z_index = z_index
@@ -55,6 +57,7 @@ func add_slash(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()
 	sp.position = pos
 	sp.sprite_frames = slash_frames
+	sp.speed_scale = 0.5 / duration
 	var dist = p0.distance_to(p1)
 	sp.scale = Vector2(dist, dist) / 128.0
 	sp.rotation = (p1 - p0).angle()
@@ -76,7 +79,7 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(fx.queue_free)
-	SSound.sfx_lighting_connect.play()
+	SSound.sfx_lightning_connect.play()
 	return fx
 
 func add_black_hole_rotating(pos : Vector2, size : Vector2, z_index : int, duration : float):

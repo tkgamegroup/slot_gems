@@ -16,9 +16,6 @@ func get_shuffled_indices(n : int):
 	ret.shuffle()
 	return ret
 
-func last_one(arr : Array):
-	return arr[arr.size() - 1]
-
 func pick_and_remove(arr : Array):
 	var idx = randi_range(0, arr.size() - 1)
 	var ret = arr[idx]

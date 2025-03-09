@@ -143,9 +143,9 @@ func set_gem_at(c : Vector2i, g : Gem):
 		Game.release_gem(og)
 	cell.gem = g
 	if g:
+		g.coord = c
 		for a in auras:
 			a.on_aura.call(AuraEvent.Enter, self, c)
-		g.coord = c
 	Game.get_cell_ui(c).set_gem_image(g.type if g else 0, g.rune if g else 0)
 	return og
 
@@ -168,6 +168,7 @@ func set_item_at(c : Vector2i, i : Item):
 		if !oi.active:
 			Game.release_item(oi)
 	if i:
+		i.coord = c
 		if i.on_quick.is_valid():
 			i.on_quick.call(self, c)
 			Game.release_item(i)
@@ -217,6 +218,9 @@ func find(cb : Callable) -> Array[Vector2i]:
 			var c = Vector2i(x, y)
 			if cb.call(get_gem_at(c), get_item_at(c)):
 				ret.append(c)
+	for i in active_items:
+		if cb.call(null, i.first):
+			ret.append(i.second)
 	return ret
 
 func gem_score_at(c : Vector2i):

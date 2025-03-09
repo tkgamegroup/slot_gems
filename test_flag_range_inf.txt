@@ -1,0 +1,1104 @@
+Board Size: 24x8(192 cells)
+Red: 216, Orange: 216, Green: 216, Blue: 216, Pink: 216, Wild: 0
+Items: Dye: Red, Dye: Orange, Dye: Green, Dye: Blue, Dye: Pink, Flag
+Rolls: 4
+===Task 0===
+Level Score: 300, Level Combos: 16
+Avg Matching Score: 75.0, Avg Matching Combos: 4.00
+matching 0: 224 score, 7 combos
+matching 1: 24 score, 3 combos
+matching 2: 40 score, 4 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 300.0, Avg Level Combos: 16.00
+Min, Max Matching Score: 12, 224
+Min, Max Matching Combos: 2, 7
+===Task 1===
+Level Score: 972, Level Combos: 30
+Avg Matching Score: 243.0, Avg Matching Combos: 7.50
+matching 0: 728 score, 13 combos
+matching 1: 60 score, 5 combos
+matching 2: 144 score, 8 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 636.0, Avg Level Combos: 23.00
+Min, Max Matching Score: 12, 728
+Min, Max Matching Combos: 2, 13
+===Task 2===
+Level Score: 612, Level Combos: 20
+Avg Matching Score: 153.0, Avg Matching Combos: 5.00
+matching 0: 528 score, 11 combos
+matching 1: 60 score, 5 combos
+matching 2: 12 score, 2 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 628.0, Avg Level Combos: 22.00
+Min, Max Matching Score: 12, 728
+Min, Max Matching Combos: 2, 13
+===Task 3===
+Level Score: 2152, Level Combos: 39
+Avg Matching Score: 538.0, Avg Matching Combos: 9.75
+matching 0: 1848 score, 21 combos
+matching 1: 180 score, 9 combos
+matching 2: 12 score, 2 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 1009.0, Avg Level Combos: 26.25
+Min, Max Matching Score: 12, 1848
+Min, Max Matching Combos: 2, 21
+===Task 4===
+Level Score: 1020, Level Combos: 30
+Avg Matching Score: 255.0, Avg Matching Combos: 7.50
+matching 0: 728 score, 13 combos
+matching 1: 12 score, 2 combos
+matching 2: 220 score, 10 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 1011.2, Avg Level Combos: 27.00
+Min, Max Matching Score: 12, 1848
+Min, Max Matching Combos: 2, 21
+===Task 5===
+Level Score: 688, Level Combos: 20
+Avg Matching Score: 172.0, Avg Matching Combos: 5.00
+matching 0: 624 score, 12 combos
+matching 1: 12 score, 2 combos
+matching 2: 12 score, 2 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 957.3, Avg Level Combos: 25.83
+Min, Max Matching Score: 12, 1848
+Min, Max Matching Combos: 2, 21
+===Task 6===
+Level Score: 360, Level Combos: 15
+Avg Matching Score: 90.0, Avg Matching Combos: 3.75
+matching 0: 288 score, 8 combos
+matching 1: 12 score, 2 combos
+matching 2: 60 score, 5 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 872.0, Avg Level Combos: 24.29
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 7===
+Level Score: 1160, Level Combos: 35
+Avg Matching Score: 290.0, Avg Matching Combos: 8.75
+matching 0: 728 score, 13 combos
+matching 1: 24 score, 3 combos
+matching 2: 264 score, 11 combos
+matching 3: 144 score, 8 combos
+================
+Avg Level Score: 908.0, Avg Level Combos: 25.62
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 8===
+Level Score: 648, Level Combos: 22
+Avg Matching Score: 162.0, Avg Matching Combos: 5.50
+matching 0: 528 score, 11 combos
+matching 1: 24 score, 3 combos
+matching 2: 84 score, 6 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 879.1, Avg Level Combos: 25.22
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 9===
+Level Score: 996, Level Combos: 20
+Avg Matching Score: 249.0, Avg Matching Combos: 5.00
+matching 0: 960 score, 15 combos
+matching 1: 0 score, 0 combos
+matching 2: 12 score, 2 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 890.8, Avg Level Combos: 24.70
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 10===
+Level Score: 784, Level Combos: 20
+Avg Matching Score: 196.0, Avg Matching Combos: 5.00
+matching 0: 728 score, 13 combos
+matching 1: 4 score, 1 combos
+matching 2: 12 score, 2 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 881.1, Avg Level Combos: 24.27
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 11===
+Level Score: 756, Level Combos: 18
+Avg Matching Score: 189.0, Avg Matching Combos: 4.50
+matching 0: 728 score, 13 combos
+matching 1: 12 score, 2 combos
+matching 2: 4 score, 1 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 870.7, Avg Level Combos: 23.75
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 12===
+Level Score: 412, Level Combos: 15
+Avg Matching Score: 103.0, Avg Matching Combos: 3.75
+matching 0: 360 score, 9 combos
+matching 1: 40 score, 4 combos
+matching 2: 12 score, 2 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 835.4, Avg Level Combos: 23.08
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 13===
+Level Score: 680, Level Combos: 26
+Avg Matching Score: 170.0, Avg Matching Combos: 6.50
+matching 0: 440 score, 10 combos
+matching 1: 84 score, 6 combos
+matching 2: 144 score, 8 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 824.3, Avg Level Combos: 23.29
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 14===
+Level Score: 704, Level Combos: 25
+Avg Matching Score: 176.0, Avg Matching Combos: 6.25
+matching 0: 440 score, 10 combos
+matching 1: 4 score, 1 combos
+matching 2: 40 score, 4 combos
+matching 3: 220 score, 10 combos
+================
+Avg Level Score: 816.3, Avg Level Combos: 23.40
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 15===
+Level Score: 392, Level Combos: 19
+Avg Matching Score: 98.0, Avg Matching Combos: 4.75
+matching 0: 224 score, 7 combos
+matching 1: 12 score, 2 combos
+matching 2: 12 score, 2 combos
+matching 3: 144 score, 8 combos
+================
+Avg Level Score: 789.8, Avg Level Combos: 23.12
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 16===
+Level Score: 660, Level Combos: 29
+Avg Matching Score: 165.0, Avg Matching Combos: 7.25
+matching 0: 224 score, 7 combos
+matching 1: 312 score, 12 combos
+matching 2: 84 score, 6 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 782.1, Avg Level Combos: 23.47
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 17===
+Level Score: 1096, Level Combos: 27
+Avg Matching Score: 274.0, Avg Matching Combos: 6.75
+matching 0: 960 score, 15 combos
+matching 1: 40 score, 4 combos
+matching 2: 84 score, 6 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 799.6, Avg Level Combos: 23.67
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 18===
+Level Score: 492, Level Combos: 16
+Avg Matching Score: 123.0, Avg Matching Combos: 4.00
+matching 0: 440 score, 10 combos
+matching 1: 0 score, 0 combos
+matching 2: 12 score, 2 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 783.4, Avg Level Combos: 23.26
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 19===
+Level Score: 752, Level Combos: 17
+Avg Matching Score: 188.0, Avg Matching Combos: 4.25
+matching 0: 728 score, 13 combos
+matching 1: 12 score, 2 combos
+matching 2: 0 score, 0 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 781.8, Avg Level Combos: 22.95
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 20===
+Level Score: 396, Level Combos: 14
+Avg Matching Score: 99.0, Avg Matching Combos: 3.50
+matching 0: 360 score, 9 combos
+matching 1: 12 score, 2 combos
+matching 2: 0 score, 0 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 763.4, Avg Level Combos: 22.52
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 21===
+Level Score: 564, Level Combos: 21
+Avg Matching Score: 141.0, Avg Matching Combos: 5.25
+matching 0: 288 score, 8 combos
+matching 1: 264 score, 11 combos
+matching 2: 0 score, 0 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 754.4, Avg Level Combos: 22.45
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 22===
+Level Score: 384, Level Combos: 13
+Avg Matching Score: 96.0, Avg Matching Combos: 3.25
+matching 0: 360 score, 9 combos
+matching 1: 12 score, 2 combos
+matching 2: 0 score, 0 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 738.3, Avg Level Combos: 22.04
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 23===
+Level Score: 496, Level Combos: 20
+Avg Matching Score: 124.0, Avg Matching Combos: 5.00
+matching 0: 360 score, 9 combos
+matching 1: 112 score, 7 combos
+matching 2: 12 score, 2 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 728.2, Avg Level Combos: 21.96
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 24===
+Level Score: 728, Level Combos: 29
+Avg Matching Score: 182.0, Avg Matching Combos: 7.25
+matching 0: 440 score, 10 combos
+matching 1: 60 score, 5 combos
+matching 2: 84 score, 6 combos
+matching 3: 144 score, 8 combos
+================
+Avg Level Score: 728.2, Avg Level Combos: 22.24
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 25===
+Level Score: 1448, Level Combos: 35
+Avg Matching Score: 362.0, Avg Matching Combos: 8.75
+matching 0: 1088 score, 16 combos
+matching 1: 12 score, 2 combos
+matching 2: 84 score, 6 combos
+matching 3: 264 score, 11 combos
+================
+Avg Level Score: 755.8, Avg Level Combos: 22.73
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 26===
+Level Score: 256, Level Combos: 15
+Avg Matching Score: 64.0, Avg Matching Combos: 3.75
+matching 0: 168 score, 6 combos
+matching 1: 60 score, 5 combos
+matching 2: 4 score, 1 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 737.3, Avg Level Combos: 22.44
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 27===
+Level Score: 276, Level Combos: 19
+Avg Matching Score: 69.0, Avg Matching Combos: 4.75
+matching 0: 80 score, 4 combos
+matching 1: 112 score, 7 combos
+matching 2: 60 score, 5 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 720.9, Avg Level Combos: 22.32
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 28===
+Level Score: 1428, Level Combos: 38
+Avg Matching Score: 357.0, Avg Matching Combos: 9.50
+matching 0: 960 score, 15 combos
+matching 1: 264 score, 11 combos
+matching 2: 24 score, 3 combos
+matching 3: 180 score, 9 combos
+================
+Avg Level Score: 745.2, Avg Level Combos: 22.86
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 29===
+Level Score: 256, Level Combos: 17
+Avg Matching Score: 64.0, Avg Matching Combos: 4.25
+matching 0: 80 score, 4 combos
+matching 1: 60 score, 5 combos
+matching 2: 4 score, 1 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 728.9, Avg Level Combos: 22.67
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 30===
+Level Score: 916, Level Combos: 23
+Avg Matching Score: 229.0, Avg Matching Combos: 5.75
+matching 0: 840 score, 14 combos
+matching 1: 40 score, 4 combos
+matching 2: 24 score, 3 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 735.0, Avg Level Combos: 22.68
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 31===
+Level Score: 812, Level Combos: 19
+Avg Matching Score: 203.0, Avg Matching Combos: 4.75
+matching 0: 728 score, 13 combos
+matching 1: 84 score, 6 combos
+matching 2: 0 score, 0 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 737.4, Avg Level Combos: 22.56
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 32===
+Level Score: 548, Level Combos: 18
+Avg Matching Score: 137.0, Avg Matching Combos: 4.50
+matching 0: 484 score, 11 combos
+matching 1: 24 score, 3 combos
+matching 2: 40 score, 4 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 731.6, Avg Level Combos: 22.42
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 33===
+Level Score: 1016, Level Combos: 33
+Avg Matching Score: 254.0, Avg Matching Combos: 8.25
+matching 0: 528 score, 11 combos
+matching 1: 364 score, 13 combos
+matching 2: 12 score, 2 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 740.0, Avg Level Combos: 22.74
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 34===
+Level Score: 1376, Level Combos: 32
+Avg Matching Score: 344.0, Avg Matching Combos: 8.00
+matching 0: 1088 score, 16 combos
+matching 1: 144 score, 8 combos
+matching 2: 144 score, 8 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 758.2, Avg Level Combos: 23.00
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 35===
+Level Score: 392, Level Combos: 18
+Avg Matching Score: 98.0, Avg Matching Combos: 4.50
+matching 0: 288 score, 8 combos
+matching 1: 40 score, 4 combos
+matching 2: 4 score, 1 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 748.0, Avg Level Combos: 22.86
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 36===
+Level Score: 404, Level Combos: 22
+Avg Matching Score: 101.0, Avg Matching Combos: 5.50
+matching 0: 224 score, 7 combos
+matching 1: 60 score, 5 combos
+matching 2: 60 score, 5 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 738.7, Avg Level Combos: 22.84
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 37===
+Level Score: 1008, Level Combos: 21
+Avg Matching Score: 252.0, Avg Matching Combos: 5.25
+matching 0: 960 score, 15 combos
+matching 1: 4 score, 1 combos
+matching 2: 4 score, 1 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 745.8, Avg Level Combos: 22.79
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 38===
+Level Score: 576, Level Combos: 22
+Avg Matching Score: 144.0, Avg Matching Combos: 5.50
+matching 0: 440 score, 10 combos
+matching 1: 12 score, 2 combos
+matching 2: 40 score, 4 combos
+matching 3: 84 score, 6 combos
+================
+Avg Level Score: 741.4, Avg Level Combos: 22.77
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 39===
+Level Score: 352, Level Combos: 18
+Avg Matching Score: 88.0, Avg Matching Combos: 4.50
+matching 0: 168 score, 6 combos
+matching 1: 0 score, 0 combos
+matching 2: 40 score, 4 combos
+matching 3: 144 score, 8 combos
+================
+Avg Level Score: 731.7, Avg Level Combos: 22.65
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 40===
+Level Score: 1060, Level Combos: 24
+Avg Matching Score: 265.0, Avg Matching Combos: 6.00
+matching 0: 960 score, 15 combos
+matching 1: 60 score, 5 combos
+matching 2: 0 score, 0 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 739.7, Avg Level Combos: 22.68
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 41===
+Level Score: 356, Level Combos: 19
+Avg Matching Score: 89.0, Avg Matching Combos: 4.75
+matching 0: 168 score, 6 combos
+matching 1: 4 score, 1 combos
+matching 2: 144 score, 8 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 730.6, Avg Level Combos: 22.60
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 42===
+Level Score: 372, Level Combos: 20
+Avg Matching Score: 93.0, Avg Matching Combos: 5.00
+matching 0: 224 score, 7 combos
+matching 1: 84 score, 6 combos
+matching 2: 24 score, 3 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 722.2, Avg Level Combos: 22.53
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 43===
+Level Score: 244, Level Combos: 17
+Avg Matching Score: 61.0, Avg Matching Combos: 4.25
+matching 0: 120 score, 5 combos
+matching 1: 60 score, 5 combos
+matching 2: 24 score, 3 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 711.4, Avg Level Combos: 22.41
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 44===
+Level Score: 888, Level Combos: 27
+Avg Matching Score: 222.0, Avg Matching Combos: 6.75
+matching 0: 728 score, 13 combos
+matching 1: 60 score, 5 combos
+matching 2: 60 score, 5 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 715.3, Avg Level Combos: 22.51
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 45===
+Level Score: 556, Level Combos: 15
+Avg Matching Score: 139.0, Avg Matching Combos: 3.75
+matching 0: 528 score, 11 combos
+matching 1: 0 score, 0 combos
+matching 2: 4 score, 1 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 711.8, Avg Level Combos: 22.35
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 46===
+Level Score: 408, Level Combos: 18
+Avg Matching Score: 102.0, Avg Matching Combos: 4.50
+matching 0: 288 score, 8 combos
+matching 1: 60 score, 5 combos
+matching 2: 0 score, 0 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 705.4, Avg Level Combos: 22.26
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 47===
+Level Score: 796, Level Combos: 24
+Avg Matching Score: 199.0, Avg Matching Combos: 6.00
+matching 0: 624 score, 12 combos
+matching 1: 60 score, 5 combos
+matching 2: 0 score, 0 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 707.2, Avg Level Combos: 22.29
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 48===
+Level Score: 720, Level Combos: 26
+Avg Matching Score: 180.0, Avg Matching Combos: 6.50
+matching 0: 528 score, 11 combos
+matching 1: 24 score, 3 combos
+matching 2: 84 score, 6 combos
+matching 3: 84 score, 6 combos
+================
+Avg Level Score: 707.5, Avg Level Combos: 22.37
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 49===
+Level Score: 320, Level Combos: 17
+Avg Matching Score: 80.0, Avg Matching Combos: 4.25
+matching 0: 224 score, 7 combos
+matching 1: 60 score, 5 combos
+matching 2: 24 score, 3 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 699.8, Avg Level Combos: 22.26
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 50===
+Level Score: 512, Level Combos: 22
+Avg Matching Score: 128.0, Avg Matching Combos: 5.50
+matching 0: 288 score, 8 combos
+matching 1: 4 score, 1 combos
+matching 2: 40 score, 4 combos
+matching 3: 180 score, 9 combos
+================
+Avg Level Score: 696.1, Avg Level Combos: 22.25
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 51===
+Level Score: 856, Level Combos: 29
+Avg Matching Score: 214.0, Avg Matching Combos: 7.25
+matching 0: 624 score, 12 combos
+matching 1: 60 score, 5 combos
+matching 2: 60 score, 5 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 699.2, Avg Level Combos: 22.38
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 52===
+Level Score: 700, Level Combos: 21
+Avg Matching Score: 175.0, Avg Matching Combos: 5.25
+matching 0: 624 score, 12 combos
+matching 1: 40 score, 4 combos
+matching 2: 24 score, 3 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 699.2, Avg Level Combos: 22.36
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 53===
+Level Score: 1148, Level Combos: 28
+Avg Matching Score: 287.0, Avg Matching Combos: 7.00
+matching 0: 960 score, 15 combos
+matching 1: 40 score, 4 combos
+matching 2: 144 score, 8 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 707.5, Avg Level Combos: 22.46
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 54===
+Level Score: 508, Level Combos: 21
+Avg Matching Score: 127.0, Avg Matching Combos: 5.25
+matching 0: 360 score, 9 combos
+matching 1: 112 score, 7 combos
+matching 2: 24 score, 3 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 703.9, Avg Level Combos: 22.44
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 55===
+Level Score: 744, Level Combos: 28
+Avg Matching Score: 186.0, Avg Matching Combos: 7.00
+matching 0: 440 score, 10 combos
+matching 1: 112 score, 7 combos
+matching 2: 180 score, 9 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 704.6, Avg Level Combos: 22.54
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 56===
+Level Score: 800, Level Combos: 27
+Avg Matching Score: 200.0, Avg Matching Combos: 6.75
+matching 0: 528 score, 11 combos
+matching 1: 40 score, 4 combos
+matching 2: 12 score, 2 combos
+matching 3: 220 score, 10 combos
+================
+Avg Level Score: 706.2, Avg Level Combos: 22.61
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 57===
+Level Score: 332, Level Combos: 18
+Avg Matching Score: 83.0, Avg Matching Combos: 4.50
+matching 0: 224 score, 7 combos
+matching 1: 24 score, 3 combos
+matching 2: 24 score, 3 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 699.8, Avg Level Combos: 22.53
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 58===
+Level Score: 348, Level Combos: 16
+Avg Matching Score: 87.0, Avg Matching Combos: 4.00
+matching 0: 224 score, 7 combos
+matching 1: 12 score, 2 combos
+matching 2: 0 score, 0 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 693.8, Avg Level Combos: 22.42
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 59===
+Level Score: 1028, Level Combos: 23
+Avg Matching Score: 257.0, Avg Matching Combos: 5.75
+matching 0: 960 score, 15 combos
+matching 1: 24 score, 3 combos
+matching 2: 40 score, 4 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 699.4, Avg Level Combos: 22.43
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 60===
+Level Score: 724, Level Combos: 21
+Avg Matching Score: 181.0, Avg Matching Combos: 5.25
+matching 0: 624 score, 12 combos
+matching 1: 4 score, 1 combos
+matching 2: 12 score, 2 combos
+matching 3: 84 score, 6 combos
+================
+Avg Level Score: 699.8, Avg Level Combos: 22.41
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 61===
+Level Score: 596, Level Combos: 18
+Avg Matching Score: 149.0, Avg Matching Combos: 4.50
+matching 0: 528 score, 11 combos
+matching 1: 60 score, 5 combos
+matching 2: 4 score, 1 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 698.1, Avg Level Combos: 22.34
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 62===
+Level Score: 356, Level Combos: 16
+Avg Matching Score: 89.0, Avg Matching Combos: 4.00
+matching 0: 288 score, 8 combos
+matching 1: 4 score, 1 combos
+matching 2: 40 score, 4 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 692.7, Avg Level Combos: 22.24
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 63===
+Level Score: 244, Level Combos: 11
+Avg Matching Score: 61.0, Avg Matching Combos: 2.75
+matching 0: 224 score, 7 combos
+matching 1: 12 score, 2 combos
+matching 2: 4 score, 1 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 685.7, Avg Level Combos: 22.06
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 64===
+Level Score: 588, Level Combos: 24
+Avg Matching Score: 147.0, Avg Matching Combos: 6.00
+matching 0: 288 score, 8 combos
+matching 1: 264 score, 11 combos
+matching 2: 24 score, 3 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 684.2, Avg Level Combos: 22.09
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 65===
+Level Score: 448, Level Combos: 19
+Avg Matching Score: 112.0, Avg Matching Combos: 4.75
+matching 0: 360 score, 9 combos
+matching 1: 40 score, 4 combos
+matching 2: 24 score, 3 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 680.6, Avg Level Combos: 22.05
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 66===
+Level Score: 352, Level Combos: 20
+Avg Matching Score: 88.0, Avg Matching Combos: 5.00
+matching 0: 168 score, 6 combos
+matching 1: 12 score, 2 combos
+matching 2: 112 score, 7 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 675.7, Avg Level Combos: 22.01
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 67===
+Level Score: 532, Level Combos: 12
+Avg Matching Score: 133.0, Avg Matching Combos: 3.00
+matching 0: 528 score, 11 combos
+matching 1: 4 score, 1 combos
+matching 2: 0 score, 0 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 673.6, Avg Level Combos: 21.87
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 68===
+Level Score: 520, Level Combos: 20
+Avg Matching Score: 130.0, Avg Matching Combos: 5.00
+matching 0: 360 score, 9 combos
+matching 1: 12 score, 2 combos
+matching 2: 4 score, 1 combos
+matching 3: 144 score, 8 combos
+================
+Avg Level Score: 671.4, Avg Level Combos: 21.84
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 69===
+Level Score: 528, Level Combos: 19
+Avg Matching Score: 132.0, Avg Matching Combos: 4.75
+matching 0: 440 score, 10 combos
+matching 1: 4 score, 1 combos
+matching 2: 24 score, 3 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 669.3, Avg Level Combos: 21.80
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 70===
+Level Score: 640, Level Combos: 21
+Avg Matching Score: 160.0, Avg Matching Combos: 5.25
+matching 0: 528 score, 11 combos
+matching 1: 4 score, 1 combos
+matching 2: 84 score, 6 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 668.9, Avg Level Combos: 21.79
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 71===
+Level Score: 436, Level Combos: 17
+Avg Matching Score: 109.0, Avg Matching Combos: 4.25
+matching 0: 360 score, 9 combos
+matching 1: 12 score, 2 combos
+matching 2: 4 score, 1 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 665.7, Avg Level Combos: 21.72
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 72===
+Level Score: 432, Level Combos: 21
+Avg Matching Score: 108.0, Avg Matching Combos: 5.25
+matching 0: 288 score, 8 combos
+matching 1: 60 score, 5 combos
+matching 2: 24 score, 3 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 662.5, Avg Level Combos: 21.71
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 73===
+Level Score: 360, Level Combos: 17
+Avg Matching Score: 90.0, Avg Matching Combos: 4.25
+matching 0: 224 score, 7 combos
+matching 1: 24 score, 3 combos
+matching 2: 112 score, 7 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 658.4, Avg Level Combos: 21.65
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 74===
+Level Score: 1404, Level Combos: 32
+Avg Matching Score: 351.0, Avg Matching Combos: 8.00
+matching 0: 1224 score, 17 combos
+matching 1: 60 score, 5 combos
+matching 2: 60 score, 5 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 668.3, Avg Level Combos: 21.79
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 75===
+Level Score: 808, Level Combos: 26
+Avg Matching Score: 202.0, Avg Matching Combos: 6.50
+matching 0: 624 score, 12 combos
+matching 1: 12 score, 2 combos
+matching 2: 60 score, 5 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 670.2, Avg Level Combos: 21.84
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 76===
+Level Score: 948, Level Combos: 24
+Avg Matching Score: 237.0, Avg Matching Combos: 6.00
+matching 0: 840 score, 14 combos
+matching 1: 12 score, 2 combos
+matching 2: 84 score, 6 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 673.8, Avg Level Combos: 21.87
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 77===
+Level Score: 600, Level Combos: 25
+Avg Matching Score: 150.0, Avg Matching Combos: 6.25
+matching 0: 360 score, 9 combos
+matching 1: 12 score, 2 combos
+matching 2: 144 score, 8 combos
+matching 3: 84 score, 6 combos
+================
+Avg Level Score: 672.8, Avg Level Combos: 21.91
+Min, Max Matching Score: 0, 1848
+Min, Max Matching Combos: 0, 21
+===Task 78===
+Level Score: 2144, Level Combos: 33
+Avg Matching Score: 536.0, Avg Matching Combos: 8.25
+matching 0: 2024 score, 22 combos
+matching 1: 24 score, 3 combos
+matching 2: 84 score, 6 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 691.4, Avg Level Combos: 22.05
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 79===
+Level Score: 948, Level Combos: 24
+Avg Matching Score: 237.0, Avg Matching Combos: 6.00
+matching 0: 840 score, 14 combos
+matching 1: 12 score, 2 combos
+matching 2: 84 score, 6 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 694.6, Avg Level Combos: 22.07
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 80===
+Level Score: 964, Level Combos: 28
+Avg Matching Score: 241.0, Avg Matching Combos: 7.00
+matching 0: 624 score, 12 combos
+matching 1: 24 score, 3 combos
+matching 2: 312 score, 12 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 698.0, Avg Level Combos: 22.15
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 81===
+Level Score: 1188, Level Combos: 37
+Avg Matching Score: 297.0, Avg Matching Combos: 9.25
+matching 0: 728 score, 13 combos
+matching 1: 180 score, 9 combos
+matching 2: 60 score, 5 combos
+matching 3: 220 score, 10 combos
+================
+Avg Level Score: 704.0, Avg Level Combos: 22.33
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 82===
+Level Score: 676, Level Combos: 19
+Avg Matching Score: 169.0, Avg Matching Combos: 4.75
+matching 0: 624 score, 12 combos
+matching 1: 24 score, 3 combos
+matching 2: 24 score, 3 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 703.6, Avg Level Combos: 22.29
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 83===
+Level Score: 460, Level Combos: 20
+Avg Matching Score: 115.0, Avg Matching Combos: 5.00
+matching 0: 288 score, 8 combos
+matching 1: 0 score, 0 combos
+matching 2: 60 score, 5 combos
+matching 3: 112 score, 7 combos
+================
+Avg Level Score: 700.7, Avg Level Combos: 22.26
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 84===
+Level Score: 804, Level Combos: 21
+Avg Matching Score: 201.0, Avg Matching Combos: 5.25
+matching 0: 728 score, 13 combos
+matching 1: 60 score, 5 combos
+matching 2: 12 score, 2 combos
+matching 3: 4 score, 1 combos
+================
+Avg Level Score: 701.9, Avg Level Combos: 22.25
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 85===
+Level Score: 444, Level Combos: 17
+Avg Matching Score: 111.0, Avg Matching Combos: 4.25
+matching 0: 360 score, 9 combos
+matching 1: 60 score, 5 combos
+matching 2: 24 score, 3 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 698.9, Avg Level Combos: 22.19
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 86===
+Level Score: 468, Level Combos: 23
+Avg Matching Score: 117.0, Avg Matching Combos: 5.75
+matching 0: 288 score, 8 combos
+matching 1: 60 score, 5 combos
+matching 2: 60 score, 5 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 696.3, Avg Level Combos: 22.20
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 87===
+Level Score: 736, Level Combos: 23
+Avg Matching Score: 184.0, Avg Matching Combos: 5.75
+matching 0: 624 score, 12 combos
+matching 1: 40 score, 4 combos
+matching 2: 12 score, 2 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 696.7, Avg Level Combos: 22.20
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 88===
+Level Score: 652, Level Combos: 21
+Avg Matching Score: 163.0, Avg Matching Combos: 5.25
+matching 0: 528 score, 11 combos
+matching 1: 84 score, 6 combos
+matching 2: 0 score, 0 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 696.2, Avg Level Combos: 22.19
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 89===
+Level Score: 964, Level Combos: 25
+Avg Matching Score: 241.0, Avg Matching Combos: 6.25
+matching 0: 840 score, 14 combos
+matching 1: 4 score, 1 combos
+matching 2: 60 score, 5 combos
+matching 3: 60 score, 5 combos
+================
+Avg Level Score: 699.2, Avg Level Combos: 22.22
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 90===
+Level Score: 780, Level Combos: 19
+Avg Matching Score: 195.0, Avg Matching Combos: 4.75
+matching 0: 728 score, 13 combos
+matching 1: 12 score, 2 combos
+matching 2: 40 score, 4 combos
+matching 3: 0 score, 0 combos
+================
+Avg Level Score: 700.1, Avg Level Combos: 22.19
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 91===
+Level Score: 1504, Level Combos: 30
+Avg Matching Score: 376.0, Avg Matching Combos: 7.50
+matching 0: 1368 score, 18 combos
+matching 1: 40 score, 4 combos
+matching 2: 12 score, 2 combos
+matching 3: 84 score, 6 combos
+================
+Avg Level Score: 708.8, Avg Level Combos: 22.27
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 92===
+Level Score: 584, Level Combos: 18
+Avg Matching Score: 146.0, Avg Matching Combos: 4.50
+matching 0: 528 score, 11 combos
+matching 1: 4 score, 1 combos
+matching 2: 40 score, 4 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 707.5, Avg Level Combos: 22.23
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 93===
+Level Score: 1288, Level Combos: 25
+Avg Matching Score: 322.0, Avg Matching Combos: 6.25
+matching 0: 1224 score, 17 combos
+matching 1: 40 score, 4 combos
+matching 2: 12 score, 2 combos
+matching 3: 12 score, 2 combos
+================
+Avg Level Score: 713.7, Avg Level Combos: 22.26
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 94===
+Level Score: 372, Level Combos: 20
+Avg Matching Score: 93.0, Avg Matching Combos: 5.00
+matching 0: 224 score, 7 combos
+matching 1: 84 score, 6 combos
+matching 2: 24 score, 3 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 710.1, Avg Level Combos: 22.23
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 95===
+Level Score: 592, Level Combos: 19
+Avg Matching Score: 148.0, Avg Matching Combos: 4.75
+matching 0: 528 score, 11 combos
+matching 1: 12 score, 2 combos
+matching 2: 12 score, 2 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 708.8, Avg Level Combos: 22.20
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 96===
+Level Score: 412, Level Combos: 22
+Avg Matching Score: 103.0, Avg Matching Combos: 5.50
+matching 0: 168 score, 6 combos
+matching 1: 180 score, 9 combos
+matching 2: 40 score, 4 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 705.8, Avg Level Combos: 22.20
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 97===
+Level Score: 288, Level Combos: 15
+Avg Matching Score: 72.0, Avg Matching Combos: 3.75
+matching 0: 224 score, 7 combos
+matching 1: 12 score, 2 combos
+matching 2: 12 score, 2 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 701.5, Avg Level Combos: 22.12
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 98===
+Level Score: 996, Level Combos: 25
+Avg Matching Score: 249.0, Avg Matching Combos: 6.25
+matching 0: 900 score, 15 combos
+matching 1: 12 score, 2 combos
+matching 2: 60 score, 5 combos
+matching 3: 24 score, 3 combos
+================
+Avg Level Score: 704.5, Avg Level Combos: 22.15
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22
+===Task 99===
+Level Score: 784, Level Combos: 20
+Avg Matching Score: 196.0, Avg Matching Combos: 5.00
+matching 0: 728 score, 13 combos
+matching 1: 4 score, 1 combos
+matching 2: 12 score, 2 combos
+matching 3: 40 score, 4 combos
+================
+Avg Level Score: 705.3, Avg Level Combos: 22.13
+Min, Max Matching Score: 0, 2024
+Min, Max Matching Combos: 0, 22

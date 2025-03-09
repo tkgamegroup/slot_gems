@@ -162,7 +162,8 @@ var coins : int:
 var buffs : Array[Buff]
 var history : History = History.new()
 
-var animation_speed = 1.0
+var base_animation_speed = 1.0
+var animation_speed = base_animation_speed
 
 func set_props(t : int):
 	props = t
@@ -205,6 +206,7 @@ func get_item(i : Item = null):
 	return SMath.pick_and_remove(unused_items)
 
 func release_item(item : Item):
+	item.coord = Vector2i(-1, -1)
 	unused_items.append(item)
 
 func add_combo():
@@ -413,9 +415,9 @@ func start_new_game():
 		var item = Item.new()
 		item.setup("Dye: Pink")
 		items.append(item)
-	for i in 1:
+	for i in 2:
 		var item = Item.new()
-		item.setup("Flag")
+		item.setup("Iai Cut")
 		items.append(item)
 	
 	status_bar_ui.appear()
@@ -435,7 +437,7 @@ func start_new_game():
 	)
 	board.matching_finished.connect(func():
 		stage = Stage.Deploy
-		animation_speed = 1.0
+		animation_speed = base_animation_speed
 		history.update()
 		
 		Buff.clear(self, Buff.Duration.ThisMatchingStage)
@@ -514,7 +516,7 @@ func roll():
 		stage = Stage.Rolling
 		rolls -= 1
 		score_mult = 1.0
-		animation_speed = 1.0
+		animation_speed = base_animation_speed
 		board.roll()
 		game_ui.roll_button.disabled = true
 		game_ui.play_button.disabled = true

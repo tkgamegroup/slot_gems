@@ -32,6 +32,10 @@ var total_score : int
 var total_combos : int
 
 func new_test(tasks : int, type : int):
+	AudioServer.set_bus_volume_db(SSound.sfx_bus_index, linear_to_db(0))
+	Game.base_animation_speed = 0.25
+	Game.animation_speed = Game.base_animation_speed
+	
 	task_num = tasks
 	task_type = type
 	task_index = 0
@@ -152,10 +156,8 @@ func time_out():
 									var res : Array[Vector2i] = p.match_with(bd, c)
 									for cc in res:
 										activater_places.append(cc)
-						activater_places.sort_custom(func(a, b):
-							var d1 = bd.offset_distance(a, center)
-							var d2 = bd.offset_distance(b, center)
-							return d1 < d2
+						activater_places.sort_custom(func(c1, c2):
+							return bd.offset_distance(c1, center) < bd.offset_distance(c2, center)
 						)
 						var aura_places = []
 						for y in cy:

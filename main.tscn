@@ -24,18 +24,18 @@
 [ext_resource type="Script" path="res://ui_game.gd" id="10_4wyqg"]
 [ext_resource type="AudioStream" uid="uid://cljdyrasxmhf2" path="res://sounds/brush.wav" id="10_jsr5e"]
 [ext_resource type="AudioStream" uid="uid://v5aplcpuq6co" path="res://sounds/vibra.wav" id="11_0r14j"]
-[ext_resource type="AudioStream" uid="uid://4qd2vxmu3s2u" path="res://sounds/lighting_connect.wav" id="12_20h45"]
 [ext_resource type="AudioStream" uid="uid://b7r0ixrqgi65s" path="res://sounds/explode.wav" id="12_773c0"]
 [ext_resource type="Script" path="res://ui_shop.gd" id="12_uajbh"]
-[ext_resource type="AudioStream" uid="uid://bnfmwbpunud0i" path="res://sounds/lighting_fail.wav" id="13_feac5"]
 [ext_resource type="Script" path="res://ui_options.gd" id="14_kw2dv"]
 [ext_resource type="Script" path="res://ui_in_game_menu.gd" id="15_clbdl"]
 [ext_resource type="AudioStream" uid="uid://c4s22wdn5gxo4" path="res://sounds/level_clear.wav" id="15_guqny"]
 [ext_resource type="AudioStream" uid="uid://dprs6ie463ffp" path="res://sounds/bubble.wav" id="15_iwwqi"]
 [ext_resource type="AudioStream" uid="uid://c3fkob8w6mgrd" path="res://sounds/start_burning.wav" id="16_6pavh"]
 [ext_resource type="Script" path="res://ui_game_over.gd" id="16_iphee"]
+[ext_resource type="AudioStream" uid="uid://4qd2vxmu3s2u" path="res://sounds/lightning_connect.wav" id="17_dvs8d"]
 [ext_resource type="AudioStream" uid="uid://b73xkcur0fkfi" path="res://sounds/end_burning.wav" id="17_tmu32"]
 [ext_resource type="Script" path="res://ui_level_clear.gd" id="17_ykjhx"]
+[ext_resource type="AudioStream" uid="uid://bnfmwbpunud0i" path="res://sounds/lightning_fail.wav" id="18_bul2v"]
 [ext_resource type="Texture2D" uid="uid://b1t2da5qbvmv8" path="res://images/hover.png" id="25_2un53"]
 [ext_resource type="Shader" path="res://fire.gdshader" id="27_fv65f"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
@@ -474,13 +474,14 @@ stream = ExtResource("12_773c0")
 max_polyphony = 10
 bus = &"SFX"
 
-[node name="LightingConnect" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("12_20h45")
+[node name="LightningConnect" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("17_dvs8d")
+volume_db = -10.0
 max_polyphony = 10
 bus = &"SFX"
 
-[node name="LightingFail" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("13_feac5")
+[node name="LightningFail" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("18_bul2v")
 max_polyphony = 10
 bus = &"SFX"
 

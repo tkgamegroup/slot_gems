@@ -30,9 +30,9 @@ func _ready() -> void:
 		Game.board.cleanup()
 		Game.game_ui.hide()
 		Game.game_root.hide()
-		Game.status_bar.hide()
-		Game.skills_bar.hide()
-		Game.patterns_bar.hide()
+		Game.status_bar_ui.hide()
+		Game.skills_bar_ui.hide()
+		Game.patterns_bar_ui.hide()
 		Game.title_ui.enter()
 	)
 	test_avg_score_button.pressed.connect(func():

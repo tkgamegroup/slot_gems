@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bnfmwbpunud0i"
-path="res://.godot/imported/lighting_fail.wav-487984722da87dc6aa0a871e600e1d0b.sample"
+path="res://.godot/imported/lightning_fail.wav-84a5a60d5e192c24b4c24aa25ab35a13.sample"
 
 [deps]
 
-source_file="res://sounds/lighting_fail.wav"
-dest_files=["res://.godot/imported/lighting_fail.wav-487984722da87dc6aa0a871e600e1d0b.sample"]
+source_file="res://sounds/lightning_fail.wav"
+dest_files=["res://.godot/imported/lightning_fail.wav-84a5a60d5e192c24b4c24aa25ab35a13.sample"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://4qd2vxmu3s2u"
-path="res://.godot/imported/lighting_connect.wav-ad251218dac620adf04a074c7e9cbd11.sample"
+path="res://.godot/imported/lightning_connect.wav-dece8a8ca7704af5acc9b345db7ce9ce.sample"
 
 [deps]
 
-source_file="res://sounds/lighting_connect.wav"
-dest_files=["res://.godot/imported/lighting_connect.wav-ad251218dac620adf04a074c7e9cbd11.sample"]
+source_file="res://sounds/lightning_connect.wav"
+dest_files=["res://.godot/imported/lightning_connect.wav-dece8a8ca7704af5acc9b345db7ce9ce.sample"]
 
 [params]
 

@@ -9,7 +9,7 @@ var image_id : int
 var active : bool = false
 var description : String
 var category : String
-var require_type : int = Gem.Type.None
+var coord : Vector2i = Vector2i(-1, -1)
 
 var extra = {}
 
@@ -59,14 +59,15 @@ func setup(n : String):
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Pink})
 	elif name == "Flag":
 		image_id = 6
-		description = "Aura: +1 score."
+		description = "Aura: Gems in 4-ring get +1 score."
 		on_aura = func(event : int, b : Board, coord : Vector2i):
 			var g = b.get_gem_at(coord)
 			if g:
-				if event == Board.AuraEvent.Enter:
-					g.bonus_score += 1
-				else:
-					g.bonus_score -= 1
+				if b.offset_distance(coord, self.coord) <= 4:
+					if event == Board.AuraEvent.Enter:
+						g.bonus_score += 1
+					else:
+						g.bonus_score -= 1
 	elif name == "Bomb":
 		image_id = 7
 		description = "Active: Eliminate cells in 1-ring."
@@ -78,9 +79,9 @@ func setup(n : String):
 				coords.append(c)
 			tween.tween_callback(func():
 				var pos = b.get_pos(coord)
-				var sp_expl = SEffect.add_explosion(pos, Vector2(64.0, 64.0), 3, 0.5)
+				var sp_expl = SEffect.add_explosion(pos, Vector2(64.0, 64.0), 3, 0.5 * Game.animation_speed)
 				Game.cells_root.add_child(sp_expl)
-				var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0), 4, 0.5)
+				var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0), 4, 0.5 * Game.animation_speed)
 				Game.cells_root.add_child(fx)
 				Game.add_combo()
 				for c in coords:
@@ -104,9 +105,9 @@ func setup(n : String):
 					coords.append(c)
 			tween.tween_callback(func():
 				var pos = b.get_pos(coord)
-				var sp_expl = SEffect.add_big_explosion(pos, Vector2(128.0, 128.0), 3, 0.5)
+				var sp_expl = SEffect.add_big_explosion(pos, Vector2(128.0, 128.0), 3, 0.5 * Game.animation_speed)
 				Game.cells_root.add_child(sp_expl)
-				var fx = SEffect.add_distortion(pos, Vector2(128.0, 128.0), 4, 0.5)
+				var fx = SEffect.add_distortion(pos, Vector2(128.0, 128.0), 4, 0.5 * Game.animation_speed)
 				Game.cells_root.add_child(fx)
 				var score = 0
 				Game.add_combo()
@@ -163,31 +164,36 @@ func setup(n : String):
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Lightning":
 		image_id = 11
-		description = "Active: Eliminate cells that on the line to another active 'lightning'."
+		description = "Active: Connect all 'Lightning's, eliminate cells on between."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var targets = b.find(func(gem : Gem, item : Item):
-				return item && item != self && item.name == "lightning" && item.active
+				return item && item.name == "Lightning"
 			)
-			if !targets.is_empty():
-				var target = targets.pick_random()
-				var coords : Array[Vector2i] = [target]
-				for c in b.draw_line(b.offset_to_cube(coord), b.offset_to_cube(target)):
-					var cc = b.cube_to_offset(c)
-					coords.append(cc)
-				tween.tween_callback(func():
-						var fx = SEffect.add_lighning(b.get_pos(coord), b.get_pos(target), 3, 0.5)
+			targets.sort_custom(func(c1, c2):
+				return b.offset_distance(c1, coord) < b.offset_distance(c2, coord)
+			)
+			if targets.size() >= 2:
+				var coords : Array[Vector2i] = []
+				for i in targets.size() - 1:
+					var p0 = targets[i]
+					var p1 = targets[i + 1]
+					for c in b.draw_line(b.offset_to_cube(p0), b.offset_to_cube(p1)):
+						var cc = b.cube_to_offset(c)
+						coords.append(cc)
+					tween.tween_callback(func():
+						var fx = SEffect.add_lighning(b.get_pos(p0), b.get_pos(p1), 3, 0.5 * Game.animation_speed)
 						Game.cells_root.add_child(fx)
+					)
+				coords.append(targets.back())
+				tween.tween_interval(0.5 * Game.animation_speed)
+				tween.tween_callback(func():
 						Game.add_combo()
 						for c in coords:
 							if b.is_valid(c):
 								Game.add_score(b.gem_score_at(c), b.get_pos(c))
 				)
 				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
-			else:
-				tween.tween_callback(func():
-					SSound.sfx_lighting_fail.play()
-				)
 	elif name == "Color Palette":
 		image_id = 12
 		description = "Quick: Turn gem to wild type."
@@ -210,7 +216,7 @@ func setup(n : String):
 		description = "Active: if this the last item activated. Eliminate all cells."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			if SMath.last_one(b.active_items).first == self:
+			if b.active_items.back().first == self:
 				var coords : Array[Vector2i] = []
 				for y in b.cy:
 					for x in b.cx:
@@ -290,12 +296,12 @@ func setup(n : String):
 			)
 	elif name == "Cat":
 		image_id = 17
-		description = "Active: Jump to a cell and eliminate it within 2 distance. Repeat 4 times."
+		description = "Active: Jump to a cell and eliminate it within 2 distance. Repeat 3 times."
 		category = "Animal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var coords : Array[Vector2i] = []
 			var bc = coord
-			for i in 4:
+			for i in 3:
 				var cands = []
 				for c in b.offset_ring(bc, 1):
 					if b.is_valid(c) && !coords.has(c):
@@ -306,7 +312,7 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = cands.pick_random()
 					var pos = b.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, 0.5, Vector2(0.0, -30.0), 0.4)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, 0.5, Vector2(0.0, -30.0), 0.4 * Game.animation_speed)
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
@@ -348,45 +354,54 @@ func setup(n : String):
 			Game.add_combo()
 			Game.add_score(50, pos)
 			return true
-	elif name == "Lai Cut":
+	elif name == "Iai Cut":
 		image_id = 20
-		description = "Active: If there is no inactive 'Lai Cut' on board, eliminate a row on a random direction."
+		description = "Active: Eliminate a row on a random direction. (Eliminated by 'Iai Cut' will add one direction, Max 3)."
 		category = "Normal"
+		on_place = func(b : Board, coord : Vector2i):
+			extra.num = 1
+		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
+			if reason == Board.ActiveReason.Item && source.name == "Iai Cut":
+				extra.num += 1
+			return true
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var no_others =  b.find(func(gem : Gem, item : Item):
-				return item && item.name == "Lai Cut"
-			).is_empty()
-			if no_others:
-				var cc = b.offset_to_cube(coord)
-				var coords : Array[Vector2i] = []
-				match randi() % 3:
+			var cc = b.offset_to_cube(coord)
+			var arr = [0, 1, 2]
+			var coords : Array[Vector2i] = []
+			for i in min(extra.num, 3):
+				var sub_coords : Array[Vector2i] = []
+				var d = SMath.pick_and_remove(arr)
+				match d:
 					0: 
 						for x in b.cx:
 							var c = b.cube_to_offset(Vector3i(x, -x - cc.z, cc.z))
 							if b.is_valid(c):
-								coords.append(c)
+								sub_coords.append(c)
 					1: 
 						for x in b.cx:
 							var c = b.cube_to_offset(Vector3i(cc.x, x - cc.x, -x))
 							if b.is_valid(c):
-								coords.append(c)
+								sub_coords.append(c)
 					2: 
 						for x in b.cx:
 							var c = b.cube_to_offset(Vector3i(x - cc.y, cc.y, -x))
 							if b.is_valid(c):
-								coords.append(c)
-				var p0 = b.get_pos(coords[0])
-				var p1 = b.get_pos(coords[coords.size() - 1])
-				var sp = SEffect.add_slash(p0, p1, 3, 0.5)
-				Game.cells_root.add_child(sp)
-				var pos = (p0 + p1) / 2.0
+								sub_coords.append(c)
+				var p0 = b.get_pos(sub_coords.front())
+				var p1 = b.get_pos(sub_coords.back())
 				tween.tween_callback(func():
-					Game.add_combo()
-					for c in coords:
-						if b.is_valid(c):
-							Game.add_score(b.gem_score_at(c), b.get_pos(c))
+					var sp = SEffect.add_slash(p0, p1, 3, 0.5 * Game.animation_speed)
+					Game.cells_root.add_child(sp)
 				)
-				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
+				coords.append_array(sub_coords)
+			tween.tween_interval(0.5 * Game.animation_speed)
+			tween.tween_callback(func():
+				Game.add_combo()
+				for c in coords:
+					if b.is_valid(c):
+						Game.add_score(b.gem_score_at(c), b.get_pos(c))
+			)
+			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Magnet":
 		image_id = 21
 		description = "Active: Move 2-ring activable items toward this."
@@ -509,7 +524,7 @@ func setup(n : String):
 			return true
 	elif name == "Volcano":
 		image_id = 30
-		description = "Active: Eliminate 3 random cells in 2-ring. Repeat 2 times."
+		description = "Active: Eliminate 2 random cells in 2-ring. Repeat 2 times."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var pos = b.get_pos(coord)
@@ -524,7 +539,7 @@ func setup(n : String):
 						cands.append(c)
 				if !cands.is_empty():
 					var arr = []
-					for c in SMath.pick_n(cands, 3):
+					for c in SMath.pick_n(cands, 2):
 						arr.append(Triple.new(c, b.get_pos(c), null))
 						coords.append(c)
 					tween.tween_interval(0.1)
@@ -536,7 +551,7 @@ func setup(n : String):
 						Game.cells_root.add_child(sp)
 						t.third = sp
 						tween.parallel()
-						SAnimation.quadratic_curve_to(tween, sp, t.second, 0.5, Vector2(0.0, -30.0), 0.4)
+						SAnimation.quadratic_curve_to(tween, sp, t.second, 0.5, Vector2(0.0, -30.0), 0.4 * Game.animation_speed)
 					tween.tween_callback(func():
 						Game.add_combo()
 						for t in arr:

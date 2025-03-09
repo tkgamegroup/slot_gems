@@ -40,12 +40,16 @@ func draw():
 	)
 	return ui
 
-func discard():
+func discard(use_animation : bool = false):
 	for n in get_children():
 		Game.release_item(n.item)
-		var tween = get_tree().create_tween()
-		tween.tween_property(n, "position", n.position + Vector2(0, 100), 0.2)
-		tween.tween_callback(n.queue_free)
+		if use_animation:
+			var tween = get_tree().create_tween()
+			tween.tween_property(n, "position", n.position + Vector2(0, 100), 0.2)
+			tween.tween_callback(n.queue_free)
+		else:
+			n.queue_free()
+			remove_child(n)
 
 func get_item_count():
 	return get_child_count()
@@ -66,9 +70,7 @@ func use_item(ui : UiSlot, c : Vector2i):
 	return false
 
 func roll():
-	for n in get_children():
-		n.queue_free()
-		remove_child(n)
+	discard(true)
 	var tween = get_tree().create_tween()
 	for i in min(8, Game.unused_items.size()):
 		tween.tween_interval(0.15)
@@ -82,9 +84,7 @@ func roll():
 	)
 
 func cleanup():
-	for n in get_children():
-		n.queue_free()
-		remove_child(n)
+	discard()
 	Game.unused_items.clear()
 	for i in Game.items:
 		Game.unused_items.append(i)

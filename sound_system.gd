@@ -15,8 +15,8 @@ extends Node
 @onready var sfx_vibra : AudioStreamPlayer = $/root/Main/SFX/Vibra
 @onready var sfx_bubble : AudioStreamPlayer = $/root/Main/SFX/Bubble
 @onready var sfx_explode : AudioStreamPlayer = $/root/Main/SFX/Explode
-@onready var sfx_lighting_connect : AudioStreamPlayer = $/root/Main/SFX/LightingConnect
-@onready var sfx_lighting_fail : AudioStreamPlayer = $/root/Main/SFX/LightingFail
+@onready var sfx_lightning_connect : AudioStreamPlayer = $/root/Main/SFX/LightningConnect
+@onready var sfx_lightning_fail : AudioStreamPlayer = $/root/Main/SFX/LightningFail
 @onready var sfx_start_buring : AudioStreamPlayer = $/root/Main/SFX/StartBurning
 @onready var sfx_end_buring : AudioStreamPlayer = $/root/Main/SFX/EndBurning
 @onready var sfx_level_clear : AudioStreamPlayer = $/root/Main/SFX/LevelClear
