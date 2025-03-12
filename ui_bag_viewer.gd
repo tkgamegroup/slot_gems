@@ -1,6 +1,8 @@
 extends Control
 
 @onready var title = $VBoxContainer/Label
+@onready var legend1 = $VBoxContainer/HBoxContainer2/HBoxContainer
+@onready var legend2 = $VBoxContainer/HBoxContainer2/HBoxContainer2
 @onready var gem_list = $VBoxContainer/ScrollContainer/VBoxContainer/List
 @onready var item_list = $VBoxContainer/ScrollContainer/VBoxContainer/List2
 @onready var comfirm_button = $VBoxContainer/HBoxContainer/Button2
@@ -20,15 +22,27 @@ func clear():
 		n.queue_free()
 		item_list.remove_child(n)
 
+func create_bar():
+	var bar = ColorRect.new()
+	bar.position = Vector2(8, 32)
+	bar.size = Vector2(16, 4)
+	bar.color = Color(0.7, 0.7, 0.7, 1.0)
+	bar.hide()
+	return bar
+
 func enter(_select_num : int = 0, select_prompt : String = "", _select_callback : Callable = Callable()):
 	clear()
 	Game.blocker_ui.enter()
 	self.show()
 	if _select_num == 0:
 		title.text = "Bag"
+		legend1.show()
+		legend2.hide()
 		comfirm_button.hide()
 	else:
 		title.text = "Bag (%s)" % select_prompt
+		legend2.show()
+		legend1.hide()
 		comfirm_button.show()
 		comfirm_button.text = "Comfirm(0)"
 		comfirm_button.disabled = false
@@ -36,7 +50,7 @@ func enter(_select_num : int = 0, select_prompt : String = "", _select_callback 
 		select_callback = _select_callback
 	for g in Game.gems:
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(32, 34)
+		ctrl.custom_minimum_size = Vector2(32, 36)
 		ctrl.mouse_entered.connect(func():
 			SSound.sfx_select.play()
 			STooltip.show(g.get_tooltip())
@@ -48,13 +62,9 @@ func enter(_select_num : int = 0, select_prompt : String = "", _select_callback 
 		ui.position = Vector2(16, 16)
 		ui.set_image(g.type, g.rune)
 		ctrl.add_child(ui)
+		var bar = create_bar()
+		ctrl.add_child(bar)
 		if _select_num > 0:
-			var bar = ColorRect.new()
-			bar.position = Vector2(12, 32)
-			bar.size = Vector2(8, 2)
-			bar.color = Color(0.7, 0.7, 0.7, 1.0)
-			bar.hide()
-			ctrl.add_child(bar)
 			ctrl.gui_input.connect(func(event : InputEvent):
 				if event is InputEventMouseButton:
 					if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
@@ -67,10 +77,14 @@ func enter(_select_num : int = 0, select_prompt : String = "", _select_callback 
 						comfirm_button.text = "Comfirm(%d)" % selecteds.size()
 						comfirm_button.disabled = selecteds.is_empty()
 			)
+		else:
+			if g.coord.x != -1 && g.coord.y != -1:
+				bar.color = Color(0.9, 0.6, 0.3, 1.0)
+				bar.show()
 		gem_list.add_child(ctrl)
 	for i in Game.items:
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(32, 34)
+		ctrl.custom_minimum_size = Vector2(32, 36)
 		ctrl.mouse_entered.connect(func():
 			SSound.sfx_select.play()
 			STooltip.show(i.get_tooltip())
@@ -83,6 +97,15 @@ func enter(_select_num : int = 0, select_prompt : String = "", _select_callback 
 		ui.sprite_frames = Item.item_frames
 		ui.frame = i.image_id
 		ctrl.add_child(ui)
+		var bar = create_bar()
+		ctrl.add_child(bar)
+		if i.coord.x != -1:
+			if i.coord.y != -1:
+				bar.color = Color(0.9, 0.6, 0.3, 1.0)
+				bar.show()
+			else:
+				bar.color = Color(0.5, 0.8, 0.6, 1.0)
+				bar.show()
 		item_list.add_child(ctrl)
 
 func exit():

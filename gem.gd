@@ -109,5 +109,5 @@ func get_tooltip():
 	var desc = get_description()
 	ret.append(Pair.new(get_name(), desc))
 	if type == Type.Wild:
-		ret.append(Pair.new("Wild", "Can match with any color."))
+		ret.append(Pair.new("#Wild", "Can match with any color."))
 	return ret

@@ -1,10 +1,10 @@
-[gd_scene load_steps=128 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=129 format=3 uid="uid://c7yh3twd5o1w4"]
 
-[ext_resource type="Shader" path="res://background.gdshader" id="1_gsejj"]
+[ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_i3igf"]
 [ext_resource type="Texture2D" uid="uid://bbwm5s7asbied" path="res://images/vivid-artistic-design-abstract-background-texture-and-pattern_9910000.jpg" id="2_3ibvg"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
-[ext_resource type="Shader" path="res://crt.gdshader" id="4_8t4hj"]
+[ext_resource type="Shader" uid="uid://bmnxc3eesmaag" path="res://crt.gdshader" id="4_8t4hj"]
 [ext_resource type="AudioStream" uid="uid://vjqrtptu17gb" path="res://sounds/select.wav" id="4_fvcw6"]
 [ext_resource type="AudioStream" uid="uid://b2o1cfcq5mnt6" path="res://sounds/click.wav" id="4_j3q78"]
 [ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/red.png" id="4_mieac"]
@@ -20,24 +20,24 @@
 [ext_resource type="AudioStream" uid="uid://b00rjgk5valep" path="res://sounds/coins.wav" id="9_6w1lu"]
 [ext_resource type="PackedScene" uid="uid://d38gxj61sfsdt" path="res://advanced_label.tscn" id="9_c5vd3"]
 [ext_resource type="AudioStream" uid="uid://cmj7s22kwg5l4" path="res://sounds/zap.wav" id="9_di110"]
-[ext_resource type="Script" path="res://ui_title.gd" id="9_te575"]
-[ext_resource type="Script" path="res://ui_game.gd" id="10_4wyqg"]
+[ext_resource type="Script" uid="uid://di8ymjsldc2u" path="res://ui_title.gd" id="9_te575"]
+[ext_resource type="Script" uid="uid://d00blbhwfg7fg" path="res://ui_game.gd" id="10_4wyqg"]
 [ext_resource type="AudioStream" uid="uid://cljdyrasxmhf2" path="res://sounds/brush.wav" id="10_jsr5e"]
 [ext_resource type="AudioStream" uid="uid://v5aplcpuq6co" path="res://sounds/vibra.wav" id="11_0r14j"]
 [ext_resource type="AudioStream" uid="uid://b7r0ixrqgi65s" path="res://sounds/explode.wav" id="12_773c0"]
-[ext_resource type="Script" path="res://ui_shop.gd" id="12_uajbh"]
-[ext_resource type="Script" path="res://ui_options.gd" id="14_kw2dv"]
-[ext_resource type="Script" path="res://ui_in_game_menu.gd" id="15_clbdl"]
+[ext_resource type="Script" uid="uid://djc6e44a5dl2s" path="res://ui_shop.gd" id="12_uajbh"]
+[ext_resource type="Script" uid="uid://b7wmshnf31luj" path="res://ui_options.gd" id="14_kw2dv"]
+[ext_resource type="Script" uid="uid://de6vkry3bftwv" path="res://ui_in_game_menu.gd" id="15_clbdl"]
 [ext_resource type="AudioStream" uid="uid://c4s22wdn5gxo4" path="res://sounds/level_clear.wav" id="15_guqny"]
 [ext_resource type="AudioStream" uid="uid://dprs6ie463ffp" path="res://sounds/bubble.wav" id="15_iwwqi"]
 [ext_resource type="AudioStream" uid="uid://c3fkob8w6mgrd" path="res://sounds/start_burning.wav" id="16_6pavh"]
-[ext_resource type="Script" path="res://ui_game_over.gd" id="16_iphee"]
+[ext_resource type="Script" uid="uid://bbahec5ioj1ii" path="res://ui_game_over.gd" id="16_iphee"]
 [ext_resource type="AudioStream" uid="uid://4qd2vxmu3s2u" path="res://sounds/lightning_connect.wav" id="17_dvs8d"]
 [ext_resource type="AudioStream" uid="uid://b73xkcur0fkfi" path="res://sounds/end_burning.wav" id="17_tmu32"]
-[ext_resource type="Script" path="res://ui_level_clear.gd" id="17_ykjhx"]
+[ext_resource type="Script" uid="uid://dem0qyoc8kmf5" path="res://ui_level_clear.gd" id="17_ykjhx"]
 [ext_resource type="AudioStream" uid="uid://bnfmwbpunud0i" path="res://sounds/lightning_fail.wav" id="18_bul2v"]
 [ext_resource type="Texture2D" uid="uid://b1t2da5qbvmv8" path="res://images/hover.png" id="25_2un53"]
-[ext_resource type="Shader" path="res://fire.gdshader" id="27_fv65f"]
+[ext_resource type="Shader" uid="uid://e28162dlfqdt" path="res://fire.gdshader" id="27_fv65f"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://fw5w2kkrc75e" path="res://images/fire_shape.png" id="28_oso7t"]
 [ext_resource type="Texture2D" uid="uid://c7txrafqs3mca" path="res://images/bag.png" id="30_fg5n8"]
@@ -48,12 +48,12 @@
 [ext_resource type="Texture2D" uid="uid://hutjhat8drg6" path="res://images/magic_stick.png" id="32_e8bxs"]
 [ext_resource type="Texture2D" uid="uid://b5sxnv8vfemc4" path="res://images/lightning.png" id="32_pdjls"]
 [ext_resource type="Texture2D" uid="uid://bdrka1bbrx4tx" path="res://images/color_palette.png" id="33_bbu4i"]
-[ext_resource type="Script" path="res://text_fx_popup.gd" id="33_s1bup"]
-[ext_resource type="Script" path="res://ui_bag_viewer.gd" id="34_rwa0e"]
+[ext_resource type="Script" uid="uid://uoom8njvb1lu" path="res://text_fx_popup.gd" id="33_s1bup"]
+[ext_resource type="Script" uid="uid://bgmiggfcw8k2p" path="res://ui_bag_viewer.gd" id="34_rwa0e"]
 [ext_resource type="Texture2D" uid="uid://djiwq88rqxx33" path="res://images/fire.png" id="34_twiol"]
 [ext_resource type="Texture2D" uid="uid://b7l4i2yq2fbq4" path="res://images/black_hole.png" id="35_21n2c"]
 [ext_resource type="Texture2D" uid="uid://muiuehpjgwbw" path="res://images/grab.png" id="35_m1l3k"]
-[ext_resource type="Script" path="res://ui_choose_reward.gd" id="36_c2aw5"]
+[ext_resource type="Script" uid="uid://cl7s82k7ftloq" path="res://ui_choose_reward.gd" id="36_c2aw5"]
 [ext_resource type="Texture2D" uid="uid://nutkg5fwjbtq" path="res://images/white_hole.png" id="36_on8vn"]
 [ext_resource type="Texture2D" uid="uid://ccv6yol4gb1h0" path="res://images/dog.png" id="37_bdpah"]
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
@@ -67,16 +67,16 @@
 [ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/emerald.png" id="46_3tj5g"]
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="47_lomq7"]
 [ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="48_awy03"]
-[ext_resource type="Script" path="res://hand.gd" id="53_mnqjw"]
+[ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
-[ext_resource type="Script" path="res://ui_status_bar.gd" id="59_nqrtl"]
+[ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Texture2D" uid="uid://bhccry11chopd" path="res://images/expand_board.png" id="59_us2ab"]
 [ext_resource type="Texture2D" uid="uid://dlntaesp0urpa" path="res://images/trash_bin.png" id="60_63e6s"]
-[ext_resource type="Script" path="res://ui_skills_bar.gd" id="63_mpmib"]
+[ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_skills_bar.gd" id="63_mpmib"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
-[ext_resource type="Script" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
-[ext_resource type="Script" path="res://ui_blocker.gd" id="68_a5ll1"]
+[ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
+[ext_resource type="Script" uid="uid://kwssksc4v2rx" path="res://ui_blocker.gd" id="68_a5ll1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
@@ -85,7 +85,7 @@ shader_parameter/uSpeed = 0.0
 shader_parameter/uColor = Vector3(1, 1, 0.6)
 
 [sub_resource type="Curve" id="Curve_1irgn"]
-max_value = 5.0
+_limits = [0.0, 5.0, 0.0, 1.0]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 5), 0.0, 0.0, 0, 0]
 point_count = 2
 
@@ -367,6 +367,9 @@ expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m50mc"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f0uef"]
+bg_color = Color(0, 0, 0, 0.54902)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_axmio"]
 shader = ExtResource("4_8t4hj")
 shader_parameter/resolution = Vector2(1280, 720)
@@ -395,8 +398,8 @@ centered = false
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 position = Vector2(640, 360)
 amount = 10
-lifetime = 6.0
 texture = ExtResource("30_tpxmw")
+lifetime = 6.0
 emission_shape = 2
 emission_sphere_radius = 50.0
 spread = 180.0
@@ -421,6 +424,7 @@ bus = &"SFX"
 
 [node name="Click" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("4_j3q78")
+pitch_scale = 0.5
 bus = &"SFX"
 
 [node name="BoardSetup" type="AudioStreamPlayer" parent="SFX"]
@@ -1142,6 +1146,11 @@ layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "Start Test Avg Score"
 
+[node name="Button5" type="Button" parent="UI/InGameMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
+text = "Auto Place Items"
+
 [node name="LineEdit" type="LineEdit" parent="UI/InGameMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_hwh0u")
@@ -1252,8 +1261,8 @@ text = "Continue"
 position = Vector2(152, -1.5)
 emitting = false
 amount = 32
-one_shot = true
 texture = ExtResource("2_tqnxt")
+one_shot = true
 emission_shape = 3
 emission_rect_extents = Vector2(200, 1)
 spread = 180.0
@@ -1336,6 +1345,45 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Bag"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/BagViewer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/BagViewer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="ColorRect2" type="ColorRect" parent="UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(16, 4)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.901961, 0.6, 0.301961, 1)
+
+[node name="Label2" type="Label" parent="UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "On Board"
+
+[node name="ColorRect3" type="ColorRect" parent="UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(16, 4)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.501961, 0.8, 0.6, 1)
+
+[node name="Label3" type="Label" parent="UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "In Hand"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/BagViewer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
+custom_minimum_size = Vector2(16, 4)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+text = "Selected"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/BagViewer/VBoxContainer"]
 layout_mode = 2
@@ -1459,6 +1507,36 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_m50mc")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Tooltips"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Tooltips/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Tooltips/HBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = -6
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/Tooltips/HBoxContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f0uef")
+
+[node name="Label" type="Label" parent="UI/Tooltips/HBoxContainer/VBoxContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 10
+text = "Alt To Show More"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Tooltips/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0

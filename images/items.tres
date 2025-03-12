@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=32 format=3 uid="uid://c18w0067lhwqr"]
+[gd_resource type="SpriteFrames" load_steps=36 format=3 uid="uid://c18w0067lhwqr"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_khjgj"]
 [ext_resource type="Texture2D" uid="uid://bpbwgcoq21dfi" path="res://images/bomb.png" id="1_qe4ah"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://dqkai8831jyx4" path="res://images/dye_pink.png" id="6_lffdu"]
 [ext_resource type="Texture2D" uid="uid://bfdx2qnxrun23" path="res://images/flag.png" id="7_5rbky"]
 [ext_resource type="Texture2D" uid="uid://b7l4i2yq2fbq4" path="res://images/black_hole.png" id="7_f8hsl"]
+[ext_resource type="Texture2D" uid="uid://djb5uvo3rgm82" path="res://images/pin.png" id="7_vgtho"]
 [ext_resource type="Texture2D" uid="uid://nutkg5fwjbtq" path="res://images/white_hole.png" id="8_s2n7v"]
 [ext_resource type="Texture2D" uid="uid://ccv6yol4gb1h0" path="res://images/dog.png" id="9_u665u"]
 [ext_resource type="Texture2D" uid="uid://bw36kvtsp3hoe" path="res://images/cat.png" id="10_0nyac"]
@@ -26,8 +27,11 @@
 [ext_resource type="Texture2D" uid="uid://w0ddkb6yn7aa" path="res://images/citrine.png" id="17_wwmuq"]
 [ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/emerald.png" id="18_gf5hd"]
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/sapphire.png" id="19_a3f8e"]
+[ext_resource type="Texture2D" uid="uid://ct17gsbjcvbge" path="res://images/eagle.png" id="20_rg331"]
 [ext_resource type="Texture2D" uid="uid://c8jevimmjt1yy" path="res://images/amethyst.png" id="20_sn50c"]
+[ext_resource type="Texture2D" uid="uid://behfcr5jd04sj" path="res://images/rabbit.png" id="21_7oqg0"]
 [ext_resource type="Texture2D" uid="uid://c1sbuytw6e6ow" path="res://images/iai_cut.png" id="21_yb1qm"]
+[ext_resource type="Texture2D" uid="uid://ma22yn3m40qv" path="res://images/fox.png" id="22_mp5jm"]
 [ext_resource type="Texture2D" uid="uid://y4ekq5j45dc4" path="res://images/idol.png" id="24_xti05"]
 [ext_resource type="Texture2D" uid="uid://btep6kxjkhpwf" path="res://images/magician.png" id="25_ujc0v"]
 [ext_resource type="Texture2D" uid="uid://btpt25u6agnw4" path="res://images/volcano.png" id="30_7yekr"]
@@ -52,6 +56,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("6_lffdu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_vgtho")
 }, {
 "duration": 1.0,
 "texture": ExtResource("7_5rbky")
@@ -91,6 +98,15 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("11_e8w31")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_7oqg0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_mp5jm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_rg331")
 }, {
 "duration": 1.0,
 "texture": ExtResource("12_kskvb")

@@ -13,6 +13,7 @@ var coord : Vector2i = Vector2i(-1, -1)
 
 var extra = {}
 
+var tradeable : bool = false
 var on_process : Callable
 var on_place : Callable
 var on_quick : Callable
@@ -57,19 +58,24 @@ func setup(n : String):
 			var g = b.get_gem_at(coord)
 			if g:
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Pink})
-	elif name == "Flag":
+	elif name == "Pin":
 		image_id = 6
-		description = "Aura: Gems in 4-ring get +1 score."
+		description = "Quick: Pin the cell."
+		on_quick = func(b : Board, coord : Vector2i):
+			b.pin(coord)
+	elif name == "Flag":
+		image_id = 7
+		description = "Aura: Gems in 5-ring +1 score."
 		on_aura = func(event : int, b : Board, coord : Vector2i):
 			var g = b.get_gem_at(coord)
 			if g:
-				if b.offset_distance(coord, self.coord) <= 4:
+				if b.offset_distance(coord, self.coord) <= 5:
 					if event == Board.AuraEvent.Enter:
 						g.bonus_score += 1
 					else:
 						g.bonus_score -= 1
 	elif name == "Bomb":
-		image_id = 7
+		image_id = 8
 		description = "Active: Eliminate cells in 1-ring."
 		category = "Bomb"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
@@ -83,6 +89,9 @@ func setup(n : String):
 				Game.cells_root.add_child(sp_expl)
 				var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0), 4, 0.5 * Game.animation_speed)
 				Game.cells_root.add_child(fx)
+			)
+			tween.tween_interval(0.5 * Game.animation_speed)
+			tween.tween_callback(func():
 				Game.add_combo()
 				for c in coords:
 					if b.is_valid(c):
@@ -90,7 +99,7 @@ func setup(n : String):
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "C4":
-		image_id = 8
+		image_id = 9
 		description = "Active: Eliminate cells in 2-ring (Only activate by Bomb)."
 		category = "Bomb"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -117,7 +126,7 @@ func setup(n : String):
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Chain Bomb":
-		image_id = 9
+		image_id = 10
 		description = "Active: activate a random nearby gem. \nWhen combos hits 4, activate this"
 		category = "Bomb"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
@@ -135,7 +144,7 @@ func setup(n : String):
 			if combo >= 4:
 				b.activate_item(self, Board.ActiveReason.Item, self)
 	elif name == "Virus":
-		image_id = 10
+		image_id = 11
 		description = "Active: Eliminate all connected cells with the same color of this."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
@@ -163,13 +172,13 @@ func setup(n : String):
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Lightning":
-		image_id = 11
+		image_id = 12
 		description = "Active: Connect all 'Lightning's, eliminate cells on between."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var targets = b.find(func(gem : Gem, item : Item):
+			var targets = b.filter(func(gem : Gem, item : Item):
 				return item && item.name == "Lightning"
-			)
+			, true)
 			targets.sort_custom(func(c1, c2):
 				return b.offset_distance(c1, coord) < b.offset_distance(c2, coord)
 			)
@@ -195,25 +204,24 @@ func setup(n : String):
 				)
 				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Color Palette":
-		image_id = 12
+		image_id = 13
 		description = "Quick: Turn gem to wild type."
 		category = "Normal"
 		on_quick = func(b : Board, coord : Vector2i):
 			var g = b.get_gem_at(coord)
 			if g:
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
-		on_place = func(b : Board, coord : Vector2i):
-			b.activate_item(self, Board.ActiveReason.Item, self)
 	elif name == "Fire":
-		image_id = 13
-		description = "Active: Sets the cell to burning state."
+		image_id = 14
+		description = "Eliminate: Sets the cell to burning state."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
 			b.set_state_at(coord, Cell.State.Burning)
+			SSound.sfx_start_buring.play()
 			return true
 	elif name == "Black Hole":
-		image_id = 14
-		description = "Active: if this the last item activated. Eliminate all cells."
+		image_id = 15
+		description = "Active: If this the last item activated. Eliminate all cells."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			if b.active_items.back().first == self:
@@ -250,7 +258,7 @@ func setup(n : String):
 				)
 				b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "White Hole":
-		image_id = 15
+		image_id = 16
 		description = "Active: Eliminate all cells. (Only activate if this is the first item activated.)"
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -282,21 +290,18 @@ func setup(n : String):
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Dog":
-		image_id = 16
-		description = "Get 1 base score more for each animal eliminated this roll."
-		category = "Animal"
-		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			tween.tween_callback(func():
-				var pos = b.get_pos(coord)
-				var score = 5
-				if b.touched_items.has("cat") || b.touched_items.has("rooster"):
-					score += 5
-				Game.add_combo()
-				Game.add_score(score, pos)
-			)
-	elif name == "Cat":
 		image_id = 17
-		description = "Active: Jump to a cell and eliminate it within 2 distance. Repeat 3 times."
+		description = "Eliminate: +200 score for each animal. (Not affected by combos)"
+		category = "Animal"
+		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
+			var targets = b.filter(func(gem : Gem, item : Item):
+				return item && item.category == "Animal"
+			, true)
+			Game.add_score(200 * targets.size(), b.get_pos(coord), false)
+			return true
+	elif name == "Cat":
+		image_id = 18
+		description = "Active: Jump to a cell and eliminate it within 2-ring. Repeat 3 times."
 		category = "Animal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var coords : Array[Vector2i] = []
@@ -321,18 +326,17 @@ func setup(n : String):
 					b.eliminate([c], tween, Board.ActiveReason.Item, self)
 					bc = c
 	elif name == "Rooster":
-		image_id = 18
-		description = "Active: activate 3 items."
+		image_id = 19
+		description = "Active: Activate all animal activater items."
 		category = "Animal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var cands = b.find(func(gem : Gem, item : Item):
-				if item && !item.active:
+			var targets = b.filter(func(gem : Gem, item : Item):
+				if item && !item.active && item.on_process.is_valid() && item.category == "Animal":
 					return true
 				return false
 			)
-			if !cands.is_empty():
+			if !targets.is_empty():
 				var pos = b.get_pos(coord)
-				var targets = SMath.pick_n(cands, 3) 
 				tween.tween_callback(func():
 					for c in targets:
 						var l = SEffect.leading_line_pb.instantiate()
@@ -343,22 +347,88 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					for c in targets:
-						b.activate(b.get_item_at(c), c, Board.ActiveReason.Item, self)
+						b.activate(c, Board.ActiveReason.Item, self)
 				)
+	elif name == "Rabbit":
+		image_id = 20
+		description = "Active: Jump to a cell and eliminate it within 2-ring. If jump to another 'Rabbit', add a new 'Rabbit' to Bag. Repeat 2 times."
+		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+			var coords : Array[Vector2i] = []
+			var bc = coord
+			for i in 2:
+				var cands = []
+				for c in b.offset_ring(bc, 1):
+					if b.is_valid(c) && !coords.has(c):
+						cands.append(c)
+				for c in b.offset_ring(bc, 2):
+					if b.is_valid(c) && !coords.has(c):
+						cands.append(c)
+				if !cands.is_empty():
+					var c = cands.pick_random()
+					var pos = b.get_pos(c)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, 0.5, Vector2(0.0, -30.0), 0.4 * Game.animation_speed)
+					coords.append(c)
+					tween.tween_callback(func():
+						Game.add_combo()
+						Game.add_score(b.gem_score_at(c), pos)
+						
+						var item = b.get_item_active_or_not_at(c)
+						if item && item != self && item.name == "Rabbit":
+							var sp = AnimatedSprite2D.new()
+							sp.position = b.get_pos(coord)
+							sp.sprite_frames = Item.item_frames
+							sp.frame = image_id
+							sp.z_index = 3
+							Game.cells_root.add_child(sp)
+							var tween2 = Game.get_tree().create_tween()
+							SAnimation.cubic_curve_to(tween2, sp, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
+							tween2.tween_callback(func():
+								var new_item = Item.new()
+								new_item.setup("Rabbit")
+								Game.items.append(new_item)
+							)
+					)
+					b.eliminate([c], tween, Board.ActiveReason.Item, self)
+					bc = c
+	elif name == "Fox":
+		image_id = 21
+		description = "Tradeable\nPlace: If this item is placed from Bag, place another animal from Bag."
+		category = "Animal"
+		tradeable = true
+		on_place = func(b : Board, coord : Vector2i, reason : int):
+			if reason == Board.PlaceReason.FromBag:
+				var cands = []
+				for i in Game.items:
+					if i.coord.x == -1 && i.coord.y == -1 && i.category == "Animal":
+						cands.append(i)
+				if !cands.is_empty():
+					var item = cands.pick_random()
+					effect_place_item_from_bag(b, item)
+		
+	elif name == "Eagle":
+		image_id = 22
+		description = "Place: Place another animal from Bag."
+		category = "Animal"
+		on_place = func(b : Board, coord : Vector2i, reason : int):
+			var cands = []
+			for i in Game.items:
+				if i.coord.x == -1 && i.coord.y == -1 && i.category == "Animal":
+					cands.append(i)
+			if !cands.is_empty():
+				var item = cands.pick_random()
+				effect_place_item_from_bag(b, item)
 	elif name == "Hotdog":
-		image_id = 19
-		description = ""
+		image_id = 23
+		description = "Eliminate: +350 score. (Not affected by combos)"
 		category = "Food"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			var pos = b.get_pos(coord)
-			Game.add_combo()
-			Game.add_score(50, pos)
+			Game.add_score(350, b.get_pos(coord), false)
 			return true
 	elif name == "Iai Cut":
-		image_id = 20
-		description = "Active: Eliminate a row on a random direction. (Eliminated by 'Iai Cut' will add one direction, Max 3)."
+		image_id = 24
+		description = "Active: Eliminate a row on a random direction. (Eliminated by 'Iai Cut' will add one direction, Max 3)"
 		category = "Normal"
-		on_place = func(b : Board, coord : Vector2i):
+		on_place = func(b : Board, coord : Vector2i, reason : int):
 			extra.num = 1
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
 			if reason == Board.ActiveReason.Item && source.name == "Iai Cut":
@@ -403,7 +473,7 @@ func setup(n : String):
 			)
 			b.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Magnet":
-		image_id = 21
+		image_id = 25
 		description = "Active: Move 2-ring activable items toward this."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
@@ -428,15 +498,16 @@ func setup(n : String):
 							empty_places.append(c)
 			)
 	elif name == "Rainbow":
-		image_id = 22
-		description = "Active: Get 1.5x score mult this matching stage."
+		image_id = 26
+		description = "Active: Get +0.5 score multipler this matching stage."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
-			Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","modify_mult":1.5}, Buff.Duration.ThisMatchingStage)
+			Game.float_text("+0.5 Mult", b.get_pos(coord), Color(0.7, 0.3, 0.9))
+			Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","modify_add":0.5}, Buff.Duration.ThisMatchingStage)
 			return true
 	elif name == "Idol":
-		image_id = 23
-		description = "Aura: +3 score.\nActive: Gems in 1-ring get -1 score permanently."
+		image_id = 27
+		description = "Aura: All gems +3 score.\nActive: Gems in 1-ring get -1 score permanently."
 		category = "Normal"
 		on_aura = func(event : int, b : Board, coord : Vector2i):
 			var g = b.get_gem_at(coord)
@@ -454,22 +525,22 @@ func setup(n : String):
 				for c in coords:
 					var g = b.get_gem_at(c)
 					if g:
-						Game.float_text("-1", b.get_pos(c))
+						Game.float_text("-1", b.get_pos(c), Color(0.8, 0.1, 0.0))
 						g.base_score -= 1
 			)
 	elif name == "Magician":
-		image_id = 24
-		description = "Active: Turn 3 gems to wild."
+		image_id = 28
+		description = "Active: Turn 5 gems to wild."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var cands = b.find(func(gem : Gem, item : Item):
+			var cands = b.filter(func(gem : Gem, item : Item):
 				if gem && gem.type != Gem.Type.Wild:
 					return true
 				return false
 			)
 			if !cands.is_empty():
 				var pos = b.get_pos(coord)
-				var targets = SMath.pick_n(cands, 3) 
+				var targets = SMath.pick_n(cands, 5) 
 				tween.tween_callback(func():
 					for c in targets:
 						var l = SEffect.leading_line_pb.instantiate()
@@ -483,7 +554,7 @@ func setup(n : String):
 						Buff.create(b.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
 				)
 	elif name == "Ruby":
-		image_id = 25
+		image_id = 29
 		description = "Eliminate: Red type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -491,7 +562,7 @@ func setup(n : String):
 			Game.add_status("Red +1", b.gem_col(Gem.Type.Red))
 			return true
 	elif name == "Citrine":
-		image_id = 26
+		image_id = 30
 		description = "Eliminate: Orange type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -499,7 +570,7 @@ func setup(n : String):
 			Game.add_status("Orange +1", b.gem_col(Gem.Type.Orange))
 			return true
 	elif name == "Emerald":
-		image_id = 27
+		image_id = 31
 		description = "Eliminate: Green type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -507,7 +578,7 @@ func setup(n : String):
 			Game.add_status("Green +1", b.gem_col(Gem.Type.Green))
 			return true
 	elif name == "Sapphire":
-		image_id = 28
+		image_id = 32
 		description = "Eliminate: Blue type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -515,7 +586,7 @@ func setup(n : String):
 			Game.add_status("Blue +1", b.gem_col(Gem.Type.Blue))
 			return true
 	elif name == "Amethyst":
-		image_id = 29
+		image_id = 33
 		description = "Eliminate: Pink type gems' base score +1."
 		category = "Normal"
 		on_eliminate = func(b : Board, coord : Vector2i, reason : int, source):
@@ -523,7 +594,7 @@ func setup(n : String):
 			Game.add_status("Pink +1", b.gem_col(Gem.Type.Pink))
 			return true
 	elif name == "Volcano":
-		image_id = 30
+		image_id = 34
 		description = "Active: Eliminate 2 random cells in 2-ring. Repeat 2 times."
 		category = "Normal"
 		on_process = func(b : Board, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
@@ -564,9 +635,40 @@ func get_tooltip():
 	var ret : Array[Pair] = []
 	ret.append(Pair.new(name, description))
 	if description.find("Active:") != -1:
-		ret.append(Pair.new("Active", "Effect when the cell is eliminated. \nActive effects will stack and process one by one when the matching stops."))
+		ret.append(Pair.new("#Active", "Effect when the cell is eliminated. \nActive effects will stack and process one by one when the matching stops."))
 	if description.find("Quick:") != -1:
-		ret.append(Pair.new("Quick", "Effect when the item is placed into the board. And then the item will disapear."))
+		ret.append(Pair.new("#Quick", "Effect when the item is placed into the board. And then the item will disapear."))
 	if description.find("Aura:") != -1:
-		ret.append(Pair.new("Aura", "Effect all gems while this item is on board."))
+		ret.append(Pair.new("#Aura", "Effect all gems within a range while this item is on board."))
+	if description.find("Tradeable") != -1:
+		ret.append(Pair.new("#Tradeable", "You can drag and drop this item to Bag to exchange another item."))
 	return ret
+
+func effect_place_item_from_bag(b : Board, target : Item, to : Vector2i = Vector2i(-1, -1)):
+	if to.x == -1 && to.y == -1:
+		var places = b.filter(func(g, i):
+			return g && !i
+		)   
+		if !places.is_empty():
+			return
+		to = places.pick_random()
+	var to_pos = b.get_pos(to)
+	Game.begin_busy()
+	var l = SEffect.leading_line_pb.instantiate()
+	l.setup(b.get_pos(coord), to_pos, 0.3, 0.3)
+	l.z_index = 3
+	Game.cells_root.add_child(l)
+	var tween = Game.get_tree().create_tween()
+	tween.tween_interval(0.3)
+	var sp = AnimatedSprite2D.new()
+	sp.position = Game.status_bar_ui.bag_button.get_global_rect().get_center()
+	sp.sprite_frames = Item.item_frames
+	sp.frame = target.image_id
+	sp.z_index = 3
+	Game.cells_root.add_child(sp)
+	SAnimation.cubic_curve_to(tween, sp, to_pos, 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
+	tween.tween_callback(func():
+		sp.queue_free()
+		Game.end_busy()
+		b.set_item_at(coord, target, Board.PlaceReason.FromBag)
+	)

@@ -56,18 +56,18 @@ func _ready() -> void:
 		Game.roll()
 	)
 	roll_button.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Roll", "Roll the board!")])
+		STooltip.show([Pair.new("Roll", "Roll the board! New gems will fill in the board, old gems except pinned ones will dispear.")])
 	)
 	roll_button.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	play_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		#SSound.sfx_click.play()
 		play_button.disabled = true
 		Game.play()
 	)
 	play_button.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Play", "Start matching patterns.")])
+		STooltip.show([Pair.new("Play", "Start matching stage. When there is no patterns, matching stage stops.")])
 		for n in preview_matchings:
 			n.queue_free()
 			Game.overlay.remove_child(n)

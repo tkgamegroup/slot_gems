@@ -211,27 +211,16 @@ func release_item(item : Item):
 
 func add_combo():
 	combos += 1
-	var burning_cells = []
-	for y in board.cy:
-		for x in board.cx:
-			var c = Vector2i(x, y)
-			if board.get_state_at(c) == Cell.State.Burning:
-				burning_cells.append(c)
-			var i = board.get_item_at(c)
-			if i && i.on_combo.is_valid():
-				i.on_combo.call(self, combos)
-	for c in burning_cells:
-		for cc in board.offset_neighbors(c):
-			if board.get_state_at(cc) != Cell.State.Burning:
-				board.set_state_at(cc, Cell.State.Burning)
-				break
+	if board:
+		board.on_combo()
 
-func float_text(txt : String, pos : Vector2):
+func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0)):
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
 	lb.text = txt
+	lb.add_theme_color_override("font_color", color)
 	ui.z_index = 10
 	overlay.add_child(ui)
 	var tween = get_tree().create_tween()
@@ -241,30 +230,34 @@ func float_text(txt : String, pos : Vector2):
 		ui.queue_free()
 	)
 
-func add_score(base : int, pos : Vector2):
+func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	var mult = int(combos * score_mult)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
-	lb.text = "%dx%d" % [base, int(mult * score_mult)]
+	if affected_by_combos:
+		lb.text = "%dx%d" % [base, mult]
+	else:
+		lb.text = "%d" % int(base * score_mult)
 	ui.z_index = 10
 	overlay.add_child(ui)
 	var tween = get_tree().create_tween()
-	tween.tween_method(func(t):
-		ui.rotation_degrees = sin(t * PI * 10.0) * t * 30.0
-	, 1.0, 0.0, 1.0)
-	tween.parallel().tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_callback(func():
-		var s = base * int(mult * score_mult)
-		lb.text = "%d" % s
-		score += s
-	)
+	if affected_by_combos:
+		tween.tween_method(func(t):
+			ui.rotation_degrees = sin(t * PI * 10.0) * t * 30.0
+		, 1.0, 0.0, 1.0)
+		tween.parallel().tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_callback(func():
+			var s = base * mult
+			lb.text = "%d" % s
+			score += s
+		)
+	else:
+		score += int(base * score_mult)
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
 	tween.parallel().tween_property(ui, "scale", Vector2(0.8, 0.8), 0.5)
-	tween.tween_callback(func():
-		ui.queue_free()
-	)
+	tween.tween_callback(ui.queue_free)
 
 var status_tween : Tween
 func add_status(s : String, col : Color):
@@ -320,6 +313,17 @@ func get_level_score(lv : int):
 			return 40000000
 		8:
 			return 60000000
+
+func begin_busy():
+	game_ui.roll_button.disabled = true
+	game_ui.play_button.disabled = true
+	hand.disabled = true
+
+func end_busy():
+	if rolls > 0:
+		game_ui.roll_button.disabled = false
+	game_ui.play_button.disabled = false
+	hand.disabled = false
 
 func start_new_game():
 	gem_bouns_scores.clear()
@@ -415,9 +419,9 @@ func start_new_game():
 		var item = Item.new()
 		item.setup("Dye: Pink")
 		items.append(item)
-	for i in 2:
+	for i in 10:
 		var item = Item.new()
-		item.setup("Iai Cut")
+		item.setup("Rabbit")
 		items.append(item)
 	
 	status_bar_ui.appear()
@@ -430,10 +434,7 @@ func start_new_game():
 	)
 	board.rolling_finished.connect(func():
 		stage = Stage.Deploy
-		if rolls > 0:
-			game_ui.roll_button.disabled = false
-		game_ui.play_button.disabled = false
-		hand.disabled = false
+		end_busy()
 	)
 	board.matching_finished.connect(func():
 		stage = Stage.Deploy
@@ -463,10 +464,7 @@ func start_new_game():
 			level_end()
 			level_clear_ui.enter()
 		else:
-			if rolls > 0:
-				game_ui.roll_button.disabled = false
-			game_ui.play_button.disabled = false
-			hand.disabled = false
+			end_busy()
 	)
 	hand.rolling_finished.connect(func():
 		stage = Stage.Deploy
@@ -518,16 +516,12 @@ func roll():
 		score_mult = 1.0
 		animation_speed = base_animation_speed
 		board.roll()
-		game_ui.roll_button.disabled = true
-		game_ui.play_button.disabled = true
-		hand.disabled = true
+		begin_busy()
 		history.rolls += 1
 
 func play():
 	stage = Stage.Matching
-	game_ui.roll_button.disabled = true
-	game_ui.play_button.disabled = true
-	hand.disabled = true
+	begin_busy()
 	board.matching()
 
 func toggle_in_game_menu():
@@ -590,9 +584,9 @@ func _unhandled_input(event: InputEvent) -> void:
 									pins_num -= 1
 							elif props == Props.Activate:
 								if activates_num > 0:
-									var g = board.get_gem_at(c)
-									if g && g.item:
-										board.activate(g.item, c, Board.ActiveReason.RcAction)
+									var i = board.get_item_at(c)
+									if i:
+										board.activate(c, Board.ActiveReason.RcAction)
 										board.matching()
 										activates_num -= 1
 							elif props == Props.Grab:

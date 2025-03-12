@@ -25,9 +25,15 @@ func _ready() -> void:
 		Game.bag_viewer_ui.enter()
 	)
 	bag_button.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Your Bag", "Your gems and items.")])
+		if Game.hand && Game.hand.dragging && Game.hand.dragging.item.tradeable:
+			Game.hand.dragging.trade.show()
+			STooltip.show([Pair.new("Your Bag", "Drop the item here to exchange another item.")])
+		else:
+			STooltip.show([Pair.new("Your Bag", "Your gems and items.")])
 	)
 	bag_button.mouse_exited.connect(func():
+		if Game.hand && Game.hand.dragging:
+			Game.hand.dragging.trade.hide()
 		STooltip.close()
 	)
 	gear_button.pressed.connect(func():

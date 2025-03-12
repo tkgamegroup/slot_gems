@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://835567ur0hv5"]
 
-[ext_resource type="Shader" path="res://dissolve.gdshader" id="1_wlc40"]
+[ext_resource type="Shader" uid="uid://b17rpch1hfeio" path="res://dissolve.gdshader" id="1_wlc40"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_htsm1"]
 noise_type = 0

@@ -18,9 +18,18 @@ signal rolling_finished
 func is_empty():
 	return get_child_count() == 0
 
+func get_item_count():
+	return get_child_count()
+
+func get_item(idx : int) -> UiSlot:
+	if idx >= 0 && idx < get_child_count():
+		return get_child(idx)
+	return null
+
 func release_dragging():
 	if dragging:
 		dragging.z_index = 0
+		dragging.trade.hide()
 		dragging = null
 
 func draw():
@@ -29,6 +38,7 @@ func draw():
 	var item : Item = Game.get_item()
 	var ui = ui_slot.instantiate()
 	ui.item = item
+	item.coord = Vector2i(get_item_count(), -1)
 	self.add_child(ui)
 	ui.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
@@ -51,20 +61,12 @@ func discard(use_animation : bool = false):
 			n.queue_free()
 			remove_child(n)
 
-func get_item_count():
-	return get_child_count()
-
-func get_item(idx : int) -> UiSlot:
-	if idx >= 0 && idx < get_child_count():
-		return get_child(idx)
-	return null
-
 func use_item(ui : UiSlot, c : Vector2i):
 	if Game.board.is_valid(c):
 		var g = Game.board.get_gem_at(c)
 		var i = Game.board.get_item_at(c)
-		if g && !i:
-			Game.board.set_item_at(c, ui.item)
+		if g && (!i || ui.item.on_quick.is_valid()):
+			Game.board.set_item_at(c, ui.item, Board.PlaceReason.FromHand)
 			ui.queue_free()
 			return true
 	return false
@@ -117,7 +119,12 @@ func _input(event: InputEvent) -> void:
 		if event.is_released():
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				if dragging && !disabled:
-					if Game.board:
+					if dragging.trade.visible:
+						Game.release_item(dragging.item)
+						dragging.queue_free()
+						dragging = null
+						draw()
+					elif Game.board:
 						var c = Game.tilemap.local_to_map(Game.tilemap.get_local_mouse_position())
 						c -= Game.board.central_coord - Vector2i(Game.board.cx / 2, Game.board.cy / 2)
 						if use_item(dragging, c):

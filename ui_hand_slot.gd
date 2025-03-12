@@ -1,5 +1,6 @@
 extends Control
 
+@onready var trade : Sprite2D = $Trade
 @onready var sp : AnimatedSprite2D = $SP
 
 var item : Item = null

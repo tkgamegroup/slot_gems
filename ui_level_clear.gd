@@ -117,7 +117,7 @@ func enter():
 								if idx != -1:
 									tween3.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
 									tween3.parallel()
-									SAnimation.cubic_curve_to(tween3, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
+									SAnimation.cubic_curve_to(tween3, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
 									tween3.tween_callback(func():
 										for i in 5:
 											var g = Gem.new()
@@ -134,7 +134,7 @@ func enter():
 				elif idx == 1:
 					tween.tween_callback(func():
 						Game.bag_viewer_ui.enter(5, "Select up to 5 gems to Remove", func(gems):
-							var bag_pos = Game.bag_button.get_global_rect().get_center()
+							var bag_pos = Game.status_bar_ui.bag_button.get_global_rect().get_center()
 							var base_pos = self.get_global_rect().get_center() + Vector2(-16 * (gems.size() - 1), 200)
 							var uis = []
 							for g in gems:

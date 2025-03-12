@@ -89,6 +89,100 @@ func new_test(tasks : int, type : int):
 func start_test_avg_score(times : int):
 	new_test(times, TaskType.AvgScore)
 
+func auto_place_items():
+	if Game.hand.get_item_count() > 0:
+		var bd = Game.board
+		var cx = Game.board.cx
+		var cy = Game.board.cy
+		var center = Vector2i(cx / 2, cy / 2)
+		var item_uis = []
+		for i in Game.hand.get_item_count():
+			var ui = Game.hand.get_item(i)
+			item_uis.append(ui)
+		var one_less_places : Array[Array] = []
+		for i in Gem.Type.Count - 1:
+			one_less_places.append([])
+		for y in cy:
+			for x in cx:
+				var c = Vector2i(x, y)
+				for p in Game.patterns:
+					for col in Gem.Type.Count - 1:
+						var res : Array[Vector2i] = p.differ(bd, c, col + 1)
+						if !res.is_empty():
+							one_less_places[col].append(res[0])
+		SMath.remove_if(item_uis, func(ui):
+			var item = ui.item
+			if item.name.begins_with("Dye: "):
+				var color = Gem.name_to_type(item.name.substr(5))
+				var arr = one_less_places[color - 1]
+				if !arr.is_empty():
+					if Game.hand.use_item(ui, SMath.pick_and_remove(arr)):
+						return true
+			elif item.name == "Color Palette":
+				for arr in one_less_places:
+					if !arr.is_empty():
+						if Game.hand.use_item(ui, SMath.pick_and_remove(arr)):
+							return true
+			return false
+		)
+		var activater_places : Array[Vector2i] = []
+		var central_activater_places : Array[Vector2i] = []
+		for y in cy:
+			for x in cx:
+				var c = Vector2i(x, y)
+				for p in Game.patterns:
+					var res : Array[Vector2i] = p.match_with(bd, c)
+					for cc in res:
+						activater_places.append(cc)
+						central_activater_places.append(cc)
+		central_activater_places.sort_custom(func(c1, c2):
+			return bd.offset_distance(c1, center) < bd.offset_distance(c2, center)
+		)
+		var aura_places = []
+		for y in cy:
+			for x in cx:
+				var c = Vector2i(x, y)
+				if !activater_places.has(c):
+					aura_places.append(c)
+		SMath.remove_if(item_uis, func(ui):
+			var item = ui.item
+			if item.on_process.is_valid():
+				if !central_activater_places.is_empty():
+					var c = central_activater_places[0]
+					if Game.hand.use_item(ui, c):
+						central_activater_places.remove_at(0)
+						activater_places.erase(c)
+						return true
+			return false
+		)
+		SMath.remove_if(item_uis, func(ui):
+			var item = ui.item
+			if item.on_aura.is_valid():
+				if !aura_places.is_empty():
+					if Game.hand.use_item(ui, SMath.pick_and_remove(aura_places)):
+						aura_places.remove_at(0)
+						return true
+			return false
+		)
+		SMath.remove_if(item_uis, func(ui):
+			var item = ui.item
+			if item.on_eliminate.is_valid():
+				if item.name == "Rainbow" || item.name == "Fire":
+					var c = activater_places[0]
+					if Game.hand.use_item(ui, c):
+						activater_places.remove_at(0)
+						central_activater_places.erase(c)
+						return true
+				else:
+					if !central_activater_places.is_empty():
+						var c = central_activater_places[0]
+						if Game.hand.use_item(ui, c):
+							central_activater_places.remove_at(0)
+							activater_places.erase(c)
+							return true
+			return false
+		)
+
 func time_out():
 	match task_type:
 		TaskType.AvgScore:
@@ -124,60 +218,7 @@ func time_out():
 						step = TaskSteps.ToMatch
 						Game.roll()
 				elif step == TaskSteps.ToMatch:
-					var bd = Game.board
-					var cx = Game.board.cx
-					var cy = Game.board.cy
-					var center = Vector2i(cx / 2, cy / 2)
-					if Game.hand.get_item_count() > 0:
-						var dye_places : Array[Array] = []
-						for i in Gem.Type.Count - 1:
-							dye_places.append([])
-						for y in cy:
-							for x in cx:
-								var c = Vector2i(x, y)
-								for p in Game.patterns:
-									for col in Gem.Type.Count - 1:
-										var res : Array[Vector2i] = p.differ(bd, c, col + 1)
-										if !res.is_empty():
-											dye_places[col].append(res[0])
-						for i in Game.hand.get_item_count():
-							var ui = Game.hand.get_item(i)
-							var item = ui.item
-							if item.name.begins_with("Dye: "):
-								var color = Gem.name_to_type(item.name.substr(5))
-								var arr = dye_places[color - 1]
-								if !arr.is_empty():
-									Game.hand.use_item(ui, SMath.pick_and_remove(arr))
-						var activater_places : Array[Vector2i] = []
-						for y in cy:
-							for x in cx:
-								var c = Vector2i(x, y)
-								for p in Game.patterns:
-									var res : Array[Vector2i] = p.match_with(bd, c)
-									for cc in res:
-										activater_places.append(cc)
-						activater_places.sort_custom(func(c1, c2):
-							return bd.offset_distance(c1, center) < bd.offset_distance(c2, center)
-						)
-						var aura_places = []
-						for y in cy:
-							for x in cx:
-								var c = Vector2i(x, y)
-								if !activater_places.has(c):
-									aura_places.append(c)
-						for i in Game.hand.get_item_count():
-							var ui = Game.hand.get_item(i)
-							var item = ui.item
-							if item.on_process.is_valid():
-								if !activater_places.is_empty():
-									Game.hand.use_item(ui, activater_places[0])
-									activater_places.remove_at(0)
-						for i in Game.hand.get_item_count():
-							var ui = Game.hand.get_item(i)
-							var item = ui.item
-							if item.on_aura.is_valid():
-								if !aura_places.is_empty():
-									Game.hand.use_item(ui, SMath.pick_and_remove(aura_places))
+					auto_place_items()
 					step = TaskSteps.GetResult
 					Game.play()
 				elif step == TaskSteps.GetResult:

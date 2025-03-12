@@ -24,7 +24,7 @@ func pick_and_remove(arr : Array):
 
 func pick_n(arr : Array, n : int) -> Array:
 	var ret = []
-	for i in n:
+	for i in min(n, arr.size()):
 		ret.append(pick_and_remove(arr))
 		if ret.is_empty():
 			break
@@ -32,9 +32,10 @@ func pick_n(arr : Array, n : int) -> Array:
 
 func remove_if(arr : Array, cb : Callable):
 	var targets = []
-	for i in arr:
-		if cb.call(i):
-			targets.append(i)
+	for i in range(arr.size() - 1, -1, -1):
+		var item = arr[i]
+		if cb.call(item):
+			targets.append(item)
 	for t in targets:
 		arr.erase(t)
 

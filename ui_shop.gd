@@ -11,7 +11,7 @@ func buy_gem(g : Gem, img : AnimatedSprite2D):
 	var tween = Game.get_tree().create_tween()
 	tween.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
 	tween.parallel()
-	SAnimation.cubic_curve_to(tween, img, Game.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
+	SAnimation.cubic_curve_to(tween, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
 	tween.tween_callback(func():
 		Game.gems.append(g)
 		img.queue_free()

@@ -6,7 +6,14 @@ enum ActiveReason
 {
 	Pattern,
 	Item,
+	Burning,
 	RcAction
+}
+
+enum PlaceReason
+{
+	FromHand,
+	FromBag
 }
 
 enum AuraEvent
@@ -31,7 +38,6 @@ var show_coords : bool = false
 
 var active_items : Array[Triple] = []
 var active_serial : int = 0
-var eliminated_items : Dictionary[String, int] = {}
 var skill_effects : Array[Pair]
 var auras : Array[Item]
 
@@ -154,11 +160,15 @@ func get_item_at(c : Vector2i):
 		return null
 	return cells[c.y * cx + c.x].item
 
-func set_item_at(c : Vector2i, i : Item):
+func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.FromHand):
 	if !is_valid(c):
 		return
 	var cell = cells[c.y * cx + c.x]
 	var oi = cell.item
+	if i && i.on_quick.is_valid():
+		i.on_quick.call(self, c)
+		Game.release_item(i)
+		return oi
 	if oi:
 		if oi.on_aura.is_valid():
 			auras.erase(oi)
@@ -169,12 +179,8 @@ func set_item_at(c : Vector2i, i : Item):
 			Game.release_item(oi)
 	if i:
 		i.coord = c
-		if i.on_quick.is_valid():
-			i.on_quick.call(self, c)
-			Game.release_item(i)
-			return oi
 		if i.on_place.is_valid():
-			i.on_place.call(self, c)
+			i.on_place.call(self, c, r)
 		if i.on_aura.is_valid():
 			auras.append(i)
 			for y in cy:
@@ -190,7 +196,7 @@ func get_state_at(c : Vector2i):
 	var idx = c.y * cx + c.x
 	return cells[idx].state
 
-func set_state_at(c : Vector2i, s : int):
+func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
@@ -207,21 +213,34 @@ func set_state_at(c : Vector2i, s : int):
 	elif s == Cell.State.Consumed:
 		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
 	elif s == Cell.State.Burning:
-		SSound.sfx_start_buring.play()
 		ui.burn.show()
+		if extra.has("pos"):
+			var tween = Game.get_tree().create_tween()
+			ui.burn.global_position = extra.pos
+			tween.tween_property(ui.burn, "position", Vector2(0, 0), 0.15)
 	return true
 
-func find(cb : Callable) -> Array[Vector2i]:
+func filter(cb : Callable, include_active_items : bool = false) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
 			if cb.call(get_gem_at(c), get_item_at(c)):
 				ret.append(c)
-	for i in active_items:
-		if cb.call(null, i.first):
-			ret.append(i.second)
+	if include_active_items:
+		for i in active_items:
+			if cb.call(null, i.first):
+				ret.append(i.second)
 	return ret
+
+func get_item_active_or_not_at(c : Vector2i):
+	var item = get_item_at(c)
+	if item:
+		return item
+	for i in active_items:
+		if i.second == c:
+			return i.first
+	return null
 
 func gem_score_at(c : Vector2i):
 	var g = get_gem_at(c)
@@ -259,12 +278,6 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			coords.append(c)
 			uis.append(Game.get_cell_ui(c))
 			ptcs.append(particles_pb.instantiate())
-			var i = get_item_at(c)
-			if i:
-				if eliminated_items.has(i.name):
-					eliminated_items[i.name] += 1
-				else:
-					eliminated_items[i.name] = 1
 	tween.tween_callback(func():
 		for idx in coords.size():
 			var c = coords[idx]
@@ -279,12 +292,7 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			ptc.color = Gem.type_color(g.type)
 			Game.overlay.add_child(ptc)
 			if i:
-				var do_activate = true
-				if i.on_eliminate.is_valid():
-					do_activate = i.on_eliminate.call(self, c, reason, source)
-				if do_activate:
-					activate(i, c, reason, source)
-				set_item_at(c, null)
+				activate(c, reason, source)
 	)
 	tween.tween_method(func(t):
 		for ui in uis:
@@ -296,20 +304,31 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			uis[i].gem.z_index = 0
 			ptcs[i].queue_free()
 			if !cell_at(c).pined:
-				set_state_at(c, Cell.State.Consumed)
+				if get_state_at(c) != Cell.State.Burning:
+					set_state_at(c, Cell.State.Consumed)
 	)
 
-func activate(item : Item, coord : Vector2i, reason : ActiveReason, source = null):
-	if !item.active:
-		if item.on_process.is_valid():
-			item.active = true
-			var sp = active_item_pb.instantiate()
-			sp.frame = item.image_id
-			sp.position = get_pos(coord)
-			sp.z_index = 2
-			Game.cells_root.add_child(sp)
-			active_items.append(Triple.new(item, coord, sp))
-			active_serial += 1
+func activate(c : Vector2i, reason : ActiveReason, source = null):
+	var item = get_item_at(c)
+	if !item:
+		return
+	if cell_at(c).pined:
+		return
+	set_item_at(c, null)
+	if item.on_eliminate.is_valid():
+		if !item.on_eliminate.call(self, c, reason, source):
+			return
+	if item.active:
+		return
+	if item.on_process.is_valid():
+		item.active = true
+		var sp = active_item_pb.instantiate()
+		sp.frame = item.image_id
+		sp.position = get_pos(c)
+		sp.z_index = 2
+		Game.cells_root.add_child(sp)
+		active_items.append(Triple.new(item, c, sp))
+		active_serial += 1
 
 func process_active_item(t : Triple):
 	var item = t.first
@@ -505,17 +524,21 @@ func roll():
 		tween.tween_interval(0.015)
 
 func clear_consumed():
-	var burned_cells = 0
+	var burning_cells = []
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
 			var s = get_state_at(c)
-			if s == Cell.State.Consumed || s == Cell.State.Burning:
-				if s == Cell.State.Burning:
-					burned_cells += 1
+			if s == Cell.State.Consumed:
 				set_gem_at(c, null)
 				set_state_at(c, Cell.State.Normal)
-	if burned_cells > 0:
+			elif s == Cell.State.Burning:
+				burning_cells.append(c)
+	if burning_cells.size() > 0:
+		for c in burning_cells:
+			Game.add_score(gem_score_at(c), get_pos(c), false)
+			set_gem_at(c, null)
+			set_state_at(c, Cell.State.Normal)
 		SSound.sfx_end_buring.play()
 
 func fill_blanks():
@@ -536,6 +559,14 @@ func fill_blanks():
 			matching()
 	)
 
+func on_combo():
+	for y in cy:
+		for x in cx:
+			var c = Vector2i(x, y)
+			var i = get_item_at(c)
+			if i && i.on_combo.is_valid():
+				i.on_combo.call(self, Game.combos)
+
 func matching():
 	var no_patterns = true
 	var used_runes = {}
@@ -547,25 +578,45 @@ func matching():
 				if !res.is_empty():
 					no_patterns = false
 					tween.tween_callback(func():
-						var txt_pos = Vector2(0, 0)
-						SSound.sfx_tom.play()
-						
 						p.add_exp(1)
+						
+						var burning_cells = []
+						for yy in cy:
+							for xx in cx:
+								var c = Vector2i(xx, yy)
+								if get_state_at(c) == Cell.State.Burning:
+									burning_cells.append(c)
+						for c in burning_cells:
+							var cands = []
+							for cc in offset_neighbors(c):
+								if get_state_at(cc) != Cell.State.Burning:
+									cands.append(cc)
+							var pos = get_pos(c)
+							for cc in SMath.pick_n(cands, 1):
+								activate(cc, ActiveReason.Burning, null)
+								set_state_at(cc, Cell.State.Burning, {"pos":pos})
+						
+						SSound.sfx_tom.play()
 						Game.add_combo()
 						for c in res:
 							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))
 					)
-					var runes : Array[Vector2i] = []
-					for c in res:
-						if !used_runes.has(c):
-							runes.append(c)
-					for s in Game.skills:
-						var rune_coords = s.check(runes)
-						if !rune_coords.is_empty():
-							skill_effects.append(Pair.new(s, rune_coords))
-							for c in runes:
-								used_runes[c] = 1
+					
+					tween.tween_callback(func():
+						var runes : Array[Vector2i] = []
+						for c in res:
+							if !used_runes.has(c):
+								runes.append(c)
+						for s in Game.skills:
+							var rune_coords = s.check(runes)
+							if !rune_coords.is_empty():
+								skill_effects.append(Pair.new(s, rune_coords))
+								for c in runes:
+									used_runes[c] = 1
+					)
+					
 					eliminate(res, tween, ActiveReason.Pattern, p)
+					
 					Game.animation_speed *= 0.98
 					Game.animation_speed = max(0.05, Game.animation_speed)
 	if no_patterns:
@@ -574,7 +625,6 @@ func matching():
 			if active_items.is_empty():
 				matching_finished.emit()
 				active_serial = 0
-				eliminated_items.clear()
 			else:
 				process_active_item(active_items[0])
 		)

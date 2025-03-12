@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=4 uid="uid://dwej6ct7krwbs"]
 
 [ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_rhlpu"]
-[ext_resource type="Script" path="res://ui_pattern.gd" id="1_wvl8u"]
+[ext_resource type="Script" uid="uid://8kuser4svdg5" path="res://ui_pattern.gd" id="1_wvl8u"]
 [ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/outline-o.png" id="2_osotj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tcs51"]

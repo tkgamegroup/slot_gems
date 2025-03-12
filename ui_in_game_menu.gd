@@ -4,6 +4,7 @@ extends Control
 @onready var options_button : Button = $VBoxContainer/Button2
 @onready var main_menu_button : Button = $VBoxContainer/Button3
 @onready var test_avg_score_button : Button = $VBoxContainer/Button4
+@onready var auto_place_items_button : Button = $VBoxContainer/Button5
 @onready var command_line : LineEdit = $VBoxContainer/LineEdit
 
 func enter():
@@ -38,6 +39,10 @@ func _ready() -> void:
 	test_avg_score_button.pressed.connect(func():
 		exit()
 		STest.start_test_avg_score(100)
+	)
+	auto_place_items_button.pressed.connect(func():
+		exit()
+		STest.auto_place_items()
 	)
 	command_line.text_submitted.connect(func(cl : String):
 		var tks = cl.split(" ", false)
