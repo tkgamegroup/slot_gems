@@ -14,10 +14,15 @@ script = ExtResource("1_c8dfl")
 [node name="Item" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("3_cy07b")
 
+[node name="Item2" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("3_cy07b")
+offset = Vector2(8, 8)
+
 [node name="Burn" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("3_0hnpo")
 
-[node name="Pin" type="Sprite2D" parent="."]
+[node name="Frozen" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("5_v5bqx")

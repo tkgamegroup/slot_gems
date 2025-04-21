@@ -1,27 +1,31 @@
 extends Node
 
-func calc_value_with_modifiers(obj : Object, target : String):
-	if target in obj && ("base_" + target) in obj:
-		var v = obj["base_" + target]
-		if "buffs" in obj:
-			for b in obj.buffs:
-				if b.type == Buff.Type.ValueModifier:
-					if b.data.has("modify_add"):
-						v += b.data["modify_add"]
-					if b.data.has("modify_mult"):
-						v *= b.data["modify_mult"]
+func calc_value_with_modifiers(obj : Object, target : String, sub_attr : String = ""):
+	var v = 0
+	if "buffs" in obj:
+		for b in obj.buffs:
+			if b.type == Buff.Type.ValueModifier && b.data["target"] == target && b.data["sub_attr"] == sub_attr:
+				if b.data.has("set"):
+					v = b.data["set"]
+				if b.data.has("add"):
+					v += b.data["add"]
+				if b.data.has("mult"):
+					v *= b.data["mult"]
+	if sub_attr == "":
 		obj[target] = v
+	else:
+		obj[sub_attr][target] = v
 
 func get_cells_border(coords : Array[Vector2i]):
 	var ret = []
 	var ccords = []
 	for c in coords:
-		ccords.append(Game.board.offset_to_cube(c))
+		ccords.append(Board.offset_to_cube(c))
 	const size = 16.0
 	var w = size * 2.0
 	var h = size * sqrt(3.0)
 	for i in coords.size():
-		var p = Game.board.get_pos(coords[i])
+		var p = Board.get_pos(coords[i])
 		var cc = ccords[i]
 		if !ccords.has(cc + Vector3i(0, -1, +1)):
 			# up

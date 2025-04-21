@@ -1,0 +1,1206 @@
+Board Size: 18x6(108 cells)
+Red: 216, Orange: 216, Green: 216, Blue: 216, Pink: 216, Wild: 0
+Items: Dye: Red, Dye: Orange, Dye: Green, Dye: Blue, Dye: Pink, Bomb, Bomb
+Patterns: \, I, /
+Rolls: 4
+Matches: 3
+======Task 0======
+====Level 1====
+Level Score: 1064, Level Combos: 11
+Matching 0: 888 score, 7 combos
+Matching 1: 128 score, 2 combos
+Matching 2: 48 score, 2 combos
+======Statics For 1 Task(s)======
+	Level 1
+Avg	1064.0,11.00	
+Matching 0	888.0,7.00	
+Matching 1	128.0,2.00	
+Matching 2	48.0,2.00	
+======Task 1======
+====Level 1====
+Level Score: 2632, Level Combos: 20
+Matching 0: 2168 score, 12 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 448 score, 7 combos
+======Statics For 2 Task(s)======
+	Level 1
+Avg	1848.0,15.50	
+Matching 0	1528.0,9.50	
+Matching 1	72.0,1.50	
+Matching 2	248.0,4.50	
+======Task 2======
+====Level 1====
+Level Score: 1856, Level Combos: 15
+Matching 0: 1400 score, 9 combos
+Matching 1: 440 score, 5 combos
+Matching 2: 16 score, 1 combos
+======Statics For 3 Task(s)======
+	Level 1
+Avg	1850.7,15.33	
+Matching 0	1485.3,9.33	
+Matching 1	194.7,2.67	
+Matching 2	170.7,3.33	
+======Task 3======
+====Level 1====
+Level Score: 1656, Level Combos: 15
+Matching 0: 1480 score, 10 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 160 score, 4 combos
+======Statics For 4 Task(s)======
+	Level 1
+Avg	1802.0,15.25	
+Matching 0	1484.0,9.50	
+Matching 1	150.0,2.25	
+Matching 2	168.0,3.50	
+======Task 4======
+====Level 1====
+Level Score: 560, Level Combos: 9
+Matching 0: 464 score, 5 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 48 score, 2 combos
+======Statics For 5 Task(s)======
+	Level 1
+Avg	1553.6,14.00	
+Matching 0	1280.0,8.60	
+Matching 1	129.6,2.20	
+Matching 2	144.0,3.20	
+======Task 5======
+====Level 1====
+Level Score: 1176, Level Combos: 13
+Matching 0: 1080 score, 9 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 48 score, 2 combos
+======Statics For 6 Task(s)======
+	Level 1
+Avg	1490.7,13.83	
+Matching 0	1246.7,8.67	
+Matching 1	116.0,2.17	
+Matching 2	128.0,3.00	
+======Task 6======
+====Level 1====
+Level Score: 1208, Level Combos: 10
+Matching 0: 1176 score, 8 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 16 score, 1 combos
+======Statics For 7 Task(s)======
+	Level 1
+Avg	1450.3,13.29	
+Matching 0	1236.6,8.57	
+Matching 1	101.7,2.00	
+Matching 2	112.0,2.71	
+======Task 7======
+====Level 1====
+Level Score: 1144, Level Combos: 10
+Matching 0: 1096 score, 8 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 0 score, 0 combos
+======Statics For 8 Task(s)======
+	Level 1
+Avg	1412.0,12.88	
+Matching 0	1219.0,8.50	
+Matching 1	95.0,2.00	
+Matching 2	98.0,2.38	
+======Task 8======
+====Level 1====
+Level Score: 2568, Level Combos: 17
+Matching 0: 2456 score, 13 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 96 score, 3 combos
+======Statics For 9 Task(s)======
+	Level 1
+Avg	1540.4,13.33	
+Matching 0	1356.4,9.00	
+Matching 1	86.2,1.89	
+Matching 2	97.8,2.44	
+======Task 9======
+====Level 1====
+Level Score: 2712, Level Combos: 25
+Matching 0: 1816 score, 11 combos
+Matching 1: 448 score, 7 combos
+Matching 2: 448 score, 7 combos
+======Statics For 10 Task(s)======
+	Level 1
+Avg	1657.6,14.50	
+Matching 0	1402.4,9.20	
+Matching 1	122.4,2.40	
+Matching 2	132.8,2.90	
+======Task 10======
+====Level 1====
+Level Score: 1344, Level Combos: 15
+Matching 0: 896 score, 8 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 400 score, 5 combos
+======Statics For 11 Task(s)======
+	Level 1
+Avg	1629.1,14.55	
+Matching 0	1356.4,9.09	
+Matching 1	115.6,2.36	
+Matching 2	157.1,3.09	
+======Task 11======
+====Level 1====
+Level Score: 1760, Level Combos: 18
+Matching 0: 816 score, 8 combos
+Matching 1: 896 score, 8 combos
+Matching 2: 48 score, 2 combos
+======Statics For 12 Task(s)======
+	Level 1
+Avg	1640.0,14.83	
+Matching 0	1311.3,9.00	
+Matching 1	180.7,2.83	
+Matching 2	148.0,3.00	
+======Task 12======
+====Level 1====
+Level Score: 1424, Level Combos: 12
+Matching 0: 1360 score, 9 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 48 score, 2 combos
+======Statics For 13 Task(s)======
+	Level 1
+Avg	1623.4,14.62	
+Matching 0	1315.1,9.00	
+Matching 1	168.0,2.69	
+Matching 2	140.3,2.92	
+======Task 13======
+====Level 1====
+Level Score: 1672, Level Combos: 17
+Matching 0: 728 score, 7 combos
+Matching 1: 728 score, 7 combos
+Matching 2: 216 score, 3 combos
+======Statics For 14 Task(s)======
+	Level 1
+Avg	1626.9,14.79	
+Matching 0	1273.1,8.86	
+Matching 1	208.0,3.00	
+Matching 2	145.7,2.93	
+======Task 14======
+====Level 1====
+Level Score: 1880, Level Combos: 19
+Matching 0: 1496 score, 11 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 336 score, 6 combos
+======Statics For 15 Task(s)======
+	Level 1
+Avg	1643.7,15.07	
+Matching 0	1288.0,9.00	
+Matching 1	197.3,2.93	
+Matching 2	158.4,3.13	
+======Task 15======
+====Level 1====
+Level Score: 1152, Level Combos: 14
+Matching 0: 944 score, 8 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 160 score, 4 combos
+======Statics For 16 Task(s)======
+	Level 1
+Avg	1613.0,15.00	
+Matching 0	1266.5,8.94	
+Matching 1	188.0,2.88	
+Matching 2	158.5,3.19	
+======Task 16======
+====Level 1====
+Level Score: 1056, Level Combos: 12
+Matching 0: 912 score, 7 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 48 score, 2 combos
+======Statics For 17 Task(s)======
+	Level 1
+Avg	1580.2,14.82	
+Matching 0	1245.6,8.82	
+Matching 1	182.6,2.88	
+Matching 2	152.0,3.12	
+======Task 17======
+====Level 1====
+Level Score: 1952, Level Combos: 15
+Matching 0: 1776 score, 11 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 128 score, 2 combos
+======Statics For 18 Task(s)======
+	Level 1
+Avg	1600.9,14.83	
+Matching 0	1275.1,8.94	
+Matching 1	175.1,2.83	
+Matching 2	150.7,3.06	
+======Task 18======
+====Level 1====
+Level Score: 2776, Level Combos: 24
+Matching 0: 2088 score, 12 combos
+Matching 1: 448 score, 7 combos
+Matching 2: 240 score, 5 combos
+======Statics For 19 Task(s)======
+	Level 1
+Avg	1662.7,15.32	
+Matching 0	1317.9,9.11	
+Matching 1	189.5,3.05	
+Matching 2	155.4,3.16	
+======Task 19======
+====Level 1====
+Level Score: 1576, Level Combos: 13
+Matching 0: 1136 score, 8 combos
+Matching 1: 0 score, 0 combos
+Matching 2: 440 score, 5 combos
+======Statics For 20 Task(s)======
+	Level 1
+Avg	1658.4,15.20	
+Matching 0	1308.8,9.05	
+Matching 1	180.0,2.90	
+Matching 2	169.6,3.25	
+======Task 20======
+====Level 1====
+Level Score: 2928, Level Combos: 21
+Matching 0: 2640 score, 14 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 48 score, 2 combos
+======Statics For 21 Task(s)======
+	Level 1
+Avg	1718.9,15.48	
+Matching 0	1372.2,9.29	
+Matching 1	182.9,3.00	
+Matching 2	163.8,3.19	
+======Task 21======
+====Level 1====
+Level Score: 2816, Level Combos: 19
+Matching 0: 2168 score, 12 combos
+Matching 1: 648 score, 7 combos
+Matching 2: 0 score, 0 combos
+======Statics For 22 Task(s)======
+	Level 1
+Avg	1768.7,15.64	
+Matching 0	1408.4,9.41	
+Matching 1	204.0,3.18	
+Matching 2	156.4,3.05	
+======Task 22======
+====Level 1====
+Level Score: 1120, Level Combos: 11
+Matching 0: 1056 score, 8 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 16 score, 1 combos
+======Statics For 23 Task(s)======
+	Level 1
+Avg	1740.5,15.43	
+Matching 0	1393.0,9.35	
+Matching 1	197.2,3.13	
+Matching 2	150.3,2.96	
+======Task 23======
+====Level 1====
+Level Score: 1464, Level Combos: 15
+Matching 0: 1176 score, 8 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 240 score, 5 combos
+======Statics For 24 Task(s)======
+	Level 1
+Avg	1729.0,15.42	
+Matching 0	1384.0,9.29	
+Matching 1	191.0,3.08	
+Matching 2	154.0,3.04	
+======Task 24======
+====Level 1====
+Level Score: 1472, Level Combos: 13
+Matching 0: 1176 score, 8 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 280 score, 4 combos
+======Statics For 25 Task(s)======
+	Level 1
+Avg	1718.7,15.32	
+Matching 0	1375.7,9.24	
+Matching 1	184.0,3.00	
+Matching 2	159.0,3.08	
+======Task 25======
+====Level 1====
+Level Score: 1176, Level Combos: 13
+Matching 0: 968 score, 7 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 48 score, 2 combos
+======Statics For 26 Task(s)======
+	Level 1
+Avg	1697.8,15.23	
+Matching 0	1360.0,9.15	
+Matching 1	183.1,3.04	
+Matching 2	154.8,3.04	
+======Task 26======
+====Level 1====
+Level Score: 2568, Level Combos: 23
+Matching 0: 1456 score, 11 combos
+Matching 1: 576 score, 6 combos
+Matching 2: 536 score, 6 combos
+======Statics For 27 Task(s)======
+	Level 1
+Avg	1730.1,15.52	
+Matching 0	1363.6,9.22	
+Matching 1	197.6,3.15	
+Matching 2	168.9,3.15	
+======Task 27======
+====Level 1====
+Level Score: 1080, Level Combos: 11
+Matching 0: 968 score, 7 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 96 score, 3 combos
+======Statics For 28 Task(s)======
+	Level 1
+Avg	1706.9,15.36	
+Matching 0	1349.4,9.14	
+Matching 1	191.1,3.07	
+Matching 2	166.3,3.14	
+======Task 28======
+====Level 1====
+Level Score: 1608, Level Combos: 15
+Matching 0: 1240 score, 9 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 320 score, 4 combos
+======Statics For 29 Task(s)======
+	Level 1
+Avg	1703.4,15.34	
+Matching 0	1345.7,9.14	
+Matching 1	186.2,3.03	
+Matching 2	171.6,3.17	
+======Task 29======
+====Level 1====
+Level Score: 1496, Level Combos: 18
+Matching 0: 888 score, 7 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 448 score, 7 combos
+======Statics For 30 Task(s)======
+	Level 1
+Avg	1696.5,15.43	
+Matching 0	1330.4,9.07	
+Matching 1	185.3,3.07	
+Matching 2	180.8,3.30	
+======Task 30======
+====Level 1====
+Level Score: 952, Level Combos: 11
+Matching 0: 776 score, 6 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 16 score, 1 combos
+======Statics For 31 Task(s)======
+	Level 1
+Avg	1672.5,15.29	
+Matching 0	1312.5,8.97	
+Matching 1	184.5,3.10	
+Matching 2	175.5,3.23	
+======Task 31======
+====Level 1====
+Level Score: 1232, Level Combos: 12
+Matching 0: 968 score, 7 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 216 score, 3 combos
+======Statics For 32 Task(s)======
+	Level 1
+Avg	1658.8,15.19	
+Matching 0	1301.8,8.91	
+Matching 1	180.3,3.06	
+Matching 2	176.8,3.22	
+======Task 32======
+====Level 1====
+Level Score: 1496, Level Combos: 12
+Matching 0: 1176 score, 8 combos
+Matching 1: 0 score, 0 combos
+Matching 2: 320 score, 4 combos
+======Statics For 33 Task(s)======
+	Level 1
+Avg	1653.8,15.09	
+Matching 0	1297.9,8.88	
+Matching 1	174.8,2.97	
+Matching 2	181.1,3.24	
+======Task 33======
+====Level 1====
+Level Score: 1352, Level Combos: 11
+Matching 0: 1320 score, 9 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 16 score, 1 combos
+======Statics For 34 Task(s)======
+	Level 1
+Avg	1644.9,14.97	
+Matching 0	1298.6,8.88	
+Matching 1	170.1,2.91	
+Matching 2	176.2,3.18	
+======Task 34======
+====Level 1====
+Level Score: 1224, Level Combos: 13
+Matching 0: 968 score, 7 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 16 score, 1 combos
+======Statics For 35 Task(s)======
+	Level 1
+Avg	1632.9,14.91	
+Matching 0	1289.1,8.83	
+Matching 1	172.1,2.97	
+Matching 2	171.7,3.11	
+======Task 35======
+====Level 1====
+Level Score: 1312, Level Combos: 14
+Matching 0: 1200 score, 10 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 96 score, 3 combos
+======Statics For 36 Task(s)======
+	Level 1
+Avg	1624.0,14.89	
+Matching 0	1286.7,8.86	
+Matching 1	167.8,2.92	
+Matching 2	169.6,3.11	
+======Task 36======
+====Level 1====
+Level Score: 2448, Level Combos: 21
+Matching 0: 2048 score, 12 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 160 score, 4 combos
+======Statics For 37 Task(s)======
+	Level 1
+Avg	1646.3,15.05	
+Matching 0	1307.2,8.95	
+Matching 1	169.7,2.97	
+Matching 2	169.3,3.14	
+======Task 37======
+====Level 1====
+Level Score: 1032, Level Combos: 10
+Matching 0: 888 score, 7 combos
+Matching 1: 128 score, 2 combos
+Matching 2: 16 score, 1 combos
+======Statics For 38 Task(s)======
+	Level 1
+Avg	1630.1,14.92	
+Matching 0	1296.2,8.89	
+Matching 1	168.6,2.95	
+Matching 2	165.3,3.08	
+======Task 38======
+====Level 1====
+Level Score: 1576, Level Combos: 14
+Matching 0: 1400 score, 9 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 160 score, 4 combos
+======Statics For 39 Task(s)======
+	Level 1
+Avg	1628.7,14.90	
+Matching 0	1298.9,8.90	
+Matching 1	164.7,2.90	
+Matching 2	165.1,3.10	
+======Task 39======
+====Level 1====
+Level Score: 1184, Level Combos: 11
+Matching 0: 1120 score, 8 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 48 score, 2 combos
+======Statics For 40 Task(s)======
+	Level 1
+Avg	1617.6,14.80	
+Matching 0	1294.4,8.88	
+Matching 1	161.0,2.85	
+Matching 2	162.2,3.08	
+======Task 40======
+====Level 1====
+Level Score: 1624, Level Combos: 18
+Matching 0: 728 score, 7 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 880 score, 10 combos
+======Statics For 41 Task(s)======
+	Level 1
+Avg	1617.8,14.88	
+Matching 0	1280.6,8.83	
+Matching 1	157.5,2.80	
+Matching 2	179.7,3.24	
+======Task 41======
+====Level 1====
+Level Score: 2416, Level Combos: 20
+Matching 0: 1816 score, 11 combos
+Matching 1: 440 score, 5 combos
+Matching 2: 160 score, 4 combos
+======Statics For 42 Task(s)======
+	Level 1
+Avg	1636.8,15.00	
+Matching 0	1293.3,8.88	
+Matching 1	164.2,2.86	
+Matching 2	179.2,3.26	
+======Task 42======
+====Level 1====
+Level Score: 1296, Level Combos: 13
+Matching 0: 968 score, 7 combos
+Matching 1: 280 score, 4 combos
+Matching 2: 48 score, 2 combos
+======Statics For 43 Task(s)======
+	Level 1
+Avg	1628.8,14.95	
+Matching 0	1285.8,8.84	
+Matching 1	166.9,2.88	
+Matching 2	176.2,3.23	
+======Task 43======
+====Level 1====
+Level Score: 1096, Level Combos: 9
+Matching 0: 968 score, 7 combos
+Matching 1: 128 score, 2 combos
+Matching 2: 0 score, 0 combos
+======Statics For 44 Task(s)======
+	Level 1
+Avg	1616.7,14.82	
+Matching 0	1278.5,8.80	
+Matching 1	166.0,2.86	
+Matching 2	172.2,3.16	
+======Task 44======
+====Level 1====
+Level Score: 1112, Level Combos: 16
+Matching 0: 496 score, 6 combos
+Matching 1: 168 score, 3 combos
+Matching 2: 448 score, 7 combos
+======Statics For 45 Task(s)======
+	Level 1
+Avg	1605.5,14.84	
+Matching 0	1261.2,8.73	
+Matching 1	166.0,2.87	
+Matching 2	178.3,3.24	
+======Task 45======
+====Level 1====
+Level Score: 1816, Level Combos: 15
+Matching 0: 1640 score, 10 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 160 score, 4 combos
+======Statics For 46 Task(s)======
+	Level 1
+Avg	1610.1,14.85	
+Matching 0	1269.4,8.76	
+Matching 1	162.8,2.83	
+Matching 2	177.9,3.26	
+======Task 46======
+====Level 1====
+Level Score: 1256, Level Combos: 16
+Matching 0: 728 score, 7 combos
+Matching 1: 288 score, 4 combos
+Matching 2: 240 score, 5 combos
+======Statics For 47 Task(s)======
+	Level 1
+Avg	1602.6,14.87	
+Matching 0	1257.9,8.72	
+Matching 1	165.4,2.85	
+Matching 2	179.2,3.30	
+======Task 47======
+====Level 1====
+Level Score: 2904, Level Combos: 29
+Matching 0: 728 score, 7 combos
+Matching 1: 720 score, 9 combos
+Matching 2: 1456 score, 13 combos
+======Statics For 48 Task(s)======
+	Level 1
+Avg	1629.7,15.17	
+Matching 0	1246.8,8.69	
+Matching 1	177.0,2.98	
+Matching 2	205.8,3.50	
+======Task 48======
+====Level 1====
+Level Score: 1056, Level Combos: 13
+Matching 0: 728 score, 7 combos
+Matching 1: 280 score, 4 combos
+Matching 2: 48 score, 2 combos
+======Statics For 49 Task(s)======
+	Level 1
+Avg	1618.0,15.12	
+Matching 0	1236.2,8.65	
+Matching 1	179.1,3.00	
+Matching 2	202.6,3.47	
+======Task 49======
+====Level 1====
+Level Score: 1192, Level Combos: 9
+Matching 0: 1176 score, 8 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 0 score, 0 combos
+======Statics For 50 Task(s)======
+	Level 1
+Avg	1609.4,15.00	
+Matching 0	1235.0,8.64	
+Matching 1	175.8,2.96	
+Matching 2	198.6,3.40	
+======Task 50======
+====Level 1====
+Level Score: 1576, Level Combos: 14
+Matching 0: 1400 score, 9 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 160 score, 4 combos
+======Statics For 51 Task(s)======
+	Level 1
+Avg	1608.8,14.98	
+Matching 0	1238.3,8.65	
+Matching 1	172.7,2.92	
+Matching 2	197.8,3.41	
+======Task 51======
+====Level 1====
+Level Score: 1360, Level Combos: 14
+Matching 0: 1200 score, 10 combos
+Matching 1: 0 score, 0 combos
+Matching 2: 160 score, 4 combos
+======Statics For 52 Task(s)======
+	Level 1
+Avg	1604.0,14.96	
+Matching 0	1237.5,8.67	
+Matching 1	169.4,2.87	
+Matching 2	197.1,3.42	
+======Task 52======
+====Level 1====
+Level Score: 3256, Level Combos: 20
+Matching 0: 3080 score, 15 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 16 score, 1 combos
+======Statics For 53 Task(s)======
+	Level 1
+Avg	1635.2,15.06	
+Matching 0	1272.3,8.79	
+Matching 1	169.2,2.89	
+Matching 2	193.7,3.38	
+======Task 53======
+====Level 1====
+Level Score: 1344, Level Combos: 14
+Matching 0: 1040 score, 9 combos
+Matching 1: 176 score, 3 combos
+Matching 2: 128 score, 2 combos
+======Statics For 54 Task(s)======
+	Level 1
+Avg	1629.8,15.04	
+Matching 0	1268.0,8.80	
+Matching 1	169.3,2.89	
+Matching 2	192.4,3.35	
+======Task 54======
+====Level 1====
+Level Score: 2824, Level Combos: 23
+Matching 0: 1640 score, 10 combos
+Matching 1: 1056 score, 11 combos
+Matching 2: 128 score, 2 combos
+======Statics For 55 Task(s)======
+	Level 1
+Avg	1651.5,15.18	
+Matching 0	1274.8,8.82	
+Matching 1	185.5,3.04	
+Matching 2	191.3,3.33	
+======Task 55======
+====Level 1====
+Level Score: 1432, Level Combos: 13
+Matching 0: 1320 score, 9 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 16 score, 1 combos
+======Statics For 56 Task(s)======
+	Level 1
+Avg	1647.6,15.14	
+Matching 0	1275.6,8.82	
+Matching 1	183.9,3.04	
+Matching 2	188.1,3.29	
+======Task 56======
+====Level 1====
+Level Score: 488, Level Combos: 7
+Matching 0: 440 score, 5 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 0 score, 0 combos
+======Statics For 57 Task(s)======
+	Level 1
+Avg	1627.2,15.00	
+Matching 0	1260.9,8.75	
+Matching 1	181.5,3.02	
+Matching 2	184.8,3.23	
+======Task 57======
+====Level 1====
+Level Score: 1232, Level Combos: 16
+Matching 0: 896 score, 8 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 96 score, 3 combos
+======Statics For 58 Task(s)======
+	Level 1
+Avg	1620.4,15.02	
+Matching 0	1254.6,8.74	
+Matching 1	182.5,3.05	
+Matching 2	183.3,3.22	
+======Task 58======
+====Level 1====
+Level Score: 1544, Level Combos: 14
+Matching 0: 1400 score, 9 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 48 score, 2 combos
+======Statics For 59 Task(s)======
+	Level 1
+Avg	1619.1,15.00	
+Matching 0	1257.1,8.75	
+Matching 1	181.0,3.05	
+Matching 2	181.0,3.20	
+======Task 59======
+====Level 1====
+Level Score: 816, Level Combos: 13
+Matching 0: 608 score, 7 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 48 score, 2 combos
+======Statics For 60 Task(s)======
+	Level 1
+Avg	1605.7,14.97	
+Matching 0	1246.3,8.72	
+Matching 1	180.7,3.07	
+Matching 2	178.8,3.18	
+======Task 60======
+====Level 1====
+Level Score: 1152, Level Combos: 13
+Matching 0: 1040 score, 9 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 16 score, 1 combos
+======Statics For 61 Task(s)======
+	Level 1
+Avg	1598.3,14.93	
+Matching 0	1242.9,8.72	
+Matching 1	179.3,3.07	
+Matching 2	176.1,3.15	
+======Task 61======
+====Level 1====
+Level Score: 952, Level Combos: 10
+Matching 0: 776 score, 6 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 128 score, 2 combos
+======Statics For 62 Task(s)======
+	Level 1
+Avg	1587.9,14.85	
+Matching 0	1235.4,8.68	
+Matching 1	177.2,3.05	
+Matching 2	175.4,3.13	
+======Task 62======
+====Level 1====
+Level Score: 1672, Level Combos: 15
+Matching 0: 1576 score, 11 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 48 score, 2 combos
+======Statics For 63 Task(s)======
+	Level 1
+Avg	1589.2,14.86	
+Matching 0	1240.8,8.71	
+Matching 1	175.1,3.03	
+Matching 2	173.3,3.11	
+======Task 63======
+====Level 1====
+Level Score: 1280, Level Combos: 16
+Matching 0: 896 score, 8 combos
+Matching 1: 336 score, 6 combos
+Matching 2: 48 score, 2 combos
+======Statics For 64 Task(s)======
+	Level 1
+Avg	1584.4,14.88	
+Matching 0	1235.4,8.70	
+Matching 1	177.6,3.08	
+Matching 2	171.4,3.09	
+======Task 64======
+====Level 1====
+Level Score: 1232, Level Combos: 12
+Matching 0: 776 score, 6 combos
+Matching 1: 0 score, 0 combos
+Matching 2: 456 score, 6 combos
+======Statics For 65 Task(s)======
+	Level 1
+Avg	1579.0,14.83	
+Matching 0	1228.3,8.66	
+Matching 1	174.9,3.03	
+Matching 2	175.8,3.14	
+======Task 65======
+====Level 1====
+Level Score: 1552, Level Combos: 15
+Matching 0: 968 score, 7 combos
+Matching 1: 440 score, 5 combos
+Matching 2: 144 score, 3 combos
+======Statics For 66 Task(s)======
+	Level 1
+Avg	1578.5,14.83	
+Matching 0	1224.4,8.64	
+Matching 1	178.9,3.06	
+Matching 2	175.3,3.14	
+======Task 66======
+====Level 1====
+Level Score: 1048, Level Combos: 10
+Matching 0: 1016 score, 8 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 16 score, 1 combos
+======Statics For 67 Task(s)======
+	Level 1
+Avg	1570.6,14.76	
+Matching 0	1221.3,8.63	
+Matching 1	176.5,3.03	
+Matching 2	172.9,3.10	
+======Task 67======
+====Level 1====
+Level Score: 1704, Level Combos: 15
+Matching 0: 1560 score, 10 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 48 score, 2 combos
+======Statics For 68 Task(s)======
+	Level 1
+Avg	1572.6,14.76	
+Matching 0	1226.2,8.65	
+Matching 1	175.3,3.03	
+Matching 2	171.1,3.09	
+======Task 68======
+====Level 1====
+Level Score: 1208, Level Combos: 14
+Matching 0: 896 score, 8 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 216 score, 3 combos
+======Statics For 69 Task(s)======
+	Level 1
+Avg	1567.3,14.75	
+Matching 0	1221.4,8.64	
+Matching 1	174.1,3.03	
+Matching 2	171.7,3.09	
+======Task 69======
+====Level 1====
+Level Score: 840, Level Combos: 13
+Matching 0: 440 score, 4 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 160 score, 4 combos
+======Statics For 70 Task(s)======
+	Level 1
+Avg	1556.9,14.73	
+Matching 0	1210.3,8.57	
+Matching 1	175.1,3.06	
+Matching 2	171.5,3.10	
+======Task 70======
+====Level 1====
+Level Score: 2552, Level Combos: 20
+Matching 0: 2088 score, 12 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 448 score, 7 combos
+======Statics For 71 Task(s)======
+	Level 1
+Avg	1570.9,14.80	
+Matching 0	1222.6,8.62	
+Matching 1	172.8,3.03	
+Matching 2	175.4,3.15	
+======Task 71======
+====Level 1====
+Level Score: 3328, Level Combos: 22
+Matching 0: 3040 score, 15 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 48 score, 2 combos
+======Statics For 72 Task(s)======
+	Level 1
+Avg	1595.3,14.90	
+Matching 0	1247.9,8.71	
+Matching 1	173.8,3.06	
+Matching 2	173.7,3.14	
+======Task 72======
+====Level 1====
+Level Score: 2136, Level Combos: 20
+Matching 0: 1640 score, 10 combos
+Matching 1: 336 score, 6 combos
+Matching 2: 160 score, 4 combos
+======Statics For 73 Task(s)======
+	Level 1
+Avg	1602.7,14.97	
+Matching 0	1253.3,8.73	
+Matching 1	176.0,3.10	
+Matching 2	173.5,3.15	
+======Task 73======
+====Level 1====
+Level Score: 1904, Level Combos: 19
+Matching 0: 1080 score, 9 combos
+Matching 1: 728 score, 7 combos
+Matching 2: 96 score, 3 combos
+======Statics For 74 Task(s)======
+	Level 1
+Avg	1606.8,15.03	
+Matching 0	1250.9,8.73	
+Matching 1	183.5,3.15	
+Matching 2	172.4,3.15	
+======Task 74======
+====Level 1====
+Level Score: 2320, Level Combos: 18
+Matching 0: 2008 score, 12 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 216 score, 3 combos
+======Statics For 75 Task(s)======
+	Level 1
+Avg	1616.3,15.07	
+Matching 0	1261.0,8.77	
+Matching 1	182.3,3.15	
+Matching 2	173.0,3.15	
+======Task 75======
+====Level 1====
+Level Score: 1560, Level Combos: 14
+Matching 0: 1496 score, 11 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 16 score, 1 combos
+======Statics For 76 Task(s)======
+	Level 1
+Avg	1615.6,15.05	
+Matching 0	1264.1,8.80	
+Matching 1	180.5,3.13	
+Matching 2	170.9,3.12	
+======Task 76======
+====Level 1====
+Level Score: 2232, Level Combos: 19
+Matching 0: 1896 score, 11 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 240 score, 5 combos
+======Statics For 77 Task(s)======
+	Level 1
+Avg	1623.6,15.10	
+Matching 0	1272.3,8.83	
+Matching 1	179.4,3.13	
+Matching 2	171.8,3.14	
+======Task 77======
+====Level 1====
+Level Score: 1032, Level Combos: 14
+Matching 0: 576 score, 6 combos
+Matching 1: 216 score, 3 combos
+Matching 2: 240 score, 5 combos
+======Statics For 78 Task(s)======
+	Level 1
+Avg	1616.0,15.09	
+Matching 0	1263.4,8.79	
+Matching 1	179.9,3.13	
+Matching 2	172.7,3.17	
+======Task 78======
+====Level 1====
+Level Score: 2352, Level Combos: 21
+Matching 0: 1936 score, 13 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 256 score, 4 combos
+======Statics For 79 Task(s)======
+	Level 1
+Avg	1625.3,15.16	
+Matching 0	1271.9,8.85	
+Matching 1	179.6,3.14	
+Matching 2	173.8,3.18	
+======Task 79======
+====Level 1====
+Level Score: 1480, Level Combos: 18
+Matching 0: 1080 score, 9 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 240 score, 5 combos
+======Statics For 80 Task(s)======
+	Level 1
+Avg	1623.5,15.20	
+Matching 0	1269.5,8.85	
+Matching 1	179.4,3.15	
+Matching 2	174.6,3.20	
+======Task 80======
+====Level 1====
+Level Score: 1064, Level Combos: 13
+Matching 0: 776 score, 6 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 48 score, 2 combos
+======Statics For 81 Task(s)======
+	Level 1
+Avg	1616.6,15.17	
+Matching 0	1263.4,8.81	
+Matching 1	180.1,3.17	
+Matching 2	173.0,3.19	
+======Task 81======
+====Level 1====
+Level Score: 2136, Level Combos: 18
+Matching 0: 856 score, 8 combos
+Matching 1: 0 score, 0 combos
+Matching 2: 1280 score, 10 combos
+======Statics For 82 Task(s)======
+	Level 1
+Avg	1622.9,15.21	
+Matching 0	1258.4,8.80	
+Matching 1	178.0,3.13	
+Matching 2	186.5,3.27	
+======Task 82======
+====Level 1====
+Level Score: 600, Level Combos: 9
+Matching 0: 440 score, 5 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 0 score, 0 combos
+======Statics For 83 Task(s)======
+	Level 1
+Avg	1610.6,15.13	
+Matching 0	1248.6,8.76	
+Matching 1	177.7,3.14	
+Matching 2	184.3,3.23	
+======Task 83======
+====Level 1====
+Level Score: 2776, Level Combos: 18
+Matching 0: 2680 score, 14 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 48 score, 2 combos
+======Statics For 84 Task(s)======
+	Level 1
+Avg	1624.5,15.17	
+Matching 0	1265.6,8.82	
+Matching 1	176.2,3.13	
+Matching 2	182.7,3.21	
+======Task 84======
+====Level 1====
+Level Score: 792, Level Combos: 12
+Matching 0: 648 score, 7 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 96 score, 3 combos
+======Statics For 85 Task(s)======
+	Level 1
+Avg	1614.7,15.13	
+Matching 0	1258.4,8.80	
+Matching 1	174.7,3.12	
+Matching 2	181.6,3.21	
+======Task 85======
+====Level 1====
+Level Score: 1544, Level Combos: 14
+Matching 0: 1400 score, 9 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 48 score, 2 combos
+======Statics For 86 Task(s)======
+	Level 1
+Avg	1613.9,15.12	
+Matching 0	1260.0,8.80	
+Matching 1	173.8,3.12	
+Matching 2	180.1,3.20	
+======Task 86======
+====Level 1====
+Level Score: 2704, Level Combos: 19
+Matching 0: 2560 score, 14 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 48 score, 2 combos
+======Statics For 87 Task(s)======
+	Level 1
+Avg	1626.4,15.16	
+Matching 0	1274.9,8.86	
+Matching 1	172.9,3.11	
+Matching 2	178.6,3.18	
+======Task 87======
+====Level 1====
+Level Score: 2496, Level Combos: 25
+Matching 0: 1456 score, 11 combos
+Matching 1: 160 score, 4 combos
+Matching 2: 880 score, 10 combos
+======Statics For 88 Task(s)======
+	Level 1
+Avg	1636.3,15.27	
+Matching 0	1277.0,8.89	
+Matching 1	172.7,3.13	
+Matching 2	186.5,3.26	
+======Task 88======
+====Level 1====
+Level Score: 2216, Level Combos: 19
+Matching 0: 1640 score, 10 combos
+Matching 1: 448 score, 7 combos
+Matching 2: 128 score, 2 combos
+======Statics For 89 Task(s)======
+	Level 1
+Avg	1642.8,15.31	
+Matching 0	1281.1,8.90	
+Matching 1	175.8,3.17	
+Matching 2	185.9,3.25	
+======Task 89======
+====Level 1====
+Level Score: 2072, Level Combos: 18
+Matching 0: 1400 score, 9 combos
+Matching 1: 576 score, 6 combos
+Matching 2: 96 score, 3 combos
+======Statics For 90 Task(s)======
+	Level 1
+Avg	1647.6,15.34	
+Matching 0	1282.4,8.90	
+Matching 1	180.3,3.20	
+Matching 2	184.9,3.24	
+======Task 90======
+====Level 1====
+Level Score: 1256, Level Combos: 14
+Matching 0: 968 score, 7 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 240 score, 5 combos
+======Statics For 91 Task(s)======
+	Level 1
+Avg	1643.3,15.33	
+Matching 0	1278.9,8.88	
+Matching 1	178.8,3.19	
+Matching 2	185.5,3.26	
+======Task 91======
+====Level 1====
+Level Score: 3048, Level Combos: 21
+Matching 0: 2760 score, 14 combos
+Matching 1: 48 score, 2 combos
+Matching 2: 240 score, 5 combos
+======Statics For 92 Task(s)======
+	Level 1
+Avg	1658.5,15.39	
+Matching 0	1295.0,8.93	
+Matching 1	177.4,3.17	
+Matching 2	186.1,3.28	
+======Task 92======
+====Level 1====
+Level Score: 1888, Level Combos: 16
+Matching 0: 1400 score, 9 combos
+Matching 1: 440 score, 5 combos
+Matching 2: 48 score, 2 combos
+======Statics For 93 Task(s)======
+	Level 1
+Avg	1661.0,15.40	
+Matching 0	1296.2,8.94	
+Matching 1	180.2,3.19	
+Matching 2	184.6,3.27	
+======Task 93======
+====Level 1====
+Level Score: 1464, Level Combos: 12
+Matching 0: 1320 score, 9 combos
+Matching 1: 128 score, 2 combos
+Matching 2: 16 score, 1 combos
+======Statics For 94 Task(s)======
+	Level 1
+Avg	1658.9,15.36	
+Matching 0	1296.4,8.94	
+Matching 1	179.7,3.18	
+Matching 2	182.8,3.24	
+======Task 94======
+====Level 1====
+Level Score: 1008, Level Combos: 15
+Matching 0: 576 score, 6 combos
+Matching 1: 96 score, 3 combos
+Matching 2: 336 score, 6 combos
+======Statics For 95 Task(s)======
+	Level 1
+Avg	1652.0,15.36	
+Matching 0	1288.8,8.91	
+Matching 1	178.8,3.18	
+Matching 2	184.4,3.27	
+======Task 95======
+====Level 1====
+Level Score: 1168, Level Combos: 15
+Matching 0: 736 score, 6 combos
+Matching 1: 336 score, 6 combos
+Matching 2: 96 score, 3 combos
+======Statics For 96 Task(s)======
+	Level 1
+Avg	1647.0,15.35	
+Matching 0	1283.1,8.88	
+Matching 1	180.4,3.21	
+Matching 2	183.5,3.27	
+======Task 96======
+====Level 1====
+Level Score: 1888, Level Combos: 18
+Matching 0: 1328 score, 9 combos
+Matching 1: 240 score, 5 combos
+Matching 2: 320 score, 4 combos
+======Statics For 97 Task(s)======
+	Level 1
+Avg	1649.5,15.38	
+Matching 0	1283.5,8.88	
+Matching 1	181.0,3.23	
+Matching 2	184.9,3.28	
+======Task 97======
+====Level 1====
+Level Score: 1192, Level Combos: 12
+Matching 0: 968 score, 7 combos
+Matching 1: 16 score, 1 combos
+Matching 2: 208 score, 4 combos
+======Statics For 98 Task(s)======
+	Level 1
+Avg	1644.8,15.35	
+Matching 0	1280.3,8.86	
+Matching 1	179.3,3.20	
+Matching 2	185.1,3.29	
+======Task 98======
+====Level 1====
+Level Score: 2296, Level Combos: 18
+Matching 0: 1560 score, 10 combos
+Matching 1: 736 score, 8 combos
+Matching 2: 0 score, 0 combos
+======Statics For 99 Task(s)======
+	Level 1
+Avg	1651.4,15.37	
+Matching 0	1283.2,8.87	
+Matching 1	185.0,3.25	
+Matching 2	183.3,3.25	
+======Task 99======
+====Level 1====
+Level Score: 1048, Level Combos: 11
+Matching 0: 728 score, 7 combos
+Matching 1: 0 score, 0 combos
+Matching 2: 320 score, 4 combos
+======Statics For 100 Task(s)======
+	Level 1
+Avg	1645.4,15.33	
+Matching 0	1277.6,8.85	
+Matching 1	183.1,3.22	
+Matching 2	184.6,3.26	

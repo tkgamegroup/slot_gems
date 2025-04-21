@@ -1,9 +1,9 @@
 [gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://bgpse251ihp38"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_fku6t"]
-[ext_resource type="Texture2D" uid="uid://85hryca4vmrv" path="res://images/rune_star.png" id="2_hgpr5"]
-[ext_resource type="Texture2D" uid="uid://c33kirg1xcqjn" path="res://images/rune_circle.png" id="3_b2h5i"]
-[ext_resource type="Texture2D" uid="uid://upnp0wg2wxl4" path="res://images/rune_diamond.png" id="4_rnjfy"]
+[ext_resource type="Texture2D" uid="uid://c8lrflu1avyb1" path="res://images/rune_zhe.png" id="2_q3pnh"]
+[ext_resource type="Texture2D" uid="uid://c1kw4cjmqvfvn" path="res://images/rune_cha.png" id="3_7dsvm"]
+[ext_resource type="Texture2D" uid="uid://gmoy0lka145w" path="res://images/rune_kou.png" id="4_u8fhl"]
 
 [resource]
 animations = [{
@@ -12,13 +12,13 @@ animations = [{
 "texture": ExtResource("1_fku6t")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_hgpr5")
+"texture": ExtResource("2_q3pnh")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_b2h5i")
+"texture": ExtResource("3_7dsvm")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_rnjfy")
+"texture": ExtResource("4_u8fhl")
 }],
 "loop": true,
 "name": &"default",

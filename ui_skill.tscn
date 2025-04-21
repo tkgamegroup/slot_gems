@@ -1,43 +1,33 @@
-[gd_scene load_steps=5 format=3 uid="uid://b5kmbmhnw2v00"]
+[gd_scene load_steps=4 format=3 uid="uid://b5kmbmhnw2v00"]
 
 [ext_resource type="Script" uid="uid://i028ied247li" path="res://ui_skill.gd" id="1_ekxf7"]
-[ext_resource type="Texture2D" uid="uid://dfpkf3fwdbx4j" path="res://images/down.png" id="2_bipi3"]
-[ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="3_127je"]
+[ext_resource type="SpriteFrames" uid="uid://dwbcbrr4g17y7" path="res://images/skills.tres" id="2_cio3b"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shhvf"]
-bg_color = Color(0, 0, 0, 0.196078)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5evc3"]
 
 [node name="UiSkill" type="PanelContainer"]
-custom_minimum_size = Vector2(48, 104)
+custom_minimum_size = Vector2(48, 64)
 offset_right = 48.0
-offset_bottom = 104.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_shhvf")
+offset_bottom = 64.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5evc3")
 script = ExtResource("1_ekxf7")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 16
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource("2_bipi3")
-expand_mode = 1
+theme_override_constants/separation = -4
 
 [node name="Control" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/Control"]
-scale = Vector2(1.5, 1.5)
-sprite_frames = ExtResource("3_127je")
-frame = 5
+position = Vector2(0, -24)
+sprite_frames = ExtResource("2_cio3b")
 centered = false

@@ -10,7 +10,7 @@ layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_xb2mb")
 
-[node name="Trade" type="Sprite2D" parent="."]
+[node name="Action" type="Sprite2D" parent="."]
 visible = false
 modulate = Color(0.489276, 0.337667, 0.0621191, 1)
 texture = ExtResource("3_qah3a")

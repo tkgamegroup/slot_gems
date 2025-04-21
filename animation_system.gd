@@ -1,18 +1,36 @@
 extends Node
 
-func fade_in(n : Node2D, tween : Tween, s0 : float = 2.0, s1 : float = 1.0):
+func fade_in(n, tween : Tween, s0 : float, s1 : float, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
 	n.scale = Vector2(s0, s0)
-	n.self_modulate.a = 0.0
-	tween.tween_property(n, "scale", Vector2(s1, s1), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	tween.parallel().tween_property(n, "self_modulate:a", 1.0, 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	n.modulate.a = 0.0
+	if s0 != s1:
+		tween.tween_property(n, "scale", Vector2(s1, s1), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		tween.parallel()
+	tween.tween_property(n, "modulate:a", 1.0, duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	return tween
 
-func fade_out(n : Node2D, tween : Tween, s0 : float = 1.0, s1 : float = 2.0):
+func fade_out(n, tween : Tween, s0 : float, s1 : float, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
 	n.scale = Vector2(s0, s0)
-	n.self_modulate.a = 1.0
-	tween.tween_property(n, "scale", Vector2(s1, s1), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	tween.parallel().tween_property(n, "self_modulate:a", 0.0, 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	n.modulate.a = 1.0
+	if s0 != s1:
+		tween.tween_property(n, "scale", Vector2(s1, s1), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		tween.parallel()
+	tween.tween_property(n, "modulate:a", 0.0, duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	return tween
+
+func move_to(tween : Tween, target, p : Vector2, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
+	tween.tween_property(target, "global_position", p, duration)
+	return tween
 
 func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1_t : float, ctrl1_o : Vector2, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
 	var d = {}
 	d.p2 = p2
 	tween.tween_callback(func():
@@ -22,8 +40,11 @@ func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1_t : float, ct
 	tween.parallel().tween_method(func(t):
 		target.global_position = SMath.quadratic_bezier(d.p0, d.p1, d.p2, t)
 	, 0.0, 1.0, duration)
+	return tween
 
 func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1_t : float, ctrl1_o : Vector2, ctrl2_t : float, ctrl2_o : Vector2, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
 	var d = {}
 	d.p3 = p3
 	tween.tween_callback(func():
@@ -34,3 +55,4 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1_t : float, ctrl1_
 	tween.parallel().tween_method(func(t):
 		target.global_position = SMath.cubic_bezier(d.p0, d.p1, d.p2, d.p3, t)
 	, 0.0, 1.0, duration)
+	return tween

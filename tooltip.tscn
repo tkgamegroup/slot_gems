@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://btbm3noiemr1y" path="res://tooltip.gd" id="1_p2sb4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3ohg"]
-bg_color = Color(0, 0, 0, 0.784314)
+bg_color = Color(0, 0, 0, 0.901961)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -47,6 +47,7 @@ autowrap_mode = 0
 custom_minimum_size = Vector2(164, 0)
 layout_mode = 2
 mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 2

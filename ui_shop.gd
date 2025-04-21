@@ -1,157 +1,259 @@
 extends Control
 
-@onready var title_txt : Label = $Label
-var slot_uis : Array[Control]
-@onready var next_button : Button = $Button
-@onready var buy_board_size_button : Button = $Button2
-
 const item_pb = preload("res://ui_shop_item.tscn")
+const gem_ui = preload("res://ui_gem.tscn")
 
-func buy_gem(g : Gem, img : AnimatedSprite2D):
-	var tween = Game.get_tree().create_tween()
-	tween.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
-	tween.parallel()
-	SAnimation.cubic_curve_to(tween, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
-	tween.tween_callback(func():
-		Game.gems.append(g)
-		img.queue_free()
-	)
+@onready var exit_button : Button = $PanelContainer/VBoxContainer2/Button
+@onready var list1 : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer2/HBoxContainer
+@onready var list2 : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer2/HBoxContainer2
+@onready var refresh_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton
+@onready var expand_board_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton2
+@onready var add_gems_button  : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton3
+@onready var remove_gems_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton4
+@onready var remove_item_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton5
+
+var expand_board_price : int = 15
+var expand_board_increase : int = 10
+
+func random_item(cands : Array, list):
+	var indices = SMath.get_shuffled_indices(cands.size())
+	for idx in indices:
+		var found = false
+		for i in list:
+			if i.name == cands[idx]:
+				found = true
+				break
+		if !found:
+			return cands[idx]
+	return null
 
 func enter():
 	self.show()
 	
 	var tween = get_tree().create_tween()
-	var p0 = title_txt.position
-	title_txt.position = p0  - Vector2(0, 300)
-	tween.tween_property(title_txt, "position", p0, 0.3)
-	var p1 = next_button.position
-	next_button.position = p1  + Vector2(0, 300)
-	tween.parallel().tween_property(next_button, "position", p1, 0.3)
 	
-	var list = ["Bomb", "Ruby", "Citrine", "Emerald", "Sapphire", "Amethyst"]
-	for i in 8:
-		tween.tween_interval(0.1)
+	var items_pool = ["Bomb", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Bomb", "C4", "Chain Bomb", "Virus", "Lightning", "Color Palette", "Dog", "Cat", "Rooster", "Rabbit", "Fox", "Eagle", "Mouse", "Elephant", "Hot Dog", "Iai Cut"]
+	var relics_pool = ["Explosives", "Red Stone", "Orange Stone", "Green Stone", "Blue Stone", "Pink Stone", "Rock Bottom"]
+	var skills_pool = ["Xiao", "RoLL", "Mat.", "Qiang", "Jiang", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
+	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
+	
+	for n in list1.get_children():
+		list1.remove_child(n)
+		n.queue_free()
+	for n in list2.get_children():
+		list2.remove_child(n)
+		n.queue_free()
+	
+	for i in 4:
+		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = item_pb.instantiate()
-			var g = Gem.new()
-			g.setup(list.pick_random())
-			var gold = randi_range(1, 5)
-			ui.setup(g.image_id, gold)
+			var item = Item.new()
+			item.setup(items_pool.pick_random())
+			ui.setup("Item", item, "", item.price)
 			ui.gui_input.connect(func(event : InputEvent):
 				if event is InputEventMouseButton:
 					if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-						if Game.gold >= gold:
+						if Game.coins < item.price:
+							return
+						
+						SSound.sfx_coin.play()
+						Game.coins -= item.price
+						
+						var img = ui.image
+						img.reparent(self)
+						ui.get_parent().remove_child(ui)
+						ui.queue_free()
+						
+						var tween2 = Game.get_tree().create_tween()
+						tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+						tween2.parallel()
+						SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+						tween2.tween_callback(func():
+							Game.add_item(item)
+							img.queue_free()
+						)
+			)
+			list1.add_child(ui)
+		)
+	for i in 2:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var name = random_item(relics_pool, Game.relics)
+			if name:
+				var ui = item_pb.instantiate()
+				var relic = Relic.new()
+				relic.setup(name)
+				ui.setup("Relic", relic, "", relic.price)
+				ui.gui_input.connect(func(event : InputEvent):
+					if event is InputEventMouseButton:
+						if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+							if Game.coins < relic.price:
+								return
+							
 							SSound.sfx_coin.play()
-							Game.gold -= gold
+							Game.coins -= relic.price
+							
 							var img = ui.image
 							img.reparent(self)
 							ui.get_parent().remove_child(ui)
 							ui.queue_free()
-							buy_gem(g, img)
-			)
-			slot_uis[i].add_child(ui)
+							
+							var tween2 = Game.get_tree().create_tween()
+							tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+							tween2.parallel()
+							SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+							tween2.tween_callback(func():
+								Game.add_relic(relic)
+								img.queue_free()
+							)
+				)
+				list2.add_child(ui)
+		)
+	for i in 1:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var name = random_item(skills_pool, Game.skills)
+			if name:
+				var ui = item_pb.instantiate()
+				var skill = Skill.new()
+				skill.setup(name)
+				ui.setup("Skill", skill, "", skill.price)
+				ui.gui_input.connect(func(event : InputEvent):
+					if event is InputEventMouseButton:
+						if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+							if Game.coins < skill.price:
+								return
+				)
+				list2.add_child(ui)
+		)
+	for i in 1:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var name = random_item(patterns_pool, Game.patterns)
+			if name:
+				var ui = item_pb.instantiate()
+				var pattern = Pattern.new()
+				pattern.setup(name)
+				ui.setup("Pattern", pattern, "", pattern.price)
+				ui.gui_input.connect(func(event : InputEvent):
+					if event is InputEventMouseButton:
+						if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+							if Game.coins < pattern.price:
+								return
+				)
+				list2.add_child(ui)
 		)
 
 func _ready() -> void:
-	for i in 8:
-		slot_uis.append(find_child("Slot%d" % i))
-	
-	next_button.pressed.connect(func():
+	exit_button.pressed.connect(func():
 		SSound.sfx_click.play()
 		self.hide()
 		Game.new_level()
 	)
-	#next_button.mouse_entered.connect(SSound.sfx_select.play)
-	buy_board_size_button.pressed.connect(func():
-		Game.blocker_ui.enter()
-		Game.outlines_root.reparent(Game.blocker_ui)
+	#exit_button.mouse_entered.connect(SSound.sfx_select.play)
+	expand_board_button.price.text = "%d" % expand_board_price
+	expand_board_button.button.pressed.connect(func():
+		if Game.coins < expand_board_price:
+			return
 		
-		var cx_mult = Game.board.cx_mult
-		var cx = Game.board_size * 2 * cx_mult
-		var cy = Game.board_size * 2
-		var hf_cx = cx / 2
-		var hf_cy = cy / 2
+		SSound.sfx_coin.play()
+		Game.coins -= expand_board_price
 		
-		var margin = MarginContainer.new()
-		margin.add_theme_constant_override("margin_top", 30)
-		var hbox = HBoxContainer.new()
-		margin.add_child(hbox)
-		var txt0 = Label.new()
-		txt0.text = "Board Size: %dX%d" % [cx, cy]
-		txt0.add_theme_font_size_override("font_size", 24)
-		hbox.add_child(txt0)
-		SSound.sfx_click.play()
-		var txt1 = Label.new()
-		txt1.text = "=>"
-		txt1.add_theme_font_size_override("font_size", 24)
-		txt1.hide()
-		hbox.add_child(txt1)
-		var txt2 = Label.new()
-		txt2.add_theme_font_size_override("font_size", 24)
-		hbox.add_child(txt2)
-		txt2.hide()
-		Game.blocker_ui.add_child(margin)
-		margin.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+		Game.blocker_ui.enter(0.2)
+		var lb = Label.new()
+		lb.text = "Board Size: %d -> %d" % [Game.board_size, Game.board_size + 1]
+		lb.add_theme_font_size_override("font_size", 64)
+		Game.blocker_ui.add_child(lb)
+		lb.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
 		
-		var tween = Game.get_tree().create_tween()
-		
-		var central_coord = Game.board.central_coord
-		var pc = Game.tilemap.map_to_local(central_coord)
-		var had_coords = {}
-		for x in cx:
-			for y in cy:
-				var cc = Vector2i(x - hf_cx, y - hf_cy) + central_coord
-				var outline_sp = Sprite2D.new()
-				outline_sp.texture = load("res://images/outline.png")
-				outline_sp.position = Game.tilemap.map_to_local(cc)
-				had_coords[cc] = 1
-				Game.outlines_root.add_child(outline_sp)
-		
-		Game.board_size += 1
-		cx = Game.board_size * 2 * cx_mult
-		cy = Game.board_size * 2
-		hf_cx = cx / 2
-		hf_cy = cy / 2
-		
-		txt2.text = "Board Size: %dX%d" % [cx, cy]
-		
-		tween.tween_interval(0.5)
+		var tween = get_tree().create_tween()
+		tween.tween_interval(0.8)
 		tween.tween_callback(func():
-			SSound.sfx_click.play()
-			txt1.show()
-			margin.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+			Game.blocker_ui.exit(0.2)
 		)
-		tween.tween_interval(0.5)
+		tween.tween_interval(0.2)
 		tween.tween_callback(func():
-			SSound.sfx_click.play()
-			txt2.show()
-			margin.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+			lb.queue_free()
+			Game.board_size += 1
 		)
+	)
+	add_gems_button.button.pressed.connect(func():
+		if Game.coins < 2:
+			return
+		
+		var arr = []
+		for i in 5:
+			var r = {}
+			var name = Gem.type_name(i + 1)
+			r.icon = Gem.type_img(i + 1)
+			r.title = name + " x10"
+			r.description = "Add 10 %s gems, the runes are random." % name
+			arr.append(r)
+		var tween = get_tree().create_tween()
 		tween.tween_callback(func():
-			for x in cx:
-				for y in cy:
-					var cc = Vector2i(x - hf_cx, y - hf_cy) + central_coord
-					if !had_coords.has(cc):
-						var tween2 = Game.get_tree().create_tween()
-						var p1 = Game.tilemap.map_to_local(cc)
-						var p0 = p1 + (p1 - pc).normalized() * 500.0
-						var outline_sp = Sprite2D.new()
-						outline_sp.texture = load("res://images/outline.png")
-						outline_sp.position = p0
-						Game.outlines_root.add_child(outline_sp)
-						tween2.tween_property(outline_sp, "position", p1, 0.5)
+			Game.choose_reward_ui.enter(arr, func(idx : int, tween2 : Tween, img : Sprite2D):
+				if idx != -1:
+			
+					SSound.sfx_coin.play()
+					Game.coins -= 2
+					
+					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+					tween2.parallel()
+					SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+					tween2.tween_callback(func():
+						for i in 10:
+							var g = Gem.new()
+							g.type = idx + 1
+							g.rune = randi_range(1, Gem.Rune.Count)
+							Game.add_gem(g)
+						Game.sort_gems()
+					)
+			)
 		)
-		tween.tween_interval(2.0)
-		tween.tween_method(func(t : float):
-			Game.outlines_root.modulate.a = t
-			margin.modulate.a = t
-		, 1.0, 0.0, 0.5)
-		tween.tween_callback(func():
-			margin.queue_free()
-			Game.blocker_ui.exit()
-			Game.outlines_root.modulate.a = 1.0
-			Game.outlines_root.reparent(Game.game_root)
-			Game.game_root.move_child(Game.outlines_root, 1)
-			Game.board.cleanup()
+	)
+	remove_gems_button.button.pressed.connect(func():
+		if Game.coins < 2:
+			return
+		
+		Game.bag_viewer_ui.enter(8, "Select up to 8 gems to Remove", func(gems):
+			if gems.is_empty():
+				return
+			
+			SSound.sfx_coin.play()
+			Game.coins -= 2
+			
+			Game.blocker_ui.enter()
+			var bag_pos = Game.status_bar_ui.bag_button.get_global_rect().get_center()
+			var base_pos = self.get_global_rect().get_center() + Vector2(-16 * (gems.size() - 1), 200)
+			var uis = []
+			for g in gems:
+				var ui = gem_ui.instantiate()
+				ui.set_image(g.type, g.rune)
+				Game.blocker_ui.add_child(ui)
+				ui.global_position = bag_pos
+				ui.hide()
+				uis.append(ui)
+			var tween = get_tree().create_tween()
+			for i in gems.size():
+				tween.tween_interval(0.2)
+				tween.tween_callback(func():
+					var ui = uis[i]
+					ui.show()
+					SAnimation.cubic_curve_to(null, ui, base_pos + i * Vector2(32, 0), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.4)
+				)
+			tween.tween_interval(1.0)
+			tween.tween_callback(func():
+				for ui in uis:
+					ui.dissolve(0.5)
+			)
+			tween.tween_interval(0.5)
+			tween.tween_callback(func():
+				for ui in uis:
+					ui.queue_free()
+				for g in gems:
+					Game.gems.erase(g)
+				Game.blocker_ui.exit()
+			)
 		)
 	)

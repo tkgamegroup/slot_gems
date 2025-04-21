@@ -6,47 +6,41 @@ enum Type
 {
 	None,
 	ChangeColor,
-	ValueModifier,
-	Custom
+	ValueModifier
 }
 
 enum Duration
 {
-	ThisMatchingStage,
+	ThisMatching,
 	ThisLevel,
 	Eternal
 }
 
-var id : int
+var uid : int
 var type : int
 var host = null
 var duration : int
 var data : Dictionary
 
-var on_remove : Callable
-
-static var uid : int = 0
+static var s_uid : int = 0
 
 func die():
-	if type == Type.Custom:
-		on_remove.call(host, data)
-	else:
-		match type:
-			Type.ChangeColor: 
-				host.type = data["original_color"]
-				if host.coord.x != -1 && host.coord.y != -1:
-					Game.get_cell_ui(host.coord).set_gem_image(host.type, host.rune)
-			Type.ValueModifier:
-				type = Type.None
-				SUtils.calc_value_with_modifiers(host, data["target"])
+	match type:
+		Type.ChangeColor: 
+			host.type = data["original_color"]
+			if host.coord.x != -1 && host.coord.y != -1:
+				Game.get_cell_ui(host.coord).set_gem_image(host.type, host.rune)
+		Type.ValueModifier:
+			type = Type.None
+			SUtils.calc_value_with_modifiers(host, data["target"], data["sub_attr"])
 
-static func create(host, type : int, parms : Dictionary, duration : int = Duration.ThisMatchingStage):
+static func create(host, type : int, parms : Dictionary, duration : int = Duration.ThisMatching):
 	var b = Buff.new()
+	b.uid = s_uid
+	s_uid += 1
 	b.type = type
 	b.host = host
 	b.duration = duration
-	host.buffs.append(b)
-	uid += 1
 	match type:
 		Type.ChangeColor: 
 			b.data["original_color"] = host.type
@@ -54,23 +48,39 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 			if host.coord.x != -1 && host.coord.y != -1:
 				Game.get_cell_ui(host.coord).set_gem_image(host.type, host.rune)
 		Type.ValueModifier:
-			if parms.has("modify_add"):
-				b.data["modify_add"] = parms["modify_add"]
-			if parms.has("modify_mult"):
-				b.data["modify_mult"] = parms["modify_mult"]
-			b.data["target"] = parms["target"]
-			SUtils.calc_value_with_modifiers(host, parms["target"])
-	return uid
-
-static func create_custom(host, _on_gain : Callable, _on_remove : Callable):
-	var b = Buff.new()
-	b.type = Type.Custom
-	b.host = host
-	_on_gain.call(host, b.data)
-	b.on_remove = _on_remove
+			var target = parms["target"]
+			var sub_attr = parms["sub_attr"] if parms.has("sub_attr") else ""
+			var first = true
+			for bb in host.buffs:
+				if bb.type == Type.ValueModifier && bb.data["target"] == target && bb.data["sub_attr"] == sub_attr:
+					first = false
+					break
+			if first:
+				var bb = Buff.new()
+				bb.uid = s_uid
+				s_uid += 1
+				bb.type = type
+				bb.host = host
+				bb.duration = Duration.Eternal
+				bb.data["target"] = target
+				bb.data["sub_attr"] = sub_attr
+				if sub_attr == "":
+					bb.data["set"] = host[target]
+				else:
+					bb.data["set"] = host[sub_attr][target]
+				host.buffs.append(bb)
+			if parms.has("set"):
+				b.data["set"] = parms["set"]
+			if parms.has("add"):
+				b.data["add"] = parms["add"]
+			if parms.has("mult"):
+				b.data["mult"] = parms["mult"]
+			b.data["target"] = target
+			b.data["sub_attr"] = sub_attr
 	host.buffs.append(b)
-	uid += 1
-	return uid
+	if type == Type.ValueModifier:
+		SUtils.calc_value_with_modifiers(host, b.data["target"], b.data["sub_attr"])
+	return b.uid
 
 static func find_typed(host, type : int):
 	for b in host.buffs:
@@ -89,6 +99,22 @@ static func clear(host, duration : int):
 static func clear_if_not(host, duration : int):
 	SMath.remove_if(host.buffs, func(b : Buff):
 		if b.duration != duration:
+			b.die()
+			return true
+		return false
+	)
+
+static func remove_by_id(host, id : int):
+	SMath.remove_if(host.buffs, func(b : Buff):
+		if b.uid == id:
+			b.die()
+			return true
+		return false
+	)
+
+static func remove_by_id_list(host, ids : Array):
+	SMath.remove_if(host.buffs, func(b : Buff):
+		if ids.has(b.uid):
 			b.die()
 			return true
 		return false

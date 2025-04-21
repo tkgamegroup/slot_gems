@@ -17,9 +17,9 @@ enum Type
 enum Rune
 {
 	None,
-	Star,
-	Circle,
-	Diamond,
+	Zhe,
+	Cha,
+	Kou,
 	Count = 3
 }
 
@@ -29,12 +29,10 @@ const rune_frames : SpriteFrames = preload("res://images/runes.tres")
 var type : int = Type.None
 var rune : int = Rune.None
 
-var base_score : int = 1
+var base_score : int = 4
 var bonus_score : int = 0
 var coord : Vector2i = Vector2i(-1, -1)
 var buffs : Array[Buff]
-
-var extra = {}
 
 static func type_name(t : int):
 	match t:
@@ -78,16 +76,16 @@ static func type_img(t : int):
 
 static func rune_name(r : int):
 	match r:
-		Rune.Star: return "Star"
-		Rune.Circle: return "Circle"
-		Rune.Diamond: return "Diamond"
+		Rune.Zhe: return "Zhe"
+		Rune.Cha: return "Cha"
+		Rune.Kou: return "Kou"
 	return "None"
 
 static func rune_icon(r : int):
 	match r:
-		Rune.Star: return "res://images/rune_star.png"
-		Rune.Circle: return "res://images/rune_circle.png"
-		Rune.Diamond: return "res://images/rune_diamond.png"
+		Rune.Zhe: return "res://images/rune_zhe.png"
+		Rune.Cha: return "res://images/rune_cha.png"
+		Rune.Kou: return "res://images/rune_kou.png"
 	return ""
 
 func get_base_score():
@@ -98,16 +96,13 @@ func get_base_score():
 func get_name():
 	var b = Buff.find_typed(self, Buff.Type.ChangeColor)
 	if b:
-		return "[color=GRAY][s]%s[/s][/color] %s" % [type_name(b.data["original_color"]), type_name(type)]
-	return type_name(type)
+		return "[color=GRAY][s]%s[/s][/color] %s (%s)" % [type_name(b.data["original_color"]), type_name(type), rune_name(rune)]
+	return "%s (%s)" % [type_name(type), rune_name(rune)]
 
 func get_description():
-	return "Rune: %s\nScore: %d%s" % [rune_name(rune), get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
+	return "Score: %d%s" % [get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
 
 func get_tooltip():
 	var ret : Array[Pair] = []
-	var desc = get_description()
-	ret.append(Pair.new(get_name(), desc))
-	if type == Type.Wild:
-		ret.append(Pair.new("#Wild", "Can match with any color."))
+	ret.append(Pair.new(get_name(), get_description()))
 	return ret

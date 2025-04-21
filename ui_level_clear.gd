@@ -1,7 +1,6 @@
 extends Control
 
 const settlement_ui = preload("res://ui_settlement.tscn")
-const gem_ui = preload("res://ui_gem.tscn")
 
 @onready var title : RichTextLabel = $VBoxContainer/Label
 @onready var continue_button : Button = $VBoxContainer/Button
@@ -68,8 +67,15 @@ func enter():
 				continue_button.disabled = false
 			
 			Game.coins += coins
+			
+			for t in get_tree().get_processed_tweens():
+				t.kill()
+			exit()
+			Game.control_ui.exit()
+			Game.shop_ui.enter()
 		)
 	)
+	"""
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		rewards_count += 1
@@ -103,70 +109,9 @@ func enter():
 			Game.choose_reward_ui.enter(rewards, func(idx : int, tween : Tween, img : Sprite2D):
 				if idx == 0:
 					tween.tween_callback(func():
-						var arr = []
-						for i in 5:
-							var r = {}
-							var name = Gem.type_name(i + 1)
-							r.icon = Gem.type_img(i + 1)
-							r.title = name + " x5"
-							r.description = "Add 5 %s gems, the runes are random. They have 4 base score." % name
-							arr.append(r)
-						var tween2 = get_tree().create_tween()
-						tween2.tween_callback(func():
-							Game.choose_reward_ui.enter(arr, func(idx : int, tween3 : Tween, img : Sprite2D):
-								if idx != -1:
-									tween3.tween_property(img, "scale", Vector2(1.0, 1.0), 0.5)
-									tween3.parallel()
-									SAnimation.cubic_curve_to(tween3, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.7)
-									tween3.tween_callback(func():
-										for i in 5:
-											var g = Gem.new()
-											g.type = idx + 1
-											g.rune = randi_range(1, Gem.Rune.Count)
-											g.base_score = 4
-											Game.gems.append(g)
-										Game.sort_gems()
-										Game.blocker_ui.move(-1)
-									)
-							)
-						)
 					)
 				elif idx == 1:
 					tween.tween_callback(func():
-						Game.bag_viewer_ui.enter(5, "Select up to 5 gems to Remove", func(gems):
-							var bag_pos = Game.status_bar_ui.bag_button.get_global_rect().get_center()
-							var base_pos = self.get_global_rect().get_center() + Vector2(-16 * (gems.size() - 1), 200)
-							var uis = []
-							for g in gems:
-								var ui = gem_ui.instantiate()
-								ui.set_image(g.type, g.rune, g.image_id)
-								Game.blocker_ui.add_child(ui)
-								ui.global_position = bag_pos
-								ui.hide()
-								uis.append(ui)
-							var tween2 = get_tree().create_tween()
-							for i in gems.size():
-								tween2.tween_interval(0.2)
-								tween2.tween_callback(func():
-									var ui = uis[i]
-									ui.show()
-									var tween3 = get_tree().create_tween()
-									SAnimation.cubic_curve_to(tween3, ui, base_pos + i * Vector2(32, 0), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
-								)
-							tween2.tween_interval(1.0)
-							tween2.tween_callback(func():
-								for ui in uis:
-									ui.dissolve(0.5)
-							)
-							tween2.tween_interval(0.5)
-							tween2.tween_callback(func():
-								for ui in uis:
-									ui.queue_free()
-								for g in gems:
-									Game.gems.erase(g)
-								Game.blocker_ui.move(-1)
-							)
-						)
 					)
 			)
 		)
@@ -175,6 +120,7 @@ func enter():
 	tween.tween_callback(func():
 		continue_button.show()
 	)
+	"""
 
 func exit():
 	Game.blocker_ui.exit()
@@ -186,7 +132,7 @@ func _ready() -> void:
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
-		Game.game_ui.exit()
+		Game.control_ui.exit()
 		Game.shop_ui.enter()
 	)
 	#continue_button.mouse_entered.connect(SSound.sfx_select.play)

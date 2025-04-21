@@ -1,13 +1,18 @@
 extends PanelContainer
 
-@onready var list : Control = $MarginContainer/List
+@onready var list : Control = $MarginContainer/VBoxContainer/List
 
-func appear():
-	self.show()
-	var tween = Game.get_tree().create_tween()
-	var pos = self.position
-	self.position = pos - Vector2(100, 0)
-	tween.tween_property(self, "position", pos, 0.8)
+const skill_pb = preload("res://ui_skill.tscn")
+const item_h = 64
+const gap = 16
+
+func add_ui(s : Skill):
+	var ui = skill_pb.instantiate()
+	ui.setup(s)
+	list.add_child(ui)
+	s.ui = ui
+	var n = list.get_child_count()
+	list.custom_minimum_size = Vector2(75, item_h * n + (n - 1) * gap if n > 0 else 0)
 
 func clear():
 	if list:

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://d20qlypwis73p"]
+
+[ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="2_jxas5"]
+
+[sub_resource type="Curve" id="Curve_uw5uu"]
+_data = [Vector2(0.00580271, 0.306001), 0.0, 0.0, 0, 0, Vector2(1, 0.153185), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_vhvdw"]
+colors = PackedColorArray(1, 1, 1, 0.72549, 1, 1, 1, 0)
+
+[node name="ActiveItem" type="AnimatedSprite2D"]
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+texture = ExtResource("2_jxas5")
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 20.0
+scale_amount_curve = SubResource("Curve_uw5uu")
+color_ramp = SubResource("Gradient_vhvdw")

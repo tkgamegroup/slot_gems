@@ -1,48 +1,52 @@
-extends Object
-
-class_name Board
+extends Node
 
 enum ActiveReason
 {
 	Pattern,
 	Item,
+	Skill,
 	Burning,
 	RcAction
 }
 
 enum PlaceReason
 {
+	None,
 	FromHand,
 	FromBag
 }
 
-enum AuraEvent
+enum Event
 {
-	Enter,
-	Exit
+	GemEntered,
+	GemLeft,
+	ItemEntered,
+	ItemLeft,
+	ItemActivated,
+	ItemMoved,
+	Combo,
+	Exploded
 }
 
 var cx : int
 var cy : int
 var cx_mult : int
 var cells : Array[Cell]
-var central_coord = Vector2i(26, 10)
 
-const cell_pb = preload("res://ui_cell.tscn")
 const roll_speed : Curve = preload("res://roll_speed.tres")
 const particles_pb = preload("res://particles.tscn")
-const active_item_pb = preload("res://active_item.tscn")
+const active_effect_pb = preload("res://active_effect.tscn")
 
 var num_tasks : int
 var show_coords : bool = false
 
-var active_items : Array[Triple] = []
+var active_effects : Array[ActiveEffect] = []
 var active_serial : int = 0
-var skill_effects : Array[Pair]
-var auras : Array[Item]
+var event_listeners : Array[Item]
 
 signal setup_finished
 signal rolling_finished
+signal filling_finished
 signal matching_finished
 
 # odd-q vertical layout shoves odd columns down
@@ -118,12 +122,15 @@ func cube_ring(c : Vector3i, r : int) -> Array[Vector3i]:
 
 func offset_ring(c : Vector2i, r : int) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
+	if r == 0:
+		ret.append(c)
+		return ret
 	for cc in cube_ring(offset_to_cube(c), r):
 		ret.append(cube_to_offset(cc))
 	return ret
 
 func get_pos(c : Vector2i):
-	return Game.tilemap.map_to_local(Vector2i(c.x - cx / 2, c.y - cy / 2) + central_coord)
+	return Game.board_ui.get_pos(Game.board_ui.ui_coord(c))
 
 func is_valid(c : Vector2i):
 	return c.x >= 0 && c.x < cx && c.y >= 0 && c.y < cy
@@ -144,14 +151,14 @@ func set_gem_at(c : Vector2i, g : Gem):
 	var cell = cells[c.y * cx + c.x]
 	var og = cell.gem
 	if og:
-		for a in auras:
-			a.on_aura.call(AuraEvent.Exit, self, c)
+		for a in event_listeners:
+			a.on_event.call(Event.GemLeft, null, og)
 		Game.release_gem(og)
 	cell.gem = g
 	if g:
 		g.coord = c
-		for a in auras:
-			a.on_aura.call(AuraEvent.Enter, self, c)
+		for a in event_listeners:
+			a.on_event.call(Event.GemEntered, null, g)
 	Game.get_cell_ui(c).set_gem_image(g.type if g else 0, g.rune if g else 0)
 	return og
 
@@ -160,35 +167,57 @@ func get_item_at(c : Vector2i):
 		return null
 	return cells[c.y * cx + c.x].item
 
-func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.FromHand):
+func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 	if !is_valid(c):
 		return
 	var cell = cells[c.y * cx + c.x]
 	var oi = cell.item
-	if i && i.on_quick.is_valid():
-		i.on_quick.call(self, c)
-		Game.release_item(i)
-		return oi
 	if oi:
-		if oi.on_aura.is_valid():
-			auras.erase(oi)
-			for y in cy:
-				for x in cx:
-					oi.on_aura.call(AuraEvent.Exit, self, Vector2i(x, y))
-		if !oi.active:
-			Game.release_item(oi)
+		if oi.on_event.is_valid():
+			for a in event_listeners:
+				a.on_event.call(Event.ItemLeft, null, oi)
+			event_listeners.erase(oi)
+		Game.release_item(oi)
 	if i:
 		i.coord = c
 		if i.on_place.is_valid():
-			i.on_place.call(self, c, r)
-		if i.on_aura.is_valid():
-			auras.append(i)
-			for y in cy:
-				for x in cx:
-					i.on_aura.call(AuraEvent.Enter, self, Vector2i(x, y))
+			i.on_place.call(c, r)
+		if i.on_event.is_valid():
+			event_listeners.append(i)
+			for a in event_listeners:
+				a.on_event.call(Event.ItemEntered, null, i)
 	cell.item = i
-	Game.get_cell_ui(c).set_item_image(i.image_id if i else 0)
+	var ui = Game.get_cell_ui(c)
+	if i:
+		ui.set_item_image(i.image_id)
+		ui.set_is_duplicant(i.is_duplicant)
+	else:
+		ui.set_item_image(0)
+		ui.set_is_duplicant(false)
 	return oi
+
+func place_item(c : Vector2i, i : Item):
+	if !is_valid(c):
+		return false
+	var g = Board.get_gem_at(c)
+	if !g:
+		return false
+	var oi = get_item_at(c)
+	if i.on_quick.is_valid():
+		if i.on_quick.call(c):
+			Game.release_item(i)
+			return true
+	elif oi && oi.mountable == i.category && !oi.mounted:
+		if oi.on_mount.is_valid():
+			if !oi.on_mount.call(i):
+				return true
+		oi.mounted = i
+		Game.get_cell_ui(c).set_item_image(oi.image_id, i.image_id)
+		return true
+	else:
+		set_item_at(c, i, PlaceReason.FromHand)
+		return true
+	return false
 
 func get_state_at(c : Vector2i):
 	if !is_valid(c):
@@ -208,7 +237,7 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 		ui.gem.position = Vector2(0, 0)
 		ui.gem.scale = Vector2(1, 1)
 		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
-		ui.pin.hide()
+		ui.frozen.hide()
 		ui.burn.hide()
 	elif s == Cell.State.Consumed:
 		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
@@ -220,26 +249,46 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 			tween.tween_property(ui.burn, "position", Vector2(0, 0), 0.15)
 	return true
 
-func filter(cb : Callable, include_active_items : bool = false) -> Array[Vector2i]:
+func filter(cb : Callable) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
 			if cb.call(get_gem_at(c), get_item_at(c)):
 				ret.append(c)
-	if include_active_items:
-		for i in active_items:
-			if cb.call(null, i.first):
-				ret.append(i.second)
 	return ret
+
+func find_item(name : String):
+	for y in cy:
+		for x in cx:
+			var c = Vector2i(x, y)
+			var i = get_item_at(c)
+			if i && i.name == name:
+				return c
+	return Vector2i(-1, -1)
+
+func find_item_backwards(name : String, include_active_effects : bool = false):
+	for y in range(cy - 1, -1, -1):
+		for x in range(cx - 1, -1, -1):
+			var c = Vector2i(x, y)
+			var i = get_item_at(c)
+			if i && i.name == name:
+				return c
+	return Vector2i(-1, -1)
 
 func get_item_active_or_not_at(c : Vector2i):
 	var item = get_item_at(c)
 	if item:
 		return item
-	for i in active_items:
+	for i in active_effects:
 		if i.second == c:
 			return i.first
+	return null
+
+func get_active_at(c : Vector2i):
+	for ae in active_effects:
+		if ae.coord == c:
+			return ae
 	return null
 
 func gem_score_at(c : Vector2i):
@@ -248,26 +297,26 @@ func gem_score_at(c : Vector2i):
 		return 0
 	return g.get_base_score() + g.bonus_score
 
-func pin(c : Vector2i):
+func freeze(c : Vector2i):
 	if !is_valid(c):
 		return false
 	var idx = c.y * cx + c.x
 	var cell = cells[idx]
-	if cell.pined:
+	if cell.frozen:
 		return false
 	var ui = Game.get_cell_ui(c)
 	if get_gem_at(c):
-		ui.pin.show()
-		cell.pined = true
+		ui.frozen.show()
+		cell.frozen = true
 		return true
 
-func unpin(c : Vector2i):
+func unfreeze(c : Vector2i):
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
 	var ui = Game.get_cell_ui(c)
-	ui.pin.hide()
-	cells[idx].pined = false
+	ui.frozen.hide()
+	cells[idx].frozen = false
 
 func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, source = null):
 	var coords = []
@@ -290,10 +339,18 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			ptc.position = get_pos(c)
 			ptc.emitting = true
 			ptc.color = Gem.type_color(g.type)
-			Game.overlay.add_child(ptc)
-			if i:
-				activate(c, reason, source)
+			Game.board_ui.overlay.add_child(ptc)
 	)
+	for c in coords:
+		var i = get_item_at(c)
+		if i:
+			if i.on_eliminate.is_valid():
+				i.on_eliminate.call(c, reason, source, tween)
+			set_item_at(c, null)
+		var listeners = cell_at(c).event_listeners
+		SMath.remove_if(listeners, func(a : Callable):
+			return a.call(c, Cell.Event.Eliminated)
+		)
 	tween.tween_method(func(t):
 		for ui in uis:
 			ui.gem.bg_sp.scale = Vector2(t, t)
@@ -303,42 +360,58 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			var c = coords[i]
 			uis[i].gem.z_index = 0
 			ptcs[i].queue_free()
-			if !cell_at(c).pined:
+			if !cell_at(c).frozen:
 				if get_state_at(c) != Cell.State.Burning:
 					set_state_at(c, Cell.State.Consumed)
 	)
 
-func activate(c : Vector2i, reason : ActiveReason, source = null):
-	var item = get_item_at(c)
-	if !item:
+func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
+	if (c.x != -1 && c.y != -1) && cell_at(c).frozen:
 		return
-	if cell_at(c).pined:
-		return
-	set_item_at(c, null)
-	if item.on_eliminate.is_valid():
-		if !item.on_eliminate.call(self, c, reason, source):
+	var sp : AnimatedSprite2D = null
+	if type == 0:
+		var item : Item = host
+		if !(item.on_active.is_valid() || (item.mounted && item.mounted.on_active.is_valid())):
 			return
-	if item.active:
-		return
-	if item.on_process.is_valid():
-		item.active = true
-		var sp = active_item_pb.instantiate()
+		sp = active_effect_pb.instantiate()
+		sp.sprite_frames = Item.item_frames
 		sp.frame = item.image_id
 		sp.position = get_pos(c)
 		sp.z_index = 2
-		Game.cells_root.add_child(sp)
-		active_items.append(Triple.new(item, c, sp))
-		active_serial += 1
+		Game.board_ui.cells_root.add_child(sp)
+	else:
+		var skill : Skill = host
+		if !skill.on_active.is_valid():
+			return
+		sp = active_effect_pb.instantiate()
+		sp.global_position = skill.ui.get_global_rect().get_center()
+		Game.skills_bar_ui.add_child(sp)
+	var ae = ActiveEffect.new()
+	ae.host = host
+	ae.type = type
+	ae.effect_index = effect_index
+	ae.coord = c
+	ae.sp = sp
+	active_effects.append(ae)
+	active_serial += 1
+	for a in event_listeners:
+		a.on_event.call(Event.ItemActivated, null, ae)
 
-func process_active_item(t : Triple):
-	var item = t.first
+func process_active_effect(ae : ActiveEffect):
 	var tween = Game.get_tree().create_tween()
-	item.on_process.call(self, t.second, tween, t.third)
+	if ae.type == 0:
+		var item : Item = ae.host
+		if item.mounted && item.mounted.on_active.is_valid():
+			item.mounted.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
+		if item.on_active.is_valid():
+			item.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
+	else:
+		var skill : Skill = ae.host
+		if skill.on_active.is_valid():
+			skill.on_active.call(ae.effect_index, ae.coord, tween)
 	tween.tween_callback(func():
-		active_items.remove_at(0)
-		item.active = false
-		Game.release_item(item)
-		t.third.queue_free()
+		active_effects.remove_at(0)
+		ae.sp.queue_free()
 		clear_consumed()
 	)
 	tween.tween_interval(0.4 * Game.animation_speed)
@@ -346,49 +419,24 @@ func process_active_item(t : Triple):
 		fill_blanks()
 	)
 
-func process_skill_effects():
-	if skill_effects.is_empty():
-		fill_blanks()
-	else:
-		SSound.sfx_bubble.play()
-		var s = skill_effects[0]
-		var skill : Skill = s.first
-		var rune_coords = s.second
-		var tween = Game.get_tree().create_tween()
-		var coords = []
-		for r in rune_coords:
-			for c in rune_coords[r]:
-				var pos = get_pos(c)
-				coords.append(c)
-		var rid = randi_range(0, coords.size() - 1)
-		var target_coord = coords[rid]
-		var g = Gem.new()
-		g.setup(skill.spawn_gem.name)
-		g.temporary = true
-		tween.tween_callback(func():
-			set_gem_at(target_coord, g)
-		)
-		tween.tween_interval(0.3)
-		tween.tween_callback(func():
-			skill_effects.remove_at(0)
-			process_skill_effects()
-		)
+func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
+	for a in event_listeners:
+		a.on_event.call(Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
 
 func cleanup():
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
+			set_item_at(c, null)
 			set_gem_at(c, null)
 	cells.clear()
+	event_listeners.clear()
 	Game.unused_gems.clear()
 	for g in Game.gems:
 		Game.unused_gems.append(g)
-	for n in Game.outlines_root.get_children():
-		n.queue_free()
-		Game.outlines_root.remove_child(n)
-	for n in Game.cells_root.get_children():
-		n.queue_free()
-		Game.cells_root.remove_child(n)
+	Game.board_ui.clear()
+	cx = 0
+	cy = 0
 
 func setup(_hf_cy : int, _cx_multipler : int):
 	cleanup()
@@ -400,14 +448,17 @@ func setup(_hf_cy : int, _cx_multipler : int):
 		for x in cx:
 			var idx = y * cx + x
 			var c = Cell.new()
-			c.index = idx
+			c.coord = Vector2i(x, y)
 			cells.append(c)
+			Game.board_ui.add_cell(Game.board_ui.ui_coord(c.coord))
 	
+	setup_finished.emit()
+	'''
 	for y in cy:
 		for x in cx:
 			var cell = cell_pb.instantiate()
 			cell.position = get_pos(Vector2i(x, y))
-			Game.cells_root.add_child(cell)
+			Game.board_ui.cells_root.add_child(cell)
 			if show_coords:
 				var cube_c = offset_to_cube(Vector2i(x, y))
 				var lb0 = Label.new()
@@ -415,34 +466,34 @@ func setup(_hf_cy : int, _cx_multipler : int):
 				lb0.add_theme_color_override("font_color", Color.RED)
 				lb0.add_theme_font_size_override("font_size", 9)
 				lb0.position = cell.position + Vector2(-5, -15)
-				Game.overlay.add_child(lb0)
+				Game.board_ui.overlay.add_child(lb0)
 				var lb1 = Label.new()
 				lb1.text = "%d" % cube_c.y
 				lb1.add_theme_color_override("font_color", Color.GREEN)
 				lb1.add_theme_font_size_override("font_size", 9)
 				lb1.position = cell.position + Vector2(3, 2)
-				Game.overlay.add_child(lb1)
+				Game.board_ui.overlay.add_child(lb1)
 				var lb2 = Label.new()
 				lb2.text = "%d" % cube_c.z
 				lb2.add_theme_color_override("font_color", Color.BLUE)
 				lb2.add_theme_font_size_override("font_size", 9)
 				lb2.position = cell.position + Vector2(-10, 2)
-				Game.overlay.add_child(lb2)
+				Game.board_ui.overlay.add_child(lb2)
 	
 	num_tasks = 0
 	var updated = {}
-	var pc = Game.tilemap.map_to_local(central_coord)
+	var pc = Game.board_ui.get_pos(Game.board_ui.central_coord)
 	var tween = Game.get_tree().create_tween()
 	for i in _hf_cy + 1:
 		for x in range(-i * cx_mult, i * cx_mult):
 			for y in range(-i, i):
-				var cc = Vector2i(x, y) + central_coord
+				var cc = Vector2i(x, y) + Game.board_ui.central_coord
 				if updated.has(cc):
 					continue
 				updated[cc] = 1
 				tween.tween_callback(func():
 					var tween2 = Game.get_tree().create_tween()
-					var p1 = Game.tilemap.map_to_local(cc)
+					var p1 = Game.board_ui.get_pos(cc)
 					var p0 = p1 + (p1 - pc).normalized() * 500.0
 					var outline_sp = Sprite2D.new()
 					outline_sp.texture = load("res://images/outline.png")
@@ -463,20 +514,21 @@ func setup(_hf_cy : int, _cx_multipler : int):
 					)
 				)
 		tween.tween_interval(0.1)
+	'''
 
-func skip_above_pineds(c : Vector2i) -> Vector2i:
+func skip_above_frozens(c : Vector2i) -> Vector2i:
 	var cc = c - Vector2i(0, 1)
 	while true:
 		if cc.y < 0:
 			return cc
-		if !cell_at(cc).pined:
+		if !cell_at(cc).frozen:
 			return cc
 		cc.y -= 1
 	return Vector2i(-1, -1)
 
 func step_down_cell(c : Vector2i):
-	if !cell_at(c).pined:
-		var cc = skip_above_pineds(c)
+	if !cell_at(c).frozen:
+		var cc = skip_above_frozens(c)
 		if cc.y < 0:
 			set_gem_at(c, Game.get_gem())
 		else:
@@ -493,9 +545,10 @@ func roll():
 	for yy in cy:
 		for xx in cx:
 			var c = Vector2i(xx, yy)
-			if !cell_at(c).pined:
-				set_gem_at(c, null)
+			if !cell_at(c).frozen:
 				set_item_at(c, null)
+				set_gem_at(c, null)
+				cell_at(c).event_listeners.clear()
 	
 	Game.combos = 0
 	
@@ -549,27 +602,22 @@ func fill_blanks():
 		for x in cx:
 			for y in cy:
 				var c = Vector2i(x, cy - y - 1)
-				if !cell_at(c).pined && !get_gem_at(c):
+				if !cell_at(c).frozen && !get_gem_at(c):
 					step_down_cell(c)
 					filled = true
 		if filled:
 			SSound.sfx_zap.play()
 			fill_blanks()
 		else:
-			matching()
+			filling_finished.emit()
 	)
 
 func on_combo():
-	for y in cy:
-		for x in cx:
-			var c = Vector2i(x, y)
-			var i = get_item_at(c)
-			if i && i.on_combo.is_valid():
-				i.on_combo.call(self, Game.combos)
+	for a in event_listeners:
+		a.on_event.call(Event.Combo, null, null)
 
 func matching():
 	var no_patterns = true
-	var used_runes = {}
 	var tween = Game.get_tree().create_tween()
 	for y in cy:
 		for x in cx:
@@ -593,7 +641,6 @@ func matching():
 									cands.append(cc)
 							var pos = get_pos(c)
 							for cc in SMath.pick_n(cands, 1):
-								activate(cc, ActiveReason.Burning, null)
 								set_state_at(cc, Cell.State.Burning, {"pos":pos})
 						
 						SSound.sfx_tom.play()
@@ -602,18 +649,16 @@ func matching():
 							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))
 					)
 					
-					tween.tween_callback(func():
-						var runes : Array[Vector2i] = []
-						for c in res:
-							if !used_runes.has(c):
-								runes.append(c)
-						for s in Game.skills:
-							var rune_coords = s.check(runes)
-							if !rune_coords.is_empty():
-								skill_effects.append(Pair.new(s, rune_coords))
-								for c in runes:
-									used_runes[c] = 1
-					)
+					var runes : Array[int] = []
+					for c in res:
+						runes.append(get_gem_at(c).rune)
+					for s in Game.skills:
+						if s.check(runes):
+							tween.tween_callback(func():
+								s.add_exp(1)
+							)
+							if s.on_cast.is_valid():
+								s.on_cast.call(tween)
 					
 					eliminate(res, tween, ActiveReason.Pattern, p)
 					
@@ -622,19 +667,15 @@ func matching():
 	if no_patterns:
 		tween.tween_interval(0.7)
 		tween.tween_callback(func():
-			if active_items.is_empty():
+			if active_effects.is_empty():
 				matching_finished.emit()
 				active_serial = 0
 			else:
-				process_active_item(active_items[0])
+				process_active_effect(active_effects[0])
 		)
 	else:
-		tween.tween_callback(func():
-			clear_consumed()
-		)
+		tween.tween_callback(clear_consumed)
 		tween.tween_interval(0.4 * Game.animation_speed)
-		tween.tween_callback(func():
-			process_skill_effects()
-		)
+		tween.tween_callback(fill_blanks)
 	Game.animation_speed *= 0.98
 	Game.animation_speed = max(0.05, Game.animation_speed)

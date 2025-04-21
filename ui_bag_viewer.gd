@@ -9,6 +9,7 @@ extends Control
 @onready var close_button = $VBoxContainer/HBoxContainer/Button
 
 const gem_ui = preload("res://ui_gem.tscn")
+const item_ui = preload("res://ui_item.tscn")
 
 var selecteds = []
 var select_num : int
@@ -83,30 +84,19 @@ func enter(_select_num : int = 0, select_prompt : String = "", _select_callback 
 				bar.show()
 		gem_list.add_child(ctrl)
 	for i in Game.items:
-		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(32, 36)
-		ctrl.mouse_entered.connect(func():
-			SSound.sfx_select.play()
-			STooltip.show(i.get_tooltip())
-		)
-		ctrl.mouse_exited.connect(func():
-			STooltip.close()
-		)
-		var ui = AnimatedSprite2D.new()
-		ui.position = Vector2(16, 16)
-		ui.sprite_frames = Item.item_frames
-		ui.frame = i.image_id
-		ctrl.add_child(ui)
+		var ui = item_ui.instantiate()
+		ui.custom_minimum_size = Vector2(32, 36)
+		ui.setup(i)
+		
 		var bar = create_bar()
-		ctrl.add_child(bar)
-		if i.coord.x != -1:
-			if i.coord.y != -1:
-				bar.color = Color(0.9, 0.6, 0.3, 1.0)
-				bar.show()
-			else:
-				bar.color = Color(0.5, 0.8, 0.6, 1.0)
-				bar.show()
-		item_list.add_child(ctrl)
+		ui.add_child(bar)
+		if i.coord.x != -1 && i.coord.y != -1:
+			bar.color = Color(0.9, 0.6, 0.3, 1.0)
+			bar.show()
+		elif i.coord.x != -1:
+			bar.color = Color(0.5, 0.8, 0.6, 1.0)
+			bar.show()
+		item_list.add_child(ui)
 
 func exit():
 	Game.blocker_ui.exit()

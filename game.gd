@@ -16,15 +16,29 @@ enum Props
 	Grab
 }
 
+enum Event
+{
+	GainGem,
+	LostGem,
+	GainItem,
+	LostItem,
+	GainRelic,
+	LostRelic,
+	GemBaseScoreChanged,
+	GemBonusScoreChanged
+}
+
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
-const UiGame = preload("res://ui_game.gd")
-const Hand = preload("res://hand.gd")
+const UiBoard = preload("res://ui_board.gd")
+const UiControl = preload("res://ui_control.gd")
+const UiHand = preload("res://ui_hand.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
 const UiSkillsBar = preload("res://ui_skills_bar.gd")
 const UiPatternsBar = preload("res://ui_patterns_bar.gd")
 const UiBlocker = preload("res://ui_blocker.gd")
+const UiDialog = preload("res://ui_dialog.gd")
 const UiOptions = preload("res://ui_options.gd")
 const UiInGameMenu = preload("res://ui_in_game_menu.gd")
 const UiGameOver = preload("res://ui_game_over.gd")
@@ -32,7 +46,7 @@ const UiLevelClear = preload("res://ui_level_clear.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
 const UiBagViewer = preload("res://ui_bag_viewer.gd")
 const popup_txt_pb = preload("res://popup_txt.tscn")
-const skill_pb = preload("res://ui_skill.tscn")
+const relic_ui = preload("res://ui_relic.tscn")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
 const activate_cursor = preload("res://images/magic_stick.png")
@@ -40,22 +54,18 @@ const grab_cursor = preload("res://images/grab.png")
 
 @onready var background = $/root/Main/Background
 @onready var bg_shader : ShaderMaterial = background.material
-@onready var game_root : Node2D = $/root/Main/Game
-@onready var tilemap : TileMapLayer = $/root/Main/Game/TileMapLayer
-@onready var outlines_root : Node2D = $/root/Main/Game/Outlines
-@onready var underlay : Node2D = $/root/Main/Game/Underlay
-@onready var cells_root : Node2D = $/root/Main/Game/Cells
-@onready var overlay : Node2D = $/root/Main/Game/Overlay
-@onready var hover_ui : Sprite2D = $/root/Main/Game/Hover
-@onready var drag_ui : AnimatedSprite2D = $/root/Main/Game/Drag
+@onready var board_ui : UiBoard = $/root/Main/Board
 @onready var title_ui : UiTitle = $/root/Main/UI/Title
-@onready var game_ui : UiGame = $/root/Main/UI/Game
-@onready var hand : Hand = $/root/Main/UI/Game/Panel/HBoxContainer/Hand
+@onready var control_ui : UiControl = $/root/Main/UI/Control
+@onready var hand_ui : UiHand = $/root/Main/UI/Control/Panel/HBoxContainer/Hand
 @onready var shop_ui : UiShop = $/root/Main/UI/Shop
-@onready var status_bar_ui : UiStatusBar = $/root/Main/UI/StatusBar
-@onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/SkillsBar
-@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/UI/PatternsBar
+@onready var game_ui : Control = $/root/Main/UI/Game
+@onready var status_bar_ui : UiStatusBar = $/root/Main/UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar
+@onready var relics_bar_ui : Control = $/root/Main/UI/Game/VBoxContainer/TopBar/VBoxContainer/Relics/MarginContainer/HBoxContainer
+@onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/Game/VBoxContainer/Control/SkillsBar
+@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/UI/Game/VBoxContainer/Control/PatternsBar
 @onready var blocker_ui : UiBlocker = $/root/Main/UI/Blocker
+@onready var dialog_ui : UiDialog = $/root/Main/UI/Dialog
 @onready var options_ui : UiOptions = $/root/Main/UI/Options
 @onready var in_game_menu_ui : UiInGameMenu = $/root/Main/UI/InGameMenu
 @onready var game_over_ui : UiGameOver = $/root/Main/UI/GameOver
@@ -63,48 +73,58 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var choose_reward_ui : UiChooseReward = $/root/Main/UI/ChooseReward
 @onready var bag_viewer_ui : UiBagViewer = $/root/Main/UI/BagViewer
 
-var dragging_cell : Vector2i = Vector2i(-1, -1)
-
-func release_dragging():
-	dragging_cell = Vector2i(-1, -1)
-	drag_ui.hide()
-
 var stage : int = Stage.Deploy
 var rolls : int:
 	set(v):
 		rolls = v
-		game_ui.rolls_text.text = "%d" % rolls
+		control_ui.rolls_text.text = "%d" % rolls
 var rolls_per_level : int
+var after_rolled_eliminate_one_rune : int = 0
+var has_processes_after_rolled : bool = false
+var next_roll_extra_draws : int = 0
+var matches : int:
+	set(v):
+		matches = v
+		control_ui.matches_text.text = "%d" % matches
+var matches_per_level : int
+var startup_draws : int
+var draws_per_roll : int:
+	set(v):
+		draws_per_roll = v
+		if hand_ui:
+			hand_ui.update_description()
 var props = Props.None
 var pins_num : int:
 	set(v):
 		pins_num = v
 		if pins_num > 0:
-			game_ui.pin_ui.show()
-			game_ui.pin_ui.num.text = "%d" % pins_num
+			control_ui.pin_ui.show()
+			control_ui.pin_ui.num.text = "%d" % pins_num
 		else:
-			game_ui.pin_ui.hide()
+			control_ui.pin_ui.hide()
 var pins_num_per_level : int
 var activates_num : int:
 	set(v):
 		activates_num = v
 		if activates_num > 0:
-			game_ui.activate_ui.show()
-			game_ui.activate_ui.num.text = "%d" % activates_num
+			control_ui.activate_ui.show()
+			control_ui.activate_ui.num.text = "%d" % activates_num
 		else:
-			game_ui.activate_ui.hide()
+			control_ui.activate_ui.hide()
 var activates_num_per_level : int
 var grabs_num : int:
 	set(v):
 		grabs_num = v
 		if grabs_num > 0:
-			game_ui.grab_ui.show()
-			game_ui.grab_ui.num.text = "%d" % grabs_num
+			control_ui.grab_ui.show()
+			control_ui.grab_ui.num.text = "%d" % grabs_num
 		else:
-			game_ui.grab_ui.hide()
+			control_ui.grab_ui.hide()
 var grabs_num_per_level : int
-var board : Board
-var board_size : int = 4
+var board_size : int = 0:
+	set(v):
+		board_size = v
+		status_bar_ui.board_size_text.text = "%d" % board_size
 var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
@@ -112,8 +132,9 @@ var unused_gems : Array[Gem] = []
 var gem_bouns_scores : Array[int]
 var items : Array[Item]
 var unused_items : Array[Item] = []
+var relics : Array[Relic]
 func update_score_text():
-	game_ui.score_text.text = "Score: %d/%d (x%.1f)" % [score, target_score, score_mult]
+	status_bar_ui.score_text.text = "Score: %d/%d (x%.1f)" % [score, target_score, score_mult]
 var score : int:
 	set(v):
 		score = v
@@ -127,27 +148,24 @@ var combos : int = 0:
 	set(v):
 		combos = v
 		if combos > 1:
-			game_ui.combos_fire.modulate.a = 1.0
-			game_ui.combos_fire.show()
-			game_ui.combos_fire_shader.set_shader_parameter("amount", min(1.0, combos / 10.0))
-			game_ui.combos_text.modulate.a = 1.0
-			game_ui.combos_text.show()
-			game_ui.combos_text.text = "Combo X %d" % combos
-			game_ui.combos_text.add_theme_color_override("font_color", Color.from_hsv(randf(), 0.4, 1.0))
+			control_ui.combos_fire.modulate.a = 1.0
+			control_ui.combos_fire.show()
+			control_ui.combos_fire_shader.set_shader_parameter("amount", min(1.0, combos / 10.0))
+			control_ui.combos_text.modulate.a = 1.0
+			control_ui.combos_text.show()
+			control_ui.combos_text.text = "Combo X %d" % combos
+			control_ui.combos_text.add_theme_color_override("font_color", Color.from_hsv(randf(), 0.4, 1.0))
 			if combos_tween:
 				combos_tween.kill()
 			combos_tween = get_tree().create_tween()
 			combos_tween.tween_method(func(t):
-				game_ui.combos_text.get_parent().rotation_degrees = sin(t * PI * 10.0) * t * 10.0
+				control_ui.combos_text.get_parent().rotation_degrees = sin(t * PI * 10.0) * t * 10.0
 			, 1.0, 0.0, 1.0)
 			combos_tween.tween_callback(func():
 				combos_tween = null
 			)
-var base_score_mult : float = 1.0:
-	set(v):
-		base_score_mult = v
-		SUtils.calc_value_with_modifiers(self, "score_mult")
-var score_mult : float = base_score_mult:
+
+var score_mult : float = 1.0:
 	set(v):
 		score_mult = v
 		update_score_text()
@@ -162,31 +180,43 @@ var coins : int:
 var buffs : Array[Buff]
 var history : History = History.new()
 
+var explode_range_modifier : int = 0
+var explode_power_modifier : int = 0
+
 var base_animation_speed = 1.0
 var animation_speed = base_animation_speed
 
 func set_props(t : int):
 	props = t
-	for n in game_ui.props_bar.get_children():
+	for n in control_ui.props_bar.get_children():
 		n.select.hide()
 	if props == Props.None:
-		game_ui.action_tip_text.text = ""
+		control_ui.action_tip_text.text = ""
 		Input.set_custom_mouse_cursor(pointer_cursor, Input.CURSOR_ARROW, Vector2(15, 4))
 	elif props == Props.Pin:
-		game_ui.pin_ui.select.show()
-		game_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Pin[img width=32]res://images/mouse_right_button.png[/img]Cancel"
+		control_ui.pin_ui.select.show()
+		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Pin[img width=32]res://images/mouse_right_button.png[/img]Cancel"
 		Input.set_custom_mouse_cursor(pin_cursor, Input.CURSOR_ARROW, Vector2(7, 30))
 	elif props == Props.Activate:
-		game_ui.activate_ui.select.show()
-		game_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Activate[img width=32]res://images/mouse_right_button.png[/img]Cancel"
+		control_ui.activate_ui.select.show()
+		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Activate[img width=32]res://images/mouse_right_button.png[/img]Cancel"
 		Input.set_custom_mouse_cursor(activate_cursor, Input.CURSOR_ARROW, Vector2(5, 5))
 	elif props == Props.Grab:
-		game_ui.grab_ui.select.show()
-		game_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Drag Around[img width=32]res://images/mouse_right_button.png[/img]Cancel"
+		control_ui.grab_ui.select.show()
+		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Drag Around[img width=32]res://images/mouse_right_button.png[/img]Cancel"
 		Input.set_custom_mouse_cursor(grab_cursor, Input.CURSOR_ARROW, Vector2(5, 20))
 
+func get_word_descriptions(arr : Array[Pair]):
+	pass
+
 func get_cell_ui(c : Vector2i) -> UiCell:
-	return cells_root.get_child(c.y * board.cx + c.x)
+	return board_ui.cells_root.get_child(c.y * Board.cx + c.x)
+
+func add_gem(g : Gem):
+	for r in relics:
+		if r.on_event.is_valid():
+			r.on_event.call(Event.GainGem, g, null)
+	gems.append(g)
 
 func get_gem(g : Gem = null):
 	if g:
@@ -194,10 +224,29 @@ func get_gem(g : Gem = null):
 		return g
 	return SMath.pick_and_remove(unused_gems)
 
-func release_gem(gem : Gem):
-	gem.coord = Vector2i(-1, -1)
-	Buff.clear_if_not(gem, Buff.Duration.Eternal)
-	unused_gems.append(gem)
+func release_gem(g : Gem):
+	g.bonus_score = 0
+	g.coord = Vector2i(-1, -1)
+	Buff.clear_if_not(g, Buff.Duration.Eternal)
+	unused_gems.append(g)
+
+func gem_add_base_score(g : Gem, v : int):
+	for r in relics:
+		v = r.on_event.call(Event.GemBaseScoreChanged, g, v)
+	g.base_score += v
+	return v
+
+func gem_add_bonus_score(g : Gem, v : int):
+	for r in relics:
+		v = r.on_event.call(Event.GemBonusScoreChanged, g, v)
+	g.bonus_score += v
+	return 
+
+func add_item(i : Item):
+	for r in relics:
+		if r.on_event.is_valid():
+			r.on_event.call(Event.GainItem, i, null)
+	items.append(i)
 
 func get_item(i : Item = null):
 	if i:
@@ -205,14 +254,32 @@ func get_item(i : Item = null):
 		return i
 	return SMath.pick_and_remove(unused_items)
 
-func release_item(item : Item):
-	item.coord = Vector2i(-1, -1)
-	unused_items.append(item)
+func release_item(i : Item):
+	if i.is_duplicant:
+		return
+	if i.mounted:
+		release_item(i.mounted)
+		i.mounted = null
+	i.coord = Vector2i(-1, -1)
+	Buff.clear_if_not(i, Buff.Duration.Eternal)
+	unused_items.append(i)
+
+func add_relic(r : Relic):
+	if r.on_event.is_valid():
+		r.on_event.call(Event.GainRelic, r, null)
+	var ui = relic_ui.instantiate()
+	ui.setup(r)
+	relics_bar_ui.add_child(ui)
+
+func has_relic(n : String):
+	for r in relics:
+		if r.name == n:
+			return true
+	return false
 
 func add_combo():
 	combos += 1
-	if board:
-		board.on_combo()
+	Board.on_combo()
 
 func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0)):
 	var ui = popup_txt_pb.instantiate()
@@ -222,7 +289,7 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 	lb.text = txt
 	lb.add_theme_color_override("font_color", color)
 	ui.z_index = 10
-	overlay.add_child(ui)
+	board_ui.overlay.add_child(ui)
 	var tween = get_tree().create_tween()
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
 	tween.parallel().tween_property(ui, "scale", Vector2(0.8, 0.8), 0.5)
@@ -241,7 +308,7 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	else:
 		lb.text = "%d" % int(base * score_mult)
 	ui.z_index = 10
-	overlay.add_child(ui)
+	board_ui.overlay.add_child(ui)
 	var tween = get_tree().create_tween()
 	if affected_by_combos:
 		tween.tween_method(func(t):
@@ -261,11 +328,11 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 
 var status_tween : Tween
 func add_status(s : String, col : Color):
-	game_ui.status_text.show()
-	game_ui.status_text.text = s
-	var parent = game_ui.status_text.get_parent()
+	control_ui.status_text.show()
+	control_ui.status_text.text = s
+	var parent = control_ui.status_text.get_parent()
 	parent.scale = Vector2(1.3, 1.3)
-	game_ui.status_text.add_theme_color_override("font_color", col)
+	control_ui.status_text.add_theme_color_override("font_color", col)
 	if status_tween:
 		status_tween.kill()
 	status_tween = get_tree().create_tween()
@@ -275,7 +342,7 @@ func add_status(s : String, col : Color):
 	status_tween.parallel().tween_property(parent, "scale", Vector2(1.0, 1.0), 1.0)
 	status_tween.tween_interval(0.5)
 	status_tween.tween_callback(func():
-		game_ui.status_text.hide()
+		control_ui.status_text.hide()
 		status_tween = null
 	)
 
@@ -285,213 +352,304 @@ func sort_gems():
 	)
 
 func add_skill(s : Skill):
-	var ui = skill_pb.instantiate()
-	ui.setup(s)
-	skills_bar_ui.list.add_child(ui)
-	s.ui = ui
 	skills.append(s)
+	skills_bar_ui.add_ui(s)
 
 func add_pattern(p : Pattern):
 	patterns.append(p)
 	patterns_bar_ui.add_ui(p)
 
 func get_level_score(lv : int):
+	# 300, 800, 2000, 5000, 11000, 20000, 35000, 50000
 	match lv:
 		1:
-			return 1000000
+			return 50000000
 		2:
-			return 3000000
+			return 90000000
 		3:
-			return 6000000
+			return 150000000
 		4:
-			return 10000000
+			return 210000000
 		5:
-			return 15000000
+			return 280000000
 		6:
-			return 24000000
+			return 360000000
 		7:
-			return 40000000
+			return 450000000
 		8:
-			return 60000000
+			return 600000000
 
 func begin_busy():
-	game_ui.roll_button.disabled = true
-	game_ui.play_button.disabled = true
-	hand.disabled = true
+	control_ui.roll_button.disabled = true
+	control_ui.match_button.disabled = true
+	hand_ui.disabled = true
 
 func end_busy():
 	if rolls > 0:
-		game_ui.roll_button.disabled = false
-	game_ui.play_button.disabled = false
-	hand.disabled = false
+		control_ui.roll_button.disabled = false
+	control_ui.match_button.disabled = false
+	hand_ui.disabled = false
 
-func start_new_game():
+func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null):
+	var outer_tween = (tween != null)
+	if !tween:
+		tween = get_tree().create_tween()
+		begin_busy()
+	var target_pos = Board.get_pos(target_coord)
+	if cast_pos != target_pos:
+		tween.tween_callback(func():
+			SEffect.add_leading_line(cast_pos, target_pos, 0.3 * animation_speed)
+		)
+		tween.tween_interval(0.4 * animation_speed)
+	var coords : Array[Vector2i] = []
+	var r = range + explode_range_modifier
+	var p = power + explode_power_modifier
+	for i in r + 1:
+		for c in Board.offset_ring(target_coord, i):
+			if Board.is_valid(c):
+				coords.append(c)
+	tween.tween_callback(func():
+		var pos = Board.get_pos(target_coord)
+		var sp_expl = SEffect.add_explosion(pos, Vector2(64.0, 64.0) * max(1, r), 3, 0.5 * animation_speed)
+		board_ui.cells_root.add_child(sp_expl)
+		var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0) * max(1, r), 4, 0.5 * animation_speed)
+		board_ui.cells_root.add_child(fx)
+	)
+	tween.tween_interval(0.5 * animation_speed)
+	tween.tween_callback(func():
+		for a in Board.event_listeners:
+			a.on_event.call(Board.Event.Exploded, null, target_coord)
+		
+		add_combo()
+		for c in coords:
+			add_score(Board.gem_score_at(c) + p, Board.get_pos(c))
+	)
+	Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+	if !outer_tween:
+		tween.tween_callback(end_busy)
+	return coords
+
+func effect_place_item_from_bag(cast_pos : Vector2, target : Item, target_coord : Vector2i, tween : Tween = null):
+	if !target:
+		var cands = []
+		for i in items:
+			if i.coord.x == -1 && i.coord.y == -1 && !i.active:
+				cands.append(i)
+		if cands.is_empty():
+			return
+		target = cands.pick_random()
+	if target_coord.x == -1 && target_coord.y == -1:
+		var places = Board.filter(func(g, i):
+			return g && !i
+		)   
+		if places.is_empty():
+			return
+		target_coord = places.pick_random()
+	var outer_tween = (tween != null)
+	if !tween:
+		tween = get_tree().create_tween()
+		begin_busy()
+	var target_pos = Board.get_pos(target_coord)
+	if cast_pos != target_pos:
+		tween.tween_callback(func():
+			SEffect.add_leading_line(cast_pos, target_pos)
+		)
+		tween.tween_interval(0.3)
+	var sp = AnimatedSprite2D.new()
+	sp.position = status_bar_ui.bag_button.get_global_rect().get_center()
+	sp.sprite_frames = Item.item_frames
+	sp.frame = target.image_id
+	sp.z_index = 3
+	board_ui.cells_root.add_child(sp)
+	SAnimation.cubic_curve_to(tween, sp, target_pos, 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
+	tween.tween_callback(func():
+		sp.queue_free()
+		Board.set_item_at(target_coord, target, Board.PlaceReason.FromBag)
+		if !outer_tween:
+			end_busy()
+	)
+
+func start_new_game(saving : Saving = null):
+	board_size = 6
 	gem_bouns_scores.clear()
 	for i in Gem.Type.Count:
 		gem_bouns_scores.append(0)
-	rolls_per_level = 4
-	pins_num_per_level = 0
-	activates_num_per_level = 0
-	grabs_num_per_level = 0
-	level = 0
-	coins = 10
-	
 	skills.clear()
 	skills_bar_ui.clear()
-	var skill0 = Skill.new()
-	skill0.add_requirement(1, 3)
-	#add_skill(skill0)
-	
 	patterns.clear()
 	patterns_bar_ui.clear()
-	var patt0 = Pattern.new()
-	patt0.coords.append(Vector3i(0, 0, 0))
-	patt0.coords.append(Vector3i(1, 0, -1))
-	patt0.coords.append(Vector3i(2, 0, -2))
-	patt0.coords.append(Vector3i(3, 0, -3))
-	patt0.mult = 1
-	add_pattern(patt0)
-	var patt1 = Pattern.new()
-	patt1.coords.append(Vector3i(0, 0, 0))
-	patt1.coords.append(Vector3i(0, 1, -1))
-	patt1.coords.append(Vector3i(0, 2, -2))
-	patt1.coords.append(Vector3i(0, 3, -3))
-	patt1.mult = 1
-	add_pattern(patt1)
-	var patt2 = Pattern.new()
-	patt2.coords.append(Vector3i(0, 0, 0))
-	patt2.coords.append(Vector3i(1, -1, 0))
-	patt2.coords.append(Vector3i(2, -2, 0))
-	patt2.coords.append(Vector3i(3, -3, 0))
-	patt2.mult = 1
-	add_pattern(patt2)
-	
 	gems.clear()
-	for j in 3:
+	items.clear()
+	
+	if saving == null:
+		rolls_per_level = 4
+		matches_per_level = 3
+		startup_draws = 5
+		draws_per_roll = 1
+		pins_num_per_level = 0
+		activates_num_per_level = 0
+		grabs_num_per_level = 0
+		coins = 10
+		
+		for i in 1:
+			var s = Skill.new()
+			s.setup("Bao")
+			add_skill(s)
+		
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("\\")
+			add_pattern(p)
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("I")
+			add_pattern(p)
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("/")
+			add_pattern(p)
+		'''
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("Y")
+			add_pattern(p)
+		'''
+		
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
-			g.rune = j + 1
-			gems.append(g)
-	for j in 3:
+			g.rune = Gem.Rune.Zhe
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Red
+			g.rune = Gem.Rune.Cha
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Red
+			g.rune = Gem.Rune.Kou
+			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
-			g.rune = j + 1
-			gems.append(g)
-	for j in 3:
+			g.rune = Gem.Rune.Zhe
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Orange
+			g.rune = Gem.Rune.Cha
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Orange
+			g.rune = Gem.Rune.Kou
+			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
-			g.rune = j + 1
-			gems.append(g)
-	for j in 3:
+			g.rune = Gem.Rune.Zhe
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Green
+			g.rune = Gem.Rune.Cha
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Green
+			g.rune = Gem.Rune.Kou
+			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
-			g.rune = j + 1
-			gems.append(g)
-	for j in 3:
+			g.rune = Gem.Rune.Zhe
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Blue
+			g.rune = Gem.Rune.Cha
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Blue
+			g.rune = Gem.Rune.Kou
+			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
-			g.rune = j + 1
-			gems.append(g)
-	
-	items.clear()
-	for i in 1:
-		var item = Item.new()
-		item.setup("Dye: Red")
-		items.append(item)
-	for i in 1:
-		var item = Item.new()
-		item.setup("Dye: Orange")
-		items.append(item)
-	for i in 1:
-		var item = Item.new()
-		item.setup("Dye: Green")
-		items.append(item)
-	for i in 1:
-		var item = Item.new()
-		item.setup("Dye: Blue")
-		items.append(item)
-	for i in 1:
-		var item = Item.new()
-		item.setup("Dye: Pink")
-		items.append(item)
-	for i in 10:
-		var item = Item.new()
-		item.setup("Rabbit")
-		items.append(item)
-	
-	status_bar_ui.appear()
-	skills_bar_ui.appear()
-	patterns_bar_ui.appear()
-	
-	board = Board.new()
-	board.setup_finished.connect(func():
-		hand.roll()
-	)
-	board.rolling_finished.connect(func():
-		stage = Stage.Deploy
-		end_busy()
-	)
-	board.matching_finished.connect(func():
-		stage = Stage.Deploy
-		animation_speed = base_animation_speed
-		history.update()
+			g.rune = Gem.Rune.Zhe
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Pink
+			g.rune = Gem.Rune.Cha
+			add_gem(g)
+		for i in 72:
+			var g = Gem.new()
+			g.type = Gem.Type.Pink
+			g.rune = Gem.Rune.Kou
+			add_gem(g)
 		
-		Buff.clear(self, Buff.Duration.ThisMatchingStage)
-		
-		combos = 0
-		if game_ui.combos_text.visible:
-			if combos_tween:
-				combos_tween.kill()
-				combos_tween = null
-			combos_tween = get_tree().create_tween()
-			combos_tween.tween_property(game_ui.combos_fire, "modulate:a", 0.0, 1.0)
-			combos_tween.parallel().tween_property(game_ui.combos_text, "modulate:a", 0.0, 1.0)
-			combos_tween.tween_callback(func():
-				game_ui.combos_fire.hide()
-				game_ui.combos_text.hide()
-				combos_tween = null
-			)
-		
-		if rolls == 0 && hand.is_empty() && score < target_score:
-			level_end()
-			game_over_ui.enter()
-		elif score >= target_score:
-			level_end()
-			level_clear_ui.enter()
-		else:
-			end_busy()
-	)
-	hand.rolling_finished.connect(func():
-		stage = Stage.Deploy
-		game_ui.roll_button.disabled = false
-	)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Dye: Red")
+			add_item(item)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Dye: Orange")
+			add_item(item)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Dye: Green")
+			add_item(item)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Dye: Blue")
+			add_item(item)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Dye: Pink")
+			add_item(item)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Bomb")
+			add_item(item)
+		for i in 1:
+			var item = Item.new()
+			item.setup("Minefield")
+			add_item(item)
+		'''
+		for i in 1:
+			var item = Item.new()
+			item.setup("Idol")
+			add_item(item)
+		'''
 	
+	game_ui.show()
+	
+	level = 0
+	history.init()
+	
+	#shop_ui.enter()
 	new_level()
 
-func new_level(dont_advance : bool = false):
+func new_level():
 	score = 0
-	if !dont_advance:
-		level += 1
-		target_score = get_level_score(level)
+	level += 1
+	target_score = get_level_score(level) * 0
 	
 	stage = Stage.Preparing
 	
 	set_props(Props.None)
 	rolls = rolls_per_level
+	matches = matches_per_level
 	pins_num = pins_num_per_level
 	activates_num = activates_num_per_level
 	grabs_num = grabs_num_per_level
 	
-	history.init()
-	
-	SSound.sfx_board_setup.play()
-	board.setup(board_size, 3)
-	hand.setup()
+	#SSound.sfx_board_setup.play()
+	Board.setup(board_size, 3)
 	
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
@@ -502,8 +660,10 @@ func new_level(dont_advance : bool = false):
 		level_clear_ui.exit()
 	if game_over_ui.visible:
 		game_over_ui.exit()
-	game_root.show()
-	game_ui.enter()
+	blocker_ui.show_num = 0
+	blocker_ui.hide()
+	board_ui.show()
+	control_ui.enter()
 
 func level_end():
 	set_props(Props.None)
@@ -515,14 +675,18 @@ func roll():
 		rolls -= 1
 		score_mult = 1.0
 		animation_speed = base_animation_speed
-		board.roll()
+		Board.roll()
+		for i in draws_per_roll:
+			hand_ui.draw()
 		begin_busy()
 		history.rolls += 1
 
 func play():
-	stage = Stage.Matching
-	begin_busy()
-	board.matching()
+	if matches > 0:
+		stage = Stage.Matching
+		matches -= 1
+		begin_busy()
+		Board.matching()
 
 func toggle_in_game_menu():
 	if !in_game_menu_ui.visible:
@@ -531,102 +695,199 @@ func toggle_in_game_menu():
 	else:
 		in_game_menu_ui.exit()
 
+func save_to_file():
+	var data = {}
+	data["level"] = Game.level
+	data["board_size"] = Game.board_size
+	data["rolls_per_level"] = Game.rolls_per_level
+	data["matches_per_level"] = Game.matches_per_level
+	data["startup_draws"] = Game.startup_draws
+	data["draws_per_roll"] = Game.draws_per_roll
+	data["coins"] = Game.coins
+	data["rolls"] = Game.rolls
+	data["matches"] = Game.matches
+	var gems = []
+	for g in Game.gems:
+		var gem = {}
+		gem["type"] = g.type
+		gem["rune"] = g.rune
+		gem["base_score"] = g.base_score
+		gem["bouns_score"] = g.bonus_score
+		gem["coord"] = g.coord
+		for b in g.buffs:
+			var buffs = []
+			
+		gems.append(gem)
+	data["gems"] = gems
+	var unused_gems = []
+	for g in Game.unused_gems:
+		unused_gems.append(Game.gems.find(g))
+	data["unused_gems"] = unused_gems
+	var items = []
+	var skills = []
+	var patterns = []
+	var relics = []
+	var hand = []
+	var cells = []
+	for c in Board.cells:
+		var cell = {}
+		cell["gem"] = Game.gems.find(c.gem)
+		cell["item"] = Game.items.find(c.item)
+		cell["state"] = c.state
+		cell["pinned"] = c.pinned
+		cell["frozen"] = c.frozen
+		cells.append(cell)
+	data["cells"] = cells
+
+func load_from_file():
+	pass
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_RIGHT:
 				set_props(Props.None)
-				release_dragging()
-		if event.is_released():
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				if board:
-					var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
-					c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
-					if board.is_valid(c):
-						if !game_ui.action_tip_text.disabled && dragging_cell.x != -1 && dragging_cell.y != -1:
-							if props == Props.Grab:
-								if grabs_num > 0 && (dragging_cell.x != c.x || dragging_cell.y != c.y):
-									var g0 = board.get_gem_at(dragging_cell)
-									var g1 = board.get_gem_at(c)
-									board.set_gem_at(dragging_cell, g1)
-									board.set_gem_at(c, g0)
-									board.matching()
-									grabs_num -= 1
-					release_dragging()
-	elif event is InputEventMouseMotion:
-		if board && game_root.visible:
-			var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
-			var cc = c - board.central_coord + Vector2i(board.cx / 2, board.cy / 2)
-			if board.is_valid(cc):
-				hover_ui.show()
-				hover_ui.position = tilemap.map_to_local(c)
-			else:
-				hover_ui.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.is_pressed():
 			if event.keycode == KEY_ESCAPE:
+				SSound.sfx_click.play()
 				if options_ui.visible:
 					options_ui.exit()
-				elif game_ui.visible:
+				elif bag_viewer_ui.visible:
+					bag_viewer_ui.exit()
+				elif control_ui.visible:
 					toggle_in_game_menu()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if board:
-					var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
-					c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
-					if board.is_valid(c):
-						if !game_ui.action_tip_text.disabled:
-							if props == Props.Pin:
-								if pins_num > 0 && board.pin(c):
-									pins_num -= 1
-							elif props == Props.Activate:
-								if activates_num > 0:
-									var i = board.get_item_at(c)
-									if i:
-										board.activate(c, Board.ActiveReason.RcAction)
-										board.matching()
-										activates_num -= 1
-							elif props == Props.Grab:
-								if grabs_num > 0:
-									var g = board.get_gem_at(c)
-									if g:
-										dragging_cell = c
-										drag_ui.frame = g.image_id
-										drag_ui.position = event.position
-										drag_ui.show()
+				var c = board_ui.hover_coord(true)
+				if Board.is_valid(c):
+					if !control_ui.action_tip_text.disabled:
+						if props == Props.Pin:
+							if pins_num > 0 && Board.freeze(c):
+								pins_num -= 1
+						elif props == Props.Activate:
+							if activates_num > 0:
+								var i = Board.get_item_at(c)
+								if i:
+									Board.activate(i, 0, 0, c, Board.ActiveReason.RcAction)
+									Board.set_item_at(c, null)
+									Board.matching()
+									activates_num -= 1
+						elif props == Props.Grab:
+							if grabs_num > 0:
+								var g = Board.get_gem_at(c)
+								if g:
+									board_ui.start_drag(c)
 	elif event is InputEventMouseMotion:
-		if board && game_root.visible:
-			var c = tilemap.local_to_map(tilemap.get_local_mouse_position())
-			c -= board.central_coord - Vector2i(board.cx / 2, board.cy / 2)
-			if board.is_valid(c):
-				var cc = board.offset_to_cube(c)
-				game_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
-				var g = board.get_gem_at(c)
+		if board_ui.visible:
+			var c = board_ui.hover_coord(true)
+			if Board.is_valid(c):
+				var cc = Board.offset_to_cube(c)
+				control_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
+				var g = Board.get_gem_at(c)
 				if g:
 					var arr = g.get_tooltip()
-					var i = board.get_item_at(c)
+					var i = Board.get_item_at(c)
 					if i:
 						arr.append_array(i.get_tooltip())
 					STooltip.show(arr, 0.5)
 			else:
-				game_ui.debug_text.text = ""
+				control_ui.debug_text.text = ""
 				STooltip.close()
-			if drag_ui.visible:
-				drag_ui.position = event.position
-
-var noise : Noise
-var noise_coord : float = 0.0
 
 func _ready() -> void:
-	noise = FastNoiseLite.new()
-	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
-	noise.frequency = 0.2
-	noise.seed = randi()
-
-func _process(delta: float) -> void:
-	noise_coord += 1.0 * delta
-	cells_root.position = Vector2(noise.get_noise_2d(17.1, noise_coord), noise.get_noise_2d(97.9, noise_coord)) * 2.0
+	randomize()
+	
+	Board.setup_finished.connect(func():
+		hand_ui.setup()
+	)
+	Board.rolling_finished.connect(func():
+		if after_rolled_eliminate_one_rune > 0:
+			after_rolled_eliminate_one_rune -= 1
+			has_processes_after_rolled = true
+			
+			var tween = get_tree().create_tween()
+			var r = randi_range(1, 1 + Gem.Rune.Count)
+			var coords = Board.filter(func(g : Gem, i):
+				return g && g.rune == r
+			)
+			
+			tween.tween_callback(func():
+				SSound.sfx_tom.play()
+				Game.add_combo()
+				for c in coords:
+					Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
+			)
+			Board.eliminate(coords, tween, Board.ActiveReason.Pattern)
+			tween.tween_callback(Board.clear_consumed)
+			tween.tween_interval(0.4 * Game.animation_speed)
+			tween.tween_callback(Board.fill_blanks)
+		else:
+			stage = Stage.Deploy
+			end_busy()
+	)
+	Board.filling_finished.connect(func():
+		if has_processes_after_rolled:
+			has_processes_after_rolled = false
+			Board.rolling_finished.emit()
+		else:
+			Board.matching()
+	)
+	Board.matching_finished.connect(func():
+		stage = Stage.Deploy
+		animation_speed = base_animation_speed
+		history.update()
+		
+		Buff.clear(self, Buff.Duration.ThisMatching)
+		for y in Board.cy:
+			for x in Board.cx:
+				var c = Vector2i(x, y)
+				var g = Board.get_gem_at(c)
+				var i = Board.get_item_at(c)
+				if g:
+					Buff.clear(g, Buff.Duration.ThisMatching)
+				if i:
+					Buff.clear(i, Buff.Duration.ThisMatching)
+		
+		combos = 0
+		if control_ui.combos_text.visible:
+			if combos_tween:
+				combos_tween.kill()
+				combos_tween = null
+			combos_tween = get_tree().create_tween()
+			combos_tween.tween_property(control_ui.combos_fire, "modulate:a", 0.0, 1.0)
+			combos_tween.parallel().tween_property(control_ui.combos_text, "modulate:a", 0.0, 1.0)
+			combos_tween.tween_callback(func():
+				control_ui.combos_fire.hide()
+				control_ui.combos_text.hide()
+				combos_tween = null
+			)
+		
+		if matches == 0 && score < target_score:
+			level_end()
+			game_over_ui.enter()
+		elif score >= target_score:
+			level_end()
+			level_clear_ui.enter()
+		else:
+			end_busy()
+	)
+	board_ui.drag_dropped.connect(func(c0 : Vector2i, c1 : Vector2i):
+		if Board.is_valid(c1):
+			if !control_ui.action_tip_text.disabled:
+				if props == Props.Grab:
+					if grabs_num > 0:
+						var g0 = Board.get_gem_at(c0)
+						var g1 = Board.get_gem_at(c1)
+						Board.set_gem_at(c0, g1)
+						Board.set_gem_at(c1, g0)
+						Board.matching()
+						grabs_num -= 1
+	)
+	hand_ui.setup_finished.connect(func():
+		stage = Stage.Deploy
+		control_ui.roll_button.disabled = false
+	)

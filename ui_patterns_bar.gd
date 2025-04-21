@@ -2,7 +2,7 @@ extends PanelContainer
 
 const pattern_pb = preload("res://ui_pattern.tscn")
 
-@onready var list : Control = $MarginContainer/List
+@onready var list : Control = $MarginContainer/VBoxContainer/List
 const item_h = 84
 const gap = 16
 
@@ -13,13 +13,6 @@ func release_dragging():
 	if dragging:
 		dragging.z_index = 0
 		dragging = null
-
-func appear():
-	self.show()
-	var tween = Game.get_tree().create_tween()
-	var pos = self.position
-	self.position = pos + Vector2(100, 0)
-	tween.tween_property(self, "position", pos, 0.8)
 
 func add_ui(p : Pattern):
 	var ui = pattern_pb.instantiate()

@@ -16,6 +16,13 @@ func get_shuffled_indices(n : int):
 	ret.shuffle()
 	return ret
 
+func find_and_remove(arr : Array, what):
+	for i in arr.size():
+		if arr[i] == what:
+			arr.remove_at(i)
+			return true
+	return false
+
 func pick_and_remove(arr : Array):
 	var idx = randi_range(0, arr.size() - 1)
 	var ret = arr[idx]
