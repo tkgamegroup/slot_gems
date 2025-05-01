@@ -21,16 +21,16 @@ signal setup_finished
 func is_empty():
 	return list.get_child_count() == 0
 
-func get_item_count():
+func get_ui_count():
 	return list.get_child_count()
 
-func get_item(idx : int) -> UiSlot:
+func get_ui(idx : int) -> UiSlot:
 	if idx >= 0 && idx < list.get_child_count():
 		return list.get_child(idx)
 	return null
 
 func update_description():
-	description_text.text = "%d/8 (+%d)" % [get_item_count(), Game.draws_per_roll]
+	description_text.text = "%d/8 (+%d)" % [get_ui_count(), Game.draws_per_roll]
 
 func release_dragging():
 	if dragging:
@@ -38,15 +38,10 @@ func release_dragging():
 		dragging.action.hide()
 		dragging = null
 
-func draw():
-	if Game.unused_items.is_empty():
-		return null
-	if get_item_count() >= 8:
-		return null
-	var item : Item = Game.get_item()
+func add_ui(item : Item):
 	var ui = ui_slot.instantiate()
 	ui.item = item
-	item.coord = Vector2i(get_item_count(), -1)
+	item.coord = Vector2i(get_ui_count(), -1)
 	list.add_child(ui)
 	update_description()
 	ui.gui_input.connect(func(event : InputEvent):
@@ -57,6 +52,15 @@ func draw():
 					dragging = ui
 					ui.z_index = 10
 	)
+	return ui
+
+func draw():
+	if Game.unused_items.is_empty():
+		return null
+	if get_ui_count() >= 8:
+		return null
+	var item : Item = Game.get_item()
+	var ui = add_ui(item)
 	ui.position.y = 50
 	return ui
 
@@ -106,7 +110,7 @@ func cleanup():
 
 func _ready() -> void:
 	description_text.get_parent().mouse_entered.connect(func():
-		STooltip.show([Pair.new("Hand", "Max Items: 8\nCurrent Items: %d\nDraw Items Per Roll: %d" % [get_item_count(), Game.draws_per_roll])])
+		STooltip.show([Pair.new("Hand", "Max Items: 8\nCurrent Items: %d\nDraw Items Per Roll: %d" % [get_ui_count(), Game.draws_per_roll])])
 	)
 
 func _process(delta: float) -> void:
@@ -117,7 +121,7 @@ func _process(delta: float) -> void:
 	var w = 32 * n + gap * (n - 1)
 	var x_off = 0
 	for i in n:
-		var ui = get_item(i)
+		var ui = get_ui(i)
 		if ui != dragging:
 			ui.position = lerp(ui.position, Vector2(x_off, 0.0), 0.2)
 			x_off += 32 + gap

@@ -1,7 +1,6 @@
 [gd_scene load_steps=137 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
-[ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_i3igf"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
 [ext_resource type="Shader" uid="uid://bmnxc3eesmaag" path="res://crt.gdshader" id="4_8t4hj"]
 [ext_resource type="AudioStream" uid="uid://vjqrtptu17gb" path="res://sounds/select.wav" id="4_fvcw6"]
@@ -71,6 +70,7 @@
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_skills_bar.gd" id="63_mpmib"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
+[ext_resource type="Script" uid="uid://dtrr5xwmh7tpk" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 [ext_resource type="Script" uid="uid://kwssksc4v2rx" path="res://ui_blocker.gd" id="68_a5ll1"]
@@ -78,33 +78,17 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_spe40"]
-texture = ExtResource("1_i3igf")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
+bg_color = Color(0.1, 0.1, 0.1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 3
+shadow_offset = Vector2(3, 3)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rwarj"]
-texture = ExtResource("4_mieac")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wnpef"]
-texture = ExtResource("48_awy03")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo5jg"]
-texture = ExtResource("6_1pecc")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1232i"]
-texture = ExtResource("7_lex75")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g1a4y"]
-texture = ExtResource("48_awy03")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34ol3"]
+texture = ExtResource("28_1savb")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 
@@ -112,12 +96,7 @@ texture_region_size = Vector2i(32, 32)
 tile_shape = 3
 tile_offset_axis = 1
 tile_size = Vector2i(32, 32)
-sources/0 = SubResource("TileSetAtlasSource_spe40")
-sources/1 = SubResource("TileSetAtlasSource_rwarj")
-sources/2 = SubResource("TileSetAtlasSource_wnpef")
-sources/3 = SubResource("TileSetAtlasSource_bo5jg")
-sources/4 = SubResource("TileSetAtlasSource_1232i")
-sources/5 = SubResource("TileSetAtlasSource_g1a4y")
+sources/1 = SubResource("TileSetAtlasSource_34ol3")
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_fftw7"]
 animations = [{
@@ -219,22 +198,6 @@ border_color = Color(1, 1, 1, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wc4l1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gx4rg"]
-
-[sub_resource type="Gradient" id="Gradient_kfd6w"]
-offsets = PackedFloat32Array(0, 0.265432, 0.993827)
-colors = PackedColorArray(0, 0, 0, 0, 1, 0.258824, 0, 1, 1, 0.729412, 0, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_vps5t"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_w3jsr"]
-color_ramp = SubResource("Gradient_kfd6w")
-noise = SubResource("FastNoiseLite_vps5t")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t75hr"]
-shader = ExtResource("27_fv65f")
-shader_parameter/noiseTexture = SubResource("NoiseTexture2D_w3jsr")
-shader_parameter/maskTexture = ExtResource("28_oso7t")
-shader_parameter/amount = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fepj7"]
 bg_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
@@ -404,20 +367,94 @@ shadow_offset = Vector2(3, 2)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_620me"]
 bg_color = Color(0, 0, 0, 0.54902)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_34ol3"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yh34"]
-bg_color = Color(0, 0, 0, 0.784314)
+bg_color = Color(0.15, 0.15, 0.15, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pjuso"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5t1e"]
+bg_color = Color(0.1, 0.1, 0.1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_size = 2
+shadow_offset = Vector2(-1, -1)
+
+[sub_resource type="Gradient" id="Gradient_kfd6w"]
+offsets = PackedFloat32Array(0, 0.265432, 0.993827)
+colors = PackedColorArray(0, 0, 0, 0, 1, 0.258824, 0, 1, 1, 0.729412, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_vps5t"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_w3jsr"]
+color_ramp = SubResource("Gradient_kfd6w")
+noise = SubResource("FastNoiseLite_vps5t")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t75hr"]
+shader = ExtResource("27_fv65f")
+shader_parameter/noiseTexture = SubResource("NoiseTexture2D_w3jsr")
+shader_parameter/maskTexture = ExtResource("28_oso7t")
+shader_parameter/amount = 1.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ejirs"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtaia"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swlj1"]
+bg_color = Color(0, 0, 0, 0.196078)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylmsd"]
-bg_color = Color(0, 0, 0, 0.784314)
+bg_color = Color(0.12, 0.12, 0.12, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pjuso"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pnuwf"]
-bg_color = Color(0, 0, 0, 0.784314)
+bg_color = Color(0.12, 0.12, 0.12, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_23xmf"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rycwm"]
 bg_color = Color(0.239266, 0.485527, 0.455179, 1)
@@ -622,6 +659,20 @@ bus = &"Music"
 visible = false
 script = ExtResource("21_34ol3")
 
+[node name="Panel" type="Panel" parent="Board"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 389.0
+offset_top = 237.0
+offset_right = 869.0
+offset_bottom = 487.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yysqy")
+
 [node name="TileMapLayer" type="TileMapLayer" parent="Board"]
 tile_set = SubResource("TileSet_m0hyf")
 
@@ -654,7 +705,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("9_te575")
-metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="UI/Title"]
 layout_mode = 1
@@ -663,10 +713,10 @@ anchor_left = 0.5
 anchor_top = -0.152778
 anchor_right = 0.5
 anchor_bottom = -0.152778
-offset_left = -174.0
+offset_left = -261.5
 offset_top = 135.0
-offset_right = 174.0
-offset_bottom = 234.0
+offset_right = 261.5
+offset_bottom = 283.0
 grow_horizontal = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
@@ -695,7 +745,6 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_wy5fy")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-disabled = true
 text = "Continue"
 metadata/_edit_use_anchors_ = true
 
@@ -730,9 +779,9 @@ anchor_left = 0.476172
 anchor_top = 0.531945
 anchor_right = 0.524609
 anchor_bottom = 0.531945
-offset_left = -95.0
+offset_left = -95.0003
 offset_top = 92.0
-offset_right = 96.0
+offset_right = 95.9997
 offset_bottom = 167.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -805,74 +854,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_4wyqg")
-
-[node name="Sprite2D" type="Sprite2D" parent="UI/Control"]
-visible = false
-material = SubResource("ShaderMaterial_t75hr")
-position = Vector2(641, 91)
-scale = Vector2(151, 83)
-texture = ExtResource("2_tqnxt")
-
-[node name="Control" type="Control" parent="UI/Control"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -1.0
-offset_top = 102.0
-offset_right = -1.0
-offset_bottom = 102.0
-grow_horizontal = 2
-
-[node name="Combo" type="Label" parent="UI/Control/Control"]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -67.0
-offset_top = -22.5
-offset_right = 67.0
-offset_bottom = 22.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 3
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 26
-text = "Combo X 2"
-
-[node name="Control2" type="Control" parent="UI/Control"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 300.0
-offset_top = 97.0
-offset_right = 300.0
-offset_bottom = 97.0
-grow_horizontal = 2
-
-[node name="Status" type="Label" parent="UI/Control/Control2"]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -39.0
-offset_top = -17.0
-offset_right = 39.0
-offset_bottom = 17.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 24
-text = "Red +1"
 
 [node name="Panel" type="PanelContainer" parent="UI/Control"]
 layout_mode = 1
@@ -1027,8 +1008,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_left = 198.0
 offset_top = -34.0
-offset_right = 40.0
+offset_right = 238.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
@@ -1161,46 +1143,88 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 0
-
-[node name="TopBar" type="PanelContainer" parent="UI/Game/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_34ol3")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Game/VBoxContainer/TopBar"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="StatusBar" type="PanelContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_5yh34")
-script = ExtResource("59_nqrtl")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer"]
-layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Score" type="Label" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+
+[node name="TopBar" type="PanelContainer" parent="UI/Game/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5yh34")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 2
+
+[node name="StatusBar" type="PanelContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pjuso")
+script = ExtResource("59_nqrtl")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n5t1e")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 4
+
+[node name="Score" type="Label" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 mouse_filter = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 32
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 22
 text = "Score: xxxx/xxxx"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer"]
+[node name="Combo" type="Control" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/Combo"]
+visible = false
+material = SubResource("ShaderMaterial_t75hr")
+position = Vector2(74, 12)
+scale = Vector2(151, 83)
+texture = ExtResource("2_tqnxt")
+
+[node name="Text" type="Label" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/Combo"]
+visible = false
+layout_mode = 1
+offset_right = 134.0
+offset_bottom = 45.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 26
+text = "Combo X 2"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Level" type="Label" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer"]
+[node name="Level" type="Label" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1210,10 +1234,10 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 22
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.726495, 0.54636, 0.413474, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1224,7 +1248,7 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 22
 text = "BS"
 
-[node name="BoardSize" type="Label" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer/HBoxContainer"]
+[node name="BoardSize" type="Label" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1234,11 +1258,11 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 22
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Coin" type="Label" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="Coin" type="Label" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1248,17 +1272,17 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 22
 
-[node name="TextureRect" type="TextureRect" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="TextureRect" type="TextureRect" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("63_yshj5")
 expand_mode = 1
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 
-[node name="Bag" type="Button" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer/HBoxContainer3"]
+[node name="Bag" type="Button" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -1267,20 +1291,33 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_ejirs")
 icon = ExtResource("30_fg5n8")
 icon_alignment = 1
 
-[node name="Gear" type="Button" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar/MarginContainer/HBoxContainer/HBoxContainer3"]
+[node name="Gear" type="Button" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
 icon = ExtResource("38_us2c3")
 icon_alignment = 1
 
-[node name="Relics" type="PanelContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="RelicsBar" type="PanelContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
+script = ExtResource("64_c2n8d")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/Relics"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar"]
 layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Game/VBoxContainer/TopBar/VBoxContainer/Relics/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar/MarginContainer"]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="UI/Game/VBoxContainer"]
@@ -1288,64 +1325,99 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="SkillsBar" type="PanelContainer" parent="UI/Game/VBoxContainer/Control"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 34.0
+offset_right = 75.0
 grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="SkillsBar" type="PanelContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer"]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ylmsd")
 script = ExtResource("63_mpmib")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control/SkillsBar"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar"]
 layout_mode = 2
-theme_override_constants/margin_left = 4
+theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Game/VBoxContainer/Control/SkillsBar/MarginContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/Game/VBoxContainer/Control/SkillsBar/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 24
+
+[node name="Label" type="Label" parent="UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
 text = "Skills"
 
-[node name="List" type="Control" parent="UI/Game/VBoxContainer/Control/SkillsBar/MarginContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_pjuso")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="List" type="Control" parent="UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="PatternsBar" type="PanelContainer" parent="UI/Game/VBoxContainer/Control"]
+[node name="MarginContainer2" type="MarginContainer" parent="UI/Game/VBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -33.0
+offset_left = -115.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PatternsBar" type="PanelContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer2"]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pnuwf")
 script = ExtResource("64_x2fcq")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control/PatternsBar"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar"]
 layout_mode = 2
-theme_override_constants/margin_left = 4
+theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Game/VBoxContainer/Control/PatternsBar/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/Game/VBoxContainer/Control/PatternsBar/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 text = "Patterns"
 
-[node name="List" type="Control" parent="UI/Game/VBoxContainer/Control/PatternsBar/MarginContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_23xmf")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = -8
+theme_override_constants/margin_bottom = 8
+
+[node name="List" type="Control" parent="UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 

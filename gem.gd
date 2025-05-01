@@ -90,7 +90,12 @@ static func rune_icon(r : int):
 
 func get_base_score():
 	var ret = base_score
-	ret += Game.gem_bouns_scores[type - 1]
+	match type:
+		Type.Red: ret += Game.modifiers["red_bouns_i"]
+		Type.Orange: ret += Game.modifiers["orange_bouns_i"]
+		Type.Green: ret += Game.modifiers["green_bouns_i"]
+		Type.Blue: ret += Game.modifiers["blue_bouns_i"]
+		Type.Pink: ret += Game.modifiers["pink_bouns_i"]
 	return ret
 
 func get_name():

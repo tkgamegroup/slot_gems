@@ -2,10 +2,6 @@ extends Control
 
 const UiProp = preload("res://ui_prop.gd")
 
-@onready var combos_fire : Sprite2D = $Sprite2D
-@onready var combos_fire_shader : ShaderMaterial = combos_fire.material
-@onready var combos_text : Label = $Control/Combo
-@onready var status_text : Label = $Control2/Status
 @onready var roll_panel : Control = $Panel
 @onready var roll_button : Button = $Panel/HBoxContainer/Roll
 @onready var rolls_text : Label = $Panel/HBoxContainer/VBoxContainer/Rolls
@@ -22,6 +18,7 @@ var preview_matchings : Array[Node2D]
 var preview_tween : Tween = null
 
 func enter():
+	Game.board_ui.enter()
 	self.show()
 	var tween = get_tree().create_tween()
 	return tween
@@ -29,6 +26,7 @@ func enter():
 func exit():
 	Board.cleanup()
 	Game.board_ui.hide()
+	Game.hand_ui.cleanup()
 	self.hide()
 
 func _ready() -> void:
@@ -67,7 +65,7 @@ func _ready() -> void:
 			for y in Board.cy:
 				for x in Board.cx:
 					for p in Game.patterns:
-						var res : Array[Vector2i] = p.match_with(Board, Vector2i(x, y))
+						var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 						if !res.is_empty():
 							var n = Node2D.new()
 							var pts = SUtils.get_cells_border(res)

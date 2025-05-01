@@ -5,6 +5,7 @@ enum ActiveReason
 	Pattern,
 	Item,
 	Skill,
+	Relic,
 	Burning,
 	RcAction
 }
@@ -16,21 +17,9 @@ enum PlaceReason
 	FromBag
 }
 
-enum Event
-{
-	GemEntered,
-	GemLeft,
-	ItemEntered,
-	ItemLeft,
-	ItemActivated,
-	ItemMoved,
-	Combo,
-	Exploded
-}
-
 var cx : int
 var cy : int
-var cx_mult : int
+const cx_mult : int = 3
 var cells : Array[Cell]
 
 const roll_speed : Curve = preload("res://roll_speed.tres")
@@ -42,9 +31,8 @@ var show_coords : bool = false
 
 var active_effects : Array[ActiveEffect] = []
 var active_serial : int = 0
-var event_listeners : Array[Item]
+var event_listeners : Array[Hook]
 
-signal setup_finished
 signal rolling_finished
 signal filling_finished
 signal matching_finished
@@ -108,7 +96,7 @@ func cube_neighbors(c : Vector3i) -> Array[Vector3i]:
 func offset_neighbors(c : Vector2i) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
 	for cc in cube_neighbors(offset_to_cube(c)):
-		ret.append(cube_to_offset(cc))
+		ret.append(format_coord(cube_to_offset(cc)))
 	return ret
 
 func cube_ring(c : Vector3i, r : int) -> Array[Vector3i]:
@@ -126,7 +114,7 @@ func offset_ring(c : Vector2i, r : int) -> Array[Vector2i]:
 		ret.append(c)
 		return ret
 	for cc in cube_ring(offset_to_cube(c), r):
-		ret.append(cube_to_offset(cc))
+		ret.append(format_coord(cube_to_offset(cc)))
 	return ret
 
 func get_pos(c : Vector2i):
@@ -135,48 +123,64 @@ func get_pos(c : Vector2i):
 func is_valid(c : Vector2i):
 	return c.x >= 0 && c.x < cx && c.y >= 0 && c.y < cy
 
+func format_coord(c : Vector2i):
+	if is_valid(c):
+		return c
+	if Game.modifiers["board_upper_lower_connected_i"] > 0:
+		if c.y < 0:
+			c.y = Board.cy + c.y
+		if c.y >= Board.cy:
+			c.y = c.y - Board.cy
+	return c
+
 func cell_at(c : Vector2i):
+	c = format_coord(c)
 	if !is_valid(c):
 		return null
 	return cells[c.y * cx + c.x]
 
 func get_gem_at(c : Vector2i):
+	c = format_coord(c)
 	if !is_valid(c):
 		return null
 	return cells[c.y * cx + c.x].gem
 
 func set_gem_at(c : Vector2i, g : Gem):
+	c = format_coord(c)
 	if !is_valid(c):
 		return
 	var cell = cells[c.y * cx + c.x]
 	var og = cell.gem
 	if og:
-		for a in event_listeners:
-			a.on_event.call(Event.GemLeft, null, og)
+		for h in event_listeners:
+			h.host.on_event.call(Event.GemLeft, null, og)
 		Game.release_gem(og)
 	cell.gem = g
 	if g:
 		g.coord = c
-		for a in event_listeners:
-			a.on_event.call(Event.GemEntered, null, g)
+		for h in event_listeners:
+			h.host.on_event.call(Event.GemEntered, null, g)
 	Game.get_cell_ui(c).set_gem_image(g.type if g else 0, g.rune if g else 0)
 	return og
 
 func get_item_at(c : Vector2i):
+	c = format_coord(c)
 	if !is_valid(c):
 		return null
 	return cells[c.y * cx + c.x].item
 
 func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
+	c = format_coord(c)
 	if !is_valid(c):
 		return
 	var cell = cells[c.y * cx + c.x]
 	var oi = cell.item
 	if oi:
-		if oi.on_event.is_valid():
-			for a in event_listeners:
-				a.on_event.call(Event.ItemLeft, null, oi)
-			event_listeners.erase(oi)
+		for h in event_listeners:
+			h.host.on_event.call(Event.ItemLeft, null, oi)
+		SMath.remove_if(event_listeners, func(h : Hook):
+			return h.host == oi
+		)
 		Game.release_item(oi)
 	if i:
 		i.coord = c
@@ -184,8 +188,8 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 			i.on_place.call(c, r)
 		if i.on_event.is_valid():
 			event_listeners.append(i)
-			for a in event_listeners:
-				a.on_event.call(Event.ItemEntered, null, i)
+		for h in event_listeners:
+			h.host.on_event.call(Event.ItemEntered, null, i)
 	cell.item = i
 	var ui = Game.get_cell_ui(c)
 	if i:
@@ -197,9 +201,10 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 	return oi
 
 func place_item(c : Vector2i, i : Item):
+	c = format_coord(c)
 	if !is_valid(c):
 		return false
-	var g = Board.get_gem_at(c)
+	var g = get_gem_at(c)
 	if !g:
 		return false
 	var oi = get_item_at(c)
@@ -220,12 +225,14 @@ func place_item(c : Vector2i, i : Item):
 	return false
 
 func get_state_at(c : Vector2i):
+	c = format_coord(c)
 	if !is_valid(c):
 		return 0
 	var idx = c.y * cx + c.x
 	return cells[idx].state
 
 func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
+	c = format_coord(c)
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
@@ -276,20 +283,12 @@ func find_item_backwards(name : String, include_active_effects : bool = false):
 				return c
 	return Vector2i(-1, -1)
 
-func get_item_active_or_not_at(c : Vector2i):
-	var item = get_item_at(c)
-	if item:
-		return item
-	for i in active_effects:
-		if i.second == c:
-			return i.first
-	return null
-
-func get_active_at(c : Vector2i):
+func get_active_effects_at(c : Vector2i):
+	var ret = []
 	for ae in active_effects:
 		if ae.coord == c:
-			return ae
-	return null
+			ret.append(ae)
+	return ret
 
 func gem_score_at(c : Vector2i):
 	var g = get_gem_at(c)
@@ -298,6 +297,7 @@ func gem_score_at(c : Vector2i):
 	return g.get_base_score() + g.bonus_score
 
 func freeze(c : Vector2i):
+	c = format_coord(c)
 	if !is_valid(c):
 		return false
 	var idx = c.y * cx + c.x
@@ -311,6 +311,7 @@ func freeze(c : Vector2i):
 		return true
 
 func unfreeze(c : Vector2i):
+	c = format_coord(c)
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
@@ -347,9 +348,13 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			if i.on_eliminate.is_valid():
 				i.on_eliminate.call(c, reason, source, tween)
 			set_item_at(c, null)
-		var listeners = cell_at(c).event_listeners
-		SMath.remove_if(listeners, func(a : Callable):
-			return a.call(c, Cell.Event.Eliminated)
+		for h in event_listeners:
+			h.host.on_event.call(Event.Eliminated, null, c)
+		SMath.remove_if(cell_at(c).event_listeners, func(h : Hook):
+			if h.event == Event.Eliminated:
+				h.on_event.call(Event.Eliminated, null, c)
+				return h.once
+			return false
 		)
 	tween.tween_method(func(t):
 		for ui in uis:
@@ -369,7 +374,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	if (c.x != -1 && c.y != -1) && cell_at(c).frozen:
 		return
 	var sp : AnimatedSprite2D = null
-	if type == 0:
+	if type == HostType.Item:
 		var item : Item = host
 		if !(item.on_active.is_valid() || (item.mounted && item.mounted.on_active.is_valid())):
 			return
@@ -379,7 +384,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		sp.position = get_pos(c)
 		sp.z_index = 2
 		Game.board_ui.cells_root.add_child(sp)
-	else:
+	elif type == HostType.Skill:
 		var skill : Skill = host
 		if !skill.on_active.is_valid():
 			return
@@ -394,18 +399,18 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	ae.sp = sp
 	active_effects.append(ae)
 	active_serial += 1
-	for a in event_listeners:
-		a.on_event.call(Event.ItemActivated, null, ae)
+	for h in event_listeners:
+		h.host.on_event.call(Event.ItemActivated, null, ae)
 
 func process_active_effect(ae : ActiveEffect):
 	var tween = Game.get_tree().create_tween()
-	if ae.type == 0:
+	if ae.type == HostType.Item:
 		var item : Item = ae.host
 		if item.mounted && item.mounted.on_active.is_valid():
 			item.mounted.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
 		if item.on_active.is_valid():
 			item.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
-	else:
+	elif ae.type == HostType.Skill:
 		var skill : Skill = ae.host
 		if skill.on_active.is_valid():
 			skill.on_active.call(ae.effect_index, ae.coord, tween)
@@ -420,8 +425,8 @@ func process_active_effect(ae : ActiveEffect):
 	)
 
 func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
-	for a in event_listeners:
-		a.on_event.call(Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
+	for h in event_listeners:
+		h.host.on_event.call(Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
 
 func cleanup():
 	for y in cy:
@@ -430,7 +435,6 @@ func cleanup():
 			set_item_at(c, null)
 			set_gem_at(c, null)
 	cells.clear()
-	event_listeners.clear()
 	Game.unused_gems.clear()
 	for g in Game.gems:
 		Game.unused_gems.append(g)
@@ -438,83 +442,21 @@ func cleanup():
 	cx = 0
 	cy = 0
 
-func setup(_hf_cy : int, _cx_multipler : int):
+func add_cell(c : Vector2i):
+	var cell = Cell.new()
+	cell.coord = c
+	cells.append(cell)
+	Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
+	return cell
+
+func setup(_hf_cy : int):
 	cleanup()
 	
-	cx_mult = _cx_multipler
 	cy = _hf_cy * 2
 	cx = cy * cx_mult
 	for y in cy:
 		for x in cx:
-			var idx = y * cx + x
-			var c = Cell.new()
-			c.coord = Vector2i(x, y)
-			cells.append(c)
-			Game.board_ui.add_cell(Game.board_ui.ui_coord(c.coord))
-	
-	setup_finished.emit()
-	'''
-	for y in cy:
-		for x in cx:
-			var cell = cell_pb.instantiate()
-			cell.position = get_pos(Vector2i(x, y))
-			Game.board_ui.cells_root.add_child(cell)
-			if show_coords:
-				var cube_c = offset_to_cube(Vector2i(x, y))
-				var lb0 = Label.new()
-				lb0.text = "%d" % cube_c.x
-				lb0.add_theme_color_override("font_color", Color.RED)
-				lb0.add_theme_font_size_override("font_size", 9)
-				lb0.position = cell.position + Vector2(-5, -15)
-				Game.board_ui.overlay.add_child(lb0)
-				var lb1 = Label.new()
-				lb1.text = "%d" % cube_c.y
-				lb1.add_theme_color_override("font_color", Color.GREEN)
-				lb1.add_theme_font_size_override("font_size", 9)
-				lb1.position = cell.position + Vector2(3, 2)
-				Game.board_ui.overlay.add_child(lb1)
-				var lb2 = Label.new()
-				lb2.text = "%d" % cube_c.z
-				lb2.add_theme_color_override("font_color", Color.BLUE)
-				lb2.add_theme_font_size_override("font_size", 9)
-				lb2.position = cell.position + Vector2(-10, 2)
-				Game.board_ui.overlay.add_child(lb2)
-	
-	num_tasks = 0
-	var updated = {}
-	var pc = Game.board_ui.get_pos(Game.board_ui.central_coord)
-	var tween = Game.get_tree().create_tween()
-	for i in _hf_cy + 1:
-		for x in range(-i * cx_mult, i * cx_mult):
-			for y in range(-i, i):
-				var cc = Vector2i(x, y) + Game.board_ui.central_coord
-				if updated.has(cc):
-					continue
-				updated[cc] = 1
-				tween.tween_callback(func():
-					var tween2 = Game.get_tree().create_tween()
-					var p1 = Game.board_ui.get_pos(cc)
-					var p0 = p1 + (p1 - pc).normalized() * 500.0
-					var outline_sp = Sprite2D.new()
-					outline_sp.texture = load("res://images/outline.png")
-					outline_sp.position = p0
-					outline_sp.scale = Vector2(1.2, 1.2)
-					outline_sp.modulate.a = 0
-					tween2.tween_callback(func():
-						Game.outlines_root.add_child(outline_sp)
-						num_tasks += 1
-					)
-					tween2.tween_property(outline_sp, "position", p1, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-					tween2.parallel().tween_property(outline_sp, "scale", Vector2(1.0, 1.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-					tween2.parallel().tween_property(outline_sp, "modulate:a", 1.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-					tween2.tween_callback(func():
-						num_tasks -= 1
-						if num_tasks == 0:
-							setup_finished.emit()
-					)
-				)
-		tween.tween_interval(0.1)
-	'''
+			add_cell(Vector2i(x, y))
 
 func skip_above_frozens(c : Vector2i) -> Vector2i:
 	var cc = c - Vector2i(0, 1)
@@ -613,8 +555,8 @@ func fill_blanks():
 	)
 
 func on_combo():
-	for a in event_listeners:
-		a.on_event.call(Event.Combo, null, null)
+	for h in event_listeners:
+		h.host.on_event.call(Event.Combo, null, null)
 
 func matching():
 	var no_patterns = true
@@ -622,7 +564,7 @@ func matching():
 	for y in cy:
 		for x in cx:
 			for p in Game.patterns:
-				var res : Array[Vector2i] = p.match_with(self, Vector2i(x, y))
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
 					no_patterns = false
 					tween.tween_callback(func():
@@ -679,3 +621,83 @@ func matching():
 		tween.tween_callback(fill_blanks)
 	Game.animation_speed *= 0.98
 	Game.animation_speed = max(0.05, Game.animation_speed)
+
+func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null, source = null):
+	var outer_tween = (tween != null)
+	if !tween:
+		tween = get_tree().create_tween()
+		Game.begin_busy()
+	var target_pos = get_pos(target_coord)
+	if cast_pos != target_pos:
+		tween.tween_callback(func():
+			SEffect.add_leading_line(cast_pos, target_pos, 0.3 * Game.animation_speed)
+		)
+		tween.tween_interval(0.4 * Game.animation_speed)
+	var coords : Array[Vector2i] = []
+	var r = range + Game.modifiers["explode_range_i"]
+	var p = power + Game.modifiers["explode_power_i"]
+	for i in r + 1:
+		for c in offset_ring(target_coord, i):
+			if is_valid(c):
+				coords.append(c)
+	tween.tween_callback(func():
+		var pos = get_pos(target_coord)
+		var sp_expl = SEffect.add_explosion(pos, Vector2(64.0, 64.0) * max(1, r), 3, 0.5 * Game.animation_speed)
+		Game.board_ui.cells_root.add_child(sp_expl)
+		var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0) * max(1, r), 4, 0.5 * Game.animation_speed)
+		Game.board_ui.cells_root.add_child(fx)
+	)
+	tween.tween_interval(0.5 * Game.animation_speed)
+	tween.tween_callback(func():
+		var data = {"source":source,"coord":target_coord,"range":range,"power":power}
+		for h in event_listeners:
+			h.host.on_event.call(Event.Exploded, null, data)
+		
+		Game.add_combo()
+		for c in coords:
+			Game.add_score(gem_score_at(c) + p, get_pos(c))
+	)
+	eliminate(coords, tween, ActiveReason.Item, self)
+	if !outer_tween:
+		tween.tween_callback(Game.end_busy)
+	return coords
+
+func effect_place_item_from_bag(cast_pos : Vector2, target : Item, target_coord : Vector2i, tween : Tween = null, source = null):
+	if !target:
+		var cands = []
+		for i in Game.items:
+			if i.coord.x == -1 && i.coord.y == -1 && !i.active:
+				cands.append(i)
+		if cands.is_empty():
+			return
+		target = cands.pick_random()
+	if target_coord.x == -1 && target_coord.y == -1:
+		var places = filter(func(g, i):
+			return g && !i
+		)   
+		if places.is_empty():
+			return
+		target_coord = places.pick_random()
+	var outer_tween = (tween != null)
+	if !tween:
+		tween = get_tree().create_tween()
+		Game.begin_busy()
+	var target_pos = get_pos(target_coord)
+	if cast_pos != target_pos:
+		tween.tween_callback(func():
+			SEffect.add_leading_line(cast_pos, target_pos)
+		)
+		tween.tween_interval(0.3)
+	var sp = AnimatedSprite2D.new()
+	sp.position = Game.status_bar_ui.bag_button.get_global_rect().get_center()
+	sp.sprite_frames = Item.item_frames
+	sp.frame = target.image_id
+	sp.z_index = 3
+	Game.board_ui.cells_root.add_child(sp)
+	SAnimation.cubic_curve_to(tween, sp, target_pos, 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
+	tween.tween_callback(func():
+		sp.queue_free()
+		set_item_at(target_coord, target, PlaceReason.FromBag)
+		if !outer_tween:
+			Game.end_busy()
+	)

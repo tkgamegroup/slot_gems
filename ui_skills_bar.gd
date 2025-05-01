@@ -1,6 +1,6 @@
 extends PanelContainer
 
-@onready var list : Control = $MarginContainer/VBoxContainer/List
+@onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
 
 const skill_pb = preload("res://ui_skill.tscn")
 const item_h = 64
@@ -12,7 +12,7 @@ func add_ui(s : Skill):
 	list.add_child(ui)
 	s.ui = ui
 	var n = list.get_child_count()
-	list.custom_minimum_size = Vector2(75, item_h * n + (n - 1) * gap if n > 0 else 0)
+	list.custom_minimum_size = Vector2(64, item_h * n + (n - 1) * gap if n > 0 else 0)
 
 func clear():
 	if list:

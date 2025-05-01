@@ -35,11 +35,13 @@ func _ready() -> void:
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
-		Board.cleanup()
-		Game.control_ui.hide()
-		Game.board_ui.hide()
-		Game.game_ui.hide()
-		Game.title_ui.enter()
+		var tween = Game.blocker_ui.enter(0.3, 1.0)
+		tween.tween_callback(func():
+			Game.control_ui.exit()
+			Game.game_ui.hide()
+			Game.title_ui.enter()
+			Game.blocker_ui.exit(0.3)
+		)
 	)
 	test_avg_score_button.pressed.connect(func():
 		SSound.sfx_click.play()
@@ -58,5 +60,5 @@ func _ready() -> void:
 			if cmd == "test_matching":
 				var coord = Vector2i(int(tks[1]), int(tks[2]))
 				for p in Game.patterns:
-					p.match_with(Board, coord)
+					p.match_with(coord)
 	)

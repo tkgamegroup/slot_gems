@@ -11,6 +11,7 @@ enum Type
 
 enum Duration
 {
+	ThisCombo,
 	ThisMatching,
 	ThisLevel,
 	Eternal
@@ -88,9 +89,9 @@ static func find_typed(host, type : int):
 			return b
 	return null
 
-static func clear(host, duration : int):
+static func clear(host, durations : Array[int]):
 	SMath.remove_if(host.buffs, func(b : Buff):
-		if b.duration == duration:
+		if durations.find(b.duration) != -1:
 			b.die()
 			return true
 		return false

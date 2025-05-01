@@ -256,5 +256,5 @@ void fragment() {
 
     // final pixel color
     COLOR = cw / cw.w;
-
+    COLOR = vec4(COLOR.rgb * 0.8, 1.0);
 }

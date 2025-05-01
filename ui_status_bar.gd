@@ -1,13 +1,16 @@
 extends PanelContainer
 
-@onready var score_text : Label = $MarginContainer/HBoxContainer/Score
-@onready var level_text : Label = $MarginContainer/HBoxContainer/Level
-@onready var board_size_container : Control = $MarginContainer/HBoxContainer/HBoxContainer
-@onready var board_size_text : Label = $MarginContainer/HBoxContainer/HBoxContainer/BoardSize
-@onready var coin_container : Control = $MarginContainer/HBoxContainer/HBoxContainer2
-@onready var coin_text : Label = $MarginContainer/HBoxContainer/HBoxContainer2/Coin
-@onready var bag_button : Button = $MarginContainer/HBoxContainer/HBoxContainer3/Bag
-@onready var gear_button : Button = $MarginContainer/HBoxContainer/HBoxContainer3/Gear
+@onready var score_text : Label = $HBoxContainer/PanelContainer/MarginContainer/Score
+@onready var combos_fire : Sprite2D = $HBoxContainer/Combo/Sprite2D
+@onready var combos_fire_shader : ShaderMaterial = combos_fire.material
+@onready var combos_text : Label = $HBoxContainer/Combo/Text
+@onready var level_text : Label = $HBoxContainer/Level
+@onready var board_size_container : Control = $HBoxContainer/HBoxContainer
+@onready var board_size_text : Label = $HBoxContainer/HBoxContainer/BoardSize
+@onready var coin_container : Control = $HBoxContainer/HBoxContainer2
+@onready var coin_text : Label = $HBoxContainer/HBoxContainer2/Coin
+@onready var bag_button : Button = $HBoxContainer/HBoxContainer3/Bag
+@onready var gear_button : Button = $HBoxContainer/HBoxContainer3/Gear
 
 func _ready() -> void:
 	score_text.mouse_entered.connect(func():

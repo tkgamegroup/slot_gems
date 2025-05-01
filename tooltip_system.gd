@@ -11,6 +11,15 @@ const tooltip_pb = preload("res://tooltip.tscn")
 
 var tween : Tween = null
 
+func process_word(word : String, processed : Array, description : String):
+	if !processed.has(word):
+		processed.append(word)
+		var item = tooltip_pb.instantiate()
+		item.title = word
+		item.content = description
+		list2.add_child(item)
+		show_more_tip.show()
+
 func show(contents : Array[Pair], delay : float = 0.05):
 	for n in list1.get_children():
 		if n == show_more_tip:
@@ -33,69 +42,21 @@ func show(contents : Array[Pair], delay : float = 0.05):
 		var words = []
 		for c in contents:
 			if c.second.find("[b]Wild[/b]") != -1 || c.first.find("Wild") != -1:
-				if !words.has("Wild"):
-					words.append("Wild")
-					var item = tooltip_pb.instantiate()
-					item.title = "Wild"
-					item.content = "Can match with any color."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Wild", words, "Can match with any color.")
 			if c.second.find("[b]Eliminate[/b]") != -1:
-				if !words.has("Eliminate"):
-					words.append("Eliminate")
-					var item = tooltip_pb.instantiate()
-					item.title = "Eliminate"
-					item.content = "Effect when the cell is eliminated."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Eliminate", words, "Effect when the cell is eliminated.")
 			if c.second.find("[b]Active[/b]") != -1:
-				if !words.has("Active"):
-					words.append("Active")
-					var item = tooltip_pb.instantiate()
-					item.title = "Active"
-					item.content = "Active effects will stack and process one by one when the matching stops."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Active", words, "Active effects will stack and process one by one when the matching stops.")
 			if c.second.find("[b]Quick[/b]") != -1:
-				if !words.has("Quick"):
-					words.append("Quick")
-					var item = tooltip_pb.instantiate()
-					item.title = "Quick"
-					item.content = "Effect when the item is placed into the board. And then the item will be removed."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Quick", words, "Effect when the item is placed into the board. And then the item will be removed.")
 			if c.second.find("[b]Aura[/b]") != -1:
-				if !words.has("Aura"):
-					words.append("Aura")
-					var item = tooltip_pb.instantiate()
-					item.title = "Aura"
-					item.content = "Effect all gems while this item is on board."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Aura", words, "Effect all gems while this item is on board.")
 			if c.second.find("[b]Range[/b]") != -1:
-				if !words.has("Range"):
-					words.append("Range")
-					var item = tooltip_pb.instantiate()
-					item.title = "n-Range"
-					item.content = "The cells within the distance of n. 0[color=gray][b]Range[/b][/color] means the cell itself."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Range", words, "The cells within the distance of n. 0[color=gray][b]Range[/b][/color] means the cell itself.")
 			if c.second.find("[b]Tradeable[/b]") != -1:
-				if !words.has("Tradeable"):
-					words.append("Tradeable")
-					var item = tooltip_pb.instantiate()
-					item.title = "Tradeable"
-					item.content = "You can drag this item to Bag inorder to exchange another item."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Tradeable", words, "You can drag this item to Bag inorder to exchange another item.")
 			if c.second.find("[b]Mount[/b]") != -1:
-				if !words.has("Mount"):
-					words.append("Mount")
-					var item = tooltip_pb.instantiate()
-					item.title = "Mount"
-					item.content = "Place another satisfied item to form a combine item that basicly have the effects of both."
-					list2.add_child(item)
-				show_more_tip.show()
+				process_word("Mount", words, "Place another satisfied item to form a combine item that basicly have the effects of both.")
 			var item = tooltip_pb.instantiate()
 			item.title = c.first
 			item.content = c.second

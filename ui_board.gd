@@ -1,10 +1,11 @@
 extends Node2D
 
-var central_coord = Vector2i(26, 10)
+var central_coord = Vector2i(26, 11)
 
 const cell_pb = preload("res://ui_cell.tscn")
 const outline_pb = preload("res://ui_outline.tscn")
 
+@onready var panel : Panel = $Panel
 @onready var tilemap : TileMapLayer = $TileMapLayer
 @onready var outlines_root : Node2D = $Outlines
 @onready var underlay : Node2D = $Underlay
@@ -57,7 +58,16 @@ func add_cell(c : Vector2i):
 	var cell = cell_pb.instantiate()
 	cell.position = get_pos(c)
 	cells_root.add_child(cell)
-	
+
+func enter():
+	self.show()
+	for y in Board.cy:
+		for x in Board.cx:
+			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
+	var rect = tilemap.get_used_rect()
+	panel.position = tilemap.map_to_local(rect.position) - Vector2(16, 16) - Vector2(8, 32)
+	panel.size = tilemap.map_to_local(rect.end) - panel.position
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.is_pressed():
@@ -84,16 +94,7 @@ func _input(event: InputEvent) -> void:
 			if drag_ui.visible:
 				drag_ui.position = event.position
 
-var noise : Noise
-var noise_coord : float = 0.0
-
-func _ready() -> void:
-	noise = FastNoiseLite.new()
-	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
-	noise.frequency = 0.2
-	noise.seed = randi()
+var float_island = FloatIsland.new()
 
 func _process(delta: float) -> void:
-	noise_coord += 1.0 * delta
-	cells_root.position = Vector2(noise.get_noise_2d(17.1, noise_coord), noise.get_noise_2d(97.9, noise_coord)) * 2.0
+	float_island.update(cells_root, 2.0, delta)

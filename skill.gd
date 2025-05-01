@@ -8,7 +8,6 @@ const UiSkill = preload("res://ui_skill.gd")
 var name : String
 var description : String
 var image_id : int
-var short_description : String
 var requirements : Array[int]
 var price : int
 var extra = {}
@@ -49,7 +48,7 @@ func setup(n : String):
 			)
 	elif name == "Qiang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Kou, Gem.Rune.Zhe]
-		description = "+1 base score to gems of a random color."
+		description = "+1 base score to a random color."
 		image_id = 4
 		on_cast = func(tween : Tween):
 			tween.tween_callback(func():
@@ -69,7 +68,7 @@ func setup(n : String):
 		description = "Place an item from Bag to Board."
 		image_id = 6
 		on_cast = func(tween : Tween):
-			Game.effect_place_item_from_bag(ui.get_global_rect().get_center(), null, Vector2i(-1, -1), tween)
+			Board.effect_place_item_from_bag(ui.get_global_rect().get_center(), null, Vector2i(-1, -1), tween)
 	elif name == "Chou":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Cha, Gem.Rune.Kou]
 		description = "Draw an Item."
@@ -93,12 +92,11 @@ func setup(n : String):
 		image_id = 9
 		on_cast = func(tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, 1, 0, Vector2i(-1, -1), Board.ActiveReason.Skill, self)
+				Board.activate(self, HostType.Skill, 0, Vector2i(-1, -1), Board.ActiveReason.Skill, self)
 			)
-			
 		on_active = func(effect_index : int, c : Vector2i, tween : Tween):
 			var target = Vector2i(randi_range(0, Board.cx - 1), randi_range(0, Board.cy - 1))
-			Game.effect_explode(ui.get_global_rect().get_center(), target, 1, 0, tween)
+			Board.effect_explode(ui.get_global_rect().get_center(), target, 1, 0, tween)
 	elif name == "Fang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Cha]
 		description = "Duplicate 1 Item on Board to random location."

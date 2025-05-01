@@ -63,17 +63,17 @@ func setup(n : String):
 		coords.append(Vector3i(2, -1, -1))
 		coords.append(Vector3i(0, 1, -1))
 
-func match_with(board : Board, off : Vector2i) -> Array[Vector2i]:
+func match_with(off : Vector2i) -> Array[Vector2i]:
 	var ocoords : Array[Vector2i] = []
 	if coords.size() < 2:
 		return [] as Array[Vector2i]
-	var base_c = board.offset_to_cube(off)
+	var base_c = Board.offset_to_cube(off)
 	for c in coords:
-		ocoords.append(board.cube_to_offset(base_c + c))
+		ocoords.append(Board.format_coord(Board.cube_to_offset(base_c + c)))
 	var colors = []
 	for c in ocoords:
-		var g = board.get_gem_at(c)
-		if g && !board.cell_at(c).frozen:
+		var g = Board.get_gem_at(c)
+		if g && !Board.cell_at(c).frozen:
 			colors.append(g.type)
 	if colors.size() < coords.size():
 		return [] as Array[Vector2i]
@@ -107,17 +107,17 @@ func get_ui_coords():
 			ret[i].z += y_min
 	return ret
 
-func differ(board : Board, off : Vector2i, type : int, differences : int = 1) -> Array[Vector2i]:
+func differ(off : Vector2i, type : int, differences : int = 1) -> Array[Vector2i]:
 	var ocoords : Array[Vector2i] = []
 	if coords.size() < 2:
 		return [] as Array[Vector2i]
-	var base_c = board.offset_to_cube(off)
+	var base_c = Board.offset_to_cube(off)
 	for c in coords:
-		ocoords.append(board.cube_to_offset(base_c + c))
+		ocoords.append(Board.format_coord(Board.cube_to_offset(base_c + c)))
 	var colors = []
 	for c in ocoords:
-		var g = board.get_gem_at(c)
-		if g && !board.cell_at(c).frozen:
+		var g = Board.get_gem_at(c)
+		if g && !Board.cell_at(c).frozen:
 			colors.append(g.type)
 	if colors.size() < coords.size():
 		return [] as Array[Vector2i]

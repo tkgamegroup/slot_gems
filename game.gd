@@ -60,10 +60,10 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var hand_ui : UiHand = $/root/Main/UI/Control/Panel/HBoxContainer/Hand
 @onready var shop_ui : UiShop = $/root/Main/UI/Shop
 @onready var game_ui : Control = $/root/Main/UI/Game
-@onready var status_bar_ui : UiStatusBar = $/root/Main/UI/Game/VBoxContainer/TopBar/VBoxContainer/StatusBar
-@onready var relics_bar_ui : Control = $/root/Main/UI/Game/VBoxContainer/TopBar/VBoxContainer/Relics/MarginContainer/HBoxContainer
-@onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/Game/VBoxContainer/Control/SkillsBar
-@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/UI/Game/VBoxContainer/Control/PatternsBar
+@onready var status_bar_ui : UiStatusBar = $/root/Main/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
+@onready var relics_bar_ui : Control = $/root/Main/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar
+@onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar
+@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
 @onready var blocker_ui : UiBlocker = $/root/Main/UI/Blocker
 @onready var dialog_ui : UiDialog = $/root/Main/UI/Dialog
 @onready var options_ui : UiOptions = $/root/Main/UI/Options
@@ -80,7 +80,10 @@ var rolls : int:
 		control_ui.rolls_text.text = "%d" % rolls
 var rolls_per_level : int
 var after_rolled_eliminate_one_rune : int = 0
-var has_processes_after_rolled : bool = false
+var after_rolled_eliminate_processing : bool = false
+var after_rolled_roll_and_match : int = 0
+var after_rolled_roll_and_match_processing : bool = false
+var after_rolled_roll_and_match_processed : bool = false
 var next_roll_extra_draws : int = 0
 var matches : int:
 	set(v):
@@ -129,7 +132,6 @@ var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
 var unused_gems : Array[Gem] = []
-var gem_bouns_scores : Array[int]
 var items : Array[Item]
 var unused_items : Array[Item] = []
 var relics : Array[Relic]
@@ -180,8 +182,7 @@ var coins : int:
 var buffs : Array[Buff]
 var history : History = History.new()
 
-var explode_range_modifier : int = 0
-var explode_power_modifier : int = 0
+var modifiers : Dictionary
 
 var base_animation_speed = 1.0
 var animation_speed = base_animation_speed
@@ -280,6 +281,7 @@ func has_relic(n : String):
 func add_combo():
 	combos += 1
 	Board.on_combo()
+	Buff.clear(self, [Buff.Duration.ThisCombo])
 
 func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0)):
 	var ui = popup_txt_pb.instantiate()
@@ -390,90 +392,8 @@ func end_busy():
 	control_ui.match_button.disabled = false
 	hand_ui.disabled = false
 
-func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null):
-	var outer_tween = (tween != null)
-	if !tween:
-		tween = get_tree().create_tween()
-		begin_busy()
-	var target_pos = Board.get_pos(target_coord)
-	if cast_pos != target_pos:
-		tween.tween_callback(func():
-			SEffect.add_leading_line(cast_pos, target_pos, 0.3 * animation_speed)
-		)
-		tween.tween_interval(0.4 * animation_speed)
-	var coords : Array[Vector2i] = []
-	var r = range + explode_range_modifier
-	var p = power + explode_power_modifier
-	for i in r + 1:
-		for c in Board.offset_ring(target_coord, i):
-			if Board.is_valid(c):
-				coords.append(c)
-	tween.tween_callback(func():
-		var pos = Board.get_pos(target_coord)
-		var sp_expl = SEffect.add_explosion(pos, Vector2(64.0, 64.0) * max(1, r), 3, 0.5 * animation_speed)
-		board_ui.cells_root.add_child(sp_expl)
-		var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0) * max(1, r), 4, 0.5 * animation_speed)
-		board_ui.cells_root.add_child(fx)
-	)
-	tween.tween_interval(0.5 * animation_speed)
-	tween.tween_callback(func():
-		for a in Board.event_listeners:
-			a.on_event.call(Board.Event.Exploded, null, target_coord)
-		
-		add_combo()
-		for c in coords:
-			add_score(Board.gem_score_at(c) + p, Board.get_pos(c))
-	)
-	Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	if !outer_tween:
-		tween.tween_callback(end_busy)
-	return coords
-
-func effect_place_item_from_bag(cast_pos : Vector2, target : Item, target_coord : Vector2i, tween : Tween = null):
-	if !target:
-		var cands = []
-		for i in items:
-			if i.coord.x == -1 && i.coord.y == -1 && !i.active:
-				cands.append(i)
-		if cands.is_empty():
-			return
-		target = cands.pick_random()
-	if target_coord.x == -1 && target_coord.y == -1:
-		var places = Board.filter(func(g, i):
-			return g && !i
-		)   
-		if places.is_empty():
-			return
-		target_coord = places.pick_random()
-	var outer_tween = (tween != null)
-	if !tween:
-		tween = get_tree().create_tween()
-		begin_busy()
-	var target_pos = Board.get_pos(target_coord)
-	if cast_pos != target_pos:
-		tween.tween_callback(func():
-			SEffect.add_leading_line(cast_pos, target_pos)
-		)
-		tween.tween_interval(0.3)
-	var sp = AnimatedSprite2D.new()
-	sp.position = status_bar_ui.bag_button.get_global_rect().get_center()
-	sp.sprite_frames = Item.item_frames
-	sp.frame = target.image_id
-	sp.z_index = 3
-	board_ui.cells_root.add_child(sp)
-	SAnimation.cubic_curve_to(tween, sp, target_pos, 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
-	tween.tween_callback(func():
-		sp.queue_free()
-		Board.set_item_at(target_coord, target, Board.PlaceReason.FromBag)
-		if !outer_tween:
-			end_busy()
-	)
-
-func start_new_game(saving : Saving = null):
-	board_size = 6
-	gem_bouns_scores.clear()
-	for i in Gem.Type.Count:
-		gem_bouns_scores.append(0)
+func start_new_game(saving : String = ""):
+	board_size = 3
 	skills.clear()
 	skills_bar_ui.clear()
 	patterns.clear()
@@ -481,7 +401,18 @@ func start_new_game(saving : Saving = null):
 	gems.clear()
 	items.clear()
 	
-	if saving == null:
+	modifiers["red_bouns_i"] = 0
+	modifiers["orange_bouns_i"] = 0
+	modifiers["green_bouns_i"] = 0
+	modifiers["blue_bouns_i"] = 0
+	modifiers["pink_bouns_i"] = 0
+	modifiers["explode_range_i"] = 0
+	modifiers["explode_power_i"] = 0
+	modifiers["base_combo_i"] = 0
+	modifiers["continueous_roll_and_match_i"] = 0
+	modifiers["board_upper_lower_connected_i"] = 0
+	
+	if saving == "":
 		rolls_per_level = 4
 		matches_per_level = 3
 		startup_draws = 5
@@ -649,7 +580,8 @@ func new_level():
 	grabs_num = grabs_num_per_level
 	
 	#SSound.sfx_board_setup.play()
-	Board.setup(board_size, 3)
+	Board.setup(board_size)
+	hand_ui.setup()
 	
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
@@ -660,14 +592,11 @@ func new_level():
 		level_clear_ui.exit()
 	if game_over_ui.visible:
 		game_over_ui.exit()
-	blocker_ui.show_num = 0
-	blocker_ui.hide()
-	board_ui.show()
 	control_ui.enter()
 
 func level_end():
 	set_props(Props.None)
-	Buff.clear(self, Buff.Duration.ThisLevel)
+	Buff.clear(self, [Buff.Duration.ThisLevel])
 
 func roll():
 	if rolls > 0:
@@ -801,13 +730,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	randomize()
 	
-	Board.setup_finished.connect(func():
-		hand_ui.setup()
-	)
 	Board.rolling_finished.connect(func():
 		if after_rolled_eliminate_one_rune > 0:
 			after_rolled_eliminate_one_rune -= 1
-			has_processes_after_rolled = true
+			after_rolled_eliminate_processing = true
 			
 			var tween = get_tree().create_tween()
 			var r = randi_range(1, 1 + Gem.Rune.Count)
@@ -825,55 +751,65 @@ func _ready() -> void:
 			tween.tween_callback(Board.clear_consumed)
 			tween.tween_interval(0.4 * Game.animation_speed)
 			tween.tween_callback(Board.fill_blanks)
+		elif after_rolled_roll_and_match_processing:
+			after_rolled_roll_and_match_processing = false
+			Board.matching()
 		else:
 			stage = Stage.Deploy
+			save_to_file()
 			end_busy()
 	)
 	Board.filling_finished.connect(func():
-		if has_processes_after_rolled:
-			has_processes_after_rolled = false
+		if after_rolled_eliminate_processing:
+			after_rolled_eliminate_processing = false
 			Board.rolling_finished.emit()
 		else:
 			Board.matching()
 	)
 	Board.matching_finished.connect(func():
-		stage = Stage.Deploy
-		animation_speed = base_animation_speed
-		history.update()
-		
-		Buff.clear(self, Buff.Duration.ThisMatching)
-		for y in Board.cy:
-			for x in Board.cx:
-				var c = Vector2i(x, y)
-				var g = Board.get_gem_at(c)
-				var i = Board.get_item_at(c)
-				if g:
-					Buff.clear(g, Buff.Duration.ThisMatching)
-				if i:
-					Buff.clear(i, Buff.Duration.ThisMatching)
-		
-		combos = 0
-		if control_ui.combos_text.visible:
-			if combos_tween:
-				combos_tween.kill()
-				combos_tween = null
-			combos_tween = get_tree().create_tween()
-			combos_tween.tween_property(control_ui.combos_fire, "modulate:a", 0.0, 1.0)
-			combos_tween.parallel().tween_property(control_ui.combos_text, "modulate:a", 0.0, 1.0)
-			combos_tween.tween_callback(func():
-				control_ui.combos_fire.hide()
-				control_ui.combos_text.hide()
-				combos_tween = null
-			)
-		
-		if matches == 0 && score < target_score:
-			level_end()
-			game_over_ui.enter()
-		elif score >= target_score:
-			level_end()
-			level_clear_ui.enter()
+		if !after_rolled_roll_and_match_processed && modifiers["continueous_roll_and_match_i"] > 0:
+			after_rolled_roll_and_match_processed = true
+			after_rolled_roll_and_match_processing = true
+			Board.roll()
 		else:
-			end_busy()
+			stage = Stage.Deploy
+			history.update()
+			save_to_file()
+			animation_speed = base_animation_speed
+			
+			Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+			for y in Board.cy:
+				for x in Board.cx:
+					var c = Vector2i(x, y)
+					var g = Board.get_gem_at(c)
+					var i = Board.get_item_at(c)
+					if g:
+						Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+					if i:
+						Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+			
+			combos = 0
+			if control_ui.combos_text.visible:
+				if combos_tween:
+					combos_tween.kill()
+					combos_tween = null
+				combos_tween = get_tree().create_tween()
+				combos_tween.tween_property(control_ui.combos_fire, "modulate:a", 0.0, 1.0)
+				combos_tween.parallel().tween_property(control_ui.combos_text, "modulate:a", 0.0, 1.0)
+				combos_tween.tween_callback(func():
+					control_ui.combos_fire.hide()
+					control_ui.combos_text.hide()
+					combos_tween = null
+				)
+			
+			if matches == 0 && score < target_score:
+				level_end()
+				game_over_ui.enter()
+			elif score >= target_score:
+				level_end()
+				level_clear_ui.enter()
+			else:
+				end_busy()
 	)
 	board_ui.drag_dropped.connect(func(c0 : Vector2i, c1 : Vector2i):
 		if Board.is_valid(c1):
@@ -889,5 +825,6 @@ func _ready() -> void:
 	)
 	hand_ui.setup_finished.connect(func():
 		stage = Stage.Deploy
+		save_to_file()
 		control_ui.roll_button.disabled = false
 	)

@@ -209,14 +209,13 @@ func time_out():
 					step = TaskSteps.ToRoll
 
 func auto_place_items():
-	if Game.hand_ui.get_item_count() > 0:
-		var bd = Board
+	if !Game.hand_ui.is_empty():
 		var cx = Board.cx
 		var cy = Board.cy
 		var center = Vector2i(cx / 2, cy / 2)
 		var item_uis = []
-		for i in Game.hand_ui.get_item_count():
-			var ui = Game.hand_ui.get_item(i)
+		for i in Game.hand_ui.get_ui_count():
+			var ui = Game.hand_ui.get_ui(i)
 			item_uis.append(ui)
 		var one_less_places : Array[Array] = []
 		for i in Gem.Type.Count - 1:
@@ -226,7 +225,7 @@ func auto_place_items():
 				var c = Vector2i(x, y)
 				for p in Game.patterns:
 					for col in Gem.Type.Count - 1:
-						var res : Array[Vector2i] = p.differ(bd, c, col + 1)
+						var res : Array[Vector2i] = p.differ(c, col + 1)
 						if !res.is_empty():
 							one_less_places[col].append(res[0])
 		SMath.remove_if(item_uis, func(ui):
@@ -250,12 +249,12 @@ func auto_place_items():
 			for x in cx:
 				var c = Vector2i(x, y)
 				for p in Game.patterns:
-					var res : Array[Vector2i] = p.match_with(bd, c)
+					var res : Array[Vector2i] = p.match_with(c)
 					for cc in res:
 						activater_places.append(cc)
 						central_activater_places.append(cc)
 		central_activater_places.sort_custom(func(c1, c2):
-			return bd.offset_distance(c1, center) < bd.offset_distance(c2, center)
+			return Board.offset_distance(c1, center) < Board.offset_distance(c2, center)
 		)
 		var aura_places = []
 		for y in cy:
