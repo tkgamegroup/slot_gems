@@ -3,7 +3,6 @@ extends Control
 const ui_slot = preload("res://ui_hand_slot.tscn")
 const UiSlot = preload("res://ui_hand_slot.gd")
 
-@onready var description_text = $PanelContainer/Label
 @onready var list = $Control
 
 var dragging : UiSlot = null
@@ -29,9 +28,6 @@ func get_ui(idx : int) -> UiSlot:
 		return list.get_child(idx)
 	return null
 
-func update_description():
-	description_text.text = "%d/8 (+%d)" % [get_ui_count(), Game.draws_per_roll]
-
 func release_dragging():
 	if dragging:
 		dragging.z_index = 0
@@ -43,7 +39,6 @@ func add_ui(item : Item):
 	ui.item = item
 	item.coord = Vector2i(get_ui_count(), -1)
 	list.add_child(ui)
-	update_description()
 	ui.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
@@ -73,18 +68,15 @@ func discard(use_animation : bool = false):
 			tween.tween_callback(func():
 				n.queue_free()
 				list.remove_child(n)
-				update_description()
 			)
 		else:
 			n.queue_free()
 			list.remove_child(n)
-			update_description()
 
 func place_item(ui : UiSlot, c : Vector2i):
 	if Board.place_item(c, ui.item):
 		ui.queue_free()
 		list.remove_child(ui)
-		update_description()
 		return true
 	return false
 
@@ -107,11 +99,6 @@ func cleanup():
 	Game.unused_items.clear()
 	for i in Game.items:
 		Game.unused_items.append(i)
-
-func _ready() -> void:
-	description_text.get_parent().mouse_entered.connect(func():
-		STooltip.show([Pair.new("Hand", "Max Items: 8\nCurrent Items: %d\nDraw Items Per Roll: %d" % [get_ui_count(), Game.draws_per_roll])])
-	)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()

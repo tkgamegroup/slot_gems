@@ -31,8 +31,7 @@ func exit():
 
 func _ready() -> void:
 	roll_button.pressed.connect(func():
-		SSound.sfx_slot_button.play()
-		SSound.sfx_roll.play()
+		SSound.sfx_click.play()
 		roll_button.disabled = true
 		Game.roll()
 	)
@@ -48,7 +47,7 @@ func _ready() -> void:
 		STooltip.close()
 	)
 	match_button.pressed.connect(func():
-		#SSound.sfx_click.play()
+		SSound.sfx_click.play()
 		match_button.disabled = true
 		Game.play()
 	)

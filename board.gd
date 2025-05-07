@@ -483,6 +483,23 @@ func step_down_cell(c : Vector2i):
 			set_gem_at(c, og)
 			set_item_at(c, oi)
 
+func roll_step():
+	var tween = Game.get_tree().create_tween()
+	tween.tween_interval(0.03)
+	tween.tween_callback(func():
+		var filled = false
+		for x in cx:
+			for y in cy:
+				var c = Vector2i(x, cy - y - 1)
+				if !cell_at(c).frozen && !get_gem_at(c):
+					step_down_cell(c)
+					filled = true
+		if filled:
+			roll_step()
+		else:
+			rolling_finished.emit()
+	)
+
 func roll():
 	for yy in cy:
 		for xx in cx:
@@ -492,31 +509,7 @@ func roll():
 				set_gem_at(c, null)
 				cell_at(c).event_listeners.clear()
 	
-	Game.combos = 0
-	
-	num_tasks = 0
-	var tween = Game.get_tree().create_tween()
-	for x in cx:
-		tween.tween_callback(func():
-			var tween2 = Game.get_tree().create_tween()
-			tween2.tween_callback(func():
-				num_tasks += 1
-			)
-			for i in cy * 6:
-				tween2.tween_callback(func():
-					for y in cy:
-						var c = Vector2i(x, cy - y - 1)
-						step_down_cell(c)
-				)
-				tween2.tween_interval(roll_speed.sample(float(i) / (cy * 6.0)))
-			tween2.tween_interval(0.01)
-			tween2.tween_callback(func():
-				num_tasks -= 1
-				if num_tasks == 0:
-					rolling_finished.emit()
-			)
-		)
-		tween.tween_interval(0.015)
+	roll_step()
 
 func clear_consumed():
 	var burning_cells = []
@@ -561,6 +554,7 @@ func on_combo():
 func matching():
 	var no_patterns = true
 	var tween = Game.get_tree().create_tween()
+	tween.tween_interval(0.4)
 	for y in cy:
 		for x in cx:
 			for p in Game.patterns:
@@ -585,7 +579,7 @@ func matching():
 							for cc in SMath.pick_n(cands, 1):
 								set_state_at(cc, Cell.State.Burning, {"pos":pos})
 						
-						SSound.sfx_tom.play()
+						SSound.sfx_bubble.play()
 						Game.add_combo()
 						for c in res:
 							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))

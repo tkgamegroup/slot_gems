@@ -54,24 +54,27 @@ const grab_cursor = preload("res://images/grab.png")
 
 @onready var background = $/root/Main/Background
 @onready var bg_shader : ShaderMaterial = background.material
-@onready var board_ui : UiBoard = $/root/Main/Board
-@onready var title_ui : UiTitle = $/root/Main/UI/Title
-@onready var control_ui : UiControl = $/root/Main/UI/Control
-@onready var hand_ui : UiHand = $/root/Main/UI/Control/Panel/HBoxContainer/Hand
-@onready var shop_ui : UiShop = $/root/Main/UI/Shop
-@onready var game_ui : Control = $/root/Main/UI/Game
-@onready var status_bar_ui : UiStatusBar = $/root/Main/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
-@onready var relics_bar_ui : Control = $/root/Main/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar
-@onready var skills_bar_ui : UiSkillsBar = $/root/Main/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar
-@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
-@onready var blocker_ui : UiBlocker = $/root/Main/UI/Blocker
-@onready var dialog_ui : UiDialog = $/root/Main/UI/Dialog
-@onready var options_ui : UiOptions = $/root/Main/UI/Options
-@onready var in_game_menu_ui : UiInGameMenu = $/root/Main/UI/InGameMenu
-@onready var game_over_ui : UiGameOver = $/root/Main/UI/GameOver
-@onready var level_clear_ui : UiLevelClear = $/root/Main/UI/LevelClear
-@onready var choose_reward_ui : UiChooseReward = $/root/Main/UI/ChooseReward
-@onready var bag_viewer_ui : UiBagViewer = $/root/Main/UI/BagViewer
+@onready var subviewport_container = $/root/Main/SubViewportContainer
+@onready var mask_shader : ShaderMaterial = subviewport_container.material
+@onready var subviewport = $/root/Main/SubViewportContainer/SubViewport
+@onready var board_ui : UiBoard = $/root/Main/SubViewportContainer/SubViewport/UI/Board
+@onready var title_ui : UiTitle = $/root/Main/SubViewportContainer/SubViewport/UI/Title
+@onready var control_ui : UiControl = $/root/Main/SubViewportContainer/SubViewport/UI/Control
+@onready var hand_ui : UiHand = $/root/Main/SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Hand
+@onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/UI/Shop
+@onready var game_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game
+@onready var status_bar_ui : UiStatusBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
+@onready var relics_bar_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar
+@onready var skills_bar_ui : UiSkillsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar
+@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
+@onready var blocker_ui : UiBlocker = $/root/Main/SubViewportContainer/SubViewport/UI/Blocker
+@onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/UI/Dialog
+@onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/UI/Options
+@onready var in_game_menu_ui : UiInGameMenu = $/root/Main/SubViewportContainer/SubViewport/UI/InGameMenu
+@onready var game_over_ui : UiGameOver = $/root/Main/SubViewportContainer/SubViewport/UI/GameOver
+@onready var level_clear_ui : UiLevelClear = $/root/Main/SubViewportContainer/SubViewport/UI/LevelClear
+@onready var choose_reward_ui : UiChooseReward = $/root/Main/SubViewportContainer/SubViewport/UI/ChooseReward
+@onready var bag_viewer_ui : UiBagViewer = $/root/Main/SubViewportContainer/SubViewport/UI/BagViewer
 
 var stage : int = Stage.Deploy
 var rolls : int:
@@ -90,12 +93,16 @@ var matches : int:
 		matches = v
 		control_ui.matches_text.text = "%d" % matches
 var matches_per_level : int
-var startup_draws : int
+var startup_draws : int:
+	set(v):
+		startup_draws = v
+		if hand_ui:
+			status_bar_ui.hand_metrics_text.text = "%d/%d/%d" % [startup_draws, draws_per_roll, 8]
 var draws_per_roll : int:
 	set(v):
 		draws_per_roll = v
 		if hand_ui:
-			hand_ui.update_description()
+			status_bar_ui.hand_metrics_text.text = "%d/%d/%d" % [startup_draws, draws_per_roll, 8]
 var props = Props.None
 var pins_num : int:
 	set(v):
@@ -135,42 +142,31 @@ var unused_gems : Array[Gem] = []
 var items : Array[Item]
 var unused_items : Array[Item] = []
 var relics : Array[Relic]
-func update_score_text():
-	status_bar_ui.score_text.text = "Score: %d/%d (x%.1f)" % [score, target_score, score_mult]
 var score : int:
 	set(v):
 		score = v
-		update_score_text()
+		status_bar_ui.score_text.text = "%d" % score
 var target_score : int:
 	set(v):
 		target_score = v
-		update_score_text()
+		status_bar_ui.level_target.text = "Score at least %d" % target_score
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
 		combos = v
-		if combos > 1:
-			control_ui.combos_fire.modulate.a = 1.0
-			control_ui.combos_fire.show()
-			control_ui.combos_fire_shader.set_shader_parameter("amount", min(1.0, combos / 10.0))
-			control_ui.combos_text.modulate.a = 1.0
-			control_ui.combos_text.show()
-			control_ui.combos_text.text = "Combo X %d" % combos
-			control_ui.combos_text.add_theme_color_override("font_color", Color.from_hsv(randf(), 0.4, 1.0))
-			if combos_tween:
-				combos_tween.kill()
-			combos_tween = get_tree().create_tween()
-			combos_tween.tween_method(func(t):
-				control_ui.combos_text.get_parent().rotation_degrees = sin(t * PI * 10.0) * t * 10.0
-			, 1.0, 0.0, 1.0)
-			combos_tween.tween_callback(func():
-				combos_tween = null
-			)
+		
+		status_bar_ui.combos_text.text = "%dX" % combos
+		if combos_tween:
+			combos_tween.kill()
+		combos_tween = get_tree().create_tween()
+		combos_tween.tween_callback(func():
+			combos_tween = null
+		)
 
 var score_mult : float = 1.0:
 	set(v):
 		score_mult = v
-		update_score_text()
+		#update_score_text()
 var level : int:
 	set(v):
 		level = v
@@ -216,7 +212,7 @@ func get_cell_ui(c : Vector2i) -> UiCell:
 func add_gem(g : Gem):
 	for r in relics:
 		if r.on_event.is_valid():
-			r.on_event.call(Event.GainGem, g, null)
+			r.on_event.call(Event.GainGem, null, g)
 	gems.append(g)
 
 func get_gem(g : Gem = null):
@@ -233,20 +229,20 @@ func release_gem(g : Gem):
 
 func gem_add_base_score(g : Gem, v : int):
 	for r in relics:
-		v = r.on_event.call(Event.GemBaseScoreChanged, g, v)
+		v = r.on_event.call(Event.GemBaseScoreChanged, null, {"gem":g,"value":v})
 	g.base_score += v
 	return v
 
 func gem_add_bonus_score(g : Gem, v : int):
 	for r in relics:
-		v = r.on_event.call(Event.GemBonusScoreChanged, g, v)
+		v = r.on_event.call(Event.GemBonusScoreChanged, null, {"gem":g,"value":v})
 	g.bonus_score += v
 	return 
 
 func add_item(i : Item):
 	for r in relics:
 		if r.on_event.is_valid():
-			r.on_event.call(Event.GainItem, i, null)
+			r.on_event.call(Event.GainItem, null, i)
 	items.append(i)
 
 func get_item(i : Item = null):
@@ -267,7 +263,7 @@ func release_item(i : Item):
 
 func add_relic(r : Relic):
 	if r.on_event.is_valid():
-		r.on_event.call(Event.GainRelic, r, null)
+		r.on_event.call(Event.GainRelic, null, r)
 	var ui = relic_ui.instantiate()
 	ui.setup(r)
 	relics_bar_ui.add_child(ui)
@@ -393,7 +389,7 @@ func end_busy():
 	hand_ui.disabled = false
 
 func start_new_game(saving : String = ""):
-	board_size = 3
+	board_size = 6
 	skills.clear()
 	skills_bar_ui.clear()
 	patterns.clear()
@@ -445,6 +441,11 @@ func start_new_game(saving : String = ""):
 			p.setup("Y")
 			add_pattern(p)
 		'''
+		
+		for i in 1:
+			var r = Relic.new()
+			r.setup("Blue Stone")
+			add_relic(r)
 		
 		for i in 72:
 			var g = Gem.new()
@@ -557,13 +558,12 @@ func start_new_game(saving : String = ""):
 			add_item(item)
 		'''
 	
-	game_ui.show()
-	
 	level = 0
 	history.init()
 	
-	#shop_ui.enter()
-	new_level()
+	Board.setup(board_size)
+	game_ui.show()
+	control_ui.enter()
 
 func new_level():
 	score = 0
@@ -575,18 +575,8 @@ func new_level():
 	set_props(Props.None)
 	rolls = rolls_per_level
 	matches = matches_per_level
-	pins_num = pins_num_per_level
-	activates_num = activates_num_per_level
-	grabs_num = grabs_num_per_level
 	
-	#SSound.sfx_board_setup.play()
-	Board.setup(board_size)
 	hand_ui.setup()
-	
-	var tween = get_tree().create_tween()
-	tween.tween_method(func(t):
-		bg_shader.set_shader_parameter("uColor", lerp(Vector3(1.0, 1.0, 0.6), Vector3(0.6, 1.0, 1.0), t))
-	, 0.0, 1.0, 0.8)
 	
 	if level_clear_ui.visible:
 		level_clear_ui.exit()
@@ -730,6 +720,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	randomize()
 	
+	subviewport.size = get_viewport().size
+	
 	Board.rolling_finished.connect(func():
 		if after_rolled_eliminate_one_rune > 0:
 			after_rolled_eliminate_one_rune -= 1
@@ -742,7 +734,7 @@ func _ready() -> void:
 			)
 			
 			tween.tween_callback(func():
-				SSound.sfx_tom.play()
+				SSound.sfx_bubble.play()
 				Game.add_combo()
 				for c in coords:
 					Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
@@ -772,6 +764,7 @@ func _ready() -> void:
 			after_rolled_roll_and_match_processing = true
 			Board.roll()
 		else:
+			combos = 0
 			stage = Stage.Deploy
 			history.update()
 			save_to_file()
@@ -787,20 +780,6 @@ func _ready() -> void:
 						Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 					if i:
 						Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
-			
-			combos = 0
-			if control_ui.combos_text.visible:
-				if combos_tween:
-					combos_tween.kill()
-					combos_tween = null
-				combos_tween = get_tree().create_tween()
-				combos_tween.tween_property(control_ui.combos_fire, "modulate:a", 0.0, 1.0)
-				combos_tween.parallel().tween_property(control_ui.combos_text, "modulate:a", 0.0, 1.0)
-				combos_tween.tween_callback(func():
-					control_ui.combos_fire.hide()
-					control_ui.combos_text.hide()
-					combos_tween = null
-				)
 			
 			if matches == 0 && score < target_score:
 				level_end()

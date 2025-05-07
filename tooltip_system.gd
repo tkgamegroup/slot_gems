@@ -1,10 +1,10 @@
 extends Node
 
-@onready var ui : Control = $/root/Main/UI/Tooltips
-@onready var list1 : Control = $/root/Main/UI/Tooltips/HBoxContainer/VBoxContainer
-@onready var list2 : Control = $/root/Main/UI/Tooltips/HBoxContainer/VBoxContainer2
-@onready var show_more_tip : Control = $/root/Main/UI/Tooltips/HBoxContainer/VBoxContainer/MarginContainer
-@onready var timer : Timer = $/root/Main/UI/Tooltips/Timer
+@onready var ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Tooltips
+@onready var list1 : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer/VBoxContainer
+@onready var list2 : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer/VBoxContainer2
+@onready var show_more_tip : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer/VBoxContainer/MarginContainer
+@onready var timer : Timer = $/root/Main/SubViewportContainer/SubViewport/UI/Tooltips/Timer
 
 const Tooltip = preload("res://tooltip.gd")
 const tooltip_pb = preload("res://tooltip.tscn")

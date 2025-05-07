@@ -1,12 +1,15 @@
 extends PanelContainer
 
-@onready var score_text : Label = $HBoxContainer/PanelContainer/MarginContainer/Score
-@onready var combos_fire : Sprite2D = $HBoxContainer/Combo/Sprite2D
-@onready var combos_fire_shader : ShaderMaterial = combos_fire.material
-@onready var combos_text : Label = $HBoxContainer/Combo/Text
-@onready var level_text : Label = $HBoxContainer/Level
+@onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
+#@onready var combos_fire : Sprite2D = $HBoxContainer/Combo/Sprite2D
+#@onready var combos_fire_shader : ShaderMaterial = combos_fire.material
+@onready var combos_text : Label = $HBoxContainer/VBoxContainer2/Combos
+@onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
+@onready var level_target : Label = $HBoxContainer/VBoxContainer4/Label
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
 @onready var board_size_text : Label = $HBoxContainer/HBoxContainer/BoardSize
+@onready var hand_metrics_container : Control = $HBoxContainer/HBoxContainer4
+@onready var hand_metrics_text : Label = $HBoxContainer/HBoxContainer4/HandMetrics
 @onready var coin_container : Control = $HBoxContainer/HBoxContainer2
 @onready var coin_text : Label = $HBoxContainer/HBoxContainer2/Coin
 @onready var bag_button : Button = $HBoxContainer/HBoxContainer3/Bag
@@ -21,6 +24,9 @@ func _ready() -> void:
 	)
 	board_size_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new("Board Size", "The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2")])
+	)
+	hand_metrics_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Hand", "Max Items: 8\nStartup Draw Items: %d\nDraw Items Per Roll: %d" % [Game.startup_draws, Game.draws_per_roll])])
 	)
 	coin_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new("Your Coins", "")])

@@ -9,6 +9,8 @@ const gap = 16
 var dragging : Control = null
 var drag_pos : Vector2
 
+var float_island = FloatIsland.new()
+
 func release_dragging():
 	if dragging:
 		dragging.z_index = 0
@@ -20,7 +22,7 @@ func add_ui(p : Pattern):
 	list.add_child(ui)
 	p.ui = ui
 	var n = list.get_child_count()
-	list.custom_minimum_size = Vector2(64, item_h * n + (n - 1) * gap if n > 0 else 0)
+	list.custom_minimum_size = Vector2(52, item_h * n + (n - 1) * gap if n > 0 else 0)
 	ui.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
@@ -39,6 +41,8 @@ func clear():
 
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(52, 0)
+	
+	float_island.setup(self, 2.0, 0.1, 0.2)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()
@@ -66,6 +70,8 @@ func _process(delta: float) -> void:
 			Game.patterns[oidx] = Game.patterns[nidx]
 			Game.patterns[nidx] = t
 			list.move_child(dragging, nidx)
+	
+	float_island.update(delta)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

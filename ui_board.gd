@@ -1,6 +1,6 @@
-extends Node2D
+extends Control
 
-var central_coord = Vector2i(26, 11)
+var central_coord = Vector2i(26, 12)
 
 const cell_pb = preload("res://ui_cell.tscn")
 const outline_pb = preload("res://ui_outline.tscn")
@@ -93,8 +93,3 @@ func _input(event: InputEvent) -> void:
 				hover_ui.hide()
 			if drag_ui.visible:
 				drag_ui.position = event.position
-
-var float_island = FloatIsland.new()
-
-func _process(delta: float) -> void:
-	float_island.update(cells_root, 2.0, delta)

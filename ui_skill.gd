@@ -12,7 +12,7 @@ func setup(_skill : Skill):
 func _ready() -> void:
 	for r in skill.requirements:
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(24, 24)
+		ctrl.custom_minimum_size = Vector2(12, 12)
 		ctrl.mouse_filter = Control.MOUSE_FILTER_PASS
 		var sp = AnimatedSprite2D.new()
 		sp.sprite_frames = Gem.rune_frames

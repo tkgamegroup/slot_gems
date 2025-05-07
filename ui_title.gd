@@ -27,26 +27,40 @@ func _ready() -> void:
 	continue_button.mouse_entered.connect(SSound.sfx_select.play)
 	continue_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		var tween = Game.blocker_ui.enter(0.5, 1.0)
+		var tween = Game.get_tree().create_tween()
+		tween.tween_method(func(t):
+			Game.mask_shader.set_shader_parameter("radius", t)
+		, 0.0, 2.0, 0.4)
 		exit(tween)
 		tween.tween_callback(func():
 			Game.start_new_game("1")
-			Game.blocker_ui.exit(0.3)
 		)
+		tween.tween_interval(0.4)
+		tween.tween_method(func(t):
+			Game.mask_shader.set_shader_parameter("radius", t)
+		, 2.0, 0.0, 0.7)
 	)
 	new_game_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		var tween = Game.blocker_ui.enter(0.5, 1.0)
+		var tween = Game.get_tree().create_tween()
+		tween.tween_method(func(t):
+			Game.mask_shader.set_shader_parameter("radius", t)
+		, 0.0, 2.0, 0.4)
 		exit(tween)
 		tween.tween_callback(func():
 			Game.start_new_game()
-			Game.blocker_ui.exit(0.3)
+		)
+		tween.tween_interval(0.4)
+		tween.tween_method(func(t):
+			Game.mask_shader.set_shader_parameter("radius", t)
+		, 2.0, 0.0, 0.7)
+		tween.tween_callback(func():
+			Game.new_level()
 		)
 	)
 	new_game_button.mouse_entered.connect(SSound.sfx_select.play)
 	collections_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		
 	)
 	collections_button.mouse_entered.connect(SSound.sfx_select.play)
 	options_button.pressed.connect(func():

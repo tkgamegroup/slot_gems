@@ -1,6 +1,6 @@
-extends PanelContainer
+extends Control
 
-@onready var list : Control = $MarginContainer/HBoxContainer
+@onready var list : Control = $HBoxContainer
 
 const relic_pb = preload("res://ui_relic.tscn")
 
