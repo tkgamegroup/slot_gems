@@ -3,7 +3,8 @@ extends PanelContainer
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
 #@onready var combos_fire : Sprite2D = $HBoxContainer/Combo/Sprite2D
 #@onready var combos_fire_shader : ShaderMaterial = combos_fire.material
-@onready var combos_text : Label = $HBoxContainer/VBoxContainer2/Combos
+@onready var combos_text : Label = $HBoxContainer/VBoxContainer2/Control/Combos
+@onready var mult_text : Label = $HBoxContainer/VBoxContainer3/Mult
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : Label = $HBoxContainer/VBoxContainer4/Label
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer

@@ -390,7 +390,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 			return
 		sp = active_effect_pb.instantiate()
 		sp.global_position = skill.ui.get_global_rect().get_center()
-		Game.skills_bar_ui.add_child(sp)
+		Game.game_ui.add_child(sp)
 	var ae = ActiveEffect.new()
 	ae.host = host
 	ae.type = type
@@ -594,7 +594,22 @@ func matching():
 								s.add_exp(1)
 							)
 							if s.on_cast.is_valid():
-								s.on_cast.call(tween)
+								var bg = Sprite2D.new()
+								tween.tween_callback(func():
+									bg.texture = load("res://images/black_bg.png")
+									var sp = AnimatedSprite2D.new()
+									sp.sprite_frames = Skill.skill_frames
+									sp.frame = s.image_id
+									bg.add_child(sp)
+									bg.position = get_pos(res[1])
+									bg.z_index = 10
+									Game.board_ui.cells_root.add_child(bg)
+								)
+								tween.tween_property(bg, "scale", Vector2(2.0, 2.0), 1.0)
+								tween.parallel().tween_property(bg, "modulate:a", 0.0, 1.0)
+								tween.tween_callback(bg.queue_free)
+								
+								s.on_cast.call(tween, res)
 					
 					eliminate(res, tween, ActiveReason.Pattern, p)
 					

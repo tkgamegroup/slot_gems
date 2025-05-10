@@ -19,20 +19,20 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Control" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(40, 42)
+custom_minimum_size = Vector2(56, 42)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/Control"]
 layout_mode = 2
-offset_right = 40.0
+offset_right = 56.0
 offset_bottom = 60.0
 texture = ExtResource("2_addby")
 expand_mode = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/Control"]
-position = Vector2(4, 5)
+position = Vector2(12, 5)
 sprite_frames = ExtResource("2_cio3b")
 frame = 1
 centered = false

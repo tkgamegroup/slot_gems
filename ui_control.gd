@@ -38,9 +38,6 @@ func _ready() -> void:
 	roll_button.mouse_entered.connect(func():
 		var desc = "Roll the board! Unfrozen gems will be replaced to new ones."
 		desc += "\nDraw %d item(s)." % (Game.next_roll_extra_draws + 1)
-		if Game.after_rolled_eliminate_one_rune > 0:
-			desc += "\nAfter rolled:"
-			desc += "\nEliminate one random rune x%d" % Game.after_rolled_eliminate_one_rune
 		STooltip.show([Pair.new("Roll", desc)])
 	)
 	roll_button.mouse_exited.connect(func():

@@ -67,6 +67,8 @@ func enter():
 	var rect = tilemap.get_used_rect()
 	panel.position = tilemap.map_to_local(rect.position) - Vector2(16, 16) - Vector2(8, 32)
 	panel.size = tilemap.map_to_local(rect.end) - panel.position
+	if Game.board_size % 2 == 0:
+		panel.position.y += 16
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

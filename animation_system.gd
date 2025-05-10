@@ -56,3 +56,10 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1_t : float, ctrl1_
 		target.global_position = SMath.cubic_bezier(d.p0, d.p1, d.p2, d.p3, t)
 	, 0.0, 1.0, duration)
 	return tween
+
+func jump(tween : Tween, target, height : float, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
+	tween.tween_property(target, "position", target.position + Vector2(0, height), duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(target, "position", target.position, duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	return tween

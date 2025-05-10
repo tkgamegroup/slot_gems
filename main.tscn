@@ -1,4 +1,4 @@
-[gd_scene load_steps=140 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=139 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -70,7 +70,6 @@
 [ext_resource type="Script" uid="uid://coxa0ciyuwmpa" path="res://top_bar.gd" id="57_c2n8d"]
 [ext_resource type="PackedScene" uid="uid://d0m0h6ygbqre" path="res://shop_button.tscn" id="57_kkkcx"]
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
-[ext_resource type="FontFile" uid="uid://c3o3nkccu4j8o" path="res://rotunda-pommerania/Rotunda_Pommerania.ttf" id="59_wy5fy"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_skills_bar.gd" id="63_mpmib"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
 [ext_resource type="Script" uid="uid://dtrr5xwmh7tpk" path="res://ui_relics_bar.gd" id="64_c2n8d"]
@@ -1020,17 +1019,14 @@ theme_override_font_sizes/font_size = 24
 
 [node name="Shop" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
 offset_left = -222.0
-offset_top = -221.0
+offset_top = 200.0
 offset_right = 222.0
-offset_bottom = 221.0
+offset_bottom = 642.0
 grow_horizontal = 2
-grow_vertical = 2
 script = ExtResource("12_uajbh")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Shop"]
@@ -1207,7 +1203,6 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("59_wy5fy")
 theme_override_font_sizes/font_size = 32
 text = "0"
 
@@ -1235,7 +1230,49 @@ position = Vector2(241, 12)
 scale = Vector2(151, 83)
 texture = ExtResource("2_tqnxt")
 
-[node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -9.0
+offset_right = 9.0
+offset_bottom = 45.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+mouse_filter = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="VSeparator2" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 12
+text = "Mult"
+
+[node name="Mult" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 0
@@ -1244,11 +1281,10 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("59_wy5fy")
 theme_override_font_sizes/font_size = 32
-text = "0"
+text = "1.0"
 
-[node name="VSeparator2" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator4" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
@@ -1357,6 +1393,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_c2n8d")
 
 [node name="MarginContainer2" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 16
@@ -1365,10 +1402,12 @@ theme_override_constants/margin_bottom = 4
 [node name="RelicsBar" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
+mouse_filter = 2
 script = ExtResource("64_c2n8d")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer"]
 layout_mode = 2

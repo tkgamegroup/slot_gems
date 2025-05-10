@@ -16,18 +16,6 @@ enum Props
 	Grab
 }
 
-enum Event
-{
-	GainGem,
-	LostGem,
-	GainItem,
-	LostItem,
-	GainRelic,
-	LostRelic,
-	GemBaseScoreChanged,
-	GemBonusScoreChanged
-}
-
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
 const UiBoard = preload("res://ui_board.gd")
@@ -82,11 +70,6 @@ var rolls : int:
 		rolls = v
 		control_ui.rolls_text.text = "%d" % rolls
 var rolls_per_level : int
-var after_rolled_eliminate_one_rune : int = 0
-var after_rolled_eliminate_processing : bool = false
-var after_rolled_roll_and_match : int = 0
-var after_rolled_roll_and_match_processing : bool = false
-var after_rolled_roll_and_match_processed : bool = false
 var next_roll_extra_draws : int = 0
 var matches : int:
 	set(v):
@@ -142,6 +125,7 @@ var unused_gems : Array[Gem] = []
 var items : Array[Item]
 var unused_items : Array[Item] = []
 var relics : Array[Relic]
+var event_listeners : Array[Hook]
 var score : int:
 	set(v):
 		score = v
@@ -156,17 +140,20 @@ var combos : int = 0:
 		combos = v
 		
 		status_bar_ui.combos_text.text = "%dX" % combos
-		if combos_tween:
-			combos_tween.kill()
-		combos_tween = get_tree().create_tween()
-		combos_tween.tween_callback(func():
-			combos_tween = null
-		)
+		if combos > 0:
+			if combos_tween:
+				combos_tween.kill()
+			status_bar_ui.combos_text.position.y = 0
+			combos_tween = get_tree().create_tween()
+			SAnimation.jump(combos_tween, status_bar_ui.combos_text, -6.0, 0.5)
+			combos_tween.tween_callback(func():
+				combos_tween = null
+			)
 
 var score_mult : float = 1.0:
 	set(v):
 		score_mult = v
-		#update_score_text()
+		status_bar_ui.mult_text.text = "%.1f" % score_mult
 var level : int:
 	set(v):
 		level = v
@@ -203,9 +190,6 @@ func set_props(t : int):
 		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Drag Around[img width=32]res://images/mouse_right_button.png[/img]Cancel"
 		Input.set_custom_mouse_cursor(grab_cursor, Input.CURSOR_ARROW, Vector2(5, 20))
 
-func get_word_descriptions(arr : Array[Pair]):
-	pass
-
 func get_cell_ui(c : Vector2i) -> UiCell:
 	return board_ui.cells_root.get_child(c.y * Board.cx + c.x)
 
@@ -226,6 +210,11 @@ func release_gem(g : Gem):
 	g.coord = Vector2i(-1, -1)
 	Buff.clear_if_not(g, Buff.Duration.Eternal)
 	unused_gems.append(g)
+
+func sort_gems():
+	gems.sort_custom(func(a, b):
+		return a.type * 0xffff + a.rune * 0xff + (100.0 / max(a.base_score, 0.1)) < b.type * 0xffff + b.rune * 0xff + (100.0 / max(b.base_score, 0.1))
+	)
 
 func gem_add_base_score(g : Gem, v : int):
 	for r in relics:
@@ -260,6 +249,16 @@ func release_item(i : Item):
 	i.coord = Vector2i(-1, -1)
 	Buff.clear_if_not(i, Buff.Duration.Eternal)
 	unused_items.append(i)
+
+func add_skill(s : Skill):
+	if s.on_event.is_valid():
+		s.on_event.call(Event.GainSkill, null, s)
+	skills.append(s)
+	skills_bar_ui.add_ui(s)
+
+func add_pattern(p : Pattern):
+	patterns.append(p)
+	patterns_bar_ui.add_ui(p)
 
 func add_relic(r : Relic):
 	if r.on_event.is_valid():
@@ -296,30 +295,19 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 	)
 
 func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
-	var mult = int(combos * score_mult)
+	var combos_mult = combos if affected_by_combos else 1
+	var mult = int(combos_mult * score_mult)
+	var add_score = base * mult
+	score += add_score
+	
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
-	if affected_by_combos:
-		lb.text = "%dx%d" % [base, mult]
-	else:
-		lb.text = "%d" % int(base * score_mult)
-	ui.z_index = 10
+	lb.text = "%d" % add_score
+	ui.z_index = 5
 	board_ui.overlay.add_child(ui)
 	var tween = get_tree().create_tween()
-	if affected_by_combos:
-		tween.tween_method(func(t):
-			ui.rotation_degrees = sin(t * PI * 10.0) * t * 30.0
-		, 1.0, 0.0, 1.0)
-		tween.parallel().tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_callback(func():
-			var s = base * mult
-			lb.text = "%d" % s
-			score += s
-		)
-	else:
-		score += int(base * score_mult)
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
 	tween.parallel().tween_property(ui, "scale", Vector2(0.8, 0.8), 0.5)
 	tween.tween_callback(ui.queue_free)
@@ -343,19 +331,6 @@ func add_status(s : String, col : Color):
 		control_ui.status_text.hide()
 		status_tween = null
 	)
-
-func sort_gems():
-	gems.sort_custom(func(a, b):
-		return a.type * 0xffff + a.rune * 0xff + (100.0 / max(a.base_score, 0.1)) < b.type * 0xffff + b.rune * 0xff + (100.0 / max(b.base_score, 0.1))
-	)
-
-func add_skill(s : Skill):
-	skills.append(s)
-	skills_bar_ui.add_ui(s)
-
-func add_pattern(p : Pattern):
-	patterns.append(p)
-	patterns_bar_ui.add_ui(p)
 
 func get_level_score(lv : int):
 	# 300, 800, 2000, 5000, 11000, 20000, 35000, 50000
@@ -405,7 +380,6 @@ func start_new_game(saving : String = ""):
 	modifiers["explode_range_i"] = 0
 	modifiers["explode_power_i"] = 0
 	modifiers["base_combo_i"] = 0
-	modifiers["continueous_roll_and_match_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
 	
 	if saving == "":
@@ -420,7 +394,7 @@ func start_new_game(saving : String = ""):
 		
 		for i in 1:
 			var s = Skill.new()
-			s.setup("Bao")
+			s.setup("Xiao")
 			add_skill(s)
 		
 		for i in 1:
@@ -568,7 +542,7 @@ func start_new_game(saving : String = ""):
 func new_level():
 	score = 0
 	level += 1
-	target_score = get_level_score(level) * 0
+	target_score = get_level_score(level) * 1
 	
 	stage = Stage.Preparing
 	
@@ -583,6 +557,10 @@ func new_level():
 	if game_over_ui.visible:
 		game_over_ui.exit()
 	control_ui.enter()
+	
+	for h in event_listeners:
+		if h.event == Event.LevelBegan:
+			h.host.on_event.call(Event.LevelBegan, null, null)
 
 func level_end():
 	set_props(Props.None)
@@ -723,47 +701,35 @@ func _ready() -> void:
 	subviewport.size = get_viewport().size
 	
 	Board.rolling_finished.connect(func():
-		if after_rolled_eliminate_one_rune > 0:
-			after_rolled_eliminate_one_rune -= 1
-			after_rolled_eliminate_processing = true
-			
-			var tween = get_tree().create_tween()
-			var r = randi_range(1, 1 + Gem.Rune.Count)
-			var coords = Board.filter(func(g : Gem, i):
-				return g && g.rune == r
-			)
-			
-			tween.tween_callback(func():
-				SSound.sfx_bubble.play()
-				Game.add_combo()
-				for c in coords:
-					Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
-			)
-			Board.eliminate(coords, tween, Board.ActiveReason.Pattern)
-			tween.tween_callback(Board.clear_consumed)
-			tween.tween_interval(0.4 * Game.animation_speed)
-			tween.tween_callback(Board.fill_blanks)
-		elif after_rolled_roll_and_match_processing:
-			after_rolled_roll_and_match_processing = false
-			Board.matching()
-		else:
+		var processed = false
+		for h in event_listeners:
+			if h.event == Event.RollingFinished:
+				processed = h.host.on_event.call(Event.RollingFinished, null, null)
+				if processed:
+					break
+		if !processed:
 			stage = Stage.Deploy
 			save_to_file()
 			end_busy()
 	)
 	Board.filling_finished.connect(func():
-		if after_rolled_eliminate_processing:
-			after_rolled_eliminate_processing = false
-			Board.rolling_finished.emit()
-		else:
+		var processed = false
+		for h in event_listeners:
+			if h.event == Event.FillingFinished:
+				processed = h.host.on_event.call(Event.FillingFinished, null, null)
+				if processed:
+					break
+		if !processed:
 			Board.matching()
 	)
 	Board.matching_finished.connect(func():
-		if !after_rolled_roll_and_match_processed && modifiers["continueous_roll_and_match_i"] > 0:
-			after_rolled_roll_and_match_processed = true
-			after_rolled_roll_and_match_processing = true
-			Board.roll()
-		else:
+		var processed = false
+		for h in event_listeners:
+			if h.event == Event.MatchingFinished:
+				processed = h.host.on_event.call(Event.MatchingFinished, null, null)
+				if processed:
+					break
+		if !processed:
 			combos = 0
 			stage = Stage.Deploy
 			history.update()

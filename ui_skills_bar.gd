@@ -14,7 +14,7 @@ func add_ui(s : Skill):
 	list.add_child(ui)
 	s.ui = ui
 	var n = list.get_child_count()
-	list.custom_minimum_size = Vector2(40, item_h * n + (n - 1) * gap if n > 0 else 0)
+	list.custom_minimum_size = Vector2(56, item_h * n + (n - 1) * gap if n > 0 else 0)
 
 func clear():
 	if list:
