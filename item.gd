@@ -17,7 +17,6 @@ var mountable : String = ""
 var mounted : Item = null
 var coord : Vector2i = Vector2i(-1, -1)
 var buffs : Array[Buff]
-
 var extra = {}
 
 var on_process : Callable

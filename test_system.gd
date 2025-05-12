@@ -1,7 +1,7 @@
 extends Node
 
 @onready var timer : Timer = $/root/Main/TestTimer
-@onready var text : Label = $/root/Main/UI/TestingText
+@onready var text : Label = $/root/Main/SubViewportContainer/SubViewport/UI/TestingText
 
 var filename : String
 
@@ -74,7 +74,8 @@ func start_test(type : int, level_count : int, tasks : int, fn : String = ""):
 	else:
 		filename = fn
 	
-	Game.start_new_game()
+	Game.start_game()
+	Game.new_level()
 	
 	var cx = Board.cx
 	var cy = Board.cy
@@ -167,7 +168,11 @@ func time_out():
 									var score = 0
 									var combos = 0
 									for r in records:
+										if r.levels.size() <= i:
+											continue
 										var l = r.levels[i]
+										if l.matchings.size() <= j:
+											continue
 										var m = l.matchings[j]
 										score += m.score
 										combos += m.combos
@@ -185,7 +190,8 @@ func time_out():
 									start_test(args["type"], args["level_count"], args["tasks"], args["fn"])
 							else:
 								records.append(TaskRecord.new())
-								Game.start_new_game()
+								Game.start_game()
+								Game.new_level()
 						else:
 							curr_task.levels.append(LevelRecord.new())
 							Game.new_level()

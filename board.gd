@@ -192,12 +192,8 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 			h.host.on_event.call(Event.ItemEntered, null, i)
 	cell.item = i
 	var ui = Game.get_cell_ui(c)
-	if i:
-		ui.set_item_image(i.image_id)
-		ui.set_is_duplicant(i.is_duplicant)
-	else:
-		ui.set_item_image(0)
-		ui.set_is_duplicant(false)
+	ui.set_item_image(i.image_id if i else 0)
+	ui.set_is_duplicant(i.is_duplicant if i else false)
 	return oi
 
 func place_item(c : Vector2i, i : Item):
@@ -295,6 +291,12 @@ func gem_score_at(c : Vector2i):
 	if !g:
 		return 0
 	return g.get_base_score() + g.bonus_score
+
+func pin(c : Vector2i):
+	pass
+
+func unpin(c : Vector2i):
+	pass
 
 func freeze(c : Vector2i):
 	c = format_coord(c)

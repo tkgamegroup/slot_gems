@@ -17,6 +17,8 @@ enum
 	LostRelic,
 	GainSkill,
 	LostSkill,
+	GainPattern,
+	LostPattern,
 	GemBaseScoreChanged,
 	GemBonusScoreChanged,
 	GemEntered,

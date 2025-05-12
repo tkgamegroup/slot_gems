@@ -33,7 +33,7 @@ func _ready() -> void:
 		, 0.0, 2.0, 0.4)
 		exit(tween)
 		tween.tween_callback(func():
-			Game.start_new_game("1")
+			Game.start_game("1")
 		)
 		tween.tween_interval(0.4)
 		tween.tween_method(func(t):
@@ -48,7 +48,7 @@ func _ready() -> void:
 		, 0.0, 2.0, 0.4)
 		exit(tween)
 		tween.tween_callback(func():
-			Game.start_new_game()
+			Game.start_game()
 		)
 		tween.tween_interval(0.4)
 		tween.tween_method(func(t):

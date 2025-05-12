@@ -6,11 +6,12 @@ const UiPattern = preload("res://ui_pattern.gd")
 
 var name : String
 var coords : Array[Vector3i]
+var price : int
 var mult : int = 1
 var lv : int = 1
 var exp : int = 0
 var max_exp : int = get_max_exp(1)
-var price : int
+
 var ui : UiPattern = null
 
 static func get_max_exp(_lv : int):

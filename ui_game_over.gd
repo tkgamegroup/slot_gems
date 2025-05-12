@@ -32,7 +32,7 @@ func _ready() -> void:
 		var sb : StyleBoxFlat = Game.blocker_ui.get_theme_stylebox("panel")
 		sb.bg_color = Color(0.0, 0.0, 0.0, 80.0 / 255.0)
 		exit()
-		Game.start_new_game()
+		Game.start_game()
 	)
 	#new_run.mouse_entered.connect(SSound.sfx_select.play)
 	main_menu_button.pressed.connect(func():

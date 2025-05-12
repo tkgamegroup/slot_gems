@@ -170,7 +170,11 @@ func setup(n : String):
 		image_id = 14
 		description = "Gems' score will not descent."
 		on_event = func(event : int, tween : Tween, data):
-			if event == Event.GemBaseScoreChanged || event == Event.GemBonusScoreChanged:
+			if event == Event.GainRelic:
+				if data == self:
+					Board.event_listeners.append(Hook.new(Event.GemBaseScoreChanged, self, HostType.Relic, false))
+					Board.event_listeners.append(Hook.new(Event.GemBonusScoreChanged, self, HostType.Relic, false))
+			elif event == Event.GemBaseScoreChanged || event == Event.GemBonusScoreChanged:
 				if data["value"] < 0:
 					data["value"] = 0
 

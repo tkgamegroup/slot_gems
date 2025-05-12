@@ -70,7 +70,6 @@ var rolls : int:
 		rolls = v
 		control_ui.rolls_text.text = "%d" % rolls
 var rolls_per_level : int
-var next_roll_extra_draws : int = 0
 var matches : int:
 	set(v):
 		matches = v
@@ -86,6 +85,7 @@ var draws_per_roll : int:
 		draws_per_roll = v
 		if hand_ui:
 			status_bar_ui.hand_metrics_text.text = "%d/%d/%d" % [startup_draws, draws_per_roll, 8]
+var next_roll_extra_draws : int = 0
 var props = Props.None
 var pins_num : int:
 	set(v):
@@ -193,10 +193,11 @@ func set_props(t : int):
 func get_cell_ui(c : Vector2i) -> UiCell:
 	return board_ui.cells_root.get_child(c.y * Board.cx + c.x)
 
-func add_gem(g : Gem):
-	for r in relics:
-		if r.on_event.is_valid():
-			r.on_event.call(Event.GainGem, null, g)
+func add_gem(g : Gem, boardcast : bool = true):
+	if boardcast:
+		for h in event_listeners:
+			if h.event == Event.GainGem:
+				h.host.on_event.call(Event.GainGem, null, g)
 	gems.append(g)
 
 func get_gem(g : Gem = null):
@@ -217,21 +218,24 @@ func sort_gems():
 	)
 
 func gem_add_base_score(g : Gem, v : int):
-	for r in relics:
-		v = r.on_event.call(Event.GemBaseScoreChanged, null, {"gem":g,"value":v})
+	for h in event_listeners:
+		if h.event == Event.GainGem:
+			h.host.on_event.call(Event.GemBaseScoreChanged, null, {"gem":g,"value":v})
 	g.base_score += v
 	return v
 
 func gem_add_bonus_score(g : Gem, v : int):
-	for r in relics:
-		v = r.on_event.call(Event.GemBonusScoreChanged, null, {"gem":g,"value":v})
+	for h in event_listeners:
+		if h.event == Event.GainGem:
+			h.host.on_event.call(Event.GemBonusScoreChanged, null, {"gem":g,"value":v})
 	g.bonus_score += v
 	return 
 
-func add_item(i : Item):
-	for r in relics:
-		if r.on_event.is_valid():
-			r.on_event.call(Event.GainItem, null, i)
+func add_item(i : Item, boardcast : bool = true):
+	if boardcast:
+		for h in event_listeners:
+			if h.event == Event.GainGem:
+				h.host.on_event.call(Event.GainItem, null, i)
 	items.append(i)
 
 func get_item(i : Item = null):
@@ -250,19 +254,28 @@ func release_item(i : Item):
 	Buff.clear_if_not(i, Buff.Duration.Eternal)
 	unused_items.append(i)
 
-func add_skill(s : Skill):
-	if s.on_event.is_valid():
-		s.on_event.call(Event.GainSkill, null, s)
+func add_skill(s : Skill, boardcast : bool = true):
+	if boardcast:
+		if s.on_event.is_valid():
+			s.on_event.call(Event.GainSkill, null, s)
 	skills.append(s)
 	skills_bar_ui.add_ui(s)
 
-func add_pattern(p : Pattern):
+func add_pattern(p : Pattern, boardcast : bool = true):
+	if boardcast:
+		for h in event_listeners:
+			if h.event == Event.GainPattern:
+				h.host.on_event.call(Event.GainPattern, null, p)
 	patterns.append(p)
 	patterns_bar_ui.add_ui(p)
 
-func add_relic(r : Relic):
-	if r.on_event.is_valid():
-		r.on_event.call(Event.GainRelic, null, r)
+func add_relic(r : Relic, boardcast : bool = true):
+	if boardcast:
+		if r.on_event.is_valid():
+			r.on_event.call(Event.GainRelic, null, r)
+		for h in event_listeners:
+			if h.event == Event.GainRelic:
+				h.host.on_event.call(Event.GainRelic, null, r)
 	var ui = relic_ui.instantiate()
 	ui.setup(r)
 	relics_bar_ui.add_child(ui)
@@ -335,22 +348,14 @@ func add_status(s : String, col : Color):
 func get_level_score(lv : int):
 	# 300, 800, 2000, 5000, 11000, 20000, 35000, 50000
 	match lv:
-		1:
-			return 50000000
-		2:
-			return 90000000
-		3:
-			return 150000000
-		4:
-			return 210000000
-		5:
-			return 280000000
-		6:
-			return 360000000
-		7:
-			return 450000000
-		8:
-			return 600000000
+		1: return 50000000
+		2: return 90000000
+		3: return 150000000
+		4: return 210000000
+		5: return 280000000
+		6: return 360000000
+		7: return 450000000
+		8: return 600000000
 
 func begin_busy():
 	control_ui.roll_button.disabled = true
@@ -363,8 +368,8 @@ func end_busy():
 	control_ui.match_button.disabled = false
 	hand_ui.disabled = false
 
-func start_new_game(saving : String = ""):
-	board_size = 6
+func start_game(saving : String = ""):
+	board_size = 3
 	skills.clear()
 	skills_bar_ui.clear()
 	patterns.clear()
@@ -372,6 +377,10 @@ func start_new_game(saving : String = ""):
 	gems.clear()
 	items.clear()
 	
+	Buff.clear(Game, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.ThisLevel, Buff.Duration.Eternal])
+	event_listeners.clear()
+	Board.event_listeners.clear()
+	modifiers.clear()
 	modifiers["red_bouns_i"] = 0
 	modifiers["orange_bouns_i"] = 0
 	modifiers["green_bouns_i"] = 0
@@ -416,10 +425,12 @@ func start_new_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
+		'''
 		for i in 1:
 			var r = Relic.new()
 			r.setup("Blue Stone")
 			add_relic(r)
+		'''
 		
 		for i in 72:
 			var g = Gem.new()
@@ -517,6 +528,7 @@ func start_new_game(saving : String = ""):
 			var item = Item.new()
 			item.setup("Dye: Pink")
 			add_item(item)
+		'''
 		for i in 1:
 			var item = Item.new()
 			item.setup("Bomb")
@@ -525,17 +537,18 @@ func start_new_game(saving : String = ""):
 			var item = Item.new()
 			item.setup("Minefield")
 			add_item(item)
-		'''
 		for i in 1:
 			var item = Item.new()
 			item.setup("Idol")
 			add_item(item)
 		'''
 	
-	level = 0
-	history.init()
+		level = 0
+		history.init()
+		Board.setup(board_size)
+	else:
+		load_from_file(saving)
 	
-	Board.setup(board_size)
 	game_ui.show()
 	control_ui.enter()
 
@@ -592,7 +605,24 @@ func toggle_in_game_menu():
 	else:
 		in_game_menu_ui.exit()
 
-func save_to_file():
+func save_to_file(name : String = "1"):
+	if STest.testing:
+		return
+	
+	var save_buff = func(b : Buff, d : Dictionary):
+		d["uid"] = b.uid
+		d["type"] = b.type
+		d["duration"] = b.duration
+		d["data"] = b.data.duplicate()
+	var save_hook = func(h : Hook, d : Dictionary):
+		d["event"] = h.event
+		d["host_type"] = h.host_type
+		match h.host_type:
+			HostType.Item: d["host"] = Game.items.find(h.host)
+			HostType.Skill: d["host"] = Game.skills.find(h.host)
+			HostType.Relic: d["host"] = Game.relics.find(h.host)
+		d["once"] = h.once
+	
 	var data = {}
 	data["level"] = Game.level
 	data["board_size"] = Game.board_size
@@ -603,6 +633,29 @@ func save_to_file():
 	data["coins"] = Game.coins
 	data["rolls"] = Game.rolls
 	data["matches"] = Game.matches
+	data["score"] = Game.score
+	data["target_score"] = Game.target_score
+	data["combos"] = Game.combos
+	data["score_mult"] = Game.score_mult
+	var game_buffs = []
+	for b in Game.buffs:
+		var buff = {}
+		save_buff.call(b, buff)
+		game_buffs.append(buff)
+	data["buffs"] = game_buffs
+	var game_event_listeners = []
+	for h in Game.event_listeners:
+		var hook = {}
+		save_hook.call(h, hook)
+		game_event_listeners.append(hook)
+	data["event_listeners"] = game_event_listeners
+	data["modifiers"] = Game.modifiers.duplicate()
+	var board_event_listeners = []
+	for h in Board.event_listeners:
+		var hook = {}
+		save_hook.call(h, hook)
+		board_event_listeners.append(hook)
+	data["board_event_listeners"] = board_event_listeners
 	var gems = []
 	for g in Game.gems:
 		var gem = {}
@@ -611,9 +664,12 @@ func save_to_file():
 		gem["base_score"] = g.base_score
 		gem["bouns_score"] = g.bonus_score
 		gem["coord"] = g.coord
+		var buffs = []
 		for b in g.buffs:
-			var buffs = []
-			
+			var buff = {}
+			save_buff.call(b, buff)
+			buffs.append(buff)
+		gem["buffs"] = buffs
 		gems.append(gem)
 	data["gems"] = gems
 	var unused_gems = []
@@ -621,23 +677,207 @@ func save_to_file():
 		unused_gems.append(Game.gems.find(g))
 	data["unused_gems"] = unused_gems
 	var items = []
+	for i in Game.items:
+		var item = {}
+		item["name"] = i.name
+		item["power"] = i.power
+		item["is_duplicant"] = i.is_duplicant
+		item["tradeable"] = i.tradeable
+		item["mountable"] = i.mountable
+		item["mounted"] = Game.items.find(i.mounted)
+		item["coord"] = i.coord
+		var buffs = []
+		for b in i.buffs:
+			var buff = {}
+			save_buff.call(b, buff)
+			buffs.append(buff)
+		item["buffs"] = buffs
+		item["extra"] = i.extra.duplicate()
+		items.append(item)
+	data["items"] = items
+	var unused_items = []
+	for i in Game.unused_items:
+		unused_items.append(Game.items.find(i))
+	data["unused_items"] = unused_items
 	var skills = []
+	for s in Game.skills:
+		var skill = {}
+		skill["name"] = s.name
+		skill["extra"] = s.extra.duplicate()
+		skills.append(skill)
+	data["skills"] = skills
 	var patterns = []
+	for p in Game.patterns:
+		var pattern = {}
+		pattern["name"] = p.name
+		pattern["mult"] = p.mult
+		pattern["lv"] = p.lv
+		pattern["exp"] = p.exp
+		pattern["max_exp"] = p.max_exp
+		patterns.append(pattern)
+	data["patterns"] = patterns
 	var relics = []
+	for r in Game.relics:
+		var relic = {}
+		relic["name"] = r.name
+		relic["extra"] = r.extra.duplicate()
+		relics.append(relic)
+	data["relics"] = relics
 	var hand = []
+	for i in Game.hand_ui.get_ui_count():
+		var ui = Game.hand_ui.get_ui(i)
+		hand.append(Game.items.find(ui.item))
+	data["hand"] = hand
 	var cells = []
 	for c in Board.cells:
 		var cell = {}
+		cell["coord"] = c.coord
 		cell["gem"] = Game.gems.find(c.gem)
 		cell["item"] = Game.items.find(c.item)
 		cell["state"] = c.state
 		cell["pinned"] = c.pinned
 		cell["frozen"] = c.frozen
+		var event_listeners = []
+		for h in c.event_listeners:
+			var hook = {}
+			save_hook.call(h, hook)
+			event_listeners.append(hook)
+		cell["event_listeners"] = event_listeners
 		cells.append(cell)
 	data["cells"] = cells
+	
+	var file = FileAccess.open("res://saves/save%s.json" % name, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
 
-func load_from_file():
-	pass
+func load_from_file(name : String = "1"):
+	var file = FileAccess.open("res://saves/save%s.json" % name, FileAccess.READ)
+	var data = JSON.parse_string(file.get_as_text())
+	file.close()
+	
+	var load_buff = func(d : Dictionary, host):
+		var b = Buff.new()
+		b.uid = d["uid"]
+		b.type = int(d["type"])
+		b.host = host
+		b.duration = int(d["duration"])
+		b.data = SUtils.read_dictionary(d["data"])
+		return b
+	var load_hook = func(d : Dictionary):
+		var host_type = int(d["host_type"])
+		var host_idx = int(d["host"])
+		var host = null
+		match host_type:
+			HostType.Item: host = Game.items[host_idx]
+			HostType.Skill: host = Game.skills[host_idx]
+			HostType.Relic: host = Game.relics[host_idx]
+		var h = Hook.new(int(d["event"]), host, host_type, d["once"])
+		return h
+	
+	level = int(data["level"])
+	board_size = int(data["board_size"])
+	rolls_per_level = int(data["rolls_per_level"])
+	matches_per_level = int(data["matches_per_level"])
+	startup_draws = int(data["startup_draws"])
+	draws_per_roll = int(data["draws_per_roll"])
+	coins = int(data["coins"])
+	rolls = int(data["rolls"])
+	matches = int(data["matches"])
+	score = int(data["score"])
+	target_score = int(data["target_score"])
+	combos = int(data["combos"])
+	score_mult = data["score_mult"]
+	var game_buffs = data["buffs"]
+	for buff in game_buffs:
+		var b = load_buff.call(buff, Game)
+		Game.buffs.append(b)
+	modifiers = SUtils.read_dictionary(data["modifiers"])
+	var gems = data["gems"]
+	for gem in gems:
+		var g = Gem.new()
+		g.type = int(gem["type"])
+		g.rune = int(gem["rune"])
+		g.base_score = int(gem["base_score"])
+		g.bonus_score = int(gem["bonus_score"])
+		g.coord = str_to_var("Vector2i" + gem["coord"])
+		var buffs = gem["buffs"]
+		for buff in buffs:
+			var b = load_buff.call(buff, g)
+			g.buffs.append(b)
+		add_gem(g, false)
+	var unused_gems = data["unused_gems"]
+	for idx in unused_gems:
+		Game.unused_gems.append(Game.gems[idx])
+	var items = data["items"]
+	for item in items:
+		var i = Item.new()
+		i.setup(item["name"])
+		i.power = int(item["power"])
+		i.is_duplicant = item["is_duplicant"]
+		i.tradeable = item["tradeable"]
+		i.mountable = item["mountable"]
+		i.coord = str_to_var("Vector2i" + item["coord"])
+		var buffs = item["buffs"]
+		for buff in buffs:
+			var b = load_buff.call(buff, i)
+			i.buffs.append(b)
+		i.extra = SUtils.read_dictionary(item["extra"])
+		add_item(i, false)
+	var skills = data["skills"]
+	for skill in skills:
+		var s = Skill.new()
+		s.setup(skill["name"])
+		s.extra = SUtils.read_dictionary(skill["extra"])
+		add_skill(s, false)
+	var patterns = data["patterns"]
+	for pattern in patterns:
+		var p = Pattern.new()
+		p.setup(pattern["name"])
+		p.mult = int(pattern["mult"])
+		p.lv = int(pattern["lv"])
+		p.exp = int(pattern["exp"])
+		p.max_exp = int(pattern["max_exp"])
+		add_pattern(p, false)
+	var relics = data["relics"]
+	for relic in relics:
+		var r = Relic.new()
+		r.setup(relic["name"])
+		r.extra = SUtils.read_dictionary(relic["extra"])
+		add_relic(r, false)
+	var game_event_listeners = data["event_listeners"]
+	for hook in game_event_listeners:
+		var h = load_hook.call(hook)
+		Game.event_listeners.append(h)
+	var board_event_listeners = data["board_event_listeners"]
+	for hook in board_event_listeners:
+		var h = load_hook.call(hook)
+		Board.event_listeners.append(h)
+	var hand = data["hand"]
+	for idx in hand:
+		Game.hand_ui.add_ui(Game.items[int(idx)])
+	var cells = data["cells"]
+	for cell in cells:
+		var coord = str_to_var("Vector2i" + cell["coord"])
+		var c = Board.add_cell(coord)
+		var ui = Game.get_cell_ui(coord)
+		var gem_idx = cell["gem"]
+		var item_idx = cell["item"]
+		if gem_idx != -1:
+			var g = Game.gems[gem_idx]
+			c.gem = g
+			ui.set_gem_image(g.type, g.rune)
+		if item_idx != -1:
+			var i = Game.items[item_idx]
+			c.item = i
+			ui.set_item_image(i.image_id)
+			ui.set_is_duplicant(i.is_duplicant)
+		var state = cell["state"]
+		if state != Cell.State.Normal:
+			Board.set_state_at(coord, state)
+		if cell["pinned"]:
+			Board.pin(coord)
+		if cell["frozen"]:
+			Board.freeze(coord)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -747,10 +987,10 @@ func _ready() -> void:
 					if i:
 						Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 			
-			if matches == 0 && score < target_score:
+			if matches == 0 && score < target_score && !STest.testing:
 				level_end()
 				game_over_ui.enter()
-			elif score >= target_score:
+			elif score >= target_score && !STest.testing:
 				level_end()
 				level_clear_ui.enter()
 			else:

@@ -11,6 +11,8 @@ static func read_dictionary(d : Dictionary):
 			ret[k] = d[k]
 		elif k.ends_wht("_2i"):
 			ret[k] = str_to_var("Vector2i" + d[k])
+		else:
+			ret[k] = d[k]
 	return ret
 
 static func calc_value_with_modifiers(obj : Object, target : String, sub_attr : String = ""):
