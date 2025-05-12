@@ -7,9 +7,9 @@ static func read_dictionary(d : Dictionary):
 	for k in d:
 		if k.ends_with("_i"):
 			ret[k] = int(d[k])
-		elif k.ends_wht("_f"):
+		elif k.ends_with("_f"):
 			ret[k] = d[k]
-		elif k.ends_wht("_2i"):
+		elif k.ends_with("_2i"):
 			ret[k] = str_to_var("Vector2i" + d[k])
 		else:
 			ret[k] = d[k]

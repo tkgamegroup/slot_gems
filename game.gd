@@ -655,6 +655,8 @@ func save_to_file(name : String = "1"):
 		var hook = {}
 		save_hook.call(h, hook)
 		board_event_listeners.append(hook)
+	data["cx"] = Board.cx
+	data["cy"] = Board.cy
 	data["board_event_listeners"] = board_event_listeners
 	var gems = []
 	for g in Game.gems:
@@ -662,7 +664,7 @@ func save_to_file(name : String = "1"):
 		gem["type"] = g.type
 		gem["rune"] = g.rune
 		gem["base_score"] = g.base_score
-		gem["bouns_score"] = g.bonus_score
+		gem["bonus_score"] = g.bonus_score
 		gem["coord"] = g.coord
 		var buffs = []
 		for b in g.buffs:
@@ -792,6 +794,10 @@ func load_from_file(name : String = "1"):
 		var b = load_buff.call(buff, Game)
 		Game.buffs.append(b)
 	modifiers = SUtils.read_dictionary(data["modifiers"])
+	
+	Board.cx = int(data["cx"])
+	Board.cy = int(data["cy"])
+	
 	var gems = data["gems"]
 	for gem in gems:
 		var g = Gem.new()
