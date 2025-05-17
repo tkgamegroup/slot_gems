@@ -15,8 +15,6 @@ var disabled : bool = false:
 		else:
 			list.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
-signal setup_finished
-
 func is_empty():
 	return list.get_child_count() == 0
 
@@ -30,6 +28,7 @@ func get_ui(idx : int) -> UiSlot:
 
 func release_dragging():
 	if dragging:
+		SSound.sfx_drop_item.play()
 		dragging.z_index = 0
 		dragging.action.hide()
 		dragging = null
@@ -44,13 +43,14 @@ func add_ui(item : Item):
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 				if !disabled:
 					STooltip.close()
+					SSound.sfx_drag_item.play()
 					dragging = ui
 					ui.z_index = 10
 	)
 	return ui
 
 func draw():
-	if Game.unused_items.is_empty():
+	if Game.bag_items.is_empty():
 		return null
 	if get_ui_count() >= 8:
 		return null
@@ -80,25 +80,11 @@ func place_item(ui : UiSlot, c : Vector2i):
 		return true
 	return false
 
-func setup():
-	cleanup()
-	disabled = true
-	
-	var tween = get_tree().create_tween()
-	for i in min(Game.startup_draws, Game.unused_items.size()):
-		tween.tween_interval(0.15)
-		tween.tween_callback(func():
-			draw()
-		)
-	tween.tween_callback(func():
-		setup_finished.emit()
-	)
-
 func cleanup():
 	discard()
-	Game.unused_items.clear()
+	Game.bag_items.clear()
 	for i in Game.items:
-		Game.unused_items.append(i)
+		Game.bag_items.append(i)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()
@@ -129,6 +115,7 @@ func _input(event: InputEvent) -> void:
 						if Board.is_valid(c):
 							on_board = true
 							if place_item(dragging, c):
+								SSound.sfx_drop_item.play()
 								dragging = null
 					if !on_board && dragging.action.visible:
 						Game.release_item(dragging.item)

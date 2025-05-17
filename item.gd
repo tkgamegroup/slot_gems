@@ -9,7 +9,7 @@ var name : String
 var image_id : int
 var description : String
 var category : String
-var price : int
+var price : int = 5
 var power : int = 0
 var is_duplicant : bool = false
 var tradeable : bool = false
@@ -32,57 +32,73 @@ func setup(n : String):
 	if name == "Dye: Red":
 		image_id = 1
 		description = "[color=gray][b]Quick[/b][/color]: Change gem to red color."
+		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Red})
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Red}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Dye: Orange":
 		image_id = 2
 		description = "[color=gray][b]Quick[/b][/color]: Change gem to orange color."
+		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Orange})
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Orange}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Dye: Green":
 		image_id = 3
 		description = "[color=gray][b]Quick[/b][/color]: Change gem to green color."
+		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Green})
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Green}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Dye: Blue":
 		image_id = 4
 		description = "[color=gray][b]Quick[/b][/color]: Change gem to blue color."
+		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Blue})
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Blue}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Dye: Pink":
 		image_id = 5
 		description = "[color=gray][b]Quick[/b][/color]: Change gem to pink color."
+		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Pink})
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Pink}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Pin":
 		image_id = 6
-		description = "[color=gray][b]Quick[/b][/color]: Freeze the cell."
+		description = "[color=gray][b]Quick[/b][/color]: Pin the cell and if it is on one or more patterns, pin those cells as well."
 		on_quick = func(coord : Vector2i):
-			Board.freeze(coord)
+			var coords = [coord]
+			for y in Board.cy:
+				for x in Board.cx:
+					for p in Game.patterns:
+						var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
+						if res.has(coord):
+							for c in res:
+								if !coords.has(c):
+									coords.append(c)
+			for c in coords:
+				Board.pin(c)
 			return true
 	elif name == "Flag":
 		image_id = 7
 		description = "[color=gray][b]Aura[/b][/color]: Gems +{value} score."
+		price = 2
 		extra["value"] = 3
 		extra["buff_ids"] = []
 		on_event = func(event : int, tween : Tween, data):
@@ -109,7 +125,7 @@ func setup(n : String):
 		image_id = 8
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Eliminate cells in {range} [color=gray][b]Range[/b][/color]."
 		category = "Bomb"
-		price = 4
+		price = 3
 		power = 3
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -122,7 +138,7 @@ func setup(n : String):
 		image_id = 9
 		description = "[color=gray][b]Eliminate[/b][/color] by [b]Bomb[/b]: [color=gray][b](Active)[/b][/color] Eliminate cells in {range} [color=gray][b]Range[/b][/color]."
 		category = "Bomb"
-		price = 4
+		price = 3
 		power = 5
 		extra["range"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -136,7 +152,7 @@ func setup(n : String):
 		image_id = 10
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Eliminate cells in {range} [color=gray][b]Range[/b][/color].\n(If eliminated after 'Chain Bomb', range become that 'Chain Bomb's +1, and power become that 'Chain Bomb's +2.)"
 		category = "Bomb"
-		price = 4
+		price = 3
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if !Board.active_effects.is_empty():
@@ -153,6 +169,7 @@ func setup(n : String):
 		image_id = 41
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Cost 6 coins to eliminate cells in {range} [color=gray][b]Range[/b][/color], earn 0-3 coins for each cell eliminated."
 		category = "Bomb"
+		price = 5
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -317,7 +334,7 @@ func setup(n : String):
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Fire":
@@ -404,8 +421,21 @@ func setup(n : String):
 							Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "Dog":
+	elif name == "Chloroplast":
 		image_id = 17
+		description = "[color=gray][b]Quick[/b][/color]: Target non-colorless gem turn to [color=gray][b]Colorless[/b][/color], draw 2 items."
+		category = "Normal"
+		price = 5
+		on_quick = func(coord : Vector2i):
+			var g = Board.get_gem_at(coord)
+			if g && g.type != Gem.Type.Colorless:
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Colorless}, Buff.Duration.ThisLevel)
+				for i in 2:
+					Game.hand_ui.draw()
+				return true
+			return false
+	elif name == "Dog":
+		image_id = 18
 		description = "[color=gray][b]Eliminate[/b][/color]: +{value} score for each [color=gray][b]Animal[/b][/color]. (Not affected by combos)"
 		category = "Animal"
 		price = 4
@@ -421,7 +451,7 @@ func setup(n : String):
 				Game.add_score(extra["value"] * targets.size(), Board.get_pos(coord), false)
 			)
 	elif name == "Cat":
-		image_id = 18
+		image_id = 19
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Jump to a cell and eliminate it within 2 [color=gray][b]Range[/b][/color]. Repeat 2 times."
 		category = "Animal"
 		price = 4
@@ -454,7 +484,7 @@ func setup(n : String):
 					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
 					bc = c
 	elif name == "Rooster":
-		image_id = 19
+		image_id = 20
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Activate all [color=gray][b]Animal[/b][/color] activater items."
 		category = "Animal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -481,7 +511,7 @@ func setup(n : String):
 							Board.activate(i, 0, 0, c, Board.ActiveReason.Item, self)
 				)
 	elif name == "Rabbit":
-		image_id = 20
+		image_id = 21
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Jump to a cell and eliminate it within 2 [color=gray][b]Range[/b][/color]. If jump to another 'Rabbit', add a new 'Rabbit' to Bag. Repeat 1 time."
 		extra["repeat"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -532,7 +562,7 @@ func setup(n : String):
 					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
 					bc = c
 	elif name == "Fox":
-		image_id = 21
+		image_id = 22
 		description = "[color=gray][b]Place[/b][/color]: If this item is placed from Bag, place another [color=gray][b]Animal[/b][/color] from Bag to Board."
 		category = "Animal"
 		tradeable = true
@@ -547,7 +577,7 @@ func setup(n : String):
 					Board.effect_place_item_from_bag(Board.get_pos(coord), item, Vector2i(-1, -1))
 		
 	elif name == "Eagle":
-		image_id = 22
+		image_id = 23
 		description = "[color=gray][b]Place[/b][/color]: Place another [color=gray][b]Animal[/b][/color] from Bag to Board."
 		category = "Animal"
 		on_place = func(coord : Vector2i, reason : int):
@@ -560,7 +590,7 @@ func setup(n : String):
 				
 				Board.effect_place_item_from_bag(Board.get_pos(coord), item, Vector2i(-1, -1))
 	elif name == "Mouse":
-		image_id = 23
+		image_id = 24
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Consume a [color=gray][b]Food[/b][/color] on the board, gain score it has."
 		category = "Animal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -583,7 +613,7 @@ func setup(n : String):
 				)
 				Board.item_moved(self, tween, coord, c)
 	elif name == "Horse":
-		image_id = 24
+		image_id = 25
 		description = "Turn mounted and this item into a new item."
 		category = "Animal"
 		mountable = "Character"
@@ -608,7 +638,7 @@ func setup(n : String):
 				return false
 			return true
 	elif name == "Elephant":
-		image_id = 25
+		image_id = 26
 		description = "Eliminate all cells this item traveled."
 		category = "Animal"
 		mountable = "Animal"
@@ -629,7 +659,7 @@ func setup(n : String):
 					)
 					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Hot Dog":
-		image_id = 26
+		image_id = 27
 		description = "[color=gray][b]Eliminate[/b][/color]: +{value} score. (Not affected by combos)"
 		category = "Food"
 		extra["value"] = 625
@@ -638,7 +668,7 @@ func setup(n : String):
 				Game.add_score(extra["value"], Board.get_pos(coord), false)
 			)
 	elif name == "Iai Cut":
-		image_id = 27
+		image_id = 28
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Eliminate a row on a random direction. (Eliminated by 'Iai Cut' will add one direction, Max 3)"
 		category = "Normal"
 		price = 5
@@ -689,7 +719,7 @@ func setup(n : String):
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Magnet":
-		image_id = 28
+		image_id = 29
 		description = "When an item is activated, move it to the closest 'Magnet'."
 		category = "Normal"
 		on_event = func(event : int, tween : Tween, data):
@@ -698,7 +728,7 @@ func setup(n : String):
 				SAnimation.move_to(null, sp, Board.get_pos(coord), 0.3)
 				data.second = coord
 	elif name == "Rainbow":
-		image_id = 29
+		image_id = 30
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] +0.5 score multipler this matching."
 		category = "Normal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -707,7 +737,7 @@ func setup(n : String):
 				Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":0.5})
 			)
 	elif name == "Idol":
-		image_id = 30
+		image_id = 31
 		description = "[color=gray][b]Aura[/b][/color]: All gems +3 score.\n[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Gems in 1 [color=gray][b]Range[/b][/color] get -1 score permanently."
 		category = "Character"
 		extra["value"] = 3
@@ -745,8 +775,8 @@ func setup(n : String):
 						Game.float_text("%d" % v, Board.get_pos(c), Color(0.8, 0.1, 0.0))
 			)
 	elif name == "Magician":
-		image_id = 31
-		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Turn 5 random gems to Wild."
+		image_id = 32
+		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Turn 5 random gems to [color=gray][b]Wild[/b][/color]."
 		category = "Character"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -768,12 +798,12 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					for c in targets:
-						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
+						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
 				)
 	elif name == "Merchant":
-		image_id = 32
+		image_id = 33
 	elif name == "Princess":
-		image_id = 32
+		image_id = 33
 		description = "[color=gray][b]Aura[/b][/color]: All gems +7 score.\n[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Gems in 1 [color=gray][b]Range[/b][/color] get +1 score permanently."
 		category = "Character"
 		extra["value"] = 7
@@ -810,7 +840,7 @@ func setup(n : String):
 						g.base_score += 1
 			)
 	elif name == "Mage":
-		image_id = 33
+		image_id = 34
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Turn gems in 1 [color=gray][b]Range[/b][/color] to Wild."
 		category = "Character"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -822,60 +852,60 @@ func setup(n : String):
 				for c in Board.offset_neighbors(coord):
 					var g = Board.get_gem_at(c)
 					if g:
-						Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
+						Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
 			)
 	elif name == "Ruby":
-		image_id = 34
+		image_id = 35
 		description = "[color=gray][b]Eliminate[/b][/color]: +1 base score to Red."
 		category = "Normal"
-		price = 9
+		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.modifiers["red_bouns_i"] += 1
 				Game.float_text("Red +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Red))
 			)
 	elif name == "Citrine":
-		image_id = 35
+		image_id = 36
 		description = "[color=gray][b]Eliminate[/b][/color]: +1 base score to Orange."
 		category = "Normal"
-		price = 9
+		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.modifiers["orange_bouns_i"] += 1
 				Game.float_text("Orange +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Orange))
 			)
 	elif name == "Emerald":
-		image_id = 36
+		image_id = 37
 		description = "[color=gray][b]Eliminate[/b][/color]: +1 base score to Green."
 		category = "Normal"
-		price = 9
+		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.modifiers["green_bouns_i"] += 1
 				Game.float_text("Green +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Green))
 			)
 	elif name == "Sapphire":
-		image_id = 37
+		image_id = 38
 		description = "[color=gray][b]Eliminate[/b][/color]: +1 base score to Blue."
 		category = "Normal"
-		price = 9
+		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.modifiers["blue_bouns_i"] += 1
 				Game.float_text("Blue +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Blue))
 			)
 	elif name == "Tourmaline":
-		image_id = 38
+		image_id = 39
 		description = "[color=gray][b]Eliminate[/b][/color]: +1 base score to Pink."
 		category = "Normal"
-		price = 9
+		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.modifiers["pink_bouns_i"] += 1
 				Game.float_text("Pink +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Pink))
 			)
 	elif name == "Strength Potion":
-		image_id = 39
+		image_id = 40
 		description = "[color=gray][b]Quick[/b][/color]: Target Item +10 [color=gray][b]Power[/b][/color]."
 		category = "Normal"
 		price = 4
@@ -886,13 +916,13 @@ func setup(n : String):
 				return true
 			return false
 	elif name == "Echo Totem":
-		image_id = 39
+		image_id = 41
 		description = "[color=gray][b]Aura[/b][/color]: All Item's repeat number +1."
 		category = "Normal"
 		price = 4
 		
 	elif name == "Volcano":
-		image_id = 40
+		image_id = 42
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Eliminate 2 random cells in 2 [color=gray][b]Range[/b][/color]. Repeat 2 times."
 		category = "Normal"
 		price = 5

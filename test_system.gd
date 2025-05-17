@@ -1,33 +1,41 @@
 extends Node
 
 @onready var timer : Timer = $/root/Main/TestTimer
-@onready var text : Label = $/root/Main/SubViewportContainer/SubViewport/UI/TestingText
+@onready var label : Label = $/root/Main/SubViewportContainer/SubViewport/UI/TestingText
 
-var filename : String
+# test 10 1 "" "" 1 1
 
-enum TaskType
+enum Mode
 {
-	AvgScore
+	AverageScore,
+	RealPlay
 }
 
 enum TaskSteps
 {
 	ToRoll,
 	ToMatch,
-	GetResult
+	GetResult,
+	ToShop
 }
 
+var filename : String
+var saving : String
+var additional_items : Array
+var additional_skills : Array
+var additional_patterns : Array
+var additional_relics : Array
+var mode : int
 var task_count : int
-var task_type : int
 var task_level_count : int
 var task_index : int:
 	set(v):
 		task_index = v
-		text.text = "Testing %d/%d" % [task_index + 1, task_count]
+		label.text = "Testing %d/%d" % [task_index + 1, task_count]
 var step : int
+var enable_shopping : bool = false
 var records : Array[TaskRecord]
 var testing : bool = false
-var multiple_test_args : Array[Dictionary] = []
 
 func get_formated_datetime():
 	var datetime = Time.get_datetime_string_from_system(false, true)
@@ -53,33 +61,30 @@ func write(s : String):
 	else:
 		print(s)
 
-func start_test(type : int, level_count : int, tasks : int, fn : String = ""):
-	AudioServer.set_bus_volume_db(SSound.sfx_bus_index, linear_to_db(0))
-	Game.base_animation_speed = 0.25
-	Game.animation_speed = Game.base_animation_speed
-	
-	task_count = tasks
-	task_type = type
-	task_level_count = level_count
-	task_index = 0
-	step = TaskSteps.ToRoll
-	
-	records.append(TaskRecord.new())
-	
-	if fn.is_empty():
-		filename = "res://test_%s.txt" % get_formated_datetime()
-		FileAccess.open(filename, FileAccess.WRITE)
-	elif fn == "console":
-		fn = ""
-	else:
-		filename = fn
-	
-	Game.start_game()
-	Game.new_level()
-	
+func start_game():
+	Game.start_game(saving)
+	for n in additional_items:
+		var i = Item.new()
+		i.setup(n)
+		Game.add_item(i)
+	for n in additional_skills:
+		var s = Skill.new()
+		s.setup(n)
+		Game.add_skill(s)
+	for n in additional_patterns:
+		var p = Pattern.new()
+		p.setup(n)
+		Game.add_pattern(p)
+	for n in additional_relics:
+		var r = Relic.new()
+		r.setup(n)
+		Game.add_relic(r)
+
+func write_game_status():
 	var cx = Board.cx
 	var cy = Board.cy
 	begin_write()
+	write("========Game Status========")
 	write("Board Size: %dx%d(%d cells)" % [cx, cy, cx * cy])
 	var red_num = 0
 	var orange_num = 0
@@ -102,117 +107,175 @@ func start_test(type : int, level_count : int, tasks : int, fn : String = ""):
 			items_str += ", "
 		items_str += i.name
 	write("Items: %s" % items_str)
+	var skills_str = ""
+	for s in Game.skills:
+		if !skills_str.is_empty():
+			skills_str += ", "
+		skills_str += s.name
+	write("Skills: %s" % skills_str)
 	var patterns_str = ""
 	for p in Game.patterns:
 		if !patterns_str.is_empty():
 			patterns_str += ", "
 		patterns_str += p.name
 	write("Patterns: %s" % patterns_str)
+	var relics_str = ""
+	for r in Game.relics:
+		if !relics_str.is_empty():
+			relics_str += ", "
+		relics_str += r.name
+	write("Relics: %s" % relics_str)
 	write("Rolls: %d" % Game.rolls_per_level)
 	write("Matches: %d" % Game.matches_per_level)
 	end_write()
+
+func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_skills : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], invincible : bool = true, _enable_shopping : bool = false):
+	AudioServer.set_bus_volume_db(SSound.sfx_bus_index, linear_to_db(0))
+	Game.performance_mode = true
+	Game.base_animation_speed = 0.25
+	Game.animation_speed = Game.base_animation_speed
+	
+	mode = _mode
+	task_count = _task_count
+	task_level_count = _level_count
+	task_index = 0
+	step = TaskSteps.ToRoll
+	
+	records.append(TaskRecord.new())
+	
+	if fn.is_empty():
+		filename = "res://test_%s.txt" % get_formated_datetime()
+		FileAccess.open(filename, FileAccess.WRITE)
+	elif fn == "console":
+		fn = ""
+	else:
+		filename = fn
+	
+	saving = _saving
+	additional_items = _additional_items
+	additional_skills = _additional_skills
+	additional_patterns = _additional_patterns
+	additional_relics = _additional_relics
+	Game.invincible = invincible
+	enable_shopping = _enable_shopping
+	
+	if Game.title_ui.visible:
+		Game.title_ui.hide()
+	start_game()
+	
+	write_game_status()
 	timer.start()
 	testing = true
-
-func next_test():
-	if !multiple_test_args.is_empty():
-		var args = multiple_test_args[0]
-		multiple_test_args.pop_front()
-		start_test(args["type"], args["level_count"], args["tasks"], args["fn"])
-
-func start_multiple_tests(args : Array[Dictionary]):
-	multiple_test_args = args
-	next_test()
+	label.show()
 
 func time_out():
-	match task_type:
-		TaskType.AvgScore:
-			if Game.stage == Game.Stage.Deploy:
-				if step == TaskSteps.ToRoll:
-					if Game.matches == 0 || Game.rolls == 0:
-						var curr_task = records.back()
-						if curr_task.levels.size() == task_level_count:
-							for l in curr_task.levels:
-								l.matchings.pop_back()
-							
-							begin_write()
-							write("======Task %d======" % task_index)
-							for i in curr_task.levels.size():
-								var curr_level = curr_task.levels[i]
-								write("====Level %d====" % (i + 1))
-								write("Level Score: %d, Level Combos: %d" % [curr_level.score, curr_level.combos])
-								for j in curr_level.matchings.size():
-									var curr_matching = curr_level.matchings[j]
-									write("Matching %d: %d score, %d combos" % [j, curr_matching.score, curr_matching.combos])
-							write("======Statics For %d Task(s)======" % (task_index + 1))
-							var head_str = ""
-							for i in task_level_count:
-								head_str += "\tLevel %d" % (i + 1)
-							write(head_str)
-							var max_matching_num = 0
-							var avg_line = "Avg\t"
+	if Game.stage == Game.Stage.Deploy:
+		if step == TaskSteps.ToRoll:
+			if Game.level_clear_ui.visible || Game.game_over_ui.visible:
+				var curr_task = records.back()
+				if curr_task.levels.size() == task_level_count || Game.game_over_ui.visible:
+					for l in curr_task.levels:
+						l.matchings.pop_back()
+					
+					if mode == Mode.AverageScore:
+						begin_write()
+						write("======Task %d======" % task_index)
+						for i in curr_task.levels.size():
+							var curr_level = curr_task.levels[i]
+							write("====Level %d====" % (i + 1))
+							write("Level Score: %d, Level Combos: %d" % [curr_level.score, curr_level.combos])
+							for j in curr_level.matchings.size():
+								var curr_matching = curr_level.matchings[j]
+								write("Matching %d: %d score, %d combos" % [j, curr_matching.score, curr_matching.combos])
+						write("======Statics For %d Task(s)======" % (task_index + 1))
+						var head_str = ""
+						for i in task_level_count:
+							head_str += "\tLevel %d" % (i + 1)
+						write(head_str)
+						var max_matching_num = 0
+						var avg_line = "Avg\t"
+						for i in task_level_count:
+							var score = 0
+							var combos = 0
+							for r in records:
+								var l = r.levels[i]
+								max_matching_num = max(max_matching_num, l.matchings.size())
+								for m in l.matchings:
+									score += m.score
+									combos += m.combos
+							avg_line += "%.1f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size()]
+						write(avg_line)
+						for j in max_matching_num:
+							var line = "Matching %d\t" % j
 							for i in task_level_count:
 								var score = 0
 								var combos = 0
 								for r in records:
+									if r.levels.size() <= i:
+										continue
 									var l = r.levels[i]
-									max_matching_num = max(max_matching_num, l.matchings.size())
-									for m in l.matchings:
-										score += m.score
-										combos += m.combos
-								avg_line += "%.1f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size()]
-							write(avg_line)
-							for j in max_matching_num:
-								var line = "Matching %d\t" % j
-								for i in task_level_count:
-									var score = 0
-									var combos = 0
-									for r in records:
-										if r.levels.size() <= i:
-											continue
-										var l = r.levels[i]
-										if l.matchings.size() <= j:
-											continue
-										var m = l.matchings[j]
-										score += m.score
-										combos += m.combos
-									line += "%.1f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size()]
-								write(line)
-							end_write()
-							
-							task_index += 1
-							if task_index == task_count:
-								timer.stop()
-								testing = false
-								if !multiple_test_args.is_empty():
-									var args = multiple_test_args[0]
-									multiple_test_args.pop_front()
-									start_test(args["type"], args["level_count"], args["tasks"], args["fn"])
-							else:
-								records.append(TaskRecord.new())
-								Game.start_game()
-								Game.new_level()
-						else:
-							curr_task.levels.append(LevelRecord.new())
-							Game.new_level()
+									if l.matchings.size() <= j:
+										continue
+									var m = l.matchings[j]
+									score += m.score
+									combos += m.combos
+								line += "%.1f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size()]
+							write(line)
+						end_write()
+					
+					task_index += 1
+					if task_index == task_count:
+						timer.stop()
+						testing = false
+						label.hide()
 					else:
-						step = TaskSteps.ToMatch
-						Game.roll()
-				elif step == TaskSteps.ToMatch:
-					if Game.matches > 0:
-						auto_place_items()
-						step = TaskSteps.GetResult
-						Game.play()
-				elif step == TaskSteps.GetResult:
-					var his = Game.history
-					var curr_level = records.back().levels.back()
-					var curr_record = curr_level.matchings.back()
-					curr_record.score = his.last_matching_score
-					curr_record.combos = his.last_matching_combos
-					curr_level.score += his.last_matching_score
-					curr_level.combos += his.last_matching_combos
-					curr_level.matchings.append(MatchingRecord.new())
-					step = TaskSteps.ToRoll
+						records.append(TaskRecord.new())
+						start_game()
+				else:
+					if mode == Mode.RealPlay:
+						begin_write()
+						write("======Level %d======" % curr_task.levels.size())
+						var curr_level = curr_task.levels.back()
+						write("Level Score: %d, Level Combos: %d" % [curr_level.score, curr_level.combos])
+						for j in curr_level.matchings.size():
+							var curr_matching = curr_level.matchings[j]
+							write("Matching %d: %d score, %d combos" % [j, curr_matching.score, curr_matching.combos])
+						end_write()
+					
+					curr_task.levels.append(LevelRecord.new())
+					if !enable_shopping:
+						Game.new_level()
+					else:
+						step = TaskSteps.ToShop
+						Game.level_clear_ui.continue_game()
+				
+				Game.level_clear_ui.hide()
+				Game.game_over_ui.hide()
+			else:
+				step = TaskSteps.ToMatch
+				Game.roll()
+		elif step == TaskSteps.ToMatch:
+			if Game.matches > 0:
+				auto_place_items()
+				step = TaskSteps.GetResult
+				Game.play()
+		elif step == TaskSteps.GetResult:
+			var his = Game.history
+			var curr_level = records.back().levels.back()
+			var curr_record = curr_level.matchings.back()
+			curr_record.score = his.last_matching_score
+			curr_record.combos = his.last_matching_combos
+			curr_level.score += his.last_matching_score
+			curr_level.combos += his.last_matching_combos
+			curr_level.matchings.append(MatchingRecord.new())
+			step = TaskSteps.ToRoll
+		elif step == TaskSteps.ToShop:
+			if Game.shop_ui.visible:
+				for i in 3:
+					Game.shop_ui.buy_randomly()
+				Game.shop_ui.continue_game()
+				step = TaskSteps.ToRoll
+				write_game_status()
 
 func auto_place_items():
 	if !Game.hand_ui.is_empty():

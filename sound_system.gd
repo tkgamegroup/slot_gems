@@ -14,6 +14,11 @@ extends Node
 @onready var sfx_brush : AudioStreamPlayer = $/root/Main/SFX/Brush
 @onready var sfx_vibra : AudioStreamPlayer = $/root/Main/SFX/Vibra
 @onready var sfx_bubble : AudioStreamPlayer = $/root/Main/SFX/Bubble
+@onready var sfx_open_bag : AudioStreamPlayer = $/root/Main/SFX/OpenBag
+@onready var sfx_close_bag : AudioStreamPlayer = $/root/Main/SFX/CloseBag
+@onready var sfx_drag_item : AudioStreamPlayer = $/root/Main/SFX/DragItem
+@onready var sfx_drop_item : AudioStreamPlayer = $/root/Main/SFX/DropItem
+@onready var sfx_skill : AudioStreamPlayer = $/root/Main/SFX/Skill
 @onready var sfx_explode : AudioStreamPlayer = $/root/Main/SFX/Explode
 @onready var sfx_lightning_connect : AudioStreamPlayer = $/root/Main/SFX/LightningConnect
 @onready var sfx_lightning_fail : AudioStreamPlayer = $/root/Main/SFX/LightningFail

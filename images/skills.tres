@@ -3,11 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_vxdsb"]
 [ext_resource type="Texture2D" uid="uid://btryuv74cbv8a" path="res://images/skills/xiao.png" id="2_gqq28"]
 [ext_resource type="Texture2D" uid="uid://chl3sh1rtkwbd" path="res://images/skills/roll.png" id="3_q1h6o"]
-[ext_resource type="Texture2D" uid="uid://1w3bo3iks1y5" path="res://images/skills/jiang.png" id="3_uejip"]
 [ext_resource type="Texture2D" uid="uid://c2b3mtj1uy0jp" path="res://images/skills/mat.png" id="4_oegy8"]
 [ext_resource type="Texture2D" uid="uid://bg16m88l18vdd" path="res://images/skills/huan.png" id="4_squ7h"]
 [ext_resource type="Texture2D" uid="uid://dcjxo7yx77pi8" path="res://images/skills/qiang.png" id="5_a4p7y"]
 [ext_resource type="Texture2D" uid="uid://chqp06qp8j4ra" path="res://images/skills/jin.png" id="5_fy13p"]
+[ext_resource type="Texture2D" uid="uid://b2tco3ovf0shs" path="res://images/skills/se.png" id="6_q1h6o"]
 [ext_resource type="Texture2D" uid="uid://bj52gtr8g6ccl" path="res://images/skills/chou.png" id="8_7pyfr"]
 [ext_resource type="Texture2D" uid="uid://b33fpc2tfcgns" path="res://images/skills/bao.png" id="10_j6brn"]
 [ext_resource type="Texture2D" uid="uid://ebsirg6xbkls" path="res://images/skills/fang.png" id="11_3pa4k"]
@@ -33,7 +33,7 @@ animations = [{
 "texture": ExtResource("5_a4p7y")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_uejip")
+"texture": ExtResource("6_q1h6o")
 }, {
 "duration": 1.0,
 "texture": ExtResource("4_squ7h")

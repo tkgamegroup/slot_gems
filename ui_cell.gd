@@ -4,6 +4,7 @@ extends Node2D
 @onready var item : AnimatedSprite2D = $Item
 @onready var item2 : AnimatedSprite2D = $Item2
 @onready var burn : Sprite2D = $Burn
+@onready var pinned : Sprite2D = $Pinned
 @onready var frozen : Sprite2D = $Frozen
 
 func set_gem_image(gem_type : int, gem_rune : int):

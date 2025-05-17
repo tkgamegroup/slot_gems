@@ -13,12 +13,25 @@ var cate : String
 var object
 var text : String
 var coins : int
+var callback : Callable
 
-func setup(_cate : String, _object, _text : String, _coins : int):
+func setup(_cate : String, _object, _text : String, _coins : int, _callback : Callable):
 	cate = _cate
 	object = _object
 	text = _text
 	coins = _coins
+	callback = _callback
+
+func buy():
+	if Game.coins < coins:
+		return false
+	SSound.sfx_coin.play()
+	Game.coins -= coins
+	callback.call()
+	
+	get_parent().remove_child(self)
+	self.queue_free()
+	return true
 
 func _ready() -> void:
 	if cate != "":
@@ -42,6 +55,11 @@ func _ready() -> void:
 	label.text = text
 	coin_text.text = "%dG" % coins
 	
+	gui_input.connect(func(event : InputEvent):
+		if event is InputEventMouseButton:
+			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+				buy()
+	)
 	mouse_entered.connect(func():
 		SSound.sfx_select.play()
 		base.position.y -= 10

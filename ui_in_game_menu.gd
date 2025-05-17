@@ -3,9 +3,7 @@ extends Control
 @onready var resume_button : Button = $VBoxContainer/Button
 @onready var options_button : Button = $VBoxContainer/Button2
 @onready var main_menu_button : Button = $VBoxContainer/Button3
-@onready var test_avg_score_button : Button = $VBoxContainer/Button4
-@onready var auto_place_items_button : Button = $VBoxContainer/Button5
-@onready var command_line : LineEdit = $VBoxContainer/LineEdit
+@onready var auto_place_items_button : Button = $VBoxContainer/Button4
 
 func enter():
 	STooltip.close()
@@ -35,30 +33,17 @@ func _ready() -> void:
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
-		var tween = Game.blocker_ui.enter(0.3, 1.0)
+		var tween = Game.get_tree().create_tween()
+		Game.begin_transition(tween)
 		tween.tween_callback(func():
 			Game.control_ui.exit()
 			Game.game_ui.hide()
 			Game.title_ui.enter()
-			Game.blocker_ui.exit(0.3)
 		)
-	)
-	test_avg_score_button.pressed.connect(func():
-		SSound.sfx_click.play()
-		STest.start_test(STest.TaskType.AvgScore, 1, 100)
-		#STest.start_multiple_tests([{"type":STest.TaskType.AvgScore,"level_count":1,"tasks":100,"fn":"","setup":"res://game_setup1.ini"}])
+		Game.end_transition(tween)
 	)
 	auto_place_items_button.pressed.connect(func():
 		SSound.sfx_click.play()
 		exit()
 		STest.auto_place_items()
-	)
-	command_line.text_submitted.connect(func(cl : String):
-		var tks = cl.split(" ", false)
-		if !tks.is_empty():
-			var cmd = tks[0]
-			if cmd == "test_matching":
-				var coord = Vector2i(int(tks[1]), int(tks[2]))
-				for p in Game.patterns:
-					p.match_with(coord)
 	)

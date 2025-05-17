@@ -16,7 +16,7 @@ func _ready() -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
 		bar_text.text = bar_str.substr(0, int(bar_str.length() * t))
-	, 0.0, 1.0, 0.5)
+	, 0.0, 1.0, 0.2)
 	tween.tween_callback(func():
 		value_text.show()
 	)

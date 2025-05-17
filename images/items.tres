@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=43 format=3 uid="uid://c18w0067lhwqr"]
+[gd_resource type="SpriteFrames" load_steps=44 format=3 uid="uid://c18w0067lhwqr"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_khjgj"]
 [ext_resource type="Texture2D" uid="uid://bpbwgcoq21dfi" path="res://images/items/bomb.png" id="1_qe4ah"]
@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://y3h3ck823tgj" path="res://images/items/ruby.png" id="16_8vf0g"]
 [ext_resource type="Texture2D" uid="uid://w0ddkb6yn7aa" path="res://images/items/citrine.png" id="17_wwmuq"]
 [ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/items/emerald.png" id="18_gf5hd"]
+[ext_resource type="Texture2D" uid="uid://k2klfv7m2pct" path="res://images/items/chloroplast.png" id="18_hiiw3"]
 [ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/items/sapphire.png" id="19_a3f8e"]
 [ext_resource type="Texture2D" uid="uid://ct17gsbjcvbge" path="res://images/items/eagle.png" id="20_rg331"]
 [ext_resource type="Texture2D" uid="uid://behfcr5jd04sj" path="res://images/items/rabbit.png" id="21_7oqg0"]
@@ -96,6 +97,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("8_s2n7v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_hiiw3")
 }, {
 "duration": 1.0,
 "texture": ExtResource("9_u665u")

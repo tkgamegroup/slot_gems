@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1w3bo3iks1y5"
-path="res://.godot/imported/jiang.png-2349572dd84a64da46efd21ad8890970.ctex"
+uid="uid://b2fgocjedd2j2"
+path="res://.godot/imported/height_map.png-a29d6f83584aa3022b3c038b26d5fd32.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/skills/jiang.png"
-dest_files=["res://.godot/imported/jiang.png-2349572dd84a64da46efd21ad8890970.ctex"]
+source_file="res://images/height_map.png"
+dest_files=["res://.godot/imported/height_map.png-a29d6f83584aa3022b3c038b26d5fd32.ctex"]
 
 [params]
 

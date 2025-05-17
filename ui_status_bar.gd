@@ -17,17 +17,11 @@ extends PanelContainer
 @onready var gear_button : Button = $HBoxContainer/HBoxContainer3/Gear
 
 func _ready() -> void:
-	score_text.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Score", "Current: %d\nTarget: %d\nMultipler: %.1f" % [Game.score, Game.target_score, Game.score_mult])])
-	)
-	score_text.mouse_exited.connect(func():
-		STooltip.close()
-	)
 	board_size_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new("Board Size", "The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2")])
 	)
 	hand_metrics_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Hand", "Max Items: 8\nStartup Draw Items: %d\nDraw Items Per Roll: %d" % [Game.startup_draws, Game.draws_per_roll])])
+		STooltip.show([Pair.new("Hand", "Startup Draw Items: %d\nDraw Items Per Roll: %d\nMax Items: 8" % [Game.startup_draws, Game.draws_per_roll])])
 	)
 	coin_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new("Your Coins", "")])
@@ -36,11 +30,12 @@ func _ready() -> void:
 		STooltip.close()
 	)
 	bag_button.pressed.connect(func():
-		SSound.sfx_click.play()
 		if !Game.bag_viewer_ui.visible:
 			STooltip.close()
+			SSound.sfx_open_bag.play()
 			Game.bag_viewer_ui.enter()
 		else:
+			SSound.sfx_close_bag.play()
 			Game.bag_viewer_ui.exit()
 	)
 	bag_button.mouse_entered.connect(func():

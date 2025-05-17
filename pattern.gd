@@ -6,7 +6,7 @@ const UiPattern = preload("res://ui_pattern.gd")
 
 var name : String
 var coords : Array[Vector3i]
-var price : int
+var price : int = 10
 var mult : int = 1
 var lv : int = 1
 var exp : int = 0
@@ -74,7 +74,7 @@ func match_with(off : Vector2i) -> Array[Vector2i]:
 	var colors = []
 	for c in ocoords:
 		var g = Board.get_gem_at(c)
-		if g && !Board.cell_at(c).frozen:
+		if g && g.type != Gem.Type.Colorless && !Board.cell_at(c).frozen:
 			colors.append(g.type)
 	if colors.size() < coords.size():
 		return [] as Array[Vector2i]

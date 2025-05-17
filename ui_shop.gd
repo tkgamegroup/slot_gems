@@ -27,13 +27,46 @@ func random_item(cands : Array, list):
 			return cands[idx]
 	return null
 
+func buy_expand_board():
+	if expand_board_button.button.disabled || Game.coins < expand_board_price:
+		return false
+	
+	SSound.sfx_coin.play()
+	Game.coins -= expand_board_price
+	
+	Game.board_size += 1
+	expand_board_price += expand_board_increase
+	expand_board_button.button.disabled = true
+	return true
+
+func buy_randomly():
+	if randf() < 0.5:
+		return buy_expand_board()
+	else:
+		if randi() % 2 < 1:
+			var item = list1.get_child(randi() % 4)
+			if item:
+				return item.buy()
+		else:
+			var item = list2.get_child(randi() % 4)
+			if item:
+				return item.buy()
+	return false
+
+func continue_game():
+	self.hide()
+	Game.new_level()
+
 func enter():
 	self.show()
 	
+	expand_board_button.price.text = "%d" % expand_board_price
+	expand_board_button.button.disabled = false if Game.board_size < 6 else true
+	
 	var tween = get_tree().create_tween()
 	
-	var items_pool = ["Bomb", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Bomb", "C4", "Chain Bomb", "Virus", "Lightning", "Color Palette", "Dog", "Cat", "Rooster", "Rabbit", "Fox", "Eagle", "Mouse", "Elephant", "Hot Dog", "Iai Cut"]
-	var relics_pool = ["Explosives", "Red Stone", "Orange Stone", "Green Stone", "Blue Stone", "Pink Stone", "Rock Bottom"]
+	var items_pool = ["Flag", "Bomb", "C4", "Chain Bomb", "Minefield", "Echo Stone", "Virus", "Lightning", "Color Palette", "Black Hole", "White Hole", "Dog", "Cat", "Rooster", "Rabbit", "Fox", "Eagle", "Mouse", "Elephant", "Hot Dog", "Iai Cut", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
+	var relics_pool = ["Explosion Science", "High Explosives", "Uniform Blasting", "Sympathetic Detonation", "Blocked Lever", "Mobius Strip", "Premeditation", "Pentagram Power", "Red Stone", "Orange Stone", "Green Stone", "Blue Stone", "Pink Stone", "Rock Bottom"]
 	var skills_pool = ["Xiao", "RoLL", "Mat.", "Qiang", "Jiang", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
 	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	
@@ -50,29 +83,18 @@ func enter():
 			var ui = item_pb.instantiate()
 			var item = Item.new()
 			item.setup(items_pool.pick_random())
-			ui.setup("Item", item, "", item.price)
-			ui.gui_input.connect(func(event : InputEvent):
-				if event is InputEventMouseButton:
-					if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-						if Game.coins < item.price:
-							return
-						
-						SSound.sfx_coin.play()
-						Game.coins -= item.price
-						
-						var img = ui.image
-						img.reparent(self)
-						ui.get_parent().remove_child(ui)
-						ui.queue_free()
-						
-						var tween2 = Game.get_tree().create_tween()
-						tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-						tween2.parallel()
-						SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
-						tween2.tween_callback(func():
-							Game.add_item(item)
-							img.queue_free()
-						)
+			ui.setup("Item", item, "", item.price, func():
+				var img = ui.image
+				img.reparent(self)
+				
+				var tween2 = Game.get_tree().create_tween()
+				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+				tween2.parallel()
+				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+				tween2.tween_callback(func():
+					Game.add_item(item)
+					img.queue_free()
+				)
 			)
 			list1.add_child(ui)
 		)
@@ -84,29 +106,18 @@ func enter():
 				var ui = item_pb.instantiate()
 				var relic = Relic.new()
 				relic.setup(name)
-				ui.setup("Relic", relic, "", relic.price)
-				ui.gui_input.connect(func(event : InputEvent):
-					if event is InputEventMouseButton:
-						if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-							if Game.coins < relic.price:
-								return
-							
-							SSound.sfx_coin.play()
-							Game.coins -= relic.price
-							
-							var img = ui.image
-							img.reparent(self)
-							ui.get_parent().remove_child(ui)
-							ui.queue_free()
-							
-							var tween2 = Game.get_tree().create_tween()
-							tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-							tween2.parallel()
-							SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
-							tween2.tween_callback(func():
-								Game.add_relic(relic)
-								img.queue_free()
-							)
+				ui.setup("Relic", relic, "", relic.price, func():
+					var img = ui.image
+					img.reparent(self)
+					
+					var tween2 = Game.get_tree().create_tween()
+					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+					tween2.parallel()
+					SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+					tween2.tween_callback(func():
+						Game.add_relic(relic)
+						img.queue_free()
+					)
 				)
 				list2.add_child(ui)
 		)
@@ -118,12 +129,8 @@ func enter():
 				var ui = item_pb.instantiate()
 				var skill = Skill.new()
 				skill.setup(name)
-				ui.setup("Skill", skill, "", skill.price)
-				ui.gui_input.connect(func(event : InputEvent):
-					if event is InputEventMouseButton:
-						if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-							if Game.coins < skill.price:
-								return
+				ui.setup("Skill", skill, "", skill.price, func():
+					Game.add_skill(skill)
 				)
 				list2.add_child(ui)
 		)
@@ -135,12 +142,8 @@ func enter():
 				var ui = item_pb.instantiate()
 				var pattern = Pattern.new()
 				pattern.setup(name)
-				ui.setup("Pattern", pattern, "", pattern.price)
-				ui.gui_input.connect(func(event : InputEvent):
-					if event is InputEventMouseButton:
-						if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-							if Game.coins < pattern.price:
-								return
+				ui.setup("Pattern", pattern, "", pattern.price, func():
+					Game.add_pattern(pattern)
 				)
 				list2.add_child(ui)
 		)
@@ -148,35 +151,11 @@ func enter():
 func _ready() -> void:
 	exit_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		self.hide()
-		Game.new_level()
+		continue_game()
 	)
 	#exit_button.mouse_entered.connect(SSound.sfx_select.play)
-	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.pressed.connect(func():
-		if Game.coins < expand_board_price:
-			return
-		
-		SSound.sfx_coin.play()
-		Game.coins -= expand_board_price
-		
-		Game.blocker_ui.enter(0.2)
-		var lb = Label.new()
-		lb.text = "Board Size: %d -> %d" % [Game.board_size, Game.board_size + 1]
-		lb.add_theme_font_size_override("font_size", 64)
-		Game.blocker_ui.add_child(lb)
-		lb.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
-		
-		var tween = get_tree().create_tween()
-		tween.tween_interval(0.8)
-		tween.tween_callback(func():
-			Game.blocker_ui.exit(0.2)
-		)
-		tween.tween_interval(0.2)
-		tween.tween_callback(func():
-			lb.queue_free()
-			Game.board_size += 1
-		)
+		buy_expand_board()
 	)
 	add_gems_button.button.pressed.connect(func():
 		if Game.coins < 2:

@@ -10,8 +10,9 @@ enum Type
 	Green,
 	Blue,
 	Pink,
+	Colorless,
 	Wild,
-	Count = 6
+	Count = 7
 }
 
 enum Rune
@@ -42,6 +43,7 @@ static func type_name(t : int):
 		Type.Green: return "Green"
 		Type.Blue: return "Blue"
 		Type.Pink: return "Pink"
+		Type.Colorless: return "Colorless"
 		Type.Wild: return "Wild"
 	return ""
 
@@ -53,6 +55,7 @@ static func name_to_type(s : String):
 		"Green": return Type.Green
 		"Blue": return Type.Blue
 		"Pink": return Type.Pink
+		"Colorless": return Type.Colorless
 		"Wild": return Type.Wild
 
 static func type_color(t : int) -> Color:
@@ -72,6 +75,7 @@ static func type_img(t : int):
 		Type.Green: return "res://images/green.png"
 		Type.Blue: return "res://images/blue.png"
 		Type.Pink: return "res://images/pink.png"
+		Type.Colorless: return "res://images/colorless.png"
 	return ""
 
 static func rune_name(r : int):
@@ -96,12 +100,13 @@ func get_base_score():
 		Type.Green: ret += Game.modifiers["green_bouns_i"]
 		Type.Blue: ret += Game.modifiers["blue_bouns_i"]
 		Type.Pink: ret += Game.modifiers["pink_bouns_i"]
+		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["pink_bouns_i"]
 	return ret
 
 func get_name():
 	var b = Buff.find_typed(self, Buff.Type.ChangeColor)
 	if b:
-		return "[color=GRAY][s]%s[/s][/color] %s (%s)" % [type_name(b.data["original_color"]), type_name(type), rune_name(rune)]
+		return "[color=GRAY][s]%s[/s][/color] %s (%s)" % [type_name(b.data["original_color_i"]), type_name(type), rune_name(rune)]
 	return "%s (%s)" % [type_name(type), rune_name(rune)]
 
 func get_description():

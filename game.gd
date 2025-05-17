@@ -2,7 +2,6 @@ extends Node
 
 enum Stage
 {
-	Preparing,
 	Deploy,
 	Rolling,
 	Matching
@@ -15,6 +14,10 @@ enum Props
 	Activate,
 	Grab
 }
+
+const version_major : int = 1
+const version_minor : int = 0
+const version_patch : int = 2
 
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
@@ -34,16 +37,17 @@ const UiLevelClear = preload("res://ui_level_clear.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
 const UiBagViewer = preload("res://ui_bag_viewer.gd")
 const popup_txt_pb = preload("res://popup_txt.tscn")
-const relic_ui = preload("res://ui_relic.tscn")
+const mask_shader = preload("res://mask.gdshader")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
 const activate_cursor = preload("res://images/magic_stick.png")
 const grab_cursor = preload("res://images/grab.png")
 
-@onready var background = $/root/Main/Background
+@onready var background : Node2D = $/root/Main/SubViewportContainer/SubViewport/Background
 @onready var bg_shader : ShaderMaterial = background.material
+@onready var crt : Control = $/root/Main/PostProcessing/ColorRect
+@onready var trans_sp : AnimatedSprite2D = $/root/Main/TransBG/Control/AnimatedSprite2D
 @onready var subviewport_container = $/root/Main/SubViewportContainer
-@onready var mask_shader : ShaderMaterial = subviewport_container.material
 @onready var subviewport = $/root/Main/SubViewportContainer/SubViewport
 @onready var board_ui : UiBoard = $/root/Main/SubViewportContainer/SubViewport/UI/Board
 @onready var title_ui : UiTitle = $/root/Main/SubViewportContainer/SubViewport/UI/Title
@@ -121,9 +125,9 @@ var board_size : int = 0:
 var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
-var unused_gems : Array[Gem] = []
+var bag_gems : Array[Gem] = []
 var items : Array[Item]
-var unused_items : Array[Item] = []
+var bag_items : Array[Item] = []
 var relics : Array[Relic]
 var event_listeners : Array[Hook]
 var score : int:
@@ -169,6 +173,17 @@ var modifiers : Dictionary
 
 var base_animation_speed = 1.0
 var animation_speed = base_animation_speed
+var invincible : bool = false
+var performance_mode : bool = false:
+	set(v):
+		if performance_mode != v:
+			performance_mode = v
+			if !performance_mode:
+				background.show()
+				crt.show()
+			else:
+				background.hide()
+				crt.hide()
 
 func set_props(t : int):
 	props = t
@@ -202,15 +217,15 @@ func add_gem(g : Gem, boardcast : bool = true):
 
 func get_gem(g : Gem = null):
 	if g:
-		unused_gems.erase(g)
+		bag_gems.erase(g)
 		return g
-	return SMath.pick_and_remove(unused_gems)
+	return SMath.pick_and_remove(bag_gems)
 
 func release_gem(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
 	Buff.clear_if_not(g, Buff.Duration.Eternal)
-	unused_gems.append(g)
+	bag_gems.append(g)
 
 func sort_gems():
 	gems.sort_custom(func(a, b):
@@ -240,9 +255,9 @@ func add_item(i : Item, boardcast : bool = true):
 
 func get_item(i : Item = null):
 	if i:
-		unused_items.erase(i)
+		bag_items.erase(i)
 		return i
-	return SMath.pick_and_remove(unused_items)
+	return SMath.pick_and_remove(bag_items)
 
 func release_item(i : Item):
 	if i.is_duplicant:
@@ -252,7 +267,7 @@ func release_item(i : Item):
 		i.mounted = null
 	i.coord = Vector2i(-1, -1)
 	Buff.clear_if_not(i, Buff.Duration.Eternal)
-	unused_items.append(i)
+	bag_items.append(i)
 
 func add_skill(s : Skill, boardcast : bool = true):
 	if boardcast:
@@ -276,9 +291,8 @@ func add_relic(r : Relic, boardcast : bool = true):
 		for h in event_listeners:
 			if h.event == Event.GainRelic:
 				h.host.on_event.call(Event.GainRelic, null, r)
-	var ui = relic_ui.instantiate()
-	ui.setup(r)
-	relics_bar_ui.add_child(ui)
+	relics.append(r)
+	relics_bar_ui.add_ui(r)
 
 func has_relic(n : String):
 	for r in relics:
@@ -356,6 +370,7 @@ func get_level_score(lv : int):
 		6: return 360000000
 		7: return 450000000
 		8: return 600000000
+	return 1000000000
 
 func begin_busy():
 	control_ui.roll_button.disabled = true
@@ -368,14 +383,48 @@ func end_busy():
 	control_ui.match_button.disabled = false
 	hand_ui.disabled = false
 
+func begin_transition(tween : Tween):
+	trans_sp.sprite_frames = null
+	trans_sp.frame = 0
+	var mat = ShaderMaterial.new()
+	mat.shader = mask_shader
+	Game.subviewport_container.material = mat
+	tween.tween_method(func(t):
+		mat.set_shader_parameter("radius", t)
+	, 0.0, 3.2, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+
+func end_transition(tween : Tween):
+	var mat = Game.subviewport_container.material
+	tween.tween_callback(func():
+		match randi() % 2:
+			0: 
+				trans_sp.sprite_frames = Item.item_frames
+				trans_sp.frame = randi_range(1, 41)
+			1: 
+				trans_sp.sprite_frames = Relic.relic_frames
+				trans_sp.frame = randi_range(1, 14)
+		trans_sp.scale = Vector2(0.0, 0.0)
+	)
+	tween.tween_property(trans_sp, "scale", Vector2(3.0, 3.0), 0.4).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_method(func(t):
+		mat.set_shader_parameter("radius", t)
+	, 3.2, 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		Game.subviewport_container.material = null
+	)
+
 func start_game(saving : String = ""):
 	board_size = 3
 	skills.clear()
 	skills_bar_ui.clear()
 	patterns.clear()
 	patterns_bar_ui.clear()
+	relics.clear()
+	relics_bar_ui.clear()
 	gems.clear()
+	bag_gems.clear()
 	items.clear()
+	bag_items.clear()
 	
 	Buff.clear(Game, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.ThisLevel, Buff.Duration.Eternal])
 	event_listeners.clear()
@@ -386,12 +435,19 @@ func start_game(saving : String = ""):
 	modifiers["green_bouns_i"] = 0
 	modifiers["blue_bouns_i"] = 0
 	modifiers["pink_bouns_i"] = 0
-	modifiers["explode_range_i"] = 0
-	modifiers["explode_power_i"] = 0
+	modifiers["first_roll_i"] = 0
+	modifiers["first_match_i"] = 0
 	modifiers["base_combo_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
+	modifiers["explode_range_i"] = 0
+	modifiers["explode_power_i"] = 0
 	
 	if saving == "":
+		score = 0
+		target_score = 0
+		score_mult = 1.0
+		combos = modifiers["base_combo_i"]
+		level = 0
 		rolls_per_level = 4
 		matches_per_level = 3
 		startup_draws = 5
@@ -401,9 +457,9 @@ func start_game(saving : String = ""):
 		grabs_num_per_level = 0
 		coins = 10
 		
-		for i in 1:
+		for i in 0:
 			var s = Skill.new()
-			s.setup("Xiao")
+			s.setup("Bao")
 			add_skill(s)
 		
 		for i in 1:
@@ -425,12 +481,10 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		'''
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Blue Stone")
 			add_relic(r)
-		'''
 		
 		for i in 72:
 			var g = Gem.new()
@@ -528,11 +582,11 @@ func start_game(saving : String = ""):
 			var item = Item.new()
 			item.setup("Dye: Pink")
 			add_item(item)
-		'''
 		for i in 1:
 			var item = Item.new()
-			item.setup("Bomb")
+			item.setup("Chloroplast")
 			add_item(item)
+		'''
 		for i in 1:
 			var item = Item.new()
 			item.setup("Minefield")
@@ -543,37 +597,43 @@ func start_game(saving : String = ""):
 			add_item(item)
 		'''
 	
-		level = 0
 		history.init()
-		Board.setup(board_size)
+		new_level()
 	else:
 		load_from_file(saving)
+		control_ui.enter()
+		history.init()
 	
 	game_ui.show()
-	control_ui.enter()
 
 func new_level():
 	score = 0
 	level += 1
 	target_score = get_level_score(level) * 1
-	
-	stage = Stage.Preparing
+	history.level_reset()
 	
 	set_props(Props.None)
 	rolls = rolls_per_level
 	matches = matches_per_level
-	
-	hand_ui.setup()
+	modifiers["first_roll_i"] = 1
+	modifiers["first_match_i"] = 1
 	
 	if level_clear_ui.visible:
 		level_clear_ui.exit()
 	if game_over_ui.visible:
 		game_over_ui.exit()
-	control_ui.enter()
 	
 	for h in event_listeners:
 		if h.event == Event.LevelBegan:
 			h.host.on_event.call(Event.LevelBegan, null, null)
+	
+	Board.setup(board_size)
+	hand_ui.cleanup()
+	control_ui.enter()
+	
+	save_to_file()
+	stage = Stage.Deploy
+	end_busy()
 
 func level_end():
 	set_props(Props.None)
@@ -586,8 +646,11 @@ func roll():
 		score_mult = 1.0
 		animation_speed = base_animation_speed
 		Board.roll()
-		for i in draws_per_roll:
+		var draw_num = startup_draws if modifiers["first_roll_i"] == 1 else draws_per_roll
+		draw_num = min(draw_num, bag_items.size())
+		for i in draw_num:
 			hand_ui.draw()
+		modifiers["first_roll_i"] = 0
 		begin_busy()
 		history.rolls += 1
 
@@ -595,6 +658,7 @@ func play():
 	if matches > 0:
 		stage = Stage.Matching
 		matches -= 1
+		modifiers["first_match_i"] = 0
 		begin_busy()
 		Board.matching()
 
@@ -674,10 +738,10 @@ func save_to_file(name : String = "1"):
 		gem["buffs"] = buffs
 		gems.append(gem)
 	data["gems"] = gems
-	var unused_gems = []
-	for g in Game.unused_gems:
-		unused_gems.append(Game.gems.find(g))
-	data["unused_gems"] = unused_gems
+	var bag_gems = []
+	for g in Game.bag_gems:
+		bag_gems.append(Game.gems.find(g))
+	data["bag_gems"] = bag_gems
 	var items = []
 	for i in Game.items:
 		var item = {}
@@ -697,10 +761,10 @@ func save_to_file(name : String = "1"):
 		item["extra"] = i.extra.duplicate()
 		items.append(item)
 	data["items"] = items
-	var unused_items = []
-	for i in Game.unused_items:
-		unused_items.append(Game.items.find(i))
-	data["unused_items"] = unused_items
+	var bag_items = []
+	for i in Game.bag_items:
+		bag_items.append(Game.items.find(i))
+	data["bag_items"] = bag_items
 	var skills = []
 	for s in Game.skills:
 		var skill = {}
@@ -748,12 +812,14 @@ func save_to_file(name : String = "1"):
 		cells.append(cell)
 	data["cells"] = cells
 	
-	var file = FileAccess.open("res://saves/save%s.json" % name, FileAccess.WRITE)
-	file.store_string(JSON.stringify(data))
+	var file = FileAccess.open("user://save%s.json" % name, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data, "\t", false))
 	file.close()
 
 func load_from_file(name : String = "1"):
-	var file = FileAccess.open("res://saves/save%s.json" % name, FileAccess.READ)
+	print("load save %s\n" % name)
+	
+	var file = FileAccess.open("user://save%s.json" % name, FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
 	file.close()
 	
@@ -811,9 +877,9 @@ func load_from_file(name : String = "1"):
 			var b = load_buff.call(buff, g)
 			g.buffs.append(b)
 		add_gem(g, false)
-	var unused_gems = data["unused_gems"]
-	for idx in unused_gems:
-		Game.unused_gems.append(Game.gems[idx])
+	var bag_gems = data["bag_gems"]
+	for idx in bag_gems:
+		Game.bag_gems.append(Game.gems[idx])
 	var items = data["items"]
 	for item in items:
 		var i = Item.new()
@@ -829,6 +895,9 @@ func load_from_file(name : String = "1"):
 			i.buffs.append(b)
 		i.extra = SUtils.read_dictionary(item["extra"])
 		add_item(i, false)
+	var bag_items = data["bag_items"]
+	for idx in bag_items:
+		Game.bag_items.append(Game.items[idx])
 	var skills = data["skills"]
 	for skill in skills:
 		var s = Skill.new()
@@ -976,11 +1045,11 @@ func _ready() -> void:
 				if processed:
 					break
 		if !processed:
-			combos = 0
-			stage = Stage.Deploy
 			history.update()
-			save_to_file()
+			combos = modifiers["base_combo_i"]
+			stage = Stage.Deploy
 			animation_speed = base_animation_speed
+			save_to_file()
 			
 			Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 			for y in Board.cy:
@@ -993,10 +1062,13 @@ func _ready() -> void:
 					if i:
 						Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 			
-			if matches == 0 && score < target_score && !STest.testing:
+			if matches == 0 && score < target_score:
 				level_end()
-				game_over_ui.enter()
-			elif score >= target_score && !STest.testing:
+				if invincible:
+					level_clear_ui.enter()
+				else:
+					game_over_ui.enter()
+			elif score >= target_score:
 				level_end()
 				level_clear_ui.enter()
 			else:
@@ -1013,9 +1085,4 @@ func _ready() -> void:
 						Board.set_gem_at(c1, g0)
 						Board.matching()
 						grabs_num -= 1
-	)
-	hand_ui.setup_finished.connect(func():
-		stage = Stage.Deploy
-		save_to_file()
-		control_ui.roll_button.disabled = false
 	)

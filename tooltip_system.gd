@@ -41,6 +41,8 @@ func show(contents : Array[Pair], delay : float = 0.05):
 	tween.tween_callback(func():
 		var words = []
 		for c in contents:
+			if c.second.find("[b]Colorless[/b]") != -1 || c.first.find("Colorless") != -1:
+				process_word("Colorless", words, "Can not match with any color.")
 			if c.second.find("[b]Wild[/b]") != -1 || c.first.find("Wild") != -1:
 				process_word("Wild", words, "Can match with any color.")
 			if c.second.find("[b]Eliminate[/b]") != -1:

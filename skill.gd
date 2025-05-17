@@ -9,7 +9,7 @@ var name : String
 var description : String
 var image_id : int
 var requirements : Array[int]
-var price : int
+var price : int = 10
 var extra = {}
 var on_cast : Callable
 var on_event : Callable
@@ -86,21 +86,36 @@ func setup(n : String):
 			)
 	elif name == "Qiang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Kou, Gem.Rune.Zhe]
-		description = "+1 base score to a random color."
+		description = "+1 base score to a random gem."
 		image_id = 4
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
 				pass
 			)
-	elif name == "Jiang":
+	elif name == "Se":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Cha]
-		description = "+{value} score. (Not affected by combos)"
+		description = "Turn 2 random gems to [color=gray][b]Wild[/b][/color]."
 		image_id = 5
-		extra["value"] = 500
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
-				Game.add_score(extra["value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
-			)
+				var cands = Board.filter(func(gem : Gem, item : Item):
+					if gem && gem.type != Gem.Type.Wild:
+						return true
+					return false
+				)
+				if !cands.is_empty():
+					var pos = ui.get_global_rect().get_center()
+					var targets = SMath.pick_n(cands, 2) 
+					tween.tween_callback(func():
+						for c in targets:
+							SEffect.add_leading_line(pos, Board.get_pos(c))
+					)
+					tween.tween_interval(0.3)
+					tween.tween_callback(func():
+						for c in targets:
+							Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
+					)
+				)
 	elif name == "Huan":
 		requirements = [Gem.Rune.Kou, Gem.Rune.Kou, Gem.Rune.Kou]
 		description = "Place an item from Bag to Board."
@@ -126,15 +141,16 @@ func setup(n : String):
 			)
 	elif name == "Bao":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Kou, Gem.Rune.Cha]
-		description = "Explode and eliminate cells in 1 Range at random location."
+		description = "Explode and eliminate cells in {range_i} [color=gray][b]Range[/b][/color] at random location."
 		image_id = 9
+		extra["range_i"] = 0
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Skill, 0, coords[1], Board.ActiveReason.Skill, self)
 			)
 		on_active = func(effect_index : int, c : Vector2i, tween : Tween):
 			var target = Vector2i(randi_range(0, Board.cx - 1), randi_range(0, Board.cy - 1))
-			Board.effect_explode(ui.get_global_rect().get_center(), target, 1, 0, tween)
+			Board.effect_explode(ui.get_global_rect().get_center(), target, extra["range_i"], 0, tween)
 	elif name == "Fang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Cha]
 		description = "Duplicate 1 Item on Board to random location."
@@ -168,11 +184,13 @@ func setup(n : String):
 			)
 	elif name == "Fen":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Zhe, Gem.Rune.Zhe]
-		description = "Get 10% score of the target score."
+		description = "Get {percentage}% target score +{basic_value} score. (Not affected by combos)"
 		image_id = 11
+		extra["percentage"] = 2
+		extra["basic_value"] = 500
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
-				Game.add_score(int(Game.target_score * 0.1), ui.get_global_rect().get_center() + Vector2(84, 0), false)
+				Game.add_score(int(Game.target_score * (0.01 * extra["percentage"])) + extra["basic_value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
 			)
 	elif name == "Xing":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Cha, Gem.Rune.Cha]

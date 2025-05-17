@@ -1,0 +1,44 @@
+Board Size: 18x6(108 cells)
+Red: 216, Orange: 216, Green: 216, Blue: 216, Pink: 216, Wild: 0
+Items: Dye: Red, Dye: Orange, Dye: Green, Dye: Blue, Dye: Pink
+Skills: 
+Patterns: \, I, /
+Relics: 
+Rolls: 4
+Matches: 3
+======Task 0======
+====Level 1====
+Level Score: 544, Level Combos: 0
+Matching 0: 160 score, 0 combos
+Matching 1: 336 score, 0 combos
+Matching 2: 48 score, 0 combos
+======Statics For 1 Task(s)======
+	Level 1
+Avg	544.0,0.00	
+Matching 0	160.0,0.00	
+Matching 1	336.0,0.00	
+Matching 2	48.0,0.00	
+======Task 1======
+====Level 1====
+Level Score: 544, Level Combos: 0
+Matching 0: 448 score, 0 combos
+Matching 1: 48 score, 0 combos
+Matching 2: 48 score, 0 combos
+======Statics For 2 Task(s)======
+	Level 1
+Avg	544.0,0.00	
+Matching 0	304.0,0.00	
+Matching 1	192.0,0.00	
+Matching 2	48.0,0.00	
+======Task 2======
+====Level 1====
+Level Score: 352, Level Combos: 0
+Matching 0: 240 score, 0 combos
+Matching 1: 96 score, 0 combos
+Matching 2: 16 score, 0 combos
+======Statics For 3 Task(s)======
+	Level 1
+Avg	480.0,0.00	
+Matching 0	282.7,0.00	
+Matching 1	160.0,0.00	
+Matching 2	37.3,0.00	

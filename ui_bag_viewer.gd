@@ -104,7 +104,7 @@ func exit():
 
 func _ready() -> void:
 	close_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.sfx_close_bag.play()
 		exit()
 	)
 	comfirm_button.pressed.connect(func():

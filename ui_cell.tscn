@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://cpv0mxnsh1ct3"]
+[gd_scene load_steps=7 format=3 uid="uid://cpv0mxnsh1ct3"]
 
 [ext_resource type="Script" uid="uid://bwcptmt32c0ay" path="res://ui_cell.gd" id="1_c8dfl"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_sxxmi"]
 [ext_resource type="Texture2D" uid="uid://cm6ylnaxbthm4" path="res://images/burning.png" id="3_0hnpo"]
 [ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="3_cy07b"]
+[ext_resource type="Texture2D" uid="uid://bhcfbybb53f87" path="res://images/pined.png" id="5_qcpuj"]
 [ext_resource type="Texture2D" uid="uid://csgetbs60orud" path="res://images/frozen.png" id="5_v5bqx"]
 
 [node name="UiCell" type="Node2D"]
@@ -22,6 +23,10 @@ offset = Vector2(8, 8)
 [node name="Burn" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("3_0hnpo")
+
+[node name="Pinned" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("5_qcpuj")
 
 [node name="Frozen" type="Sprite2D" parent="."]
 visible = false

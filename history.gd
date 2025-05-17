@@ -17,6 +17,10 @@ func init():
 	last_matching_combos = 0
 	rolls = 0
 
+func level_reset():
+	last_matching_score = 0
+	previous_score = 0
+
 func update():
 	last_matching_score = Game.score - previous_score
 	if last_matching_score > max_matching_score:

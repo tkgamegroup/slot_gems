@@ -7,7 +7,7 @@ const relic_frames : SpriteFrames = preload("res://images/relics.tres")
 var name : String
 var image_id : int
 var description : String
-var price : int
+var price : int = 10
 var extra : Dictionary
 
 var on_event : Callable
@@ -115,6 +115,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
+					Game.combos = max(4, Game.combos)
 					Game.modifiers["base_combo_i"] = 4
 	elif name == "Pentagram Power":
 		image_id = 8
@@ -129,7 +130,7 @@ func setup(n : String):
 	elif name == "Red Stone":
 		image_id = 9
 		description = "Red gems' base score +{value}."
-		extra["value"] = 4
+		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -137,7 +138,7 @@ func setup(n : String):
 	elif name == "Orange Stone":
 		image_id = 10
 		description = "Orange gems' base score +{value}."
-		extra["value"] = 4
+		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -145,7 +146,7 @@ func setup(n : String):
 	elif name == "Green Stone":
 		image_id = 11
 		description = "Green gems' base score +{value}."
-		extra["value"] = 4
+		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -153,7 +154,7 @@ func setup(n : String):
 	elif name == "Blue Stone":
 		image_id = 12
 		description = "Blue gems' base score +{value}."
-		extra["value"] = 4
+		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -161,7 +162,7 @@ func setup(n : String):
 	elif name == "Pink Stone":
 		image_id = 13
 		description = "Pink gems' base score +{value}."
-		extra["value"] = 4
+		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:

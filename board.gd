@@ -25,6 +25,7 @@ var cells : Array[Cell]
 const roll_speed : Curve = preload("res://roll_speed.tres")
 const particles_pb = preload("res://particles.tscn")
 const active_effect_pb = preload("res://active_effect.tscn")
+const black_bg = preload("res://images/black_bg.png")
 
 var num_tasks : int
 var show_coords : bool = false
@@ -156,11 +157,18 @@ func set_gem_at(c : Vector2i, g : Gem):
 			h.host.on_event.call(Event.GemLeft, null, og)
 		Game.release_gem(og)
 	cell.gem = g
+	var ui = Game.get_cell_ui(c)
 	if g:
 		g.coord = c
 		for h in event_listeners:
 			h.host.on_event.call(Event.GemEntered, null, g)
-	Game.get_cell_ui(c).set_gem_image(g.type if g else 0, g.rune if g else 0)
+		ui.set_gem_image(g.type, g.rune)
+	else:
+		ui.set_gem_image(0, 0)
+		cell.pinned = false
+		cell.frozen = false
+		ui.pinned.hide()
+		ui.frozen.hide()
 	return og
 
 func get_item_at(c : Vector2i):
@@ -240,7 +248,6 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 		ui.gem.position = Vector2(0, 0)
 		ui.gem.scale = Vector2(1, 1)
 		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
-		ui.frozen.hide()
 		ui.burn.hide()
 	elif s == Cell.State.Consumed:
 		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
@@ -293,10 +300,27 @@ func gem_score_at(c : Vector2i):
 	return g.get_base_score() + g.bonus_score
 
 func pin(c : Vector2i):
-	pass
+	c = format_coord(c)
+	if !is_valid(c):
+		return false
+	var idx = c.y * cx + c.x
+	var cell = cells[idx]
+	if cell.pinned || cell.frozen:
+		return false
+	if get_gem_at(c):
+		var ui = Game.get_cell_ui(c)
+		ui.pinned.show()
+		cell.pinned = true
+		return true
 
 func unpin(c : Vector2i):
-	pass
+	c = format_coord(c)
+	if !is_valid(c):
+		return false
+	var idx = c.y * cx + c.x
+	var ui = Game.get_cell_ui(c)
+	ui.pinned.hide()
+	cells[idx].pinned = false
 
 func freeze(c : Vector2i):
 	c = format_coord(c)
@@ -306,8 +330,8 @@ func freeze(c : Vector2i):
 	var cell = cells[idx]
 	if cell.frozen:
 		return false
-	var ui = Game.get_cell_ui(c)
 	if get_gem_at(c):
+		var ui = Game.get_cell_ui(c)
 		ui.frozen.show()
 		cell.frozen = true
 		return true
@@ -326,24 +350,25 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 	var uis = []
 	var ptcs = []
 	for c in _coords:
-		if c.x >= 0 && c.x < cx && c.y >= 0 && c.y < cy:
+		if is_valid(c) && !cell_at(c).frozen:
 			coords.append(c)
 			uis.append(Game.get_cell_ui(c))
-			ptcs.append(particles_pb.instantiate())
-	tween.tween_callback(func():
-		for idx in coords.size():
-			var c = coords[idx]
-			var g = get_gem_at(c)
-			var i = get_item_at(c)
-			var ui = uis[idx]
-			var ptc = ptcs[idx]
-			ui.gem.bg_sp.scale = Vector2(1.5, 1.5)
-			ui.gem.z_index = 1
-			ptc.position = get_pos(c)
-			ptc.emitting = true
-			ptc.color = Gem.type_color(g.type)
-			Game.board_ui.overlay.add_child(ptc)
-	)
+			if !Game.performance_mode:
+				ptcs.append(particles_pb.instantiate())
+	if !Game.performance_mode:
+		tween.tween_callback(func():
+			for idx in coords.size():
+				var c = coords[idx]
+				var g = get_gem_at(c)
+				var ui = uis[idx]
+				ui.gem.bg_sp.scale = Vector2(1.5, 1.5)
+				ui.gem.z_index = 1
+				var ptc = ptcs[idx]
+				ptc.position = get_pos(c)
+				ptc.emitting = true
+				ptc.color = Gem.type_color(g.type)
+				Game.board_ui.overlay.add_child(ptc)
+		)
 	for c in coords:
 		var i = get_item_at(c)
 		if i:
@@ -358,22 +383,25 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 				return h.once
 			return false
 		)
-	tween.tween_method(func(t):
-		for ui in uis:
-			ui.gem.bg_sp.scale = Vector2(t, t)
-	, 1.5, 1.0, max(0.4 * Game.animation_speed, 0.1))
+	if !Game.performance_mode:
+		tween.tween_method(func(t):
+			for ui in uis:
+				ui.gem.bg_sp.scale = Vector2(t, t)
+		, 1.5, 1.0, max(0.4 * Game.animation_speed, 0.1))
+	else:
+		tween.tween_interval(0.1)
 	tween.tween_callback(func():
 		for i in coords.size():
 			var c = coords[i]
-			uis[i].gem.z_index = 0
-			ptcs[i].queue_free()
-			if !cell_at(c).frozen:
-				if get_state_at(c) != Cell.State.Burning:
-					set_state_at(c, Cell.State.Consumed)
+			if !Game.performance_mode:
+				uis[i].gem.z_index = 0
+				ptcs[i].queue_free()
+			if get_state_at(c) != Cell.State.Burning:
+				set_state_at(c, Cell.State.Consumed)
 	)
 
 func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
-	if (c.x != -1 && c.y != -1) && cell_at(c).frozen:
+	if (c.x != -1 && c.y != -1):
 		return
 	var sp : AnimatedSprite2D = null
 	if type == HostType.Item:
@@ -437,9 +465,9 @@ func cleanup():
 			set_item_at(c, null)
 			set_gem_at(c, null)
 	cells.clear()
-	Game.unused_gems.clear()
+	Game.bag_gems.clear()
 	for g in Game.gems:
-		Game.unused_gems.append(g)
+		Game.bag_gems.append(g)
 	Game.board_ui.clear()
 	cx = 0
 	cy = 0
@@ -460,30 +488,29 @@ func setup(_hf_cy : int):
 		for x in cx:
 			add_cell(Vector2i(x, y))
 
-func skip_above_frozens(c : Vector2i) -> Vector2i:
+func skip_above_unmovables(c : Vector2i) -> Vector2i:
 	var cc = c - Vector2i(0, 1)
 	while true:
 		if cc.y < 0:
 			return cc
-		if !cell_at(cc).frozen:
+		if !cell_at(cc).is_unmovable():
 			return cc
 		cc.y -= 1
 	return Vector2i(-1, -1)
 
 func step_down_cell(c : Vector2i):
-	if !cell_at(c).frozen:
-		var cc = skip_above_frozens(c)
-		if cc.y < 0:
-			set_gem_at(c, Game.get_gem())
-		else:
-			var og = set_gem_at(cc, null)
-			if og:
-				og = Game.get_gem(og)
-			var oi = set_item_at(cc, null)
-			if oi:
-				oi = Game.get_item(oi)
-			set_gem_at(c, og)
-			set_item_at(c, oi)
+	var cc = skip_above_unmovables(c)
+	if cc.y < 0:
+		set_gem_at(c, Game.get_gem())
+	else:
+		var og = set_gem_at(cc, null)
+		if og:
+			og = Game.get_gem(og)
+		var oi = set_item_at(cc, null)
+		if oi:
+			oi = Game.get_item(oi)
+		set_gem_at(c, og)
+		set_item_at(c, oi)
 
 func roll_step():
 	var tween = Game.get_tree().create_tween()
@@ -493,7 +520,7 @@ func roll_step():
 		for x in cx:
 			for y in cy:
 				var c = Vector2i(x, cy - y - 1)
-				if !cell_at(c).frozen && !get_gem_at(c):
+				if !get_gem_at(c):
 					step_down_cell(c)
 					filled = true
 		if filled:
@@ -506,7 +533,7 @@ func roll():
 	for yy in cy:
 		for xx in cx:
 			var c = Vector2i(xx, yy)
-			if !cell_at(c).frozen:
+			if !cell_at(c).is_unmovable():
 				set_item_at(c, null)
 				set_gem_at(c, null)
 				cell_at(c).event_listeners.clear()
@@ -539,7 +566,7 @@ func fill_blanks():
 		for x in cx:
 			for y in cy:
 				var c = Vector2i(x, cy - y - 1)
-				if !cell_at(c).frozen && !get_gem_at(c):
+				if !get_gem_at(c):
 					step_down_cell(c)
 					filled = true
 		if filled:
@@ -587,6 +614,8 @@ func matching():
 							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))
 					)
 					
+					eliminate(res, tween, ActiveReason.Pattern, p)
+					
 					var runes : Array[int] = []
 					for c in res:
 						runes.append(get_gem_at(c).rune)
@@ -596,24 +625,24 @@ func matching():
 								s.add_exp(1)
 							)
 							if s.on_cast.is_valid():
-								var bg = Sprite2D.new()
-								tween.tween_callback(func():
-									bg.texture = load("res://images/black_bg.png")
-									var sp = AnimatedSprite2D.new()
-									sp.sprite_frames = Skill.skill_frames
-									sp.frame = s.image_id
-									bg.add_child(sp)
-									bg.position = get_pos(res[1])
-									bg.z_index = 10
-									Game.board_ui.cells_root.add_child(bg)
-								)
-								tween.tween_property(bg, "scale", Vector2(2.0, 2.0), 1.0)
-								tween.parallel().tween_property(bg, "modulate:a", 0.0, 1.0)
-								tween.tween_callback(bg.queue_free)
+								if !Game.performance_mode:
+									var bg = Sprite2D.new()
+									tween.tween_callback(func():
+										SSound.sfx_skill.play()
+										bg.texture = black_bg
+										var sp = AnimatedSprite2D.new()
+										sp.sprite_frames = Skill.skill_frames
+										sp.frame = s.image_id
+										bg.add_child(sp)
+										bg.position = get_pos(res[1])
+										bg.z_index = 10
+										Game.board_ui.cells_root.add_child(bg)
+									)
+									tween.tween_property(bg, "scale", Vector2(2.0, 2.0), 1.0)
+									tween.parallel().tween_property(bg, "modulate:a", 0.0, 1.0)
+									tween.tween_callback(bg.queue_free)
 								
 								s.on_cast.call(tween, res)
-					
-					eliminate(res, tween, ActiveReason.Pattern, p)
 					
 					Game.animation_speed *= 0.98
 					Game.animation_speed = max(0.05, Game.animation_speed)
@@ -647,15 +676,20 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 	var coords : Array[Vector2i] = []
 	var r = range + Game.modifiers["explode_range_i"]
 	var p = power + Game.modifiers["explode_power_i"]
+	var fx_sz = Vector2(64.0, 64.0)
+	if r < 1:
+		fx_sz *= 0.5
+	else:
+		fx_sz *= r
 	for i in r + 1:
 		for c in offset_ring(target_coord, i):
 			if is_valid(c):
 				coords.append(c)
 	tween.tween_callback(func():
 		var pos = get_pos(target_coord)
-		var sp_expl = SEffect.add_explosion(pos, Vector2(64.0, 64.0) * max(1, r), 3, 0.5 * Game.animation_speed)
+		var sp_expl = SEffect.add_explosion(pos, fx_sz, 3, 0.5 * Game.animation_speed)
 		Game.board_ui.cells_root.add_child(sp_expl)
-		var fx = SEffect.add_distortion(pos, Vector2(64.0, 64.0) * max(1, r), 4, 0.5 * Game.animation_speed)
+		var fx = SEffect.add_distortion(pos, fx_sz, 4, 0.5 * Game.animation_speed)
 		Game.board_ui.cells_root.add_child(fx)
 	)
 	tween.tween_interval(0.5 * Game.animation_speed)
