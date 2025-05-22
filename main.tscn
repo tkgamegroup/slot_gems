@@ -936,7 +936,7 @@ theme_override_constants/separation = -8
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
-text = "Rolls"
+text = "ui_game_rolls"
 
 [node name="Rolls" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -954,7 +954,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_phcyf")
 theme_override_styles/hover = SubResource("StyleBoxFlat_gx4rg")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_5dllo")
 theme_override_styles/normal = SubResource("StyleBoxFlat_wy5fy")
-text = "Roll"
+text = "ui_game_roll"
 
 [node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
 custom_minimum_size = Vector2(320, 50)
@@ -994,7 +994,7 @@ theme_override_constants/separation = -8
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
-text = "Matches"
+text = "ui_game_matches"
 
 [node name="Matches" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
@@ -1233,7 +1233,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 12
-text = "Score"
+text = "ui_game_score"
 horizontal_alignment = 1
 
 [node name="Score" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer"]
@@ -1262,7 +1262,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 12
-text = "Combos"
+text = "ui_game_combos"
 horizontal_alignment = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
@@ -1307,7 +1307,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 12
-text = "Mult"
+text = "ui_game_mult"
 horizontal_alignment = 1
 
 [node name="Mult" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3"]
@@ -1481,7 +1481,7 @@ size_flags_horizontal = 4
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
-text = "Skills"
+text = "ui_game_skills"
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -1530,7 +1530,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
-text = "Patterns"
+text = "ui_game_patterns"
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -1739,7 +1739,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
-text = "Options"
+text = "ui_option_title"
 
 [node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer"]
 layout_mode = 2
@@ -1747,7 +1747,7 @@ columns = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Language"
+text = "ui_option_language"
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -1760,7 +1760,7 @@ popup/item_1/id = 1
 
 [node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "SFX Volume"
+text = "ui_option_sfx_volume"
 
 [node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -1770,7 +1770,7 @@ step = 0.01
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Music Volume"
+text = "ui_option_music_volume"
 
 [node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -1780,7 +1780,7 @@ step = 0.01
 
 [node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Fullscreen"
+text = "ui_option_fullscreen"
 
 [node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -1789,7 +1789,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Performance Mode"
+text = "ui_option_performance_mode"
 
 [node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -1798,7 +1798,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Invincible"
+text = "ui_option_invincible"
 
 [node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -1807,7 +1807,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Command Line"
+text = "ui_option_command_line"
 
 [node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -1816,7 +1816,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_hwh0u")
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_av48c")
-text = "Close"
+text = "ui_close"
 
 [node name="InGameMenu" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
 visible = false

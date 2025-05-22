@@ -1,7 +1,28 @@
 id,en,zh
 game_title,Slot Gems,摇宝石
+ui_close,Close,关闭
 ui_titile_continue,Continue,继续游戏
 ui_titile_new_game,New Game,新游戏
 ui_titile_collections,Collections,藏品
 ui_titile_options,Options,选项
 ui_titile_quit,Quit,退出
+ui_option_title,Options,选项
+ui_option_language,Language,语言
+ui_option_sfx_volume,SFX Volume,音效音量
+ui_option_music_volume,Music Volume,音乐音量
+ui_option_fullscreen,Fullscreen,全屏
+ui_option_performance_mode,Performance Mode,性能模式
+ui_option_invincible,Invincible,无敌
+ui_option_command_line,Command Line,命令行
+ui_game_score,Score,分数
+ui_game_combos,Combos,连击
+ui_game_mult,Mult,倍率
+ui_game_level,Level %d,关卡 %d
+ui_game_target_score,Score at lease %d,最少达到 %d 分
+ui_game_board_size,BS,棋盘
+ui_game_hand_metrics,H,手牌
+ui_game_skills,Skills,技能
+ui_game_patterns,Patterns,图案
+ui_game_rolls,Rolls,摇次数
+ui_game_matches,Matches,匹配次数
+ui_game_roll,Roll,摇

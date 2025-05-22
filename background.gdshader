@@ -56,7 +56,7 @@ void fragment()
     uv.x -= time;
     uv.y -= time * 0.5;
 
-	float a = 1.7 + length(uv - vec2(5.5, 5.5)) * 0.032;
+	float a = 1.7;
     float cAngle = cos(a);
     float sAngle = sin(a);
     uv = mat2(vec2(cAngle, -sAngle), vec2(sAngle, cAngle)) * uv;
