@@ -83,12 +83,12 @@ var startup_draws : int:
 	set(v):
 		startup_draws = v
 		if hand_ui:
-			status_bar_ui.hand_metrics_text.text = "%d/%d/%d" % [startup_draws, draws_per_roll, 8]
+			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, 8]
 var draws_per_roll : int:
 	set(v):
 		draws_per_roll = v
 		if hand_ui:
-			status_bar_ui.hand_metrics_text.text = "%d/%d/%d" % [startup_draws, draws_per_roll, 8]
+			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, 8]
 var next_roll_extra_draws : int = 0
 var props = Props.None
 var pins_num : int:
@@ -137,7 +137,7 @@ var score : int:
 var target_score : int:
 	set(v):
 		target_score = v
-		status_bar_ui.level_target.text = "Score at least %d" % target_score
+		status_bar_ui.level_target.text = tr("ui_game_target_score") % target_score
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
@@ -161,7 +161,7 @@ var score_mult : float = 1.0:
 var level : int:
 	set(v):
 		level = v
-		status_bar_ui.level_text.text = "Level %d" % level
+		status_bar_ui.level_text.text = tr("ui_game_level") % level
 var coins : int:
 	set(v):
 		coins = v

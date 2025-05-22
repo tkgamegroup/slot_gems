@@ -20,9 +20,40 @@ ui_game_mult,Mult,倍率
 ui_game_level,Level %d,关卡 %d
 ui_game_target_score,Score at lease %d,最少达到 %d 分
 ui_game_board_size,BS,棋盘
+tt_game_board_size_title,Board Size,棋盘大小
+tt_game_board_size_content,"The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2.",横向的格子数将会是 棋盘大小 x6，纵向的格子数将会是 棋盘大小 x2。
 ui_game_hand_metrics,H,手牌
+tt_game_hand_metrics_title,Hand,
+tt_game_hand_metrics_content,Draw Items Per Roll: %d\nMax Items: %d,
+tt_game_coins_title,Your Coins,你的金币
+tt_game_bag_title,Your Bag,你的包
+tt_game_bag_content,Your gems and items.,你的宝石跟道具。
+tt_game_bag_trade_content,Drop the item here to exchange another item.,把道具拖拽到这来交换另一个道具。
+tt_game_menu_title,Game Menu,游戏菜单
 ui_game_skills,Skills,技能
 ui_game_patterns,Patterns,图案
-ui_game_rolls,Rolls,摇次数
+ui_game_rolls,Rolls,滚动次数
 ui_game_matches,Matches,匹配次数
-ui_game_roll,Roll,摇
+ui_game_roll,Roll,滚动
+ui_in_game_menu_title,Menu,菜单
+ui_in_game_menu_resume,Resume,继续
+ui_in_game_menu_options,Options,选项
+ui_in_game_menu_main_menu,Main Menu,主菜单
+ui_in_game_menu_auto_place_items,Auto Place Items,自动放道具
+gem_none,None,无
+gem_red,Red,红
+gem_orange,Orange,橙
+gem_green,Green,绿
+gem_blue,Blue,蓝
+gem_pink,Pink,粉
+gem_colorless,Colorless,无色
+gem_wild,Wild,狂野
+rune_none,None,无
+rune_zhe,Zhe,折
+rune_cha,Cha,叉
+rune_kou,Kou,口
+gem_desc,Score: %d%s,分数: %d%s
+skill_desc,,
+pattern_desc,,
+item_desc_bomb,,
+relic_desc,,

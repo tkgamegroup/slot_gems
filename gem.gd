@@ -47,6 +47,18 @@ static func type_name(t : int):
 		Type.Wild: return "Wild"
 	return ""
 
+static func type_display_name(t : int):
+	match t:
+		Type.None: return Game.tr("gem_none")
+		Type.Red: return Game.tr("gem_red")
+		Type.Orange: return Game.tr("gem_green")
+		Type.Green: return Game.tr("gem_green")
+		Type.Blue: return Game.tr("gem_blue")
+		Type.Pink: return Game.tr("gem_pink")
+		Type.Colorless: return Game.tr("gem_colorless")
+		Type.Wild: return Game.tr("gem_wild")
+	return ""
+
 static func name_to_type(s : String):
 	match s:
 		"None": return Type.None
@@ -85,6 +97,13 @@ static func rune_name(r : int):
 		Rune.Kou: return "Kou"
 	return "None"
 
+static func rune_display_name(r : int):
+	match r:
+		Rune.Zhe: return Game.tr("rune_zhe")
+		Rune.Cha: return Game.tr("rune_cha")
+		Rune.Kou: return Game.tr("rune_kou")
+	return "None"
+
 static func rune_icon(r : int):
 	match r:
 		Rune.Zhe: return "res://images/rune_zhe.png"
@@ -106,11 +125,11 @@ func get_base_score():
 func get_name():
 	var b = Buff.find_typed(self, Buff.Type.ChangeColor)
 	if b:
-		return "[color=GRAY][s]%s[/s][/color] %s (%s)" % [type_name(b.data["original_color_i"]), type_name(type), rune_name(rune)]
-	return "%s (%s)" % [type_name(type), rune_name(rune)]
+		return "[color=GRAY][s]%s[/s][/color] %s (%s)" % [type_display_name(b.data["original_color_i"]), type_display_name(type), rune_display_name(rune)]
+	return "%s (%s)" % [type_display_name(type), rune_display_name(rune)]
 
 func get_description():
-	return "Score: %d%s" % [get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
+	return tr("gem_desc") % [get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
 
 func get_tooltip():
 	var ret : Array[Pair] = []

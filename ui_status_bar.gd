@@ -18,13 +18,13 @@ extends PanelContainer
 
 func _ready() -> void:
 	board_size_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Board Size", "The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2")])
+		STooltip.show([Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)
 	hand_metrics_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Hand", "Startup Draw Items: %d\nDraw Items Per Roll: %d\nMax Items: 8" % [Game.startup_draws, Game.draws_per_roll])])
+		STooltip.show([Pair.new(tr("tt_game_hand_metrics_title"), tr("tt_game_hand_metrics_content") % [Game.draws_per_roll, 8])])
 	)
 	coin_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Your Coins", "")])
+		STooltip.show([Pair.new(tr("tt_game_coins_title"), "")])
 	)
 	coin_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -41,9 +41,9 @@ func _ready() -> void:
 	bag_button.mouse_entered.connect(func():
 		if Game.hand_ui && Game.hand_ui.dragging && Game.hand_ui.dragging.item.tradeable:
 			Game.hand_ui.dragging.action.show()
-			STooltip.show([Pair.new("Your Bag", "Drop the item here to exchange another item.")])
+			STooltip.show([Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_trade_content"))])
 		else:
-			STooltip.show([Pair.new("Your Bag", "Your gems and items.")])
+			STooltip.show([Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_content"))])
 	)
 	bag_button.mouse_exited.connect(func():
 		if Game.hand_ui && Game.hand_ui.dragging:
@@ -55,7 +55,7 @@ func _ready() -> void:
 		Game.toggle_in_game_menu()
 	)
 	gear_button.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Game Menu", "")])
+		STooltip.show([Pair.new(tr("tt_game_menu_title"), "")])
 	)
 	gear_button.mouse_exited.connect(func():
 		STooltip.close()

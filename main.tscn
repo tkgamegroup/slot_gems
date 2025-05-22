@@ -1355,7 +1355,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
-text = "BS"
+text = "ui_game_board_size"
 
 [node name="BoardSize" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1371,7 +1371,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
-text = "H"
+text = "ui_game_hand_metrics"
 
 [node name="HandMetrics" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
 layout_mode = 2
@@ -1841,27 +1841,27 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
-text = "Menu"
+text = "ui_in_game_menu_title"
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
-text = "Resume"
+text = "ui_in_game_menu_resume"
 
 [node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
-text = "Options"
+text = "ui_in_game_menu_options"
 
 [node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
-text = "Main Menu"
+text = "ui_in_game_menu_main_menu"
 
 [node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
-text = "Auto Place Items"
+text = "ui_in_game_menu_auto_place_items"
 
 [node name="GameOver" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
