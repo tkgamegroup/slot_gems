@@ -21,7 +21,7 @@ void fragment() {
     vec2 uv = SCREEN_UV;
 	uv = uv * 2.0 - 1.0;
 	uv.x *= TEXTURE_PIXEL_SIZE.y / TEXTURE_PIXEL_SIZE.x;
-	
+
     float d = sdHexagon(uv, radius);
 
     if (d < 0.)

@@ -28,12 +28,11 @@ func choose(idx : int):
 	)
 	tween.tween_property(ui, "modulate:a", 0, 0.2)
 	tween.parallel().tween_property(img, "position", ui.get_rect().get_center(), 0.3)
-	callback.call(idx, tween, img)
-	callback = Callable.create(null, "")
-	tween.tween_callback(img.queue_free)
 	tween.tween_callback(func():
+		img.queue_free()
 		exit()
 	)
+	callback.call(idx, tween, img)
 
 func enter(rewards : Array, _callback : Callable):
 	callback = _callback

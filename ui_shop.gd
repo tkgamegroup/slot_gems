@@ -172,33 +172,42 @@ func _ready() -> void:
 			return
 		
 		var arr = []
-		for i in 5:
+		for i in Gem.Type.Count:
 			var r = {}
 			var name = Gem.type_name(i + 1)
 			r.icon = Gem.type_img(i + 1)
 			r.title = name + " x10"
-			r.description = "Add 10 %s gems, the runes are random." % name
+			r.description = "Add 10 %s gems." % name
 			arr.append(r)
 		var tween = get_tree().create_tween()
 		tween.tween_callback(func():
-			Game.choose_reward_ui.enter(arr, func(idx : int, tween2 : Tween, img : Sprite2D):
+			Game.choose_reward_ui.enter(arr, func(idx : int, _tween : Tween, _img : Sprite2D):
 				if idx != -1:
-			
-					SSound.sfx_coin.play()
-					Game.coins -= add_gems_price
-					add_gems_price += add_gems_price_increase
-					add_gems_button.button.disabled = true
-					
-					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-					tween2.parallel()
-					SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
-					tween2.tween_callback(func():
-						for i in 10:
-							var g = Gem.new()
-							g.type = idx + 1
-							g.rune = randi_range(1, Gem.Rune.Count)
-							Game.add_gem(g)
-						Game.sort_gems()
+					var arr2 = []
+					for j in 3:
+						var r = {}
+						var name = Gem.rune_name(j + 1)
+						r.icon = Gem.rune_icon(j + 1)
+						r.title = name
+						r.description = "With %s rune." % name
+						arr2.append(r)
+					_tween.tween_callback(func():
+						Game.choose_reward_ui.enter(arr2, func(idx2 : int, tween2 : Tween, img : Sprite2D):
+							if idx2 != -1:
+								SSound.sfx_coin.play()
+								Game.coins -= add_gems_price
+								add_gems_price += add_gems_price_increase
+								add_gems_button.button.disabled = true
+								
+								tween2.tween_callback(func():
+									for i in 10:
+										var g = Gem.new()
+										g.type = idx + 1
+										g.rune = idx2 + 1
+										Game.add_gem(g)
+									Game.sort_gems()
+								)
+						)
 					)
 			)
 		)

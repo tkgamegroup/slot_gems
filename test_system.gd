@@ -288,13 +288,13 @@ func auto_place_items():
 			var ui = Game.hand_ui.get_ui(i)
 			item_uis.append(ui)
 		var one_less_places : Array[Array] = []
-		for i in Gem.Type.Count - 1:
+		for i in Gem.Type.Count:
 			one_less_places.append([])
 		for y in cy:
 			for x in cx:
 				var c = Vector2i(x, y)
 				for p in Game.patterns:
-					for col in Gem.Type.Count - 1:
+					for col in Gem.Type.Count:
 						var res : Array[Vector2i] = p.differ(c, col + 1)
 						if !res.is_empty():
 							one_less_places[col].append(res[0])

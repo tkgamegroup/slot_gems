@@ -12,7 +12,7 @@ enum Type
 	Pink,
 	Colorless,
 	Wild,
-	Count = 7
+	Count = 5
 }
 
 enum Rune
