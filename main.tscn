@@ -602,7 +602,6 @@ bus = &"SFX"
 
 [node name="Tom" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("8_30oiv")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="Zap" type="AudioStreamPlayer" parent="SFX"]
@@ -617,7 +616,6 @@ bus = &"SFX"
 
 [node name="Vibra" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("11_0r14j")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="Bubble" type="AudioStreamPlayer" parent="SFX"]
@@ -628,46 +626,38 @@ bus = &"SFX"
 
 [node name="OpenBag" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("14_5dllo")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="CloseBag" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("15_phcyf")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="DragItem" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("16_birbe")
 volume_db = -8.0
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="DropItem" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("17_f1p13")
 volume_db = -8.0
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="Skill" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("18_f1p13")
 volume_db = -5.0
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="Explode" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("12_773c0")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="LightningConnect" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("17_dvs8d")
 volume_db = -10.0
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="LightningFail" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("18_bul2v")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="StartBurning" type="AudioStreamPlayer" parent="SFX"]
@@ -682,7 +672,6 @@ bus = &"SFX"
 stream = ExtResource("15_guqny")
 volume_db = -17.02
 pitch_scale = 2.0
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
@@ -718,21 +707,15 @@ mouse_filter = 2
 script = ExtResource("9_te575")
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
+custom_minimum_size = Vector2(1280, 0)
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = -0.152778
-anchor_right = 0.5
-anchor_bottom = -0.152778
-offset_left = -261.5
-offset_top = 135.0
-offset_right = 261.5
-offset_bottom = 283.0
-grow_horizontal = 2
+offset_right = 550.0
+offset_bottom = 148.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 108
-text = "Slot Gems"
+text = "game_title"
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Button1" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
@@ -756,7 +739,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_wy5fy")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-text = "Continue"
+text = "ui_titile_continue"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
@@ -780,7 +763,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-text = "New Game"
+text = "ui_titile_new_game"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
@@ -804,7 +787,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-text = "Collections"
+text = "ui_titile_collections"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
@@ -828,7 +811,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-text = "Options"
+text = "ui_titile_options"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
@@ -852,7 +835,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-text = "Quit"
+text = "ui_titile_quit"
 metadata/_edit_use_anchors_ = true
 
 [node name="Version" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
@@ -1768,6 +1751,12 @@ text = "Language"
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "English"
+popup/item_0/id = 0
+popup/item_1/text = "中文"
+popup/item_1/id = 1
 
 [node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2

@@ -67,6 +67,7 @@ func start_game():
 		var i = Item.new()
 		i.setup(n)
 		Game.add_item(i)
+		Game.bag_items.append(i)
 	for n in additional_skills:
 		var s = Skill.new()
 		s.setup(n)
@@ -271,7 +272,7 @@ func time_out():
 			step = TaskSteps.ToRoll
 		elif step == TaskSteps.ToShop:
 			if Game.shop_ui.visible:
-				for i in 3:
+				for i in 5:
 					Game.shop_ui.buy_randomly()
 				Game.shop_ui.continue_game()
 				step = TaskSteps.ToRoll

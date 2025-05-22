@@ -224,7 +224,7 @@ func get_gem(g : Gem = null):
 func release_gem(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
-	Buff.clear_if_not(g, Buff.Duration.Eternal)
+	Buff.clear(g, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.OnBoard])
 	bag_gems.append(g)
 
 func sort_gems():
@@ -302,8 +302,8 @@ func has_relic(n : String):
 
 func add_combo():
 	combos += 1
-	Board.on_combo()
 	Buff.clear(self, [Buff.Duration.ThisCombo])
+	Board.on_combo()
 
 func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0)):
 	var ui = popup_txt_pb.instantiate()
@@ -450,8 +450,8 @@ func start_game(saving : String = ""):
 		level = 0
 		rolls_per_level = 4
 		matches_per_level = 3
-		startup_draws = 5
-		draws_per_roll = 1
+		startup_draws = 0
+		draws_per_roll = 8
 		pins_num_per_level = 0
 		activates_num_per_level = 0
 		grabs_num_per_level = 0
@@ -459,7 +459,7 @@ func start_game(saving : String = ""):
 		
 		for i in 0:
 			var s = Skill.new()
-			s.setup("Bao")
+			s.setup("Huan")
 			add_skill(s)
 		
 		for i in 1:
@@ -483,7 +483,7 @@ func start_game(saving : String = ""):
 		
 		for i in 0:
 			var r = Relic.new()
-			r.setup("Blue Stone")
+			r.setup("Pentagram Power")
 			add_relic(r)
 		
 		for i in 72:
@@ -582,18 +582,18 @@ func start_game(saving : String = ""):
 			var item = Item.new()
 			item.setup("Dye: Pink")
 			add_item(item)
+		'''
 		for i in 1:
 			var item = Item.new()
-			item.setup("Chloroplast")
+			item.setup("Color Palette")
 			add_item(item)
-		'''
 		for i in 1:
 			var item = Item.new()
 			item.setup("Minefield")
 			add_item(item)
-		for i in 1:
+		for i in 10:
 			var item = Item.new()
-			item.setup("Idol")
+			item.setup("Bomb")
 			add_item(item)
 		'''
 	
@@ -638,6 +638,8 @@ func new_level():
 func level_end():
 	set_props(Props.None)
 	Buff.clear(self, [Buff.Duration.ThisLevel])
+	for g in gems:
+		Buff.clear(g, [Buff.Duration.ThisLevel])
 
 func roll():
 	if rolls > 0:
@@ -646,7 +648,10 @@ func roll():
 		score_mult = 1.0
 		animation_speed = base_animation_speed
 		Board.roll()
-		var draw_num = startup_draws if modifiers["first_roll_i"] == 1 else draws_per_roll
+		var draw_num = 0
+		if modifiers["first_roll_i"] == 1:
+			draw_num = startup_draws
+		draw_num += draws_per_roll
 		draw_num = min(draw_num, bag_items.size())
 		for i in draw_num:
 			hand_ui.draw()

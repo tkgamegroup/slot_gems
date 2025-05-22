@@ -14,6 +14,7 @@ enum Duration
 	ThisCombo,
 	ThisMatching,
 	ThisLevel,
+	OnBoard,
 	Eternal
 }
 

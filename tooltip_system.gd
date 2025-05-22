@@ -51,6 +51,8 @@ func show(contents : Array[Pair], delay : float = 0.05):
 				process_word("Active", words, "Active effects will stack and process one by one when the matching stops.")
 			if c.second.find("[b]Quick[/b]") != -1:
 				process_word("Quick", words, "Effect when the item is placed into the board. And then the item will be removed.")
+			if c.second.find("[b]Consumed[/b]") != -1:
+				process_word("Consumed", words, "Removed until the end of level.")
 			if c.second.find("[b]Aura[/b]") != -1:
 				process_word("Aura", words, "Effect all gems while this item is on board.")
 			if c.second.find("[b]Range[/b]") != -1:

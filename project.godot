@@ -37,6 +37,10 @@ window/stretch/mode="viewport"
 mouse_cursor/custom_image="res://images/pointer.png"
 mouse_cursor/custom_image_hotspot=Vector2(15, 4)
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://language/language.en.translation", "res://language/language.zh.translation")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

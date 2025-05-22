@@ -1,5 +1,6 @@
 extends Control
 
+@onready var language_select : OptionButton = $VBoxContainer/GridContainer/OptionButton
 @onready var sfx_volume_slider : HSlider = $VBoxContainer/GridContainer/HSlider
 @onready var music_volume_slider : HSlider = $VBoxContainer/GridContainer/HSlider2
 @onready var fullscreen_checkbox : CheckBox = $VBoxContainer/GridContainer/CheckBox
@@ -11,6 +12,11 @@ extends Control
 func enter():
 	STooltip.close()
 	Game.blocker_ui.enter()
+	var locale = TranslationServer.get_locale()
+	if locale.begins_with("en"):
+		language_select.selected = 0
+	elif locale.begins_with("zh"):
+		language_select.selected = 1
 	sfx_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.sfx_bus_index))
 	music_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.music_bus_index))
 	performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
@@ -23,6 +29,11 @@ func exit():
 	self.hide()
 	
 func _ready() -> void:
+	language_select.item_selected.connect(func(idx):
+		match idx:
+			0: TranslationServer.set_locale("en")
+			1: TranslationServer.set_locale("zh")
+	)
 	sfx_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(SSound.sfx_bus_index, linear_to_db(v))
 	)
@@ -82,6 +93,7 @@ func _ready() -> void:
 				var mode = 0
 				var level_count = 1
 				var task_count = 1
+				var saving = ""
 				var additional_items = []
 				var additional_skills = []
 				var additional_patterns = []
@@ -98,19 +110,50 @@ func _ready() -> void:
 					elif t == "-t":
 						task_count = int(tokens[i + 1])
 						i += 1
+					elif t == "-s":
+						saving = tokens[i + 1]
+						i += 1
 					elif t == "-ai":
-						additional_items.append(tokens[i + 1])
+						var num = 1
+						var tt = tokens[i + 1]
 						i += 1
+						if tt.is_valid_int():
+							num = int(tt)
+							tt = tokens[i + 1]
+							i += 1
+						for j in num:
+							additional_items.append(tt)
 					elif t == "-as":
-						additional_skills.append(tokens[i + 1])
+						var num = 1
+						var tt = tokens[i + 1]
 						i += 1
+						if tt.is_valid_int():
+							num = int(tt)
+							tt = tokens[i + 1]
+							i += 1
+						for j in num:
+							additional_skills.append(tt)
 					elif t == "-ap":
-						additional_patterns.append(tokens[i + 1])
+						var num = 1
+						var tt = tokens[i + 1]
 						i += 1
+						if tt.is_valid_int():
+							num = int(tt)
+							tt = tokens[i + 1]
+							i += 1
+						for j in num:
+							additional_patterns.append(tt)
 					elif t == "-ar":
-						additional_relics.append(tokens[i + 1])
+						var num = 1
+						var tt = tokens[i + 1]
 						i += 1
+						if tt.is_valid_int():
+							num = int(tt)
+							tt = tokens[i + 1]
+							i += 1
+						for j in num:
+							additional_relics.append(tt)
 					elif t == "-es":
 						enable_shopping = true
-				STest.start_test(mode, level_count, task_count, "", "", additional_items, additional_skills,additional_patterns, additional_relics, true, enable_shopping)
+				STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_skills,additional_patterns, additional_relics, true, enable_shopping)
 	)

@@ -1,0 +1,9 @@
+========Game Status========
+Board Size: 18x6(108 cells)
+Red: 216, Orange: 216, Green: 216, Blue: 216, Pink: 216, Wild: 0
+Items: Dye: Red, Dye: Orange, Dye: Green, Dye: Blue, Dye: Pink, Bomb, Bomb, Bomb
+Skills: 
+Patterns: \, I, /
+Relics: 
+Rolls: 4
+Matches: 3

@@ -141,7 +141,7 @@ func setup(n : String):
 			)
 	elif name == "Bao":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Kou, Gem.Rune.Cha]
-		description = "Explode and eliminate cells in {range_i} [color=gray][b]Range[/b][/color] at random location."
+		description = "Explode and eliminate cells in {range_i} [color=gray][b]Range[/b][/color] at 2 random locations."
 		image_id = 9
 		extra["range_i"] = 0
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
@@ -149,8 +149,13 @@ func setup(n : String):
 				Board.activate(self, HostType.Skill, 0, coords[1], Board.ActiveReason.Skill, self)
 			)
 		on_active = func(effect_index : int, c : Vector2i, tween : Tween):
-			var target = Vector2i(randi_range(0, Board.cx - 1), randi_range(0, Board.cy - 1))
-			Board.effect_explode(ui.get_global_rect().get_center(), target, extra["range_i"], 0, tween)
+			for i in 2:
+				var subtween = Game.get_tree().create_tween()
+				var target = Vector2i(randi_range(0, Board.cx - 1), randi_range(0, Board.cy - 1))
+				Board.effect_explode(ui.get_global_rect().get_center(), target, extra["range_i"], 0, subtween)
+				if i > 0:
+					tween.parallel()
+				tween.tween_subtween(subtween)
 	elif name == "Fang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Cha]
 		description = "Duplicate 1 Item on Board to random location."

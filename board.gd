@@ -195,7 +195,8 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 		if i.on_place.is_valid():
 			i.on_place.call(c, r)
 		if i.on_event.is_valid():
-			event_listeners.append(i)
+			var h = Hook.new(-1, i, HostType.Item, false)
+			event_listeners.append(h)
 		for h in event_listeners:
 			h.host.on_event.call(Event.ItemEntered, null, i)
 	cell.item = i
@@ -401,8 +402,6 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 	)
 
 func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
-	if (c.x != -1 && c.y != -1):
-		return
 	var sp : AnimatedSprite2D = null
 	if type == HostType.Item:
 		var item : Item = host
@@ -647,7 +646,7 @@ func matching():
 					Game.animation_speed *= 0.98
 					Game.animation_speed = max(0.05, Game.animation_speed)
 	if no_patterns:
-		tween.tween_interval(0.7)
+		tween.tween_interval(0.7 * Game.animation_speed)
 		tween.tween_callback(func():
 			if active_effects.is_empty():
 				matching_finished.emit()
@@ -711,7 +710,7 @@ func effect_place_item_from_bag(cast_pos : Vector2, target : Item, target_coord 
 	if !target:
 		var cands = []
 		for i in Game.items:
-			if i.coord.x == -1 && i.coord.y == -1 && !i.active:
+			if i.coord.x == -1 && i.coord.y == -1:
 				cands.append(i)
 		if cands.is_empty():
 			return

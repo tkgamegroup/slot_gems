@@ -24,14 +24,17 @@ func setup(n : String):
 					Game.modifiers["explode_power_i"] -= 3
 	elif name == "High Explosives":
 		image_id = 2
-		description = "Explosion [color=gray][b]Power[/b][/color] +3."
+		description = "Explosion [color=gray][b]Power[/b][/color] +{value}."
+		price = 5
+		extra["value"] = 6
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["explode_power_i"] += 3
+					Game.modifiers["explode_power_i"] += extra["value"]
 	elif name == "Uniform Blasting":
 		image_id = 3
 		description = "Explosion will push active effects."
+		price = 557
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -63,6 +66,7 @@ func setup(n : String):
 	elif name == "Sympathetic Detonation":
 		image_id = 4
 		description = "Bombs will activate when cells next to are eliminate."
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -76,9 +80,9 @@ func setup(n : String):
 						Board.activate(i, HostType.Item, 0, c, Board.ActiveReason.Relic, self)
 	elif name == "Blocked Lever":
 		image_id = 5
-		description = "Once per level, before the matching ends, consume 1 rolls and 1 matches to perform rolling and matching."
-		extra["enable"] = false
-		extra["processing"] = false
+		description = "Once per level, before the matching ends, perform another rolling and matching, repeat 1 time."
+		extra["enable"] = true
+		extra["times_i"] = 0
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -88,19 +92,24 @@ func setup(n : String):
 			elif event == Event.LevelBegan:
 				extra["enable"] = true
 			elif event == Event.RollingFinished:
-				if extra["enable"] && Game.rolls > 0 && Game.matches > 0:
-					Game.rolls -= 1
-					Game.matches -= 1
-					extra["enable"] = false
-					extra["processing"] = true
+				if extra["times_i"] > 0:
 					Board.matching()
 					return true
 				return false
 			elif event == Event.MatchingFinished:
-				if extra["processing"]:
-					extra["processing"] = false
-					Board.roll()
-					return true
+				if extra["times_i"] > 0:
+					extra["times_i"] -= 1
+					if extra["times_i"] == 0:
+						return false
+					else:
+						Board.roll()
+						return true
+				else:
+					if extra["enable"]:
+						extra["enable"] = false
+						extra["times_i"] = 2
+						Board.roll()
+						return true
 				return false
 	elif name == "Mobius Strip":
 		image_id = 6
@@ -111,22 +120,22 @@ func setup(n : String):
 					Game.modifiers["board_upper_lower_connected_i"] = 1
 	elif name == "Premeditation":
 		image_id = 7
-		description = "Combo starts from 4."
+		description = "Combo starts from 3."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.combos = max(4, Game.combos)
-					Game.modifiers["base_combo_i"] = 4
+					Game.modifiers["base_combo_i"] = 3
+					Game.combos = max(Game.combos, Game.modifiers["base_combo_i"])
 	elif name == "Pentagram Power":
 		image_id = 8
-		description = "Get +5 Score Mult in the 5th Combo."
+		description = "Get +4 Score Mult every 5 Combos."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Combo, self, HostType.Relic, false))
 			elif event == Event.Combo:
-				if Game.combos == 5:
-					Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":5.0}, Buff.Duration.ThisCombo)
+				if Game.combos > 0 && Game.combos % 5 == 0:
+					Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":4.0}, Buff.Duration.ThisCombo)
 	elif name == "Red Stone":
 		image_id = 9
 		description = "Red gems' base score +{value}."

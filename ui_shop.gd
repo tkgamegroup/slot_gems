@@ -13,7 +13,13 @@ const gem_ui = preload("res://ui_gem.tscn")
 @onready var remove_item_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton5
 
 var expand_board_price : int = 15
-var expand_board_increase : int = 10
+var expand_board_price_increase : int = 10
+var add_gems_price : int = 2
+var add_gems_price_increase : int = 0
+var remove_gems_price : int = 2
+var remove_gems_price_increase : int = 0
+var remove_item_price : int = 2
+var remove_item_price_increase : int = 0
 
 func random_item(cands : Array, list):
 	var indices = SMath.get_shuffled_indices(cands.size())
@@ -35,22 +41,20 @@ func buy_expand_board():
 	Game.coins -= expand_board_price
 	
 	Game.board_size += 1
-	expand_board_price += expand_board_increase
+	expand_board_price += expand_board_price_increase
 	expand_board_button.button.disabled = true
 	return true
 
 func buy_randomly():
-	if randf() < 0.5:
-		return buy_expand_board()
+	buy_expand_board()
+	if randi() % 2 < 1:
+		var item = list1.get_child(randi() % 4)
+		if item:
+			return item.buy()
 	else:
-		if randi() % 2 < 1:
-			var item = list1.get_child(randi() % 4)
-			if item:
-				return item.buy()
-		else:
-			var item = list2.get_child(randi() % 4)
-			if item:
-				return item.buy()
+		var item = list2.get_child(randi() % 4)
+		if item:
+			return item.buy()
 	return false
 
 func continue_game():
@@ -62,6 +66,12 @@ func enter():
 	
 	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.disabled = false if Game.board_size < 6 else true
+	add_gems_button.price.text = "%d" % add_gems_price
+	add_gems_button.button.disabled = false
+	remove_gems_button.price.text = "%d" % remove_gems_price
+	remove_gems_button.button.disabled = false
+	remove_item_button.price.text = "%d" % remove_item_price
+	remove_item_button.button.disabled = false
 	
 	var tween = get_tree().create_tween()
 	
@@ -158,7 +168,7 @@ func _ready() -> void:
 		buy_expand_board()
 	)
 	add_gems_button.button.pressed.connect(func():
-		if Game.coins < 2:
+		if Game.coins < add_gems_price:
 			return
 		
 		var arr = []
@@ -175,7 +185,9 @@ func _ready() -> void:
 				if idx != -1:
 			
 					SSound.sfx_coin.play()
-					Game.coins -= 2
+					Game.coins -= add_gems_price
+					add_gems_price += add_gems_price_increase
+					add_gems_button.button.disabled = true
 					
 					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
 					tween2.parallel()
@@ -192,15 +204,17 @@ func _ready() -> void:
 		)
 	)
 	remove_gems_button.button.pressed.connect(func():
-		if Game.coins < 2:
+		if Game.coins < remove_gems_price:
 			return
 		
-		Game.bag_viewer_ui.enter(8, "Select up to 8 gems to Remove", func(gems):
+		Game.bag_viewer_ui.enter("", 8, "Select up to 8 gems to Remove", func(gems):
 			if gems.is_empty():
 				return
 			
 			SSound.sfx_coin.play()
-			Game.coins -= 2
+			Game.coins -= remove_gems_price
+			remove_gems_price += remove_gems_price_increase
+			remove_gems_button.button.disabled = true
 			
 			Game.blocker_ui.enter()
 			var bag_pos = Game.status_bar_ui.bag_button.get_global_rect().get_center()
@@ -234,5 +248,19 @@ func _ready() -> void:
 					Game.gems.erase(g)
 				Game.blocker_ui.exit()
 			)
+		)
+	)
+	remove_item_button.button.pressed.connect(func():
+		if Game.coins < remove_item_price:
+			return
+		
+		Game.bag_viewer_ui.enter("", 1, "Select an item to Remove", func(items):
+			if items.is_empty():
+				return
+			
+			SSound.sfx_coin.play()
+			Game.coins -= remove_item_price
+			remove_item_price += remove_item_price_increase
+			remove_item_button.button.disabled = true
 		)
 	)

@@ -31,7 +31,7 @@ func create_bar():
 	bar.hide()
 	return bar
 
-func enter(_select_num : int = 0, select_prompt : String = "", _select_callback : Callable = Callable()):
+func enter(select_category : String = "", _select_num : int = 0, select_prompt : String = "", _select_callback : Callable = Callable()):
 	clear()
 	Game.blocker_ui.enter()
 	self.show()
