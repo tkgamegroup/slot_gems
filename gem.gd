@@ -51,7 +51,7 @@ static func type_display_name(t : int):
 	match t:
 		Type.None: return Game.tr("gem_none")
 		Type.Red: return Game.tr("gem_red")
-		Type.Orange: return Game.tr("gem_green")
+		Type.Orange: return Game.tr("gem_orange")
 		Type.Green: return Game.tr("gem_green")
 		Type.Blue: return Game.tr("gem_blue")
 		Type.Pink: return Game.tr("gem_pink")

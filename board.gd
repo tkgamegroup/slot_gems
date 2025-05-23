@@ -202,10 +202,10 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 	cell.item = i
 	var ui = Game.get_cell_ui(c)
 	ui.set_item_image(i.image_id if i else 0)
-	ui.set_is_duplicant(i.is_duplicant if i else false)
+	ui.set_is_duplicant(i.duplicant if i else false)
 	return oi
 
-func place_item(c : Vector2i, i : Item):
+func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
 	c = format_coord(c)
 	if !is_valid(c):
 		return false
@@ -225,7 +225,7 @@ func place_item(c : Vector2i, i : Item):
 		Game.get_cell_ui(c).set_item_image(oi.image_id, i.image_id)
 		return true
 	else:
-		set_item_at(c, i, PlaceReason.FromHand)
+		set_item_at(c, i, reason)
 		return true
 	return false
 
@@ -706,42 +706,55 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		tween.tween_callback(Game.end_busy)
 	return coords
 
-func effect_place_item_from_bag(cast_pos : Vector2, target : Item, target_coord : Vector2i, tween : Tween = null, source = null):
-	if !target:
-		var cands = []
-		for i in Game.items:
-			if i.coord.x == -1 && i.coord.y == -1:
-				cands.append(i)
-		if cands.is_empty():
-			return
-		target = cands.pick_random()
-	if target_coord.x == -1 && target_coord.y == -1:
-		var places = filter(func(g, i):
-			return g && !i
-		)   
-		if places.is_empty():
-			return
-		target_coord = places.pick_random()
-	var outer_tween = (tween != null)
+func effect_place_items_from_bag(items : Array, tween : Tween = null, source = null):
+	var target_coords : Array[Vector2i]
+	var outer_tween = true
+	var sps = []
 	if !tween:
 		tween = get_tree().create_tween()
 		Game.begin_busy()
-	var target_pos = get_pos(target_coord)
-	if cast_pos != target_pos:
-		tween.tween_callback(func():
-			SEffect.add_leading_line(cast_pos, target_pos)
-		)
-		tween.tween_interval(0.3)
-	var sp = AnimatedSprite2D.new()
-	sp.position = Game.status_bar_ui.bag_button.get_global_rect().get_center()
-	sp.sprite_frames = Item.item_frames
-	sp.frame = target.image_id
-	sp.z_index = 3
-	Game.board_ui.cells_root.add_child(sp)
-	SAnimation.cubic_curve_to(tween, sp, target_pos, 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7)
+		outer_tween = false
 	tween.tween_callback(func():
-		sp.queue_free()
-		set_item_at(target_coord, target, PlaceReason.FromBag)
+		for i in items.size():
+			if !items[i]:
+				var cands = []
+				for _i in Game.items:
+					if _i.coord.x == -1 && _i.coord.y == -1:
+						cands.append(_i)
+				if cands.is_empty():
+					return
+				items[i] = cands.pick_random()
+			
+			var places = filter(func(g : Gem, i : Item):
+				return g && !i && get_active_effects_at(g.coord).is_empty()
+			)
+			if places.is_empty():
+				target_coords.append(Vector2i(-1, -1))
+				sps.append(null)
+			else:
+				target_coords.append(places.pick_random())
+				
+				var sp = AnimatedSprite2D.new()
+				sp.position = Game.status_bar_ui.bag_button.get_global_rect().get_center()
+				sp.sprite_frames = Item.item_frames
+				sp.frame = items[i].image_id
+				sp.z_index = 3
+				Game.board_ui.cells_root.add_child(sp)
+				sps.append(sp)
+	)
+	tween.tween_callback(func():
+		var tween2 = Game.get_tree().create_tween()
+		for i in target_coords.size():
+			if sps[i] != null:
+				tween2.parallel()
+				SAnimation.cubic_curve_to(tween2, sps[i], get_pos(target_coords[i]), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7 * Game.animation_speed)
+	)
+	tween.tween_interval(0.7 * Game.animation_speed)
+	tween.tween_callback(func():
+		for i in items.size():
+			if sps[i] != null:
+				sps[i].queue_free()
+				place_item(target_coords[i], items[i], PlaceReason.FromBag)
 		if !outer_tween:
 			Game.end_busy()
 	)

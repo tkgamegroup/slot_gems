@@ -12,7 +12,7 @@ var category : String
 var price : int = 5
 var power : int = 0
 var consumed : bool = false
-var is_duplicant : bool = false
+var duplicant : bool = false
 var tradeable : bool = false
 var mountable : String = ""
 var mounted : Item = null
@@ -246,7 +246,7 @@ func setup(n : String):
 					for c in places:
 						var new_item = Item.new()
 						new_item.setup("Virus")
-						new_item.is_duplicant = true
+						new_item.duplicant = true
 						Board.set_item_at(c, new_item)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -585,7 +585,12 @@ func setup(n : String):
 						cands.append(i)
 				if !cands.is_empty():
 					var item = cands.pick_random()
-					Board.effect_place_item_from_bag(Board.get_pos(coord), item, Vector2i(-1, -1))
+					var tween = Game.get_tree().create_tween()
+					tween.tween_callback(func():
+						SEffect.add_leading_line(Board.get_pos(coord), Game.status_bar_ui.bag_button.get_global_rect().get_center())
+					)
+					tween.tween_interval(0.3)
+					Board.effect_place_items_from_bag([item], tween)
 		
 	elif name == "Eagle":
 		image_id = 23
@@ -598,8 +603,12 @@ func setup(n : String):
 					cands.append(i)
 			if !cands.is_empty():
 				var item = cands.pick_random()
-				
-				Board.effect_place_item_from_bag(Board.get_pos(coord), item, Vector2i(-1, -1))
+				var tween = Game.get_tree().create_tween()
+				tween.tween_callback(func():
+					SEffect.add_leading_line(Board.get_pos(coord), Game.status_bar_ui.bag_button.get_global_rect().get_center())
+				)
+				tween.tween_interval(0.3)
+				Board.effect_place_items_from_bag([item], tween)
 	elif name == "Mouse":
 		image_id = 24
 		description = "[color=gray][b]Eliminate[/b][/color]: [color=gray][b](Active)[/b][/color] Consume a [color=gray][b]Food[/b][/color] on the board, gain score it has."
@@ -635,7 +644,7 @@ func setup(n : String):
 				Game.release_item(mounted)
 				var new_item = Item.new()
 				new_item.setup("Princess")
-				new_item.is_duplicant = true
+				new_item.duplicant = true
 				Board.set_item_at(c, new_item)
 				return false
 			elif mounted.name == "Magician":
@@ -644,7 +653,7 @@ func setup(n : String):
 				Game.release_item(mounted)
 				var new_item = Item.new()
 				new_item.setup("Mage")
-				new_item.is_duplicant = true
+				new_item.duplicant = true
 				Board.set_item_at(c, new_item)
 				return false
 			return true

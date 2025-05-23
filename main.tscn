@@ -957,7 +957,6 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_wy5fy")
 text = "ui_game_roll"
 
 [node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
-custom_minimum_size = Vector2(320, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0

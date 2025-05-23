@@ -1,0 +1,21 @@
+========Game Status========
+Board Size: 18x6(108 cells)
+Red: 216, Orange: 216, Green: 216, Blue: 216, Pink: 216, Wild: 0
+Items: Dye: Red, Dye: Orange, Dye: Green, Dye: Blue, Dye: Pink, Bomb, Bomb, Bomb, Bomb, Bomb, Bomb, Bomb
+Skills: Huan
+Patterns: \, I, /
+Relics: 
+Rolls: 4
+Matches: 3
+======Task 0======
+====Level 1====
+Level Score: 11671, Level Combos: 38
+Matching 0: 9102 score, 23 combos
+Matching 1: 1630 score, 8 combos
+Matching 2: 939 score, 7 combos
+======Statics For 1 Task(s)======
+	Level 1
+Avg	11671.0,38.00	
+Matching 0	9102.0,23.00	
+Matching 1	1630.0,8.00	
+Matching 2	939.0,7.00	

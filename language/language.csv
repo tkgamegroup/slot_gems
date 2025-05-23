@@ -23,8 +23,8 @@ ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
 tt_game_board_size_content,"The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2.",横向的格子数将会是 棋盘大小 x6，纵向的格子数将会是 棋盘大小 x2。
 ui_game_hand_metrics,H,手牌
-tt_game_hand_metrics_title,Hand,
-tt_game_hand_metrics_content,Draw Items Per Roll: %d\nMax Items: %d,
+tt_game_hand_metrics_title,Hand,手牌
+tt_game_hand_metrics_content,Draw Items Per Roll: %d\nMax Items: %d,每次滚动抽取道具数: %d\n最大道具数: %d
 tt_game_coins_title,Your Coins,你的金币
 tt_game_bag_title,Your Bag,你的包
 tt_game_bag_content,Your gems and items.,你的宝石跟道具。
@@ -35,6 +35,10 @@ ui_game_patterns,Patterns,图案
 ui_game_rolls,Rolls,滚动次数
 ui_game_matches,Matches,匹配次数
 ui_game_roll,Roll,滚动
+tt_game_roll_title,Roll,滚动
+tt_game_roll_content,"Roll the board, unpinned and unfrozen gems will be replaced to new ones, then draw new items.",滚动棋盘，未固定跟未冰冻的宝石会被替换成新的，然后抽取新的道具。
+tt_game_match_title,Match,匹配
+tt_game_match_content,"Start matching patterns and get score. When there are no matched patterns, matching stops.",开始匹配图案并得分。当没有匹配的图案时，匹配终止。
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
@@ -53,7 +57,31 @@ rune_zhe,Zhe,折
 rune_cha,Cha,叉
 rune_kou,Kou,口
 gem_desc,Score: %d%s,分数: %d%s
-skill_desc,,
+skill_name_Xiao,Xiao,消
+skill_desc_Xiao,Eliminate one random rune after next roll.,在下次滚动之后消除一种随机的符文。
+skill_name_Roll,RoLL,RoLL
+skill_desc_Roll,+1 Rolls.,+1 滚动次数
+skill_name_Match,Mat.,Mat.
+skill_desc_Match,+1 Matches.,+1 匹配次数
+skill_name_Qiang,Qiang,强
+skill_desc_Qiang,+1 base score to a random gem.,一个随机的宝石 基础分数 +1。
+skill_name_Se,Se,色
+skill_desc_Se,Turn 2 random gems to [color=gray][b]Wild[/b][/color] until the end of level.,使2个随机的宝石变为 [color=gray][b]狂野[/b][/color] 直到关卡结束。
+skill_name_Huan,Huan,唤
+skill_desc_Huan,Place 3 random Items from Bag to Board.,从包中放置3个随机道具到棋盘上。
+skill_name_Chou,Chou,抽
+skill_desc_Chou,Draw 1 Item.,抽1个道具。
+skill_name_Jin,Jin,金
+skill_desc_Jin,Get 1 Coin.,获取1个金币。
+skill_name_Bao,Bao,爆
+skill_desc_Bao,Explode and eliminate cells in {range_i} [color=gray][b]Range[/b][/color] at 2 random locations.,在2个随机的位置爆炸并消除{range_i} [color=gray][b]Range[/b][/color]内的格子。
+skill_name_Fang,Fang,仿
+skill_desc_Fang,Duplicate 1 random Item on Board to a random location.,复制1个棋盘上的随机的道具并放到随机的位置。
+skill_name_Fen,Fen,分
+skill_desc_Fen,+{percentage}% of the target score and +{basic_value} score. (Not affected by combos),+1{percentage}%的目标分数并+{basic_value}分数。（不会受连击影响）
+skill_name_Xing,Xing,幸
+skill_desc_Xing,+0.5 Score Mult.,+0.5的分数倍率。
+skill_requirements,Requirements: ,需求：
 pattern_desc,,
 item_desc_bomb,,
 relic_desc,,

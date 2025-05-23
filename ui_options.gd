@@ -89,6 +89,27 @@ func _ready() -> void:
 				var coord = Vector2i(int(tokens2[0]), int(tokens2[1]))
 				for p in Game.patterns:
 					p.match_with(coord)
+			elif cmd == "ai":
+				var num = 1
+				var tt = tokens[1]
+				if tt.is_valid_int():
+					num = int(tt)
+					tt = tokens[2]
+				for j in num:
+					var i = Item.new()
+					i.setup(tt)
+					Game.add_item(i)
+					Game.bag_items.append(i)
+			elif cmd == "as":
+				var num = 1
+				var tt = tokens[1]
+				if tt.is_valid_int():
+					num = int(tt)
+					tt = tokens[2]
+				for j in num:
+					var s = Skill.new()
+					s.setup(tt)
+					Game.add_skill(s)
 			elif cmd == "test":
 				var mode = 0
 				var level_count = 1

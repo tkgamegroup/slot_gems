@@ -75,9 +75,9 @@ func enter():
 	
 	var tween = get_tree().create_tween()
 	
-	var items_pool = ["Flag", "Bomb", "C4", "Chain Bomb", "Minefield", "Echo Stone", "Virus", "Lightning", "Color Palette", "Black Hole", "White Hole", "Dog", "Cat", "Rooster", "Rabbit", "Fox", "Eagle", "Mouse", "Elephant", "Hot Dog", "Iai Cut", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
+	var items_pool = ["Flag", "Bomb", "C4", "Minefield", "Echo Stone", "Color Palette", "Hot Dog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
 	var relics_pool = ["Explosion Science", "High Explosives", "Uniform Blasting", "Sympathetic Detonation", "Blocked Lever", "Mobius Strip", "Premeditation", "Pentagram Power", "Red Stone", "Orange Stone", "Green Stone", "Blue Stone", "Pink Stone", "Rock Bottom"]
-	var skills_pool = ["Xiao", "RoLL", "Mat.", "Qiang", "Jiang", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
+	var skills_pool = ["Xiao", "RoLL", "Mat.", "Qiang", "Se", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
 	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	
 	for n in list1.get_children():

@@ -61,6 +61,15 @@ func write(s : String):
 	else:
 		print(s)
 
+func has_matched_pattern():
+	for y in Board.cy:
+		for x in Board.cx:
+			for p in Game.patterns:
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
+				if !res.is_empty():
+					return true
+	return false
+
 func start_game():
 	Game.start_game(saving)
 	for n in additional_items:
@@ -256,10 +265,17 @@ func time_out():
 				step = TaskSteps.ToMatch
 				Game.roll()
 		elif step == TaskSteps.ToMatch:
-			if Game.matches > 0:
-				auto_place_items()
-				step = TaskSteps.GetResult
-				Game.play()
+			if Game.bag_items.size() > 0 && Game.hand_ui.get_ui_count() < Game.max_hand_items && Game.rolls >= Game.matches:
+				step = TaskSteps.ToMatch
+				Game.roll()
+			else:
+				if !has_matched_pattern() && Game.rolls >= Game.matches:
+					step = TaskSteps.ToMatch
+					Game.roll()
+				elif Game.matches > 0:
+					auto_place_items()
+					step = TaskSteps.GetResult
+					Game.play()
 		elif step == TaskSteps.GetResult:
 			var his = Game.history
 			var curr_level = records.back().levels.back()

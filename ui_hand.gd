@@ -4,6 +4,8 @@ const ui_slot = preload("res://ui_hand_slot.tscn")
 const UiSlot = preload("res://ui_hand_slot.gd")
 
 @onready var list = $Control
+const item_w = 32
+const gap = 8
 
 var dragging : UiSlot = null
 var disabled : bool = false:
@@ -52,7 +54,7 @@ func add_ui(item : Item):
 func draw():
 	if Game.bag_items.is_empty():
 		return null
-	if get_ui_count() >= 8:
+	if get_ui_count() >= Game.max_hand_items:
 		return null
 	var item : Item = Game.get_item()
 	var ui = add_ui(item)
@@ -86,18 +88,20 @@ func cleanup():
 	for i in Game.items:
 		Game.bag_items.append(i)
 
+func _ready() -> void:
+	custom_minimum_size = Vector2(item_w * Game.max_hand_items + gap * (Game.max_hand_items - 1), 50)
+
 func _process(delta: float) -> void:
 	var n = list.get_child_count()
 	if n == 0:
 		return
-	var gap = 8
-	var w = 32 * n + gap * (n - 1)
+	var w = item_w * n + gap * (n - 1)
 	var x_off = 0
 	for i in n:
 		var ui = get_ui(i)
 		if ui != dragging:
 			ui.position = lerp(ui.position, Vector2(x_off, 0.0), 0.2)
-			x_off += 32 + gap
+			x_off += item_w + gap
 	if dragging:
 		dragging.global_position = get_global_mouse_position() - Vector2(16, 16)
 

@@ -79,17 +79,13 @@ var matches : int:
 		matches = v
 		control_ui.matches_text.text = "%d" % matches
 var matches_per_level : int
-var startup_draws : int:
-	set(v):
-		startup_draws = v
-		if hand_ui:
-			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, 8]
 var draws_per_roll : int:
 	set(v):
 		draws_per_roll = v
 		if hand_ui:
-			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, 8]
+			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, Game.max_hand_items]
 var next_roll_extra_draws : int = 0
+var max_hand_items : int = 12
 var props = Props.None
 var pins_num : int:
 	set(v):
@@ -260,7 +256,8 @@ func get_item(i : Item = null):
 	return SMath.pick_and_remove(bag_items)
 
 func release_item(i : Item):
-	if i.is_duplicant:
+	if i.duplicant:
+		items.erase(i)
 		return
 	if i.mounted:
 		release_item(i.mounted)
@@ -450,7 +447,6 @@ func start_game(saving : String = ""):
 		level = 0
 		rolls_per_level = 4
 		matches_per_level = 3
-		startup_draws = 0
 		draws_per_roll = 8
 		pins_num_per_level = 0
 		activates_num_per_level = 0
@@ -459,7 +455,7 @@ func start_game(saving : String = ""):
 		
 		for i in 0:
 			var s = Skill.new()
-			s.setup("Huan")
+			s.setup("Fang")
 			add_skill(s)
 		
 		for i in 1:
@@ -591,7 +587,7 @@ func start_game(saving : String = ""):
 			var item = Item.new()
 			item.setup("Minefield")
 			add_item(item)
-		for i in 10:
+		for i in 7:
 			var item = Item.new()
 			item.setup("Bomb")
 			add_item(item)
@@ -648,10 +644,7 @@ func roll():
 		score_mult = 1.0
 		animation_speed = base_animation_speed
 		Board.roll()
-		var draw_num = 0
-		if modifiers["first_roll_i"] == 1:
-			draw_num = startup_draws
-		draw_num += draws_per_roll
+		var draw_num = draws_per_roll
 		draw_num = min(draw_num, bag_items.size())
 		for i in draw_num:
 			hand_ui.draw()
@@ -697,7 +690,6 @@ func save_to_file(name : String = "1"):
 	data["board_size"] = Game.board_size
 	data["rolls_per_level"] = Game.rolls_per_level
 	data["matches_per_level"] = Game.matches_per_level
-	data["startup_draws"] = Game.startup_draws
 	data["draws_per_roll"] = Game.draws_per_roll
 	data["coins"] = Game.coins
 	data["rolls"] = Game.rolls
@@ -752,7 +744,7 @@ func save_to_file(name : String = "1"):
 		var item = {}
 		item["name"] = i.name
 		item["power"] = i.power
-		item["is_duplicant"] = i.is_duplicant
+		item["duplicant"] = i.duplicant
 		item["tradeable"] = i.tradeable
 		item["mountable"] = i.mountable
 		item["mounted"] = Game.items.find(i.mounted)
@@ -851,7 +843,6 @@ func load_from_file(name : String = "1"):
 	board_size = int(data["board_size"])
 	rolls_per_level = int(data["rolls_per_level"])
 	matches_per_level = int(data["matches_per_level"])
-	startup_draws = int(data["startup_draws"])
 	draws_per_roll = int(data["draws_per_roll"])
 	coins = int(data["coins"])
 	rolls = int(data["rolls"])
@@ -890,7 +881,7 @@ func load_from_file(name : String = "1"):
 		var i = Item.new()
 		i.setup(item["name"])
 		i.power = int(item["power"])
-		i.is_duplicant = item["is_duplicant"]
+		i.duplicant = item["duplicant"]
 		i.tradeable = item["tradeable"]
 		i.mountable = item["mountable"]
 		i.coord = str_to_var("Vector2i" + item["coord"])
@@ -950,7 +941,7 @@ func load_from_file(name : String = "1"):
 			var i = Game.items[item_idx]
 			c.item = i
 			ui.set_item_image(i.image_id)
-			ui.set_is_duplicant(i.is_duplicant)
+			ui.set_is_duplicant(i.duplicant)
 		var state = cell["state"]
 		if state != Cell.State.Normal:
 			Board.set_state_at(coord, state)

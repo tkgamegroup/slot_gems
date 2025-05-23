@@ -6,7 +6,6 @@ const skill_frames : SpriteFrames = preload("res://images/skills.tres")
 const UiSkill = preload("res://ui_skill.gd")
 
 var name : String
-var description : String
 var image_id : int
 var requirements : Array[int]
 var price : int = 10
@@ -21,7 +20,6 @@ func setup(n : String):
 	name = n
 	if name == "Xiao":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Kou, Gem.Rune.Kou]
-		description = "Eliminate one random rune after next roll."
 		image_id = 1
 		extra["eliminate_times"] = 0
 		extra["processing"] = false
@@ -68,17 +66,15 @@ func setup(n : String):
 					Board.rolling_finished.emit()
 					return true
 				return false
-	elif name == "RoLL":
+	elif name == "Roll":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Kou, Gem.Rune.Zhe, Gem.Rune.Zhe]
-		description = "+1 Roll."
 		image_id = 2
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
 				Game.rolls += 1
 			)
-	elif name == "Mat.":
+	elif name == "Match":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Cha]
-		description = "+1 Match."
 		image_id = 3
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
@@ -86,7 +82,6 @@ func setup(n : String):
 			)
 	elif name == "Qiang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Kou, Gem.Rune.Zhe]
-		description = "+1 base score to a random gem."
 		image_id = 4
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
@@ -94,7 +89,6 @@ func setup(n : String):
 			)
 	elif name == "Se":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Cha]
-		description = "Turn 2 random gems to [color=gray][b]Wild[/b][/color]."
 		image_id = 5
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
@@ -118,13 +112,18 @@ func setup(n : String):
 				)
 	elif name == "Huan":
 		requirements = [Gem.Rune.Kou, Gem.Rune.Kou, Gem.Rune.Kou]
-		description = "Place an item from Bag to Board."
 		image_id = 6
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
-			Board.effect_place_item_from_bag(ui.get_global_rect().get_center(), null, Vector2i(-1, -1), tween)
+			tween.tween_callback(func():
+				SEffect.add_leading_line(ui.get_global_rect().get_center(), Game.status_bar_ui.bag_button.get_global_rect().get_center())
+			)
+			tween.tween_interval(0.3)
+			var items = []
+			for i in 3:
+				items.append(null)
+			Board.effect_place_items_from_bag(items, tween)
 	elif name == "Chou":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Cha, Gem.Rune.Kou]
-		description = "Draw an Item."
 		image_id = 7
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
@@ -132,7 +131,6 @@ func setup(n : String):
 			)
 	elif name == "Jin":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Zhe]
-		description = "Get 1 Coin."
 		image_id = 8
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
@@ -141,7 +139,6 @@ func setup(n : String):
 			)
 	elif name == "Bao":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Kou, Gem.Rune.Cha]
-		description = "Explode and eliminate cells in {range_i} [color=gray][b]Range[/b][/color] at 2 random locations."
 		image_id = 9
 		extra["range_i"] = 0
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
@@ -158,48 +155,60 @@ func setup(n : String):
 				tween.tween_subtween(subtween)
 	elif name == "Fang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Cha]
-		description = "Duplicate 1 Item on Board to random location."
 		image_id = 10
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
+			var target : Vector2i
+			var place : Vector2i
 			tween.tween_callback(func():
 				var targets = Board.filter(func(g : Gem, i : Item):
-					return i != null
+					return g && i != null
 				)
+				for ae in Board.active_effects:
+					if ae.type == HostType.Item:
+						targets.append(ae.coord)
 				var places = Board.filter(func(g : Gem, i : Item):
-					return i == null
+					return g && !i && Board.get_active_effects_at(g.coord).is_empty()
 				)
 				if !targets.is_empty() && !places.is_empty():
-					var target = targets.pick_random()
-					var place = places.pick_random()
+					target = targets.pick_random()
+					place = places.pick_random()
 					tween.tween_callback(func():
 						SEffect.add_leading_line(ui.get_global_rect().get_center(), Board.get_pos(target))
 					)
 					tween.tween_interval(0.3)
+					var new_item = Item.new()
+					var sp = AnimatedSprite2D.new()
 					tween.tween_callback(func():
-						SEffect.add_leading_line(Board.get_pos(target), Board.get_pos(place))
+						var item = Board.get_item_at(target)
+						if !item:
+							item = Board.get_active_effects_at(target).front()
+						new_item.setup(item.name)
+						new_item.duplicant = true
+						Game.items.append(new_item)
+						
+						sp.position = Board.get_pos(target)
+						sp.sprite_frames = Item.item_frames
+						sp.frame = item.image_id
+						sp.z_index = 3
+						Game.board_ui.cells_root.add_child(sp)
 					)
-					tween.tween_interval(0.3)
+					tween.tween_property(sp, "position", Board.get_pos(place), 0.5 * Game.animation_speed)
 					tween.tween_callback(func():
-						var i = Board.get_item_at(target)
-						var new_item = Item.new()
-						new_item.setup(i.name)
-						new_item.is_duplicant = true
 						Board.set_item_at(place, new_item)
+						sp.queue_free()
 					)
 			)
 	elif name == "Fen":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Zhe, Gem.Rune.Zhe]
-		description = "Get {percentage}% target score +{basic_value} score. (Not affected by combos)"
 		image_id = 11
-		extra["percentage"] = 2
-		extra["basic_value"] = 500
+		extra["percentage"] = 0
+		extra["basic_value"] = 1500
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
 				Game.add_score(int(Game.target_score * (0.01 * extra["percentage"])) + extra["basic_value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
 			)
 	elif name == "Xing":
 		requirements = [Gem.Rune.Cha, Gem.Rune.Cha, Gem.Rune.Cha]
-		description = ""
 		image_id = 12
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
@@ -229,10 +238,10 @@ func add_exp(v : int):
 
 func get_tooltip():
 	var ret : Array[Pair] = []
-	var content = "Requirements: "
+	var content = tr("skill_requirements")
 	for r in requirements:
 		content += "[img width=16]%s[/img]" % Gem.rune_icon(r)
 	content += "\n"
-	content += description.format(extra)
-	ret.append(Pair.new(name, content))
+	content += tr("skill_desc_" + name).format(extra)
+	ret.append(Pair.new(tr("skill_name_" + name), content))
 	return ret

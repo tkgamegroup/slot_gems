@@ -36,9 +36,9 @@ func _ready() -> void:
 		Game.roll()
 	)
 	roll_button.mouse_entered.connect(func():
-		var desc = "Roll the board! Unfrozen gems will be replaced to new ones."
+		var desc = tr("tt_game_roll_content")
 		desc += "\nDraw %d item(s)." % (Game.next_roll_extra_draws + 1)
-		STooltip.show([Pair.new("Roll", desc)])
+		STooltip.show([Pair.new(tr("tt_game_roll_title"), desc)])
 	)
 	roll_button.mouse_exited.connect(func():
 		STooltip.close()
@@ -79,12 +79,12 @@ func _ready() -> void:
 				preview_tween = null
 			)
 		
-		var desc = "Start matching patterns and get score. When there are no patterns, matching stops."
+		var desc = tr("tt_game_match_content")
 		if match_button.disabled && !roll_button.disabled:
 			desc += "\n[color=yellow](Roll the Board first)[/color]"
 		elif !match_button.disabled && preview_matchings.is_empty():
 			desc += "\n[color=red](No match found)[/color]"
-		STooltip.show([Pair.new("Match", desc)])
+		STooltip.show([Pair.new(tr("tt_game_match_title"), desc)])
 	)
 	match_button.mouse_exited.connect(func():
 		STooltip.close()
