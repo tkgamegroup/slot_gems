@@ -14,27 +14,24 @@ var on_event : Callable
 
 func setup(n : String):
 	name = n
-	if name == "Explosion Science":
+	if name == "ExplosionScience":
 		image_id = 1
-		description = "Explosion [color=gray][b]Range[/b][/color] +1 but [color=gray][b]Power[/b][/color] -3."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["explode_range_i"] += 1
 					Game.modifiers["explode_power_i"] -= 3
-	elif name == "High Explosives":
+	elif name == "HighExplosives":
 		image_id = 2
-		description = "Explosion [color=gray][b]Power[/b][/color] +{value}."
 		price = 5
 		extra["value"] = 6
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["explode_power_i"] += extra["value"]
-	elif name == "Uniform Blasting":
+	elif name == "UniformBlasting":
 		image_id = 3
-		description = "Explosion will push active effects."
-		price = 557
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -63,9 +60,8 @@ func setup(n : String):
 									ae.coord = new_place
 									ae.sp.position = Board.get_pos(new_place)
 									moved.append(ae.host)
-	elif name == "Sympathetic Detonation":
+	elif name == "SympatheticDetonation":
 		image_id = 4
-		description = "Bombs will activate when cells next to are eliminate."
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
@@ -78,9 +74,8 @@ func setup(n : String):
 					var i = Board.get_item_at(c)
 					if i && i.category == "Bomb":
 						Board.activate(i, HostType.Item, 0, c, Board.ActiveReason.Relic, self)
-	elif name == "Blocked Lever":
+	elif name == "BlockedLever":
 		image_id = 5
-		description = "Once per level, before the matching ends, perform another rolling and matching, repeat 1 time."
 		extra["enable"] = true
 		extra["times_i"] = 0
 		on_event = func(event : int, tween : Tween, data):
@@ -111,24 +106,21 @@ func setup(n : String):
 						Board.roll()
 						return true
 				return false
-	elif name == "Mobius Strip":
+	elif name == "MobiusStrip":
 		image_id = 6
-		description = "The upper and lower parts of the Board are connected."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["board_upper_lower_connected_i"] = 1
 	elif name == "Premeditation":
 		image_id = 7
-		description = "Combo starts from 3."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["base_combo_i"] = 3
 					Game.combos = max(Game.combos, Game.modifiers["base_combo_i"])
-	elif name == "Pentagram Power":
+	elif name == "PentagramPower":
 		image_id = 8
-		description = "Get +4 Score Mult every 5 Combos."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -136,49 +128,43 @@ func setup(n : String):
 			elif event == Event.Combo:
 				if Game.combos > 0 && Game.combos % 5 == 0:
 					Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":4.0}, Buff.Duration.ThisCombo)
-	elif name == "Red Stone":
+	elif name == "RedStone":
 		image_id = 9
-		description = "Red gems' base score +{value}."
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["red_bouns_i"] += extra["value"]
-	elif name == "Orange Stone":
+	elif name == "OrangeStone":
 		image_id = 10
-		description = "Orange gems' base score +{value}."
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["orange_bouns_i"] += extra["value"]
-	elif name == "Green Stone":
+	elif name == "GreenStone":
 		image_id = 11
-		description = "Green gems' base score +{value}."
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["green_bouns_i"] += extra["value"]
-	elif name == "Blue Stone":
+	elif name == "BlueStone":
 		image_id = 12
-		description = "Blue gems' base score +{value}."
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["blue_bouns_i"] += extra["value"]
-	elif name == "Pink Stone":
+	elif name == "PinkStone":
 		image_id = 13
-		description = "Pink gems' base score +{value}."
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.modifiers["pink_bouns_i"] += extra["value"]
-	elif name == "Rock Bottom":
+	elif name == "RockBottom":
 		image_id = 14
-		description = "Gems' score will not descent."
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -190,6 +176,6 @@ func setup(n : String):
 
 func get_tooltip():
 	var ret : Array[Pair] = []
-	var content = description.format(extra)
-	ret.append(Pair.new(name, content))
+	var content = tr("relic_desc_" + name).format(extra)
+	ret.append(Pair.new(tr("relic_name_" + name), content))
 	return ret

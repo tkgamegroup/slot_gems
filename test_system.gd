@@ -316,13 +316,32 @@ func auto_place_items():
 							one_less_places[col].append(res[0])
 		SMath.remove_if(item_uis, func(ui):
 			var item = ui.item
-			if item.name.begins_with("Dye: "):
-				var color = Gem.name_to_type(item.name.substr(5))
-				var arr = one_less_places[color - 1]
+			if item.name.begins_with("DyeRed"):
+				var arr = one_less_places[Gem.Type.Red - 1]
 				if !arr.is_empty():
 					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
-			elif item.name == "Color Palette":
+			elif item.name.begins_with("DyeOrange"):
+				var arr = one_less_places[Gem.Type.Orange - 1]
+				if !arr.is_empty():
+					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+						return true
+			elif item.name.begins_with("DyeGreen"):
+				var arr = one_less_places[Gem.Type.Green - 1]
+				if !arr.is_empty():
+					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+						return true
+			elif item.name.begins_with("DyeBlue"):
+				var arr = one_less_places[Gem.Type.Blue - 1]
+				if !arr.is_empty():
+					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+						return true
+			elif item.name.begins_with("DyePink"):
+				var arr = one_less_places[Gem.Type.Pink - 1]
+				if !arr.is_empty():
+					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+						return true
+			elif item.name == "ColorPalette":
 				for arr in one_less_places:
 					if !arr.is_empty():
 						if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
@@ -351,7 +370,7 @@ func auto_place_items():
 		SMath.remove_if(item_uis, func(ui):
 			var item = ui.item
 			if item.on_process.is_valid():
-				if item.name == "C4" || item.name == "Chain Bomb" || item.name == "Lightning":
+				if item.name == "C4" || item.name == "ChainBomb" || item.name == "Lightning":
 					return false
 				if !central_activater_places.is_empty():
 					var c = central_activater_places.front()
@@ -364,7 +383,7 @@ func auto_place_items():
 		SMath.remove_if(item_uis, func(ui):
 			var item = ui.item
 			if item.on_process.is_valid():
-				if item.name == "C4" || item.name == "Chain Bomb":
+				if item.name == "C4" || item.name == "ChainBomb":
 					var bomb_places = []
 					for y in Board.cy:
 						for x in Board.cx:
@@ -378,7 +397,7 @@ func auto_place_items():
 						var c = bomb_places[0]
 						if Game.hand_ui.place_item(ui, c):
 							return true
-					elif item.name == "Chain Bomb":
+					elif item.name == "ChainBomb":
 						if !central_activater_places.is_empty():
 							var c = central_activater_places.front()
 							if Game.hand_ui.place_item(ui, c):

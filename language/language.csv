@@ -1,19 +1,48 @@
 id,en,zh
 game_title,Slot Gems,摇宝石
+w_colorless,Colorless,无光
+w_colorless_desc,Can not match with any color.,不可以与任何颜色匹配。
+w_wild,Wild,狂野
+w_wild_desc,Can match with any color.,可以与任何颜色匹配。
+w_eliminate,Eliminate,消除
+w_eliminate_desc,Effect when the cell is eliminated.,格子被消除时的效果。
+w_active,Active,激活
+w_active_desc,Active effects will stack and process one by one when the matching stops.,激活的效果会堆叠起来，在匹配停止时一个接个地处理。
+w_place,Place,放置
+w_place_desc,Effect when the this Item is placed into the board. ,当此道具被放置到棋盘时的效果。
+w_quick,Quick,快速
+w_quick_desc,Effect when the this Item is placed into the board. And then the Item will return to Bag.,当此道具被放置到棋盘时的效果。之后道具会放回到包。
+w_consumed,Consumed,消耗
+w_consumed_desc,Removed until the end of level.,直到关卡结束前被移除。
+w_aura,Aura,光环
+w_aura_desc,Effect all gems while this Item is on board,当此道具在棋盘上时，影响所有的宝石。
+w_range,Range,范围
+w_range_desc,The cells within the distance of n. 0 means the cell itself.,距离在n之内的格子。0表示格子本身。
+w_power,Power,力量
+w_power_desc,Add addition score to each gem that this Item eliminated.,使此道具消除的宝石增加额外的分数。
+w_tradable,Tradable,可交易
+w_tradable_desc,You can drag this Item to Bag in order to exchange another item.,你可以将此道具拖拽到包来交换一个新的道具。
+w_mount,Mount,坐骑
+w_mount_desc,Place a satisfied Item to this Item in order to form a combine Item. Basiclly new Item have the effects of both.,将一个满足条件的道具放到此道具上来组合一个新道具。通常新道具拥有两个道具的效果。
 ui_close,Close,关闭
 ui_titile_continue,Continue,继续游戏
 ui_titile_new_game,New Game,新游戏
 ui_titile_collections,Collections,藏品
 ui_titile_options,Options,选项
 ui_titile_quit,Quit,退出
-ui_option_title,Options,选项
-ui_option_language,Language,语言
-ui_option_sfx_volume,SFX Volume,音效音量
-ui_option_music_volume,Music Volume,音乐音量
-ui_option_fullscreen,Fullscreen,全屏
-ui_option_performance_mode,Performance Mode,性能模式
-ui_option_invincible,Invincible,无敌
-ui_option_command_line,Command Line,命令行
+ui_options_title,Options,选项
+ui_options_language,Language,语言
+ui_options_sfx_volume,SFX Volume,音效音量
+ui_options_music_volume,Music Volume,音乐音量
+ui_options_fullscreen,Fullscreen,全屏
+ui_options_performance_mode,Performance Mode,性能模式
+ui_options_invincible,Invincible,无敌
+ui_options_command_line,Command Line,命令行
+ui_collections_title,Collections,藏品
+ui_collections_items,Items,道具
+ui_collections_skills,Skills,技能
+ui_collections_patterns,Patterns,图案
+ui_collections_relics,Relics,遗物
 ui_game_score,Score,分数
 ui_game_combos,Combos,连击
 ui_game_mult,Mult,倍率
@@ -64,9 +93,9 @@ skill_desc_Roll,+1 Rolls.,+1 滚动次数
 skill_name_Match,Mat.,Mat.
 skill_desc_Match,+1 Matches.,+1 匹配次数
 skill_name_Qiang,Qiang,强
-skill_desc_Qiang,+1 base score to a random gem.,一个随机的宝石 基础分数 +1。
+skill_desc_Qiang,+1 base score to 1 random gem.,1个随机的宝石 基础分数 +1。
 skill_name_Se,Se,色
-skill_desc_Se,Turn 2 random gems to [color=gray][b]Wild[/b][/color] until the end of level.,使2个随机的宝石变为 [color=gray][b]狂野[/b][/color] 直到关卡结束。
+skill_desc_Se,Turn 2 random gems to Wild until the end of level.,使2个随机的宝石变为 w_wild直到关卡结束。
 skill_name_Huan,Huan,唤
 skill_desc_Huan,Place 3 random Items from Bag to Board.,从包中放置3个随机道具到棋盘上。
 skill_name_Chou,Chou,抽
@@ -74,14 +103,130 @@ skill_desc_Chou,Draw 1 Item.,抽1个道具。
 skill_name_Jin,Jin,金
 skill_desc_Jin,Get 1 Coin.,获取1个金币。
 skill_name_Bao,Bao,爆
-skill_desc_Bao,Explode and eliminate cells in {range_i} [color=gray][b]Range[/b][/color] at 2 random locations.,在2个随机的位置爆炸并消除{range_i} [color=gray][b]Range[/b][/color]内的格子。
+skill_desc_Bao,Explode and eliminate cells in {range_i} w_range at 2 random locations.,在2个随机的位置爆炸并消除{range_i}w_range内的格子。
 skill_name_Fang,Fang,仿
 skill_desc_Fang,Duplicate 1 random Item on Board to a random location.,复制1个棋盘上的随机的道具并放到随机的位置。
 skill_name_Fen,Fen,分
-skill_desc_Fen,+{percentage}% of the target score and +{basic_value} score. (Not affected by combos),+1{percentage}%的目标分数并+{basic_value}分数。（不会受连击影响）
+skill_desc_Fen,+{percentage}% of the target score and +{basic_value} score. (Not affected by combos),+{percentage}%的目标分数并+{basic_value}分数。（不会受连击影响）
 skill_name_Xing,Xing,幸
 skill_desc_Xing,+0.5 Score Mult.,+0.5的分数倍率。
 skill_requirements,Requirements: ,需求：
-pattern_desc,,
-item_desc_bomb,,
-relic_desc,,
+pattern_desc,LV: %d\nExp: %d/%d\nMult: %d,等级：%d\n经验：%d/%d\n倍率：%d
+item_name_DyeRed,Dye: Red,染色剂：红
+item_desc_DyeRed,w_quick: Change gem to red color temporarily.,w_quick：临时改变宝石颜色为红。
+item_name_DyeOrange,Dye: Orange,染色剂：橙
+item_desc_DyeOrange,w_quick: Change gem to orange color temporarily.,w_quick：临时改变宝石颜色为橙。
+item_name_DyeGreen,Dye: Green,染色剂：绿
+item_desc_DyeGreen,w_quick: Change gem to green color temporarily.,w_quick：临时改变宝石颜色为绿。
+item_name_DyeBlue,Dye: Blue,染色剂：蓝
+item_desc_DyeBlue,w_quick: Change gem to blue color temporarily.,w_quick：临时改变宝石颜色为蓝。
+item_name_DyePink,Dye: Pink,染色剂：粉
+item_desc_DyePink,w_quick: Change gem to pink color temporarily.,w_quick：临时改变宝石颜色为粉。
+item_name_Pin,Pin,大头针
+item_desc_Pin,"w_quick: Pin the cell and if it is on one or more patterns, pin those cells as well.",w_quick：固定格子并且如果在一个或多个图案中，把那些格子也固定。
+item_name_Flag,Flag,旗帜
+item_desc_Flag,w_aura: Gems +{value} score.,w_aura：宝石+{value}分数。
+item_name_Bomb,Bomb,炸弹
+item_desc_Bomb,w_eliminate: (w_active) Explode and eliminate cells in {range} w_range.,w_eliminate：(w_active) 爆炸并消除{range}w_range内的格子。
+item_name_C4,C4,C4
+item_desc_C4,w_eliminate by [b]Bomb[/b]: (w_active) Explode and eliminate cells in {range} w_range.,被炸弹w_eliminate：(w_active) 爆炸并消除{range}w_range内的格子。
+item_name_ChainBomb,Chain Bomb,连锁炸弹
+item_desc_ChainBomb,"w_eliminate: (w_active) Explode and eliminate cells in {range} w_range.\n(If eliminated after 'Chain Bomb', w_range become that 'Chain Bomb's +1, and w_power become that 'Chain Bomb's +2.)",
+item_name_GoldenBomb,Golden Bomb,黄金炸弹
+item_desc_GoldenBomb,"w_eliminate: (w_active) Cost 6 coins to explode and eliminate cells in {range} w_range, earn 0-3 coins for each cell eliminated.",
+item_name_Minefield,Minefield,地雷阵
+item_desc_Minefield,"w_quick: Setup a minefield within {setup_range} w_range, and if any cell in that area is eliminated, (w_active)an explosion will occur on that cell and eliminate cells in {range} w_range.",w_quick：在{setup_range}w_range设置地雷阵，如果区域内的格子被消除，(w_active)一个爆炸将会在那个格子发生并消除{range}w_range内的格子。
+item_name_EchoStone,Echo Stone,回音石
+item_desc_EchoStone,When an explosion occurs: (w_active) Eliminate 1 random adjacent cell.\nw_eliminate by [b]Bomb[/b]: (w_active) Eliminate cells in {range} w_range.,
+item_name_Virus,Virus,病毒
+item_desc_Virus,w_place: Make two copies of this Item into adjacent cells.\nw_eliminate: (w_active) Eliminate all connected cells with the same color of this.,
+item_name_Lightning,Lightning,闪电
+item_desc_Lightning,"w_eliminate: (w_active) Connect all 'Lightning's, eliminate cells on between.",
+item_name_ColorPalette,Color Palette,调色板
+item_desc_ColorPalette,w_quick: Turn target and 3 random gems to w_wild type until the end of level.,w_quick：使此宝石与3个随机的宝石直到关卡结束前变为w_wild。
+item_name_Fire,Fire,火
+item_desc_Fire,w_eliminate: Sets the cell to burning state.,
+item_name_BlackHole,Black Hole,黑洞
+item_desc_BlackHole,w_eliminate: (w_active) If this is the last item activated. Eliminate all cells.,
+item_name_WhiteHole,White Hole,白洞
+item_desc_WhiteHole,w_eliminate: (w_active) Eliminate all cells. (Only activate if this is the first item activated.),
+item_name_Chloroplast,Chloroplast,叶绿体
+item_desc_Chloroplast,"w_quick: Target non-w_colorless gem turn to [color=gray][b]Colorless[/b][/color] until the end of level, draw 2 items.",w_quick：使一个非w_colorless宝石直到关卡结束前变为w_colorless，抽2个道具。
+item_name_Dog,Dog,狗
+item_desc_Dog,w_eliminate: +{value} score for each different Item. (Not affected by combos),w_eliminate：棋盘上每有一个不同的道具则+{value}分数。（不会受连击影响）
+item_name_Cat,Cat,猫
+item_desc_Cat,w_eliminate: (w_active) Jump to a cell and eliminate it within 2 w_range. Repeat 2 times.,w_eliminate：(w_active) 跳到一个2w_range内的格子并消除它。重复2次。
+item_name_Rooster,Rooster,公鸡
+item_desc_Rooster,w_eliminate: (w_active) Activate all [color=gray][b]Animal[/b][/color] activater items.,
+item_name_Rabbit,Rabbit,兔子
+item_desc_Rabbit,"w_eliminate: (w_active) Jump to a cell and eliminate it within 2 w_range. If jump to another 'Rabbit', add a new 'Rabbit' to Bag. Repeat 1 time.",
+item_name_Fox,Fox,狐狸
+item_desc_Fox,"w_place: If this item is placed from Bag, place another [color=gray][b]Animal[/b][/color] from Bag to Board.",
+item_name_Eagle,Eagle,鹰
+item_desc_Eagle,w_place: Place another [color=gray][b]Animal[/b][/color] from Bag to Board.,
+item_name_Mouse,Mouse,老鼠
+item_desc_Mouse,"w_eliminate: (w_active) Consume a [color=gray][b]Food[/b][/color] on the board, gain score it has.",
+item_name_Horse,Horse,马
+item_desc_Horse,Turn mounted and this Item into a new Item.,
+item_name_Elephant,Elephant,大象
+item_desc_Elephant,Eliminate all cells this item traveled.,
+item_name_HotDog,Hot Dog,热狗
+item_desc_HotDog,w_eliminate: +{value} score. (Not affected by combos),w_eliminate：+{value}分数。（不会受连击影响）
+item_name_IaiCut,Iai Cut,居合斩
+item_desc_IaiCut,"w_eliminate: (w_active) Eliminate a row on a random direction. (Eliminated by 'Iai Cut' will add one direction, Max 3)",
+item_name_Magnet,Magnet,磁铁
+item_desc_Magnet,"When an item is activated, move it to the closest 'Magnet'.",
+item_name_Rainbow,Rainbow,彩虹
+item_desc_Rainbow,w_eliminate: +{value} score mult this matching.,w_eliminate：+{value}分数倍率直到这次匹配结束。
+item_name_Idol,Idol,偶像
+item_desc_Idol,w_aura: All gems +{value} score.\nw_eliminate: (w_active) Gems in 1 w_range -1 base score.,w_aura：宝石+{value}分数。\nw_eliminate：(w_active)1w_range内的宝石基础分数-1。
+item_name_Magician,Magician,魔术师
+item_desc_Magician,w_eliminate: (w_active) Turn 5 random gems to w_wild until the end of level.,w_eliminate：(w_active) 使5个随机的宝石直到关卡结束前变为w_wild。
+item_name_Princess,Princess,公主
+item_desc_Princess,w_aura: All gems +7 score.\nw_eliminate: (w_active) Gems in 1 w_range get +1 score permanently.,
+item_name_Mage,Mage,大法师
+item_desc_Mage,w_eliminate: (w_active) Turn gems in 1 w_range to Wild until the end of level.,
+item_name_Ruby,Ruby,红宝石
+item_desc_Ruby,w_eliminate: +1 base score to Red.,w_eliminate：红色基础分数+1。
+item_name_Citrine,Citrine,黄水晶
+item_desc_Citrine,w_eliminate: +1 base score to Orange.,w_eliminate：黄色基础分数+1。
+item_name_Emerald,Emerald,绿宝石
+item_desc_Emerald,w_eliminate: +1 base score to Green.,w_eliminate：绿色基础分数+1。
+item_name_Sapphire,Sapphire,蓝宝石
+item_desc_Sapphire,w_eliminate: +1 base score to Blue.,w_eliminate：蓝色基础分数+1。
+item_name_Tourmaline,Tourmaline,粉宝石
+item_desc_Tourmaline,w_eliminate: +1 base score to Pink.,w_eliminate：粉色基础分数+1。
+item_name_StrengthPotion,Strength Potion,力量药水
+item_desc_StrengthPotion,w_quick: Target Item +10 w_power until the end of level.,w_quick：使目标道具直到关卡结束前获得+10w_power。
+item_name_EchoTotem,Echo Totem,回音图腾
+item_desc_EchoTotem,w_aura: All Item's repeat number +1.,
+item_name_Volcano,Volcano,火山
+item_desc_Volcano,w_eliminate: (w_active) Eliminate 2 random cells in 2 w_range. Repeat 2 times.,w_eliminate：(w_active)消除2w_range内的2个随机格子。重复2次。
+relic_name_ExplosionScience,Explosion Science,爆炸科学
+relic_desc_ExplosionScience,Explosion w_range +1 but w_power -3.,爆炸w_range+1但是w_power-3。
+relic_name_HighExplosives,High Explosives,高爆炸药
+relic_desc_HighExplosives,Explosion w_power +{value}.,爆炸w_power+{value}。
+relic_name_UniformBlasting,Uniform Blasting,均匀爆破
+relic_desc_UniformBlasting,Explosion will push active effects.,爆炸会推开激活效果。
+relic_name_SympatheticDetonation,Sympathetic Detonation,殉爆
+relic_desc_SympatheticDetonation,Bombs will activate when cells next to are eliminated.,当旁边的格子被消除时，炸弹会被激活。
+relic_name_BlockedLever,Blocked Lever,被阻挡的拉杆
+relic_desc_BlockedLever,"Once per level, before the matching ends, perform another rolling and matching, repeat 1 time.",每关卡一次，在匹配即将完成时，执行一次滚动与匹配，重复1次。
+relic_name_MobiusStrip,Mobius Strip,莫比乌斯环
+relic_desc_MobiusStrip,The upper and lower parts of the Board are connected.,棋盘的上下部分相互链接。
+relic_name_Premeditation,Premeditation,预谋
+relic_desc_Premeditation,Combo starts from 3.,连击从3开始。
+relic_name_PentagramPower,Pentagram Power,五角之力
+relic_desc_PentagramPower,"Every 5 Combos, get +4 Score Mult in that Combo.",每当有5个连击，那次连击获得+4分数倍率。
+relic_name_RedStone,Red Stone,红石
+relic_desc_RedStone,Red gems' base score +{value}.,红色宝石的基础分数+{value}。
+relic_name_OrangeStone,Orange Stone,橙石
+relic_desc_OrangeStone,Orange gems' base score +{value}.,橙色宝石的基础分数+{value}。
+relic_name_GreenStone,Green Stone,绿石
+relic_desc_GreenStone,Green gems' base score +{value}.,绿色宝石的基础分数+{value}。
+relic_name_BlueStone,Blue Stone,蓝石
+relic_desc_BlueStone,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
+relic_name_PinkStone,Pink Stone,粉石
+relic_desc_PinkStone,Pink gems' base score +{value}.,粉色宝石的基础分数+{value}。
+relic_name_RockBottom,Rock Bottom,谷底石
+relic_desc_RockBottom,Gems' score will not descent.,

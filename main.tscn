@@ -1,4 +1,4 @@
-[gd_scene load_steps=143 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=145 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -81,6 +81,7 @@
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 [ext_resource type="Script" uid="uid://kwssksc4v2rx" path="res://ui_blocker.gd" id="68_a5ll1"]
+[ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
@@ -274,7 +275,7 @@ shadow_size = 1
 shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_birbe"]
-bg_color = Color(0.23, 0.1564, 0.22264, 1)
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
 border_color = Color(0.705882, 0.705882, 0.705882, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -285,7 +286,7 @@ shadow_size = 1
 shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1p13"]
-bg_color = Color(0.23, 0.1564, 0.22264, 1)
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
 border_color = Color(0.705882, 0.705882, 0.705882, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -296,7 +297,7 @@ shadow_size = 1
 shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4obbf"]
-bg_color = Color(0.23, 0.1564, 0.22264, 1)
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
 border_color = Color(0.705882, 0.705882, 0.705882, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -306,7 +307,7 @@ shadow_size = 1
 shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ovcoh"]
-bg_color = Color(0.458824, 0.309804, 0.443137, 1)
+bg_color = Color(0.823529, 0.364706, 0.509804, 1)
 border_color = Color(0.705882, 0.705882, 0.705882, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -408,6 +409,13 @@ shader_parameter/amount = 1.0
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtaia"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_c2n8d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swlj1"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylmsd"]
 bg_color = Color(0.12, 0.12, 0.12, 1)
@@ -1051,9 +1059,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 198.0
+offset_left = 100.0
 offset_top = -34.0
-offset_right = 238.0
+offset_right = 140.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
@@ -1436,13 +1444,22 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 4
 
-[node name="RelicsBar" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="RelicsBar" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("64_c2n8d")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/RelicsBar"]
 layout_mode = 2
 mouse_filter = 2
 
@@ -1563,6 +1580,7 @@ offset_bottom = 282.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
+script = ExtResource("73_4obbf")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections"]
 custom_minimum_size = Vector2(300, 0)
@@ -1571,7 +1589,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Collections"
+text = "ui_collections_title"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer"]
 layout_mode = 2
@@ -1584,25 +1602,48 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
-text = "Items"
+text = "ui_collections_items"
+
+[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+columns = 24
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
-text = "Skills"
+text = "ui_collections_skills"
+
+[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+columns = 24
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
-text = "Patterns"
+text = "ui_collections_patterns"
+
+[node name="List3" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+columns = 24
 
 [node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
-text = "Relics"
+text = "ui_collections_relics"
+
+[node name="List4" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+columns = 24
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
+text = "ui_close"
 
 [node name="BagViewer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
@@ -1738,7 +1779,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
-text = "ui_option_title"
+text = "ui_options_title"
 
 [node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer"]
 layout_mode = 2
@@ -1746,7 +1787,7 @@ columns = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_language"
+text = "ui_options_language"
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -1759,7 +1800,7 @@ popup/item_1/id = 1
 
 [node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_sfx_volume"
+text = "ui_options_sfx_volume"
 
 [node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -1769,7 +1810,7 @@ step = 0.01
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_music_volume"
+text = "ui_options_music_volume"
 
 [node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -1779,7 +1820,7 @@ step = 0.01
 
 [node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_fullscreen"
+text = "ui_options_fullscreen"
 
 [node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -1788,7 +1829,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_performance_mode"
+text = "ui_options_performance_mode"
 
 [node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -1797,7 +1838,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_invincible"
+text = "ui_options_invincible"
 
 [node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -1806,7 +1847,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_option_command_line"
+text = "ui_options_command_line"
 
 [node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
 layout_mode = 2

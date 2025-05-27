@@ -11,9 +11,9 @@ const tooltip_pb = preload("res://tooltip.tscn")
 
 var tween : Tween = null
 
-func process_word(word : String, processed : Array, description : String):
-	if !processed.has(word):
-		processed.append(word)
+func add_word_desc(word : String, words : Array, description : String):
+	if !words.has(word):
+		words.append(word)
 		var item = tooltip_pb.instantiate()
 		item.title = word
 		item.content = description
@@ -41,26 +41,44 @@ func show(contents : Array[Pair], delay : float = 0.05):
 	tween.tween_callback(func():
 		var words = []
 		for c in contents:
-			if c.second.find("[b]Colorless[/b]") != -1 || c.first.find("Colorless") != -1:
-				process_word("Colorless", words, "Can not match with any color.")
-			if c.second.find("[b]Wild[/b]") != -1 || c.first.find("Wild") != -1:
-				process_word("Wild", words, "Can match with any color.")
-			if c.second.find("[b]Eliminate[/b]") != -1:
-				process_word("Eliminate", words, "Effect when the cell is eliminated.")
-			if c.second.find("[b]Active[/b]") != -1:
-				process_word("Active", words, "Active effects will stack and process one by one when the matching stops.")
-			if c.second.find("[b]Quick[/b]") != -1:
-				process_word("Quick", words, "Effect when the item is placed into the board. And then the item will be removed.")
-			if c.second.find("[b]Consumed[/b]") != -1:
-				process_word("Consumed", words, "Removed until the end of level.")
-			if c.second.find("[b]Aura[/b]") != -1:
-				process_word("Aura", words, "Effect all gems while this item is on board.")
-			if c.second.find("[b]Range[/b]") != -1:
-				process_word("Range", words, "The cells within the distance of n. 0[color=gray][b]Range[/b][/color] means the cell itself.")
-			if c.second.find("[b]Tradeable[/b]") != -1:
-				process_word("Tradeable", words, "You can drag this item to Bag inorder to exchange another item.")
-			if c.second.find("[b]Mount[/b]") != -1:
-				process_word("Mount", words, "Place another satisfied item to form a combine item that basicly have the effects of both.")
+			if c.second.find("w_colorless") != -1 || c.first.find("w_colorless") != -1:
+				c.first = c.first.replace("w_colorless", tr("w_colorless"))
+				c.second = c.second.replace("w_colorless", "[color=gray][b]%s[/b][/color]" % tr("w_colorless"))
+				add_word_desc(tr("w_colorless"), words, tr("w_colorless_desc"))
+			if c.second.find("w_wild") != -1 || c.first.find("w_wild") != -1:
+				c.first.replace("w_wild", tr("w_wild"))
+				c.second = c.second.replace("w_wild", "[color=gray][b]%s[/b][/color]" % tr("w_wild"))
+				add_word_desc(tr("w_wild"), words, tr("w_wild_desc"))
+			if c.second.find("w_eliminate") != -1:
+				c.second = c.second.replace("w_eliminate", "[color=gray][b]%s[/b][/color]" % tr("w_eliminate"))
+				add_word_desc("w_eliminate", words, tr("w_eliminate_desc"))
+			if c.second.find("w_active") != -1:
+				c.second = c.second.replace("w_active", "[color=gray][b]%s[/b][/color]" % tr("w_active"))
+				add_word_desc("w_active", words, tr("w_active_desc"))
+			if c.second.find("w_place") != -1:
+				c.second = c.second.replace("w_place", "[color=gray][b]%s[/b][/color]" % tr("w_place"))
+				add_word_desc("w_place", words, tr("w_place_desc"))
+			if c.second.find("w_quick") != -1:
+				c.second = c.second.replace("w_quick", "[color=gray][b]%s[/b][/color]" % tr("w_quick"))
+				add_word_desc("w_quick", words, tr("w_quick_desc"))
+			if c.second.find("w_consumed") != -1:
+				c.second = c.second.replace("w_consumed", "[color=gray][b]%s[/b][/color]" % tr("w_consumed"))
+				add_word_desc("w_consumed", words, tr("w_consumed_desc"))
+			if c.second.find("w_aura") != -1:
+				c.second = c.second.replace("w_aura", "[color=gray][b]%s[/b][/color]" % tr("w_aura"))
+				add_word_desc("w_aura", words, tr("w_aura_desc"))
+			if c.second.find("w_range") != -1:
+				c.second = c.second.replace("w_range", "[color=gray][b]%s[/b][/color]" % tr("w_range"))
+				add_word_desc("w_range", words, tr("w_range_desc"))
+			if c.second.find("w_power") != -1:
+				c.second = c.second.replace("w_power", "[color=gray][b]%s[/b][/color]" % tr("w_power"))
+				add_word_desc("w_power", words, tr("w_power_desc"))
+			if c.second.find("w_tradable") != -1:
+				c.second = c.second.replace("w_tradable", "[color=gray][b]%s[/b][/color]" % tr("w_tradable"))
+				add_word_desc("w_tradable", words, tr("w_tradable_desc"))
+			if c.second.find("w_mount") != -1:
+				c.second = c.second.replace("w_mount", "[color=gray][b]%s[/b][/color]" % tr("w_mount"))
+				add_word_desc("w_mount", words, tr("w_mount_desc"))
 			var item = tooltip_pb.instantiate()
 			item.title = c.first
 			item.content = c.second

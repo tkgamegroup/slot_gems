@@ -40,9 +40,6 @@ func _ready() -> void:
 		if cate == "Item":
 			image.sprite_frames = Item.item_frames
 			image.frame = object.image_id
-		elif cate == "Relic":
-			image.sprite_frames = Relic.relic_frames
-			image.frame = object.image_id
 		elif cate == "Skill":
 			image.sprite_frames = Skill.skill_frames
 			image.frame = object.image_id
@@ -52,6 +49,9 @@ func _ready() -> void:
 			for c in coords:
 				var cc = Board.cube_to_oddq(c)
 				tilemap.set_cell(cc, 0, Vector2i(0, 0))
+		elif cate == "Relic":
+			image.sprite_frames = Relic.relic_frames
+			image.frame = object.image_id
 	label.text = text
 	coin_text.text = "%dG" % coins
 	

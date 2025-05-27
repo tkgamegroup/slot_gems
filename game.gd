@@ -31,6 +31,7 @@ const UiPatternsBar = preload("res://ui_patterns_bar.gd")
 const UiBlocker = preload("res://ui_blocker.gd")
 const UiDialog = preload("res://ui_dialog.gd")
 const UiOptions = preload("res://ui_options.gd")
+const UiCollections = preload("res://ui_collections.gd")
 const UiInGameMenu = preload("res://ui_in_game_menu.gd")
 const UiGameOver = preload("res://ui_game_over.gd")
 const UiLevelClear = preload("res://ui_level_clear.gd")
@@ -56,12 +57,13 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/UI/Shop
 @onready var game_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game
 @onready var status_bar_ui : UiStatusBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
-@onready var relics_bar_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/RelicsBar
+@onready var relics_bar_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/RelicsBar
 @onready var skills_bar_ui : UiSkillsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar
 @onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
 @onready var blocker_ui : UiBlocker = $/root/Main/SubViewportContainer/SubViewport/UI/Blocker
 @onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/UI/Dialog
 @onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/UI/Options
+@onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/UI/Collections
 @onready var in_game_menu_ui : UiInGameMenu = $/root/Main/SubViewportContainer/SubViewport/UI/InGameMenu
 @onready var game_over_ui : UiGameOver = $/root/Main/SubViewportContainer/SubViewport/UI/GameOver
 @onready var level_clear_ui : UiLevelClear = $/root/Main/SubViewportContainer/SubViewport/UI/LevelClear
@@ -140,7 +142,7 @@ var combos : int = 0:
 		combos = v
 		
 		status_bar_ui.combos_text.text = "%dX" % combos
-		if combos > 0:
+		if combos > modifiers["base_combo_i"]:
 			if combos_tween:
 				combos_tween.kill()
 			status_bar_ui.combos_text.position.y = 0
@@ -479,7 +481,7 @@ func start_game(saving : String = ""):
 		
 		for i in 0:
 			var r = Relic.new()
-			r.setup("Pentagram Power")
+			r.setup("HighExplosives")
 			add_relic(r)
 		
 		for i in 72:
@@ -560,23 +562,23 @@ func start_game(saving : String = ""):
 		
 		for i in 1:
 			var item = Item.new()
-			item.setup("Dye: Red")
+			item.setup("DyeRed")
 			add_item(item)
 		for i in 1:
 			var item = Item.new()
-			item.setup("Dye: Orange")
+			item.setup("DyeOrange")
 			add_item(item)
 		for i in 1:
 			var item = Item.new()
-			item.setup("Dye: Green")
+			item.setup("DyeGreen")
 			add_item(item)
 		for i in 1:
 			var item = Item.new()
-			item.setup("Dye: Blue")
+			item.setup("DyeBlue")
 			add_item(item)
 		for i in 1:
 			var item = Item.new()
-			item.setup("Dye: Pink")
+			item.setup("DyePink")
 			add_item(item)
 		'''
 		for i in 1:
@@ -630,6 +632,7 @@ func new_level():
 	save_to_file()
 	stage = Stage.Deploy
 	end_busy()
+	control_ui.match_button.disabled = true
 
 func level_end():
 	set_props(Props.None)
@@ -941,7 +944,7 @@ func load_from_file(name : String = "1"):
 			var i = Game.items[item_idx]
 			c.item = i
 			ui.set_item_image(i.image_id)
-			ui.set_is_duplicant(i.duplicant)
+			ui.set_duplicant(i.duplicant)
 		var state = cell["state"]
 		if state != Cell.State.Normal:
 			Board.set_state_at(coord, state)

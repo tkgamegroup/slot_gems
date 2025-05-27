@@ -177,4 +177,5 @@ func _ready() -> void:
 					elif t == "-es":
 						enable_shopping = true
 				STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_skills,additional_patterns, additional_relics, true, enable_shopping)
+		command_line.clear()
 	)

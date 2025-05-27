@@ -164,5 +164,5 @@ func add_exp(v : int):
 
 func get_tooltip():
 	var ret : Array[Pair] = []
-	ret.append(Pair.new(name, "LV: %d\nExp: %d/%d\nMult: %d" % [lv, exp, max_exp, mult]))
+	ret.append(Pair.new(name, tr("pattern_desc") % [lv, exp, max_exp, mult]))
 	return ret

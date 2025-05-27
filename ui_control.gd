@@ -37,7 +37,8 @@ func _ready() -> void:
 	)
 	roll_button.mouse_entered.connect(func():
 		var desc = tr("tt_game_roll_content")
-		desc += "\nDraw %d item(s)." % (Game.next_roll_extra_draws + 1)
+		if Game.next_roll_extra_draws > 0:
+			desc += "\nDraw %d extra item(s)." % Game.next_roll_extra_draws
 		STooltip.show([Pair.new(tr("tt_game_roll_title"), desc)])
 	)
 	roll_button.mouse_exited.connect(func():

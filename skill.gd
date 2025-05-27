@@ -157,8 +157,12 @@ func setup(n : String):
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Cha]
 		image_id = 10
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
-			var target : Vector2i
-			var place : Vector2i
+			var d = {}
+			d.target = Vector2i(-1, -1)
+			d.target_item = null
+			d.target_effect = null
+			d.place = Vector2i(-1, -1)
+			d.sp = null
 			tween.tween_callback(func():
 				var targets = Board.filter(func(g : Gem, i : Item):
 					return g && i != null
@@ -170,33 +174,50 @@ func setup(n : String):
 					return g && !i && Board.get_active_effects_at(g.coord).is_empty()
 				)
 				if !targets.is_empty() && !places.is_empty():
-					target = targets.pick_random()
-					place = places.pick_random()
-					tween.tween_callback(func():
-						SEffect.add_leading_line(ui.get_global_rect().get_center(), Board.get_pos(target))
-					)
-					tween.tween_interval(0.3)
+					d.target = targets.pick_random()
+					d.target_item = Board.get_item_at(d.target)
+					if !d.target_item:
+						d.target_effect = Board.get_active_effects_at(d.target).front()
+					d.place = places.pick_random()
+					
+					SEffect.add_leading_line(ui.get_global_rect().get_center(), Board.get_pos(d.target))
+			)
+			tween.tween_interval(0.3)
+			tween.tween_callback(func():
+				if d.target_item:
+					d.sp = AnimatedSprite2D.new()
+					d.sp.position = Board.get_pos(d.target)
+					d.sp.sprite_frames = Item.item_frames
+					d.sp.frame = d.target_item.image_id
+					d.sp.z_index = 4
+					Game.board_ui.cells_root.add_child(d.sp)
+				elif d.target_effect:
+					d.sp = Board.active_effect_pb.instantiate()
+					d.sp.position = Board.get_pos(d.target)
+					d.sp.sprite_frames = Item.item_frames
+					d.sp.frame = d.target_effect.host.image_id
+					d.sp.z_index = 4
+					Game.board_ui.cells_root.add_child(d.sp)
+			)
+			tween.tween_callback(func():
+				if d.sp:
+					var tween2 = Game.get_tree().create_tween()
+					tween2.tween_property(d.sp, "position", Board.get_pos(d.place), 0.5 * Game.animation_speed)
+			)
+			tween.tween_interval(0.5 * Game.animation_speed)
+			tween.tween_callback(func():
+				if d.target_item:
 					var new_item = Item.new()
-					var sp = AnimatedSprite2D.new()
-					tween.tween_callback(func():
-						var item = Board.get_item_at(target)
-						if !item:
-							item = Board.get_active_effects_at(target).front()
-						new_item.setup(item.name)
-						new_item.duplicant = true
-						Game.items.append(new_item)
-						
-						sp.position = Board.get_pos(target)
-						sp.sprite_frames = Item.item_frames
-						sp.frame = item.image_id
-						sp.z_index = 3
-						Game.board_ui.cells_root.add_child(sp)
-					)
-					tween.tween_property(sp, "position", Board.get_pos(place), 0.5 * Game.animation_speed)
-					tween.tween_callback(func():
-						Board.set_item_at(place, new_item)
-						sp.queue_free()
-					)
+					new_item.setup(d.target_item.name)
+					new_item.duplicant = true
+					Game.items.append(new_item)
+					
+					Board.set_item_at(d.place, new_item)
+				elif d.target_effect:
+					Board.activate(d.target_effect.host, d.target_effect.type, d.target_effect.effect_index, d.place, Board.ActiveReason.Duplicate)
+					pass
+				if d.sp:
+					d.sp.queue_free()
 			)
 	elif name == "Fen":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Zhe, Gem.Rune.Zhe]

@@ -7,7 +7,8 @@ enum ActiveReason
 	Skill,
 	Relic,
 	Burning,
-	RcAction
+	RcAction,
+	Duplicate
 }
 
 enum PlaceReason
@@ -202,7 +203,7 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 	cell.item = i
 	var ui = Game.get_cell_ui(c)
 	ui.set_item_image(i.image_id if i else 0)
-	ui.set_is_duplicant(i.duplicant if i else false)
+	ui.set_duplicant(i.duplicant if i else false)
 	return oi
 
 func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
@@ -411,7 +412,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		sp.sprite_frames = Item.item_frames
 		sp.frame = item.image_id
 		sp.position = get_pos(c)
-		sp.z_index = 2
+		sp.z_index = 4
 		Game.board_ui.cells_root.add_child(sp)
 	elif type == HostType.Skill:
 		var skill : Skill = host
@@ -719,7 +720,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 			if !items[i]:
 				var cands = []
 				for _i in Game.items:
-					if _i.coord.x == -1 && _i.coord.y == -1:
+					if _i.coord.x == -1 && _i.coord.y == -1 && !items.has(_i):
 						cands.append(_i)
 				if cands.is_empty():
 					return
@@ -738,7 +739,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 				sp.position = Game.status_bar_ui.bag_button.get_global_rect().get_center()
 				sp.sprite_frames = Item.item_frames
 				sp.frame = items[i].image_id
-				sp.z_index = 3
+				sp.z_index = 4
 				Game.board_ui.cells_root.add_child(sp)
 				sps.append(sp)
 	)

@@ -52,7 +52,7 @@ void fragment()
     vec2 iResolution = vec2(1.0) / SCREEN_PIXEL_SIZE;
 	float time = TIME * 0.1;
 
-    vec2 uv = 4.5 * (2. * FRAGCOORD.xy - iResolution.xy) / iResolution.y;
+    vec2 uv = 2.5 * (2. * FRAGCOORD.xy - iResolution.xy) / iResolution.y;
     uv.x -= time;
     uv.y -= time * 0.5;
 
@@ -64,7 +64,7 @@ void fragment()
 
 	vec4 normal = heightToNormal(UV + time * 0.3);
     vec2 displacement = clamp((normal.xy - .5) * distortionStrength, -1., 1.);
-	uv += displacement * 1.;
+	uv += displacement * .3;
 
     vec4 hexInfo = calcHexInfo(uv);
     float totalDist = calcHexDistance(hexInfo.xy) + borderThickness;
@@ -73,11 +73,11 @@ void fragment()
     float angle = atan(hexInfo.y, hexInfo.x) + rand * 5. + time;
     vec3 isoline = S(isolineOffset, totalDist) * baseCol * step(.5 + rand * .5, mod(angle, 6.28))
         + S(isolineOffset2, totalDist)
-                    * baseCol * step(.1 + rand * 1.5, mod(angle + rand * 2., 6.28)) * .3;
+                    * baseCol * step(.1 + rand * 1.5, mod(angle + rand * 2., 6.28));
 
     float sinOffset = sin(time + rand * 8.);
     float aa = 2. / iResolution.y;
 
-    COLOR.rgb = (smoothstep(.51, .51 - aa, totalDist) + pow(1. - max(0., .5 - totalDist), 20.) * 1.1)
-        * (baseCol + rand * vec3(0., .03, .02)) + isoline + baseCol * smoothstep(.02 + sinOffset, .02 + sinOffset - aa, totalDist) * .3;
+    COLOR.rgb = (smoothstep(.51, .51 - aa, totalDist) + pow(1. - max(0., .5 - totalDist), 20.) * .5)
+        * (baseCol + rand * vec3(0., .03, .02)) + isoline * .0 + baseCol * smoothstep(.02 + sinOffset, .02 + sinOffset - aa, totalDist) * .3;
 }
