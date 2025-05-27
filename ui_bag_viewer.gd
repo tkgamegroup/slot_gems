@@ -1,5 +1,6 @@
 extends Control
 
+@onready var panel : PanelContainer = $PanelContainer
 @onready var title = $PanelContainer/VBoxContainer/Label
 @onready var legend1 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer
 @onready var legend2 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2
@@ -99,10 +100,18 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 			bar.color = Color(0.5, 0.8, 0.6, 1.0)
 			bar.show()
 		item_list.add_child(ui)
+	
 	self.show()
+	panel.show()
 
 func exit():
-	self.hide()
+	panel.hide()
+	self.self_modulate.a = 1.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		self.hide()
+	)
 
 func _ready() -> void:
 	close_button.pressed.connect(func():

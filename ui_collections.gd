@@ -1,5 +1,6 @@
 extends Control
 
+@onready var panel : PanelContainer = $PanelContainer
 @onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List
 @onready var skill_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List2
 @onready var pattern_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List3
@@ -61,9 +62,16 @@ func enter():
 		relic_list.add_child(ui)
 	
 	self.show()
+	panel.show()
 
 func exit():
-	self.hide()
+	panel.hide()
+	self.self_modulate.a = 1.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		self.hide()
+	)
 
 func _ready() -> void:
 	close_button.pressed.connect(func():

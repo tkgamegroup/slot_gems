@@ -2,6 +2,7 @@ extends Control
 
 const settlement_ui = preload("res://ui_settlement.tscn")
 
+@onready var panel : PanelContainer = $PanelContainer
 @onready var title : RichTextLabel = $PanelContainer/VBoxContainer/Label
 @onready var continue_button : Button = $PanelContainer/VBoxContainer/Button
 @onready var settlement_list : VBoxContainer = $PanelContainer/VBoxContainer/VBoxContainer
@@ -111,9 +112,16 @@ func enter():
 	"""
 	
 	self.show()
+	panel.show()
 
 func exit():
-	self.hide()
+	panel.hide()
+	self.self_modulate.a = 1.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		self.hide()
+	)
 	
 	Game.coins += coins
 	

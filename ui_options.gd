@@ -41,7 +41,7 @@ func exit():
 	tween.tween_callback(func():
 		self.hide()
 	)
-	
+
 func _ready() -> void:
 	language_select.item_selected.connect(func(idx):
 		match idx:

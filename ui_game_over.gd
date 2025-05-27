@@ -1,5 +1,6 @@
 extends Control
 
+@onready var panel : PanelContainer = $PanelContainer
 @onready var max_matching_score_text : Label = $PanelContainer/VBoxContainer/GridContainer/Label2
 @onready var rolls_text : Label = $PanelContainer/VBoxContainer/GridContainer/Label4
 @onready var level_text : Label = $PanelContainer/VBoxContainer/GridContainer/Label6
@@ -17,10 +18,18 @@ func enter():
 	rolls_text.text = "%d" % Game.history.rolls
 	level_text.text = "%d" % Game.level
 	seed_text.text = ""
+	
 	self.show()
+	panel.show()
 
 func exit():
-	self.hide()
+	panel.hide()
+	self.self_modulate.a = 1.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		self.hide()
+	)
 
 func _ready() -> void:
 	new_run.pressed.connect(func():

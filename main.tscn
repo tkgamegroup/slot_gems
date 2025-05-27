@@ -1,4 +1,4 @@
-[gd_scene load_steps=145 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=144 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -80,7 +80,6 @@
 [ext_resource type="Script" uid="uid://dtrr5xwmh7tpk" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
-[ext_resource type="Script" uid="uid://kwssksc4v2rx" path="res://ui_blocker.gd" id="68_a5ll1"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
@@ -1065,15 +1064,6 @@ offset_right = 140.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
-
-[node name="Blocker" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("68_a5ll1")
 
 [node name="Shop" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false

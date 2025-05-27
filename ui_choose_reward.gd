@@ -2,6 +2,7 @@ extends Control
 
 const reward_pb = preload("res://ui_reward.tscn")
 
+@onready var panel : PanelContainer = $PanelContainer
 @onready var reward_list : Control = $PanelContainer/VBoxContainer/HBoxContainer
 @onready var buttons_list : Control = $PanelContainer/VBoxContainer/HBoxContainer2
 @onready var hide_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button
@@ -54,10 +55,18 @@ func enter(rewards : Array, _callback : Callable):
 					choose(i)
 		)
 		reward_list.add_child(ui)
+	
 	self.show()
+	panel.show()
 
 func exit():
-	self.hide()
+	panel.hide()
+	self.self_modulate.a = 1.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		self.hide()
+	)
 
 func _ready() -> void:
 	hide_button.pressed.connect(func():
