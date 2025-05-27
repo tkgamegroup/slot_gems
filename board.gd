@@ -363,7 +363,7 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 				var c = coords[idx]
 				var g = get_gem_at(c)
 				var ui = uis[idx]
-				ui.gem.bg_sp.scale = Vector2(1.5, 1.5)
+				ui.gem.bg_sp.scale = Vector2(1.0, 1.0)
 				ui.gem.z_index = 1
 				var ptc = ptcs[idx]
 				ptc.position = get_pos(c)
@@ -389,9 +389,13 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 		tween.tween_method(func(t):
 			for ui in uis:
 				ui.gem.bg_sp.scale = Vector2(t, t)
-		, 1.5, 1.0, max(0.4 * Game.animation_speed, 0.1))
+		, 1.0, 1.2, max(0.1 * Game.animation_speed, 0.02)).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		tween.tween_method(func(t):
+			for ui in uis:
+				ui.gem.bg_sp.scale = Vector2(t, t)
+		, 1.2, 1.0, max(0.3 * Game.animation_speed, 0.02)).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 	else:
-		tween.tween_interval(0.1)
+		tween.tween_interval(0.02)
 	tween.tween_callback(func():
 		for i in coords.size():
 			var c = coords[i]

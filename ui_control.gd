@@ -47,6 +47,7 @@ func _ready() -> void:
 	match_button.pressed.connect(func():
 		SSound.sfx_click.play()
 		match_button.disabled = true
+		match_button.mouse_exited.emit()
 		Game.play()
 	)
 	match_button.mouse_entered.connect(func():

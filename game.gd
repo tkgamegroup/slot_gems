@@ -326,6 +326,7 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 		ui.queue_free()
 	)
 
+var add_score_dir : int = 1
 func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	var combos_mult = combos if affected_by_combos else 1
 	var mult = int(combos_mult * score_mult)
@@ -337,12 +338,17 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
 	lb.text = "%d" % add_score
-	ui.z_index = 5
+	ui.z_index = 8
 	board_ui.overlay.add_child(ui)
+	
 	var tween = get_tree().create_tween()
-	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
-	tween.parallel().tween_property(ui, "scale", Vector2(0.8, 0.8), 0.5)
+	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
+	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
+	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	tween.tween_property(ui, "scale", Vector2(0.0, 0.0), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	tween.tween_callback(ui.queue_free)
+	
+	add_score_dir *= -1
 
 var status_tween : Tween
 func add_status(s : String, col : Color):
