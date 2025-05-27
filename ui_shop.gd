@@ -1,9 +1,6 @@
 extends Control
 
 const item_pb = preload("res://ui_shop_item.tscn")
-const skill_pb = preload("res://ui_skill.tscn")
-const pattern_pb = preload("res://ui_pattern.tscn")
-const relic_pb = preload("res://ui_relic.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
 @onready var exit_button : Button = $PanelContainer/VBoxContainer2/Button
@@ -97,7 +94,7 @@ func enter():
 			var ui = item_pb.instantiate()
 			var item = Item.new()
 			item.setup(items_pool.pick_random())
-			ui.setup("Item", item, "", item.price, func():
+			ui.setup("Item", item, item.price, func():
 				var img = ui.image
 				img.reparent(self)
 				
@@ -120,7 +117,7 @@ func enter():
 				var ui = item_pb.instantiate()
 				var relic = Relic.new()
 				relic.setup(name)
-				ui.setup("Relic", relic, "", relic.price, func():
+				ui.setup("Relic", relic, relic.price, func():
 					var img = ui.image
 					img.reparent(self)
 					
@@ -143,7 +140,7 @@ func enter():
 				var ui = item_pb.instantiate()
 				var skill = Skill.new()
 				skill.setup(name)
-				ui.setup("Skill", skill, "", skill.price, func():
+				ui.setup("Skill", skill, skill.price, func():
 					Game.add_skill(skill)
 				)
 				list2.add_child(ui)
@@ -156,7 +153,7 @@ func enter():
 				var ui = item_pb.instantiate()
 				var pattern = Pattern.new()
 				pattern.setup(name)
-				ui.setup("Pattern", pattern, "", pattern.price, func():
+				ui.setup("Pattern", pattern, pattern.price, func():
 					Game.add_pattern(pattern)
 				)
 				list2.add_child(ui)

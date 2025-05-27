@@ -4,21 +4,21 @@ extends Control
 @onready var cate_frame : Control = $Base/Category
 @onready var cate_label : Label = $Base/Category/MarginContainer/Label
 @onready var content : Control = $Base/Content
-@onready var image : AnimatedSprite2D = $Base/Content/SP
-@onready var tilemap : TileMapLayer = $Base/Content/TileMapLayer
-@onready var label : Label = $Base/Content/Text
 @onready var coin_text : Label = $Base/Price/MarginContainer/HBoxContainer/Label
+
+const item_ui = preload("res://ui_item.tscn")
+const skill_ui = preload("res://ui_skill.tscn")
+const pattern_ui = preload("res://ui_pattern.tscn")
+const relic_ui = preload("res://ui_relic.tscn")
 
 var cate : String
 var object
-var text : String
 var coins : int
 var callback : Callable
 
-func setup(_cate : String, _object, _text : String, _coins : int, _callback : Callable):
+func setup(_cate : String, _object, _coins : int, _callback : Callable):
 	cate = _cate
 	object = _object
-	text = _text
 	coins = _coins
 	callback = _callback
 
@@ -38,21 +38,21 @@ func _ready() -> void:
 		cate_frame.show()
 		cate_label.text = cate
 		if cate == "Item":
-			image.sprite_frames = Item.item_frames
-			image.frame = object.image_id
+			var ui = item_ui.instantiate()
+			ui.setup(object)
+			content.add_child(ui)
 		elif cate == "Skill":
-			image.sprite_frames = Skill.skill_frames
-			image.frame = object.image_id
+			var ui = skill_ui.instantiate()
+			ui.setup(object)
+			content.add_child(ui)
 		elif cate == "Pattern":
-			var coords = object.get_ui_coords()
-			tilemap.show()
-			for c in coords:
-				var cc = Board.cube_to_oddq(c)
-				tilemap.set_cell(cc, 0, Vector2i(0, 0))
+			var ui = pattern_ui.instantiate()
+			ui.setup(object, true)
+			content.add_child(ui)
 		elif cate == "Relic":
-			image.sprite_frames = Relic.relic_frames
-			image.frame = object.image_id
-	label.text = text
+			var ui = relic_ui.instantiate()
+			ui.setup(object)
+			content.add_child(ui)
 	coin_text.text = "%dG" % coins
 	
 	gui_input.connect(func(event : InputEvent):
@@ -62,10 +62,8 @@ func _ready() -> void:
 	)
 	mouse_entered.connect(func():
 		SSound.sfx_select.play()
-		base.position.y -= 10
-		STooltip.show(object.get_tooltip())
+		base.position.y -= 5
 	)
 	mouse_exited.connect(func():
-		base.position.y += 10
-		STooltip.close()
+		base.position.y += 5
 	)

@@ -1,9 +1,7 @@
-[gd_scene load_steps=11 format=4 uid="uid://b2oghrlvbbydy"]
+[gd_scene load_steps=6 format=3 uid="uid://b2oghrlvbbydy"]
 
 [ext_resource type="Script" uid="uid://cv2l3tl2csppp" path="res://ui_shop_item.gd" id="1_e4q1j"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="2_p8w24"]
-[ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/outline-o.png" id="3_5w2cm"]
-[ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="4_tms60"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cre24"]
 bg_color = Color(0.114897, 0.114897, 0.114897, 1)
@@ -27,23 +25,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.393085, 0.393086, 0.393085, 1)
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5w2cm"]
-texture = ExtResource("3_5w2cm")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tms60"]
-texture = ExtResource("4_tms60")
-texture_region_size = Vector2i(32, 32)
-0:0/0 = 0
-
-[sub_resource type="TileSet" id="TileSet_o23q0"]
-tile_shape = 3
-tile_offset_axis = 1
-tile_size = Vector2i(32, 32)
-sources/0 = SubResource("TileSetAtlasSource_5w2cm")
-sources/1 = SubResource("TileSetAtlasSource_tms60")
 
 [node name="UiShopItem" type="Control"]
 custom_minimum_size = Vector2(64, 114)
@@ -131,17 +112,3 @@ offset_right = 64.0
 offset_bottom = 64.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_p8w24")
-
-[node name="SP" type="AnimatedSprite2D" parent="Base/Content"]
-scale = Vector2(2, 2)
-offset = Vector2(16, 16)
-
-[node name="Text" type="Label" parent="Base/Content"]
-layout_mode = 2
-
-[node name="TileMapLayer" type="TileMapLayer" parent="Base/Content"]
-visible = false
-position = Vector2(12, 4)
-scale = Vector2(0.4, 0.4)
-tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAABAAAAAQAAAAAAAAABAAEAAQAAAAAAAAABAAIAAQAAAAAAAAABAAMAAQAAAAAAAAACAAAAAQAAAAAAAAACAAEAAQAAAAAAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAADAAAAAQAAAAAAAAADAAEAAQAAAAAAAAADAAIAAQAAAAAAAAADAAMAAQAAAAAAAAA=")
-tile_set = SubResource("TileSet_o23q0")
