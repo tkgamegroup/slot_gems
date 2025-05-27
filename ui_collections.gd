@@ -1,10 +1,10 @@
 extends Control
 
-@onready var item_list = $VBoxContainer/ScrollContainer/VBoxContainer/List
-@onready var skill_list = $VBoxContainer/ScrollContainer/VBoxContainer/List2
-@onready var pattern_list = $VBoxContainer/ScrollContainer/VBoxContainer/List3
-@onready var relic_list = $VBoxContainer/ScrollContainer/VBoxContainer/List4
-@onready var close_button = $VBoxContainer/Button
+@onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List
+@onready var skill_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List2
+@onready var pattern_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List3
+@onready var relic_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List4
+@onready var close_button = $PanelContainer/VBoxContainer/Button
 
 const item_ui = preload("res://ui_item.tscn")
 const skill_ui = preload("res://ui_skill.tscn")
@@ -27,8 +27,9 @@ func clear():
 
 func enter():
 	clear()
-	Game.blocker_ui.enter()
-	self.show()
+	self.self_modulate.a = 0.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyePink", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
 	for n in items:
@@ -59,8 +60,9 @@ func enter():
 		ui.setup(r)
 		relic_list.add_child(ui)
 	
+	self.show()
+
 func exit():
-	Game.blocker_ui.exit()
 	self.hide()
 
 func _ready() -> void:

@@ -2,27 +2,20 @@ extends Control
 
 const settlement_ui = preload("res://ui_settlement.tscn")
 
-@onready var title : RichTextLabel = $VBoxContainer/Label
-@onready var continue_button : Button = $VBoxContainer/Button
-@onready var settlement_list : VBoxContainer = $VBoxContainer/VBoxContainer
-@onready var particles = $CPUParticles2D
+@onready var title : RichTextLabel = $PanelContainer/VBoxContainer/Label
+@onready var continue_button : Button = $PanelContainer/VBoxContainer/Button
+@onready var settlement_list : VBoxContainer = $PanelContainer/VBoxContainer/VBoxContainer
+@onready var particles = $PanelContainer/CPUParticles2D
 var rewards_count = 0
 var coins = 0
-
-func continue_game():
-	Game.coins += coins
-	
-	for t in get_tree().get_processed_tweens():
-		t.kill()
-	exit()
-	Game.control_ui.exit()
-	Game.shop_ui.enter()
 
 func enter():
 	SSound.sfx_level_clear.play()
 	STooltip.close()
-	Game.blocker_ui.enter()
-	self.show()
+	self.self_modulate.a = 0.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+	
 	coins = 0
 	for n in settlement_list.get_children():
 		settlement_list.remove_child(n)
@@ -31,8 +24,7 @@ func enter():
 	continue_button.hide()
 	title.text = "[popup span=12.0 dura=1.2]Level Clear![/popup]"
 	particles.emitting = true
-	var tween = get_tree().create_tween()
-	tween.tween_interval(0.3)
+	
 	tween.tween_callback(func():
 		var ui_s = settlement_ui.instantiate()
 		ui_s.name_str = "Level Rewards"
@@ -68,7 +60,7 @@ func enter():
 			reward_btn.get_parent().remove_child(reward_btn)
 			reward_btn.queue_free()
 			rewards_count -= 1
-			continue_game()
+			exit()
 		)
 	)
 	
@@ -102,7 +94,6 @@ func enter():
 			r2.description = "Remove up to 5 basic gems. You can choose what color to remove."
 			rewards.append(r2)
 			
-			Game.blocker_ui.move(get_index())
 			Game.choose_reward_ui.enter(rewards, func(idx : int, tween : Tween, img : Sprite2D):
 				if idx == 0:
 					tween.tween_callback(func():
@@ -118,14 +109,22 @@ func enter():
 		continue_button.show()
 	)
 	"""
+	
+	self.show()
 
 func exit():
-	Game.blocker_ui.exit()
 	self.hide()
+	
+	Game.coins += coins
+	
+	for t in get_tree().get_processed_tweens():
+		t.kill()
+	Game.control_ui.exit()
+	Game.shop_ui.enter()
 
 func _ready() -> void:
 	continue_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		continue_game()
+		exit()
 	)
 	#continue_button.mouse_entered.connect(SSound.sfx_select.play)

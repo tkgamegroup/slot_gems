@@ -4,7 +4,8 @@ enum Stage
 {
 	Deploy,
 	Rolling,
-	Matching
+	Matching,
+	LevelOver
 }
 
 enum Props
@@ -135,22 +136,29 @@ var score : int:
 var target_score : int:
 	set(v):
 		target_score = v
-		status_bar_ui.level_target.text = tr("ui_game_target_score") % target_score
+		status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % (tr("ui_game_target_score") % target_score)
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
-		combos = v
-		
-		status_bar_ui.combos_text.text = "%dX" % combos
-		if combos > modifiers["base_combo_i"]:
+		if v > combos:
+			combos = v
 			if combos_tween:
-				combos_tween.kill()
+				combos_tween.custom_step(1000.0)
 			status_bar_ui.combos_text.position.y = 0
 			combos_tween = get_tree().create_tween()
-			SAnimation.jump(combos_tween, status_bar_ui.combos_text, -6.0, 0.5)
+			SAnimation.jump(combos_tween, status_bar_ui.combos_text, -0.0, 0.25 * Game.animation_speed, func():
+				status_bar_ui.combos_text.text = "%dX" % v
+			)
 			combos_tween.tween_callback(func():
 				combos_tween = null
 			)
+		else:
+			if combos_tween:
+				combos_tween.kill()
+				combos_tween = null
+			combos = v
+			status_bar_ui.combos_text.text = "%dX" % combos
+		
 
 var score_mult : float = 1.0:
 	set(v):
@@ -635,10 +643,19 @@ func new_level():
 	control_ui.match_button.disabled = true
 
 func level_end():
+	stage = Stage.LevelOver
 	set_props(Props.None)
 	Buff.clear(self, [Buff.Duration.ThisLevel])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisLevel])
+
+func win():
+	level_end()
+	level_clear_ui.enter()
+
+func lose():
+	level_end()
+	game_over_ui.enter()
 
 func roll():
 	if rolls > 0:
@@ -1062,14 +1079,12 @@ func _ready() -> void:
 						Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 			
 			if matches == 0 && score < target_score:
-				level_end()
 				if invincible:
-					level_clear_ui.enter()
+					win()
 				else:
-					game_over_ui.enter()
+					lose()
 			elif score >= target_score:
-				level_end()
-				level_clear_ui.enter()
+				win()
 			else:
 				end_busy()
 	)

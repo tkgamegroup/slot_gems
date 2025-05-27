@@ -1,9 +1,9 @@
-extends PanelContainer
+extends Control
 
-@onready var title : Label = $VBoxContainer/Label
-@onready var content : Label = $VBoxContainer/Label2
-@onready var button1 : Button = $VBoxContainer/HBoxContainer/Button
-@onready var button2 : Button = $VBoxContainer/HBoxContainer/Button2
+@onready var title : Label = $PanelContainer/VBoxContainer/Label
+@onready var content : Label = $PanelContainer/VBoxContainer/Label2
+@onready var button1 : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button
+@onready var button2 : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button2
 
 var action1 : Callable
 var action2 : Callable
@@ -16,6 +16,11 @@ func open(_title : String, _content : String, yes_action : Callable, no_action :
 	content.text = _content
 	action1 = yes_action
 	action2 = no_action
+	
+	self.self_modulate.a = 0.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+	
 	self.show()
 
 func _ready() -> void:

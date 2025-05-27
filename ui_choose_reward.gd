@@ -2,11 +2,11 @@ extends Control
 
 const reward_pb = preload("res://ui_reward.tscn")
 
-@onready var reward_list : Control = $VBoxContainer/HBoxContainer
-@onready var buttons_list : Control = $VBoxContainer/HBoxContainer2
-@onready var hide_button : Button = $VBoxContainer/HBoxContainer2/Button
-@onready var reroll_button : Button = $VBoxContainer/HBoxContainer2/Button2
-@onready var skip_button : Button = $VBoxContainer/HBoxContainer2/Button3
+@onready var reward_list : Control = $PanelContainer/VBoxContainer/HBoxContainer
+@onready var buttons_list : Control = $PanelContainer/VBoxContainer/HBoxContainer2
+@onready var hide_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button
+@onready var reroll_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button2
+@onready var skip_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button3
 
 var callback : Callable
 
@@ -36,8 +36,10 @@ func choose(idx : int):
 
 func enter(rewards : Array, _callback : Callable):
 	callback = _callback
-	Game.blocker_ui.enter()
-	self.show()
+	self.self_modulate.a = 0.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+	
 	buttons_list.show()
 	for n in reward_list.get_children():
 		n.queue_free()
@@ -52,9 +54,9 @@ func enter(rewards : Array, _callback : Callable):
 					choose(i)
 		)
 		reward_list.add_child(ui)
+	self.show()
 
 func exit():
-	Game.blocker_ui.exit()
 	self.hide()
 
 func _ready() -> void:

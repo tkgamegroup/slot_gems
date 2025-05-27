@@ -1,6 +1,9 @@
 extends Control
 
 const item_pb = preload("res://ui_shop_item.tscn")
+const skill_pb = preload("res://ui_skill.tscn")
+const pattern_pb = preload("res://ui_pattern.tscn")
+const relic_pb = preload("res://ui_relic.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
 @onready var exit_button : Button = $PanelContainer/VBoxContainer2/Button
@@ -57,9 +60,10 @@ func buy_randomly():
 			return item.buy()
 	return false
 
-func continue_game():
+func exit():
 	self.hide()
-	Game.new_level()
+	if Game.stage == Game.Stage.LevelOver:
+		Game.new_level()
 
 func enter():
 	self.show()
@@ -161,7 +165,7 @@ func enter():
 func _ready() -> void:
 	exit_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		continue_game()
+		exit()
 	)
 	#exit_button.mouse_entered.connect(SSound.sfx_select.play)
 	expand_board_button.button.pressed.connect(func():
@@ -225,14 +229,13 @@ func _ready() -> void:
 			remove_gems_price += remove_gems_price_increase
 			remove_gems_button.button.disabled = true
 			
-			Game.blocker_ui.enter()
 			var bag_pos = Game.status_bar_ui.bag_button.get_global_rect().get_center()
 			var base_pos = self.get_global_rect().get_center() + Vector2(-16 * (gems.size() - 1), 200)
 			var uis = []
 			for g in gems:
 				var ui = gem_ui.instantiate()
 				ui.set_image(g.type, g.rune)
-				Game.blocker_ui.add_child(ui)
+				self.add_child(ui)
 				ui.global_position = bag_pos
 				ui.hide()
 				uis.append(ui)
@@ -255,7 +258,6 @@ func _ready() -> void:
 					ui.queue_free()
 				for g in gems:
 					Game.gems.erase(g)
-				Game.blocker_ui.exit()
 			)
 		)
 	)

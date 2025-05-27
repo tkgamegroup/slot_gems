@@ -371,9 +371,6 @@ expand_margin_bottom = 4.0
 shadow_size = 1
 shadow_offset = Vector2(3, 2)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_620me"]
-bg_color = Color(0, 0, 0, 0.54902)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yh34"]
 bg_color = Color(0.15, 0.15, 0.15, 1)
 corner_radius_top_left = 16
@@ -477,7 +474,7 @@ expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0hxn"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rtse5"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5t1e"]
 bg_color = Color(0.713726, 0.333333, 0.145098, 1)
 expand_margin_left = 8.0
 expand_margin_top = 8.0
@@ -499,8 +496,11 @@ expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ahpju"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6isl"]
+bg_color = Color(0.59, 0.0708, 0.0708, 0.588235)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2sare"]
-bg_color = Color(0.730662, 0.299321, 0.405224, 1)
+bg_color = Color(0.59, 0.0708, 0.0708, 1)
 expand_margin_left = 8.0
 expand_margin_top = 8.0
 expand_margin_right = 8.0
@@ -1066,20 +1066,30 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
 
-[node name="Shop" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Blocker" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -222.0
-offset_top = 200.0
-offset_right = 222.0
-offset_bottom = 642.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("68_a5ll1")
+
+[node name="Shop" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("12_uajbh")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Shop"]
 layout_mode = 2
+offset_left = 418.0
+offset_top = 200.0
+offset_right = 862.0
+offset_bottom = 642.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ppx11")
@@ -1168,16 +1178,6 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_kkkcx")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_34ol3")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1yv1y")
 text = "Exit"
-
-[node name="Blocker" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_620me")
-script = ExtResource("68_a5ll1")
 
 [node name="Game" type="Control" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
@@ -1280,15 +1280,18 @@ scale = Vector2(151, 83)
 texture = ExtResource("2_tqnxt")
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(60, 45)
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_vertical = 8
 
 [node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/Control"]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 45.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(0, 45)
 size_flags_horizontal = 4
 mouse_filter = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1346,10 +1349,15 @@ theme_override_font_sizes/font_size = 12
 text = "Level 1"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
+[node name="Target" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
+bbcode_enabled = true
 text = "Score at least 100"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 horizontal_alignment = 1
+justification_flags = 0
 
 [node name="VSeparator3" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
@@ -1565,9 +1573,18 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Collections" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("73_4obbf")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Collections"]
 custom_minimum_size = Vector2(904, 565)
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1580,74 +1597,82 @@ offset_bottom = 282.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
-script = ExtResource("73_4obbf")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "ui_collections_title"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_items"
 
-[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_skills"
 
-[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_patterns"
 
-[node name="List3" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List3" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_relics"
 
-[node name="List4" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List4" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Collections/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="BagViewer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="BagViewer" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("34_rwa0e")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer"]
 custom_minimum_size = Vector2(904, 565)
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1660,136 +1685,143 @@ offset_bottom = 282.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
-script = ExtResource("34_rwa0e")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Bag"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="ColorRect2" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="ColorRect2" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(16, 4)
 layout_mode = 2
 size_flags_vertical = 4
 color = Color(0.901961, 0.6, 0.301961, 1)
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 text = "On Board"
 
-[node name="ColorRect3" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="ColorRect3" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(16, 4)
 layout_mode = 2
 size_flags_vertical = 4
 color = Color(0.501961, 0.8, 0.6, 1)
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 text = "In Hand"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
 custom_minimum_size = Vector2(16, 4)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
 layout_mode = 2
 text = "Selected"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "Gems"
 
-[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "Items"
 
-[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
-text = "Comfirm"
+text = "ui_comfirm"
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/BagViewer/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
-text = "Close"
+text = "ui_close"
 
-[node name="Options" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Options" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("14_kw2dv")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Options"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -156.5
-offset_top = -81.0
-offset_right = 156.5
-offset_bottom = 81.0
+offset_left = -221.5
+offset_top = -144.0
+offset_right = 221.5
+offset_bottom = 144.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rtse5")
-script = ExtResource("14_kw2dv")
+theme_override_styles/panel = SubResource("StyleBoxFlat_n5t1e")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Options"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "ui_options_title"
 
-[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_language"
 
-[node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 selected = 0
 item_count = 2
@@ -1798,113 +1830,131 @@ popup/item_0/id = 0
 popup/item_1/text = "中文"
 popup/item_1/id = 1
 
-[node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_sfx_volume"
 
-[node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_music_volume"
 
-[node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_fullscreen"
 
-[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_performance_mode"
 
-[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_invincible"
 
-[node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_command_line"
 
-[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer/GridContainer"]
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_hwh0u")
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Options/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_av48c")
 text = "ui_close"
 
-[node name="InGameMenu" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="InGameMenu" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("15_clbdl")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/InGameMenu"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -81.0
+offset_left = -175.0
 offset_top = -127.5
-offset_right = 81.0
+offset_right = 175.0
 offset_bottom = 127.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gosjg")
-script = ExtResource("15_clbdl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/InGameMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "ui_in_game_menu_title"
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_resume"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_options"
 
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_main_menu"
 
-[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/VBoxContainer"]
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_auto_place_items"
 
-[node name="GameOver" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_h6isl")
+script = ExtResource("16_iphee")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/GameOver"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1917,70 +1967,78 @@ offset_bottom = 163.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_2sare")
-script = ExtResource("16_iphee")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/GameOver"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Game Over"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "You have used up all the matches
  but did not reach the target score."
 
-[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 16
 columns = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Max Match Score"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Rolls"
 
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Level"
 
-[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Seed"
 
-[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer/GridContainer"]
+[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "New Run"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/GameOver/VBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "Main Menu"
 
-[node name="LevelClear" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="LevelClear" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("17_ykjhx")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1993,30 +2051,29 @@ offset_bottom = 33.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dybqb")
-script = ExtResource("17_ykjhx")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/LevelClear/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
 fit_content = true
 custom_effects = [SubResource("RichTextEffect_s1npm")]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/LevelClear/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_exsg7")
 text = "Continue"
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="SubViewportContainer/SubViewport/UI/LevelClear"]
+[node name="CPUParticles2D" type="CPUParticles2D" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer"]
 position = Vector2(152, -1.5)
 emitting = false
 amount = 32
@@ -2031,8 +2088,17 @@ scale_amount_min = 10.0
 scale_amount_max = 10.0
 color_initial_ramp = SubResource("Gradient_x84n0")
 
-[node name="ChooseReward" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="ChooseReward" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("36_c2aw5")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -2045,42 +2111,50 @@ offset_bottom = 55.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_5tghd")
-script = ExtResource("36_c2aw5")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer"]
 layout_mode = 2
 theme_override_constants/separation = 64
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 32
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/VBoxContainer/HBoxContainer2"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Hide"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/VBoxContainer/HBoxContainer2"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Reroll"
 
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/VBoxContainer/HBoxContainer2"]
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Skip"
 
-[node name="Dialog" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Dialog" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("64_wy5fy")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Dialog"]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -2096,33 +2170,32 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_c2n8d")
-script = ExtResource("64_wy5fy")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Dialog"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Dialog/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "Title"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Dialog/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.753984, 0.753984, 0.753984, 1)
 theme_override_font_sizes/font_size = 24
 text = "Content"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Dialog/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Dialog/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Yes"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Dialog/VBoxContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "No"
 

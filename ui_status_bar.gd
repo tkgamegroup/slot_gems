@@ -6,7 +6,7 @@ extends PanelContainer
 @onready var combos_text : Label = $HBoxContainer/VBoxContainer2/Control/Combos
 @onready var mult_text : Label = $HBoxContainer/VBoxContainer3/Mult
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
-@onready var level_target : Label = $HBoxContainer/VBoxContainer4/Label
+@onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
 @onready var board_size_text : Label = $HBoxContainer/HBoxContainer/BoardSize
 @onready var hand_metrics_container : Control = $HBoxContainer/HBoxContainer4

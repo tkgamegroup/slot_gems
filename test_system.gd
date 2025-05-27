@@ -257,7 +257,7 @@ func time_out():
 						Game.new_level()
 					else:
 						step = TaskSteps.ToShop
-						Game.level_clear_ui.continue_game()
+						Game.level_clear_ui.exit()
 				
 				Game.level_clear_ui.hide()
 				Game.game_over_ui.hide()
@@ -290,7 +290,7 @@ func time_out():
 			if Game.shop_ui.visible:
 				for i in 5:
 					Game.shop_ui.buy_randomly()
-				Game.shop_ui.continue_game()
+				Game.shop_ui.exit()
 				step = TaskSteps.ToRoll
 				write_game_status()
 

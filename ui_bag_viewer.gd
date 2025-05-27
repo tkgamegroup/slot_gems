@@ -1,12 +1,12 @@
 extends Control
 
-@onready var title = $VBoxContainer/Label
-@onready var legend1 = $VBoxContainer/HBoxContainer2/HBoxContainer
-@onready var legend2 = $VBoxContainer/HBoxContainer2/HBoxContainer2
-@onready var gem_list = $VBoxContainer/ScrollContainer/VBoxContainer/List
-@onready var item_list = $VBoxContainer/ScrollContainer/VBoxContainer/List2
-@onready var comfirm_button = $VBoxContainer/HBoxContainer/Button2
-@onready var close_button = $VBoxContainer/HBoxContainer/Button
+@onready var title = $PanelContainer/VBoxContainer/Label
+@onready var legend1 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer
+@onready var legend2 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2
+@onready var gem_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List
+@onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List2
+@onready var comfirm_button = $PanelContainer/VBoxContainer/HBoxContainer/Button2
+@onready var close_button = $PanelContainer/VBoxContainer/HBoxContainer/Button
 
 const gem_ui = preload("res://ui_gem.tscn")
 const item_ui = preload("res://ui_item.tscn")
@@ -33,8 +33,10 @@ func create_bar():
 
 func enter(select_category : String = "", _select_num : int = 0, select_prompt : String = "", _select_callback : Callable = Callable()):
 	clear()
-	Game.blocker_ui.enter()
-	self.show()
+	self.self_modulate.a = 0.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+	
 	if _select_num == 0:
 		title.text = "Bag"
 		legend1.show()
@@ -97,9 +99,9 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 			bar.color = Color(0.5, 0.8, 0.6, 1.0)
 			bar.show()
 		item_list.add_child(ui)
+	self.show()
 
 func exit():
-	Game.blocker_ui.exit()
 	self.hide()
 
 func _ready() -> void:

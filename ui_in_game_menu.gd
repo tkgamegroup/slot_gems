@@ -1,22 +1,31 @@
 extends Control
 
-@onready var resume_button : Button = $VBoxContainer/Button
-@onready var options_button : Button = $VBoxContainer/Button2
-@onready var main_menu_button : Button = $VBoxContainer/Button3
-@onready var auto_place_items_button : Button = $VBoxContainer/Button4
+@onready var panel : PanelContainer = $PanelContainer
+@onready var resume_button : Button = $PanelContainer/VBoxContainer/Button
+@onready var options_button : Button = $PanelContainer/VBoxContainer/Button2
+@onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
+@onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button4
 
 func enter():
 	STooltip.close()
-	Game.blocker_ui.enter()
-	Game.status_bar_ui.bag_button.disabled = true
-	if Game.bag_viewer_ui.visible:
-		Game.bag_viewer_ui.exit()
+	self.self_modulate.a = 0.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+	
 	self.show()
+	panel.show()
 
-func exit():
-	Game.blocker_ui.exit()
-	Game.status_bar_ui.bag_button.disabled = false
-	self.hide()
+func exit(trans = true):
+	if trans:
+		panel.hide()
+		self.self_modulate.a = 1.0
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+		tween.tween_callback(func():
+			self.hide()
+		)
+	else:
+		self.hide()
 	
 func _ready() -> void:
 	resume_button.pressed.connect(func():
@@ -25,8 +34,8 @@ func _ready() -> void:
 	)
 	options_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		exit()
-		Game.options_ui.enter()
+		exit(false)
+		Game.options_ui.enter(false)
 	)
 	main_menu_button.pressed.connect(func():
 		SSound.sfx_click.play()

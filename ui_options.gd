@@ -1,17 +1,24 @@
 extends Control
 
-@onready var language_select : OptionButton = $VBoxContainer/GridContainer/OptionButton
-@onready var sfx_volume_slider : HSlider = $VBoxContainer/GridContainer/HSlider
-@onready var music_volume_slider : HSlider = $VBoxContainer/GridContainer/HSlider2
-@onready var fullscreen_checkbox : CheckBox = $VBoxContainer/GridContainer/CheckBox
-@onready var performance_mode_checkbox : CheckBox = $VBoxContainer/GridContainer/CheckBox2
-@onready var invincible_checkbox : CheckBox = $VBoxContainer/GridContainer/CheckBox3
-@onready var close_button : Button = $VBoxContainer/Button
-@onready var command_line : LineEdit = $VBoxContainer/GridContainer/LineEdit
+@onready var panel : PanelContainer = $PanelContainer
+@onready var language_select : OptionButton = $PanelContainer/VBoxContainer/GridContainer/OptionButton
+@onready var sfx_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider
+@onready var music_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider2
+@onready var fullscreen_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox
+@onready var performance_mode_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox2
+@onready var invincible_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox3
+@onready var close_button : Button = $PanelContainer/VBoxContainer/Button
+@onready var command_line : LineEdit = $PanelContainer/VBoxContainer/GridContainer/LineEdit
 
-func enter():
+func enter(trans = true):
 	STooltip.close()
-	Game.blocker_ui.enter()
+	if trans:
+		self.self_modulate.a = 0.0
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+	else:
+		self.self_modulate.a = 1.0
+	
 	var locale = TranslationServer.get_locale()
 	if locale.begins_with("en"):
 		language_select.selected = 0
@@ -22,11 +29,18 @@ func enter():
 	performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
 	invincible_checkbox.set_pressed_no_signal(Game.invincible)
 	fullscreen_checkbox.set_pressed_no_signal(DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
+	
 	self.show()
+	panel.show()
 
 func exit():
-	Game.blocker_ui.exit()
-	self.hide()
+	panel.hide()
+	self.self_modulate.a = 1.0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		self.hide()
+	)
 	
 func _ready() -> void:
 	language_select.item_selected.connect(func(idx):
@@ -89,6 +103,12 @@ func _ready() -> void:
 				var coord = Vector2i(int(tokens2[0]), int(tokens2[1]))
 				for p in Game.patterns:
 					p.match_with(coord)
+			elif cmd == "win":
+				Game.win()
+			elif cmd == "lose":
+				Game.lose()
+			elif cmd == "shop":
+				Game.shop_ui.enter()
 			elif cmd == "ai":
 				var num = 1
 				var tt = tokens[1]
