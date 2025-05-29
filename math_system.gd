@@ -8,6 +8,9 @@ static func v3_21(v2 : Vector2, f : float) -> Vector3:
 static func v2_3(v3 : Vector3) -> Vector2:
 	return Vector2(v3.x, v3.y)
 
+static func vert(v : Vector2) -> Vector2:
+	return Vector2(-v.y, v.x)
+
 static func component_sort(v3 : Vector3i):
 	var arr = []
 	for idx in get_shuffled_indices(3):
