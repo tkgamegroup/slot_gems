@@ -25,7 +25,7 @@ var cells : Array[Cell]
 
 const roll_speed : Curve = preload("res://roll_speed.tres")
 const particles_pb = preload("res://particles.tscn")
-const active_effect_pb = preload("res://active_effect.tscn")
+const active_effect_pb = preload("res://ui_active_effect.tscn")
 const black_bg = preload("res://images/black_bg.png")
 
 var num_tasks : int
@@ -424,6 +424,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 			return
 		sp = active_effect_pb.instantiate()
 		sp.global_position = skill.ui.get_global_rect().get_center()
+		sp.z_index = 4
 		Game.game_ui.add_child(sp)
 	var ae = ActiveEffect.new()
 	ae.host = host
@@ -612,6 +613,7 @@ func matching():
 							for cc in SMath.pick_n(cands, 1):
 								set_state_at(cc, Cell.State.Burning, {"pos":pos})
 						
+						SSound.sfx_bubble.pitch_scale = randf_range(0.9, 1.1)
 						SSound.sfx_bubble.play()
 						Game.add_combo()
 						for c in res:

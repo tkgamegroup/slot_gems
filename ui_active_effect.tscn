@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d20qlypwis73p"]
 
-[ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="2_jxas5"]
+[ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="1_uulgu"]
 
 [sub_resource type="Curve" id="Curve_uw5uu"]
 _data = [Vector2(0.00580271, 0.306001), 0.0, 0.0, 0, 0, Vector2(1, 0.153185), 0.0, 0.0, 0, 0]
@@ -14,10 +14,28 @@ colors = PackedColorArray(1, 1, 1, 0.72549, 1, 1, 1, 0)
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
-texture = ExtResource("2_jxas5")
+texture = ExtResource("1_uulgu")
 spread = 180.0
 gravity = Vector2(0, 0)
 initial_velocity_min = 20.0
 initial_velocity_max = 20.0
 scale_amount_curve = SubResource("Curve_uw5uu")
 color_ramp = SubResource("Gradient_vhvdw")
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(25, 17)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -8.5
+offset_right = 0.5
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.588235, 0.588235, 0.862745, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
