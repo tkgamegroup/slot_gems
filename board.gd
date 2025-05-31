@@ -754,7 +754,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 		for i in target_coords.size():
 			if sps[i] != null:
 				tween2.parallel()
-				SAnimation.cubic_curve_to(tween2, sps[i], get_pos(target_coords[i]), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.7 * Game.animation_speed)
+				SAnimation.cubic_curve_to(tween2, sps[i], get_pos(target_coords[i]), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.7 * Game.animation_speed)
 	)
 	tween.tween_interval(0.7 * Game.animation_speed)
 	tween.tween_callback(func():

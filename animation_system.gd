@@ -28,29 +28,31 @@ func move_to(tween : Tween, target, p : Vector2, duration : float):
 	tween.tween_property(target, "global_position", p, duration)
 	return tween
 
-func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1_t : float, ctrl1_o : Vector2, duration : float):
+func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1 : Vector2, duration : float):
 	if !tween:
 		tween = Game.get_tree().create_tween()
 	var d = {}
 	d.p2 = p2
 	tween.tween_callback(func():
 		d.p0 = target.global_position
-		d.p1 = lerp(d.p0, d.p2, ctrl1_t) + ctrl1_o
+		var v = d.p2 - d.p0
+		d.p1 = d.p0 + v * ctrl1.x + SMath.vert(v) * ctrl1.y
 	)
 	tween.parallel().tween_method(func(t):
 		target.global_position = SMath.quadratic_bezier(d.p0, d.p1, d.p2, t)
 	, 0.0, 1.0, duration)
 	return tween
 
-func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1_t : float, ctrl1_o : Vector2, ctrl2_t : float, ctrl2_o : Vector2, duration : float):
+func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 : Vector2, duration : float):
 	if !tween:
 		tween = Game.get_tree().create_tween()
 	var d = {}
 	d.p3 = p3
 	tween.tween_callback(func():
 		d.p0 = target.global_position
-		d.p1 = lerp(d.p0, d.p3, ctrl1_t) + ctrl1_o
-		d.p2 = lerp(d.p0, d.p3, ctrl2_t) + ctrl2_o
+		var v = d.p3 - d.p0
+		d.p1 = d.p0 + v * ctrl1.x + SMath.vert(v) * ctrl1.y
+		d.p2 = d.p0 + v * ctrl2.x + SMath.vert(v) * ctrl2.y
 	)
 	tween.parallel().tween_method(func(t):
 		target.global_position = SMath.cubic_bezier(d.p0, d.p1, d.p2, d.p3, t)

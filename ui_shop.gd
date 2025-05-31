@@ -101,7 +101,7 @@ func enter():
 				var tween2 = Game.get_tree().create_tween()
 				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
 				tween2.parallel()
-				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 				tween2.tween_callback(func():
 					Game.add_item(item)
 					img.queue_free()
@@ -124,7 +124,7 @@ func enter():
 					var tween2 = Game.get_tree().create_tween()
 					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
 					tween2.parallel()
-					SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+					SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 					tween2.tween_callback(func():
 						Game.add_relic(relic)
 						img.queue_free()
@@ -242,7 +242,7 @@ func _ready() -> void:
 				tween.tween_callback(func():
 					var ui = uis[i]
 					ui.show()
-					SAnimation.cubic_curve_to(null, ui, base_pos + i * Vector2(32, 0), 0.1, Vector2(0, 100), 0.9, Vector2(0, 150), 0.4)
+					SAnimation.cubic_curve_to(null, ui, base_pos + i * Vector2(32, 0), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 				)
 			tween.tween_interval(1.0)
 			tween.tween_callback(func():

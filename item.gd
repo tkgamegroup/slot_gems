@@ -464,7 +464,7 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = cands.pick_random()
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, 0.5, Vector2(0.0, -30.0), 0.4 * Game.animation_speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
@@ -520,7 +520,7 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = cands.pick_random()
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, 0.5, Vector2(0.0, -30.0), 0.4 * Game.animation_speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
@@ -539,7 +539,7 @@ func setup(n : String):
 							sp.z_index = 3
 							Game.board_ui.cells_root.add_child(sp)
 							var tween2 = Game.get_tree().create_tween()
-							SAnimation.cubic_curve_to(tween2, sp, Game.status_bar_ui.bag_button.get_global_rect().get_center(), 0.1, Vector2(0, 150), 0.9, Vector2(0, 100), 0.4)
+							SAnimation.cubic_curve_to(tween2, sp, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 							tween2.tween_callback(func():
 								var new_item = Item.new()
 								new_item.setup("Rabbit")
@@ -932,7 +932,7 @@ func setup(n : String):
 						Game.board_ui.cells_root.add_child(sp)
 						t.third = sp
 						tween.parallel()
-						SAnimation.quadratic_curve_to(tween, sp, t.second, 0.5, Vector2(0.0, -30.0), 0.4 * Game.animation_speed)
+						SAnimation.quadratic_curve_to(tween, sp, t.second, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
 					tween.tween_callback(func():
 						Game.add_combo()
 						for t in arr:

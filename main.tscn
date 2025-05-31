@@ -39,7 +39,6 @@
 [ext_resource type="AudioStream" uid="uid://b3wdrb7m6bi8r" path="res://sounds/skill.wav" id="18_f1p13"]
 [ext_resource type="Script" uid="uid://cejdm385qie14" path="res://ui_board.gd" id="21_34ol3"]
 [ext_resource type="Texture2D" uid="uid://b1t2da5qbvmv8" path="res://images/hover.png" id="25_2un53"]
-[ext_resource type="Texture2D" uid="uid://b2fgocjedd2j2" path="res://images/height_map.png" id="26_4obbf"]
 [ext_resource type="Shader" uid="uid://e28162dlfqdt" path="res://fire.gdshader" id="27_fv65f"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://fw5w2kkrc75e" path="res://images/fire_shape.png" id="28_oso7t"]
@@ -82,9 +81,20 @@
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_f1p13"]
+random_pitch = 1.1
+random_volume_offset_db = 0.1
+streams_count = 1
+stream_0/stream = ExtResource("15_iwwqi")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
-shader_parameter/height_map = ExtResource("26_4obbf")
+shader_parameter/bottom_color = Color(0.0453899, 0.612571, 0.781905, 1)
+shader_parameter/top_color = Color(0.284213, 0.437073, 0.397122, 1)
+shader_parameter/wave_amp = 0.05
+shader_parameter/wave_size = 1.2
+shader_parameter/wave_time_mul = 1.0
+shader_parameter/total_phases = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3qyrb"]
 
@@ -626,7 +636,7 @@ stream = ExtResource("11_0r14j")
 bus = &"SFX"
 
 [node name="Bubble" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("15_iwwqi")
+stream = SubResource("AudioStreamRandomizer_f1p13")
 volume_db = -5.0
 max_polyphony = 10
 bus = &"SFX"

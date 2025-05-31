@@ -345,7 +345,8 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
 	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_property(ui, "scale", Vector2(0.0, 0.0), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.tween_interval(0.5)
+	SAnimation.quadratic_curve_to(tween, ui, status_bar_ui.score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.4, (0.3 + randf() * 0.4) * sign(randf() - 0.5)), 0.8).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
 	tween.tween_callback(ui.queue_free)
 	
 	add_score_dir *= -1
