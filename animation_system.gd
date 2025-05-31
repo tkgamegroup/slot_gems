@@ -59,15 +59,20 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 
 	, 0.0, 1.0, duration)
 	return tween
 
-func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable()):
+func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable(), do_scale : bool = true):
 	if !tween:
 		tween = Game.get_tree().create_tween()
 	var parent = target.get_parent()
-	tween.tween_property(target, "scale", Vector2(1.0, 0.9), duration * 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	tween.tween_property(target, "scale", Vector2(1.0, 1.1), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(target, "position", target.position + Vector2(0, height), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	target.pivot_offset.y = target.size.y
+	if do_scale:
+		tween.tween_property(target, "scale", Vector2(1.0, 0.9), duration * 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		tween.tween_property(target, "scale", Vector2(1.0, 1.1), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.parallel()
+	tween.tween_property(target, "position", target.position + Vector2(0, height), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if cb.is_valid():
 		tween.tween_callback(cb)
-	tween.tween_property(target, "scale", Vector2(1.0, 1.0), duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	tween.parallel().tween_property(target, "position", target.position, duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	if do_scale:
+		tween.tween_property(target, "scale", Vector2(1.0, 1.0), duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		tween.parallel()
+	tween.tween_property(target, "position", target.position, duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	return tween

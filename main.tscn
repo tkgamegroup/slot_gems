@@ -1,4 +1,4 @@
-[gd_scene load_steps=144 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=146 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -79,6 +79,7 @@
 [ext_resource type="Script" uid="uid://dtrr5xwmh7tpk" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
+[ext_resource type="Script" uid="uid://b0rh64phtex0f" path="res://ui_calculate_bar.gd" id="71_f1p13"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_f1p13"]
@@ -464,6 +465,22 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_53bls"]
+bg_color = Color(0, 0, 0, 0.705882)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 0.784314)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 8.0
+expand_margin_top = 4.0
+expand_margin_right = 8.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rycwm"]
 bg_color = Color(0.239266, 0.485527, 0.455179, 1)
@@ -1572,6 +1589,120 @@ theme_override_constants/margin_bottom = 8
 [node name="List" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+
+[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+custom_minimum_size = Vector2(1280, 220)
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -640.0
+offset_right = 640.0
+offset_bottom = 220.0
+grow_horizontal = 2
+script = ExtResource("71_f1p13")
+
+[node name="Calculated" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar"]
+visible = false
+layout_mode = 2
+offset_left = 620.0
+offset_top = 120.0
+offset_right = 748.0
+offset_bottom = 165.0
+grow_horizontal = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+text = "8888888"
+
+[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/CalculateBar"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -66.5
+offset_top = -45.0
+offset_right = 66.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_53bls")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BaseScore" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.5
+offset_top = -11.5
+offset_right = 4.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1)
+theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
+text = "x"
+
+[node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 32
+text = "0X"
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Control2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.5
+offset_top = -11.5
+offset_right = 4.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1)
+theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
+text = "x"
+
+[node name="Mult" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 32
+text = "1.0"
+horizontal_alignment = 1
 
 [node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false

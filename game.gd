@@ -18,7 +18,7 @@ enum Props
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 2
+const version_patch : int = 3
 
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
@@ -29,6 +29,7 @@ const UiShop = preload("res://ui_shop.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
 const UiSkillsBar = preload("res://ui_skills_bar.gd")
 const UiPatternsBar = preload("res://ui_patterns_bar.gd")
+const UiCalculatorBar = preload("res://ui_calculate_bar.gd")
 const UiDialog = preload("res://ui_dialog.gd")
 const UiOptions = preload("res://ui_options.gd")
 const UiCollections = preload("res://ui_collections.gd")
@@ -60,6 +61,7 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var relics_bar_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/RelicsBar
 @onready var skills_bar_ui : UiSkillsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar
 @onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
+@onready var calculator_bar_ui : UiCalculatorBar = $/root/Main/SubViewportContainer/SubViewport/UI/CalculateBar
 @onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/UI/Dialog
 @onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/UI/Options
 @onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/UI/Collections
@@ -131,6 +133,26 @@ var score : int:
 	set(v):
 		score = v
 		status_bar_ui.score_text.text = "%d" % score
+var base_score_tween : Tween
+var base_score : int:
+	set(v):
+		if v > base_score:
+			base_score = v
+			if base_score_tween:
+				base_score_tween.custom_step(1000.0)
+			calculator_bar_ui.base_score_text.position.y = 4
+			calculator_bar_ui.base_score_text.text = "%d" % v
+			base_score_tween = get_tree().create_tween()
+			base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2)
+			base_score_tween.tween_callback(func():
+				base_score_tween = null
+			)
+		else:
+			if base_score_tween:
+				base_score_tween.kill()
+				base_score_tween = null
+			base_score = v
+			calculator_bar_ui.base_score_text.text = "%d" % base_score
 var target_score : int:
 	set(v):
 		target_score = v
@@ -142,10 +164,10 @@ var combos : int = 0:
 			combos = v
 			if combos_tween:
 				combos_tween.custom_step(1000.0)
-			status_bar_ui.combos_text.position.y = 0
+			calculator_bar_ui.combos_text.position.y = 0
 			combos_tween = get_tree().create_tween()
-			SAnimation.jump(combos_tween, status_bar_ui.combos_text, -0.0, 0.25 * Game.animation_speed, func():
-				status_bar_ui.combos_text.text = "%dX" % v
+			SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * Game.animation_speed, func():
+				calculator_bar_ui.combos_text.text = "%dX" % v
 			)
 			combos_tween.tween_callback(func():
 				combos_tween = null
@@ -155,13 +177,13 @@ var combos : int = 0:
 				combos_tween.kill()
 				combos_tween = null
 			combos = v
-			status_bar_ui.combos_text.text = "%dX" % combos
+			calculator_bar_ui.combos_text.text = "%dX" % combos
 		
 
 var score_mult : float = 1.0:
 	set(v):
 		score_mult = v
-		status_bar_ui.mult_text.text = "%.1f" % score_mult
+		calculator_bar_ui.mult_text.text = "%.1f" % score_mult
 var level : int:
 	set(v):
 		level = v
@@ -330,14 +352,14 @@ var add_score_dir : int = 1
 func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	var combos_mult = combos if affected_by_combos else 1
 	var mult = int(combos_mult * score_mult)
-	var add_score = base * mult
-	score += add_score
+	var add_value = base * mult
+	#score += add_value
 	
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
-	lb.text = "%d" % add_score
+	lb.text = "%d" % add_value
 	ui.z_index = 8
 	board_ui.overlay.add_child(ui)
 	
@@ -345,8 +367,11 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
 	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_interval(0.5)
-	SAnimation.quadratic_curve_to(tween, ui, status_bar_ui.score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.4, (0.3 + randf() * 0.4) * sign(randf() - 0.5)), 0.8).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	tween.tween_interval(0.3)
+	SAnimation.quadratic_curve_to(tween, ui, calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.2 + randf() * 0.3) * sign(randf() - 0.5)), 0.5).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+	tween.tween_callback(func():
+		base_score += add_value
+	)
 	tween.tween_callback(ui.queue_free)
 	
 	add_score_dir *= -1
@@ -682,6 +707,8 @@ func play():
 		stage = Stage.Matching
 		matches -= 1
 		modifiers["first_match_i"] = 0
+		
+		calculator_bar_ui.appear()
 		begin_busy()
 		Board.matching()
 
@@ -1066,6 +1093,9 @@ func _ready() -> void:
 				if processed:
 					break
 		if !processed:
+			calculator_bar_ui.calculate()
+			return
+			
 			history.update()
 			combos = modifiers["base_combo_i"]
 			stage = Stage.Deploy

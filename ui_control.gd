@@ -2,9 +2,6 @@ extends Control
 
 const UiProp = preload("res://ui_prop.gd")
 
-@onready var base_score : Label = $Control/HBoxContainer/BaseScore
-@onready var combos : Label = $Control/HBoxContainer/Combos
-@onready var mult : Label = $Control/HBoxContainer/Mult
 @onready var roll_panel : Control = $Panel
 @onready var roll_button : Button = $Panel/HBoxContainer/Roll
 @onready var rolls_text : Label = $Panel/HBoxContainer/VBoxContainer/Rolls
