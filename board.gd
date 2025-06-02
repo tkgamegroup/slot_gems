@@ -150,7 +150,7 @@ func get_gem_at(c : Vector2i):
 func set_gem_at(c : Vector2i, g : Gem):
 	c = format_coord(c)
 	if !is_valid(c):
-		return
+		return null
 	var cell = cells[c.y * cx + c.x]
 	var og = cell.gem
 	if og:
@@ -247,8 +247,8 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 	cells[idx].state = s
 	var ui = Game.get_cell_ui(c)
 	if s == Cell.State.Normal:
-		ui.gem.position = Vector2(0, 0)
-		ui.gem.scale = Vector2(1, 1)
+		ui.gem_ui.position = Vector2(0, 0)
+		ui.gem_ui.scale = Vector2(1, 1)
 		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		ui.burn.hide()
 	elif s == Cell.State.Consumed:
@@ -363,8 +363,8 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 				var c = coords[idx]
 				var g = get_gem_at(c)
 				var ui = uis[idx]
-				ui.gem.bg_sp.scale = Vector2(1.0, 1.0)
-				ui.gem.z_index = 1
+				ui.gem_ui.bg_sp.scale = Vector2(1.0, 1.0)
+				ui.gem_ui.z_index = 1
 				var ptc = ptcs[idx]
 				ptc.position = get_pos(c)
 				ptc.emitting = true
@@ -388,11 +388,11 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 	if !Game.performance_mode:
 		tween.tween_method(func(t):
 			for ui in uis:
-				ui.gem.bg_sp.scale = Vector2(t, t)
+				ui.gem_ui.bg_sp.scale = Vector2(t, t)
 		, 1.0, 1.2, max(0.1 * Game.animation_speed, 0.02)).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		tween.tween_method(func(t):
 			for ui in uis:
-				ui.gem.bg_sp.scale = Vector2(t, t)
+				ui.gem_ui.bg_sp.scale = Vector2(t, t)
 		, 1.2, 1.0, max(0.3 * Game.animation_speed, 0.02)).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 	else:
 		tween.tween_interval(0.02)
@@ -400,7 +400,7 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 		for i in coords.size():
 			var c = coords[i]
 			if !Game.performance_mode:
-				uis[i].gem.z_index = 0
+				uis[i].gem_ui.z_index = 0
 				ptcs[i].queue_free()
 			if get_state_at(c) != Cell.State.Burning:
 				set_state_at(c, Cell.State.Consumed)
@@ -463,16 +463,13 @@ func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
 	for h in event_listeners:
 		h.host.on_event.call(Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
 
-func cleanup():
+func clear():
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
 			set_item_at(c, null)
 			set_gem_at(c, null)
 	cells.clear()
-	Game.bag_gems.clear()
-	for g in Game.gems:
-		Game.bag_gems.append(g)
 	Game.board_ui.clear()
 	cx = 0
 	cy = 0
@@ -485,7 +482,7 @@ func add_cell(c : Vector2i):
 	return cell
 
 func setup(_hf_cy : int):
-	cleanup()
+	clear()
 	
 	cy = _hf_cy * 2
 	cx = cy * cx_mult

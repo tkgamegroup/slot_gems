@@ -17,12 +17,6 @@ var disabled : bool = false:
 		else:
 			list.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
-func is_empty():
-	return list.get_child_count() == 0
-
-func get_ui_count():
-	return list.get_child_count()
-
 func get_ui(idx : int) -> UiSlot:
 	if idx >= 0 && idx < list.get_child_count():
 		return list.get_child(idx)
@@ -35,10 +29,12 @@ func release_dragging():
 		dragging.action.hide()
 		dragging = null
 
-func add_ui(item : Item):
+func add_ui(gem : Gem):
 	var ui = ui_slot.instantiate()
-	ui.item = item
-	item.coord = Vector2i(get_ui_count(), -1)
+	ui.gem = gem
+	gem.coord = Vector2i(list.get_child_count(), -1)
+	if gem.bound_item:
+		gem.bound_item.coord = Vector2i(list.get_child_count(), -1)
 	list.add_child(ui)
 	ui.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
@@ -51,45 +47,20 @@ func add_ui(item : Item):
 	)
 	return ui
 
-func draw():
-	if Game.bag_items.is_empty():
-		return null
-	if get_ui_count() >= Game.max_hand_items:
-		return null
-	var item : Item = Game.get_item()
-	var ui = add_ui(item)
-	ui.position.y = 50
-	return ui
-
-func discard(use_animation : bool = false):
-	for n in list.get_children():
-		Game.release_item(n.item)
-		if use_animation:
-			var tween = get_tree().create_tween()
-			tween.tween_property(n, "position", n.position + Vector2(0, 100), 0.2)
-			tween.tween_callback(func():
-				n.queue_free()
-				list.remove_child(n)
-			)
-		else:
-			n.queue_free()
-			list.remove_child(n)
-
 func place_item(ui : UiSlot, c : Vector2i):
-	if Board.place_item(c, ui.item):
+	if Board.place_item(c, null): # TODO
 		ui.queue_free()
 		list.remove_child(ui)
 		return true
 	return false
 
-func cleanup():
-	discard()
-	Game.bag_items.clear()
-	for i in Game.items:
-		Game.bag_items.append(i)
+func clear():
+	for n in list.get_children():
+		n.queue_free()
+		list.remove_child(n)
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(item_w * Game.max_hand_items + gap * (Game.max_hand_items - 1), 50)
+	custom_minimum_size = Vector2(item_w * Game.max_hand_grabs + gap * (Game.max_hand_grabs - 1), 50)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()
@@ -121,11 +92,11 @@ func _input(event: InputEvent) -> void:
 							if place_item(dragging, c):
 								SSound.sfx_drop_item.play()
 								dragging = null
-					if !on_board && dragging.action.visible:
-						Game.release_item(dragging.item)
+					if !on_board && dragging.action.visible: #trade
+						Game.release_gem(dragging.gem)
 						dragging.queue_free()
 						dragging = null
-						draw()
+						Hand.draw()
 				release_dragging()
 	elif event is InputEventMouseMotion:
 		if dragging && !disabled && Board:

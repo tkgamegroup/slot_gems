@@ -265,7 +265,7 @@ func time_out():
 				step = TaskSteps.ToMatch
 				Game.roll()
 		elif step == TaskSteps.ToMatch:
-			if Game.bag_items.size() > 0 && Game.hand_ui.get_ui_count() < Game.max_hand_items && Game.rolls >= Game.matches:
+			if Game.bag_items.size() > 0 && Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.matches:
 				step = TaskSteps.ToMatch
 				Game.roll()
 			else:
@@ -295,12 +295,12 @@ func time_out():
 				write_game_status()
 
 func auto_place_items():
-	if !Game.hand_ui.is_empty():
+	if !Hand.grabs.is_empty():
 		var cx = Board.cx
 		var cy = Board.cy
 		var center = Vector2i(cx / 2, cy / 2)
 		var item_uis = []
-		for i in Game.hand_ui.get_ui_count():
+		for i in Hand.grabs.size():
 			var ui = Game.hand_ui.get_ui(i)
 			item_uis.append(ui)
 		var one_less_places : Array[Array] = []

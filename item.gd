@@ -422,7 +422,7 @@ func setup(n : String):
 			if g && g.type != Gem.Type.Colorless:
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Colorless}, Buff.Duration.ThisLevel)
 				for i in 2:
-					Game.hand_ui.draw()
+					Game.Hand.draw()
 				return true
 			return false
 	elif name == "Dog":

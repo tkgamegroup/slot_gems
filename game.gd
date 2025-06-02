@@ -86,9 +86,9 @@ var draws_per_roll : int:
 	set(v):
 		draws_per_roll = v
 		if hand_ui:
-			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, Game.max_hand_items]
+			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, Game.max_hand_grabs]
 var next_roll_extra_draws : int = 0
-var max_hand_items : int = 12
+var max_hand_grabs : int = 5
 var props = Props.None
 var pins_num : int:
 	set(v):
@@ -240,6 +240,7 @@ func add_gem(g : Gem, boardcast : bool = true):
 			if h.event == Event.GainGem:
 				h.host.on_event.call(Event.GainGem, null, g)
 	gems.append(g)
+	bag_gems.append(g)
 
 func get_gem(g : Gem = null):
 	if g:
@@ -303,6 +304,7 @@ func add_item(i : Item, boardcast : bool = true):
 			if h.event == Event.GainGem:
 				h.host.on_event.call(Event.GainItem, null, i)
 	items.append(i)
+	bag_items.append(i)
 
 func get_item(i : Item = null):
 	if i:
@@ -514,7 +516,7 @@ func start_game(saving : String = ""):
 		level = 0
 		rolls_per_level = 4
 		matches_per_level = 3
-		draws_per_roll = 8
+		draws_per_roll = 5
 		pins_num_per_level = 0
 		activates_num_per_level = 0
 		grabs_num_per_level = 0
@@ -691,7 +693,7 @@ func new_level():
 			h.host.on_event.call(Event.LevelBegan, null, null)
 	
 	Board.setup(board_size)
-	hand_ui.cleanup()
+	hand_ui.clear()
 	control_ui.enter()
 	
 	save_to_file()
@@ -724,7 +726,7 @@ func roll():
 		var draw_num = draws_per_roll
 		draw_num = min(draw_num, bag_items.size())
 		for i in draw_num:
-			hand_ui.draw()
+			Hand.draw()
 		modifiers["first_roll_i"] = 0
 		begin_busy()
 		history.rolls += 1
@@ -866,9 +868,8 @@ func save_to_file(name : String = "1"):
 		relics.append(relic)
 	data["relics"] = relics
 	var hand = []
-	for i in Game.hand_ui.get_ui_count():
-		var ui = Game.hand_ui.get_ui(i)
-		hand.append(Game.items.find(ui.item))
+	for g in Hand.grabs:
+		hand.append(Game.gems.find(g))
 	data["hand"] = hand
 	var cells = []
 	for c in Board.cells:
@@ -1004,7 +1005,9 @@ func load_from_file(name : String = "1"):
 		Board.event_listeners.append(h)
 	var hand = data["hand"]
 	for idx in hand:
-		Game.hand_ui.add_ui(Game.items[int(idx)])
+		var g = Game.gems[int(idx)]
+		Hand.grabs.append(g)
+		Game.hand_ui.add_ui(g)
 	var cells = data["cells"]
 	for cell in cells:
 		var coord = str_to_var("Vector2i" + cell["coord"])

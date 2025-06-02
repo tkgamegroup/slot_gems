@@ -34,6 +34,7 @@ var base_score : int = 4
 var bonus_score : int = 0
 var coord : Vector2i = Vector2i(-1, -1)
 var buffs : Array[Buff]
+var bound_item : Item = null
 
 static func type_name(t : int):
 	match t:

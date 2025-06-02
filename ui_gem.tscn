@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://s5ehr1388thk"]
+[gd_scene load_steps=5 format=3 uid="uid://s5ehr1388thk"]
 
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="1_qae8s"]
-[ext_resource type="Script" path="res://ui_gem.gd" id="2_pbann"]
+[ext_resource type="Script" uid="uid://t4phq6vbt25s" path="res://ui_gem.gd" id="2_pbann"]
 [ext_resource type="SpriteFrames" uid="uid://bgpse251ihp38" path="res://images/runes.tres" id="3_3slly"]
+[ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="4_jtep7"]
 
 [node name="UiGem" type="Node2D"]
 script = ExtResource("2_pbann")
@@ -12,3 +13,6 @@ sprite_frames = ExtResource("1_qae8s")
 
 [node name="Rune" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("3_3slly")
+
+[node name="Item" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("4_jtep7")

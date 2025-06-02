@@ -127,7 +127,7 @@ func setup(n : String):
 		image_id = 7
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
-				Game.hand_ui.draw()
+				Game.Hand.draw()
 			)
 	elif name == "Jin":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Cha, Gem.Rune.Zhe]

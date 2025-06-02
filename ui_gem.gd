@@ -2,16 +2,20 @@ extends Node2D
 
 @onready var bg_sp : AnimatedSprite2D = $BG
 @onready var rune_sp : AnimatedSprite2D = $Rune
+@onready var item_sp : AnimatedSprite2D = $Item
 
 const dissolve_mat : ShaderMaterial = preload("res://dissolve_mat.tres")
 const wild_mat : ShaderMaterial = preload("res://wild_mat.tres")
 
 var type : int
 var rune : int
+var item : int
 
-func set_image(_type : int, _rune : int):
+func set_image(_type : int, _rune : int, _item : int = 0):
 	type = _type
 	rune = _rune
+	item = _item
+	
 	if bg_sp:
 		bg_sp.frame = type
 		if type == Gem.Type.Blue || type == Gem.Type.Orange || type == Gem.Type.Green:
@@ -19,6 +23,7 @@ func set_image(_type : int, _rune : int):
 		else:
 			rune_sp.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		rune_sp.frame = rune
+		item_sp.frame = item
 		
 		if type == Gem.Type.Wild:
 			bg_sp.material = wild_mat
@@ -38,4 +43,4 @@ func dissolve(duration : float):
 	)
 
 func _ready() -> void:
-	set_image(type, rune)
+	set_image(type, rune, item)

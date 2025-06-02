@@ -24,9 +24,9 @@ func enter():
 	return tween
 
 func exit():
-	Board.cleanup()
+	Board.clear()
 	Game.board_ui.hide()
-	Game.hand_ui.cleanup()
+	Hand.clear()
 	self.hide()
 
 func _ready() -> void:
