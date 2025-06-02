@@ -1,10 +1,11 @@
 extends PanelContainer
 
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
-#@onready var combos_fire : Sprite2D = $HBoxContainer/Combo/Sprite2D
-#@onready var combos_fire_shader : ShaderMaterial = combos_fire.material
-@onready var combos_text : Label = $HBoxContainer/VBoxContainer2/Control/Combos
-@onready var mult_text : Label = $HBoxContainer/VBoxContainer3/Mult
+@onready var red_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Label2
+@onready var orange_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Label2
+@onready var green_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Label2
+@onready var blue_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Label2
+@onready var pink_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Label2
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer

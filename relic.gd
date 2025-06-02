@@ -19,8 +19,8 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["explode_range_i"] += 1
-					Game.modifiers["explode_power_i"] -= 3
+					Game.change_modifier("explode_range_i", 1)
+					Game.change_modifier("explode_power_i", -3)
 	elif name == "HighExplosives":
 		image_id = 2
 		price = 5
@@ -28,7 +28,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["explode_power_i"] += extra["value"]
+					Game.change_modifier("explode_power_i", extra["value"])
 	elif name == "UniformBlasting":
 		image_id = 3
 		price = 5
@@ -111,14 +111,13 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["board_upper_lower_connected_i"] = 1
+					Game.set_modifier("board_upper_lower_connected_i", 1)
 	elif name == "Premeditation":
 		image_id = 7
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["base_combo_i"] = 3
-					Game.combos = max(Game.combos, Game.modifiers["base_combo_i"])
+					Game.set_modifier("base_combo_i", 3)
 	elif name == "PentagramPower":
 		image_id = 8
 		on_event = func(event : int, tween : Tween, data):
@@ -134,35 +133,35 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["red_bouns_i"] += extra["value"]
+					Game.change_modifier("red_bouns_i", extra["value"])
 	elif name == "OrangeStone":
 		image_id = 10
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["orange_bouns_i"] += extra["value"]
+					Game.change_modifier("orange_bouns_i", extra["value"])
 	elif name == "GreenStone":
 		image_id = 11
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["green_bouns_i"] += extra["value"]
+					Game.change_modifier("green_bouns_i", extra["value"])
 	elif name == "BlueStone":
 		image_id = 12
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["blue_bouns_i"] += extra["value"]
+					Game.change_modifier("blue_bouns_i", extra["value"])
 	elif name == "PinkStone":
 		image_id = 13
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.modifiers["pink_bouns_i"] += extra["value"]
+					Game.change_modifier("pink_bouns_i", extra["value"])
 	elif name == "RockBottom":
 		image_id = 14
 		on_event = func(event : int, tween : Tween, data):

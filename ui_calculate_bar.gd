@@ -1,9 +1,9 @@
 extends Control
 
 @onready var panel : Control = $Panel
-@onready var base_score_text : Label = $Panel/HBoxContainer/BaseScore
-@onready var combos_text : Label = $Panel/HBoxContainer/Combos
-@onready var mult_text : Label = $Panel/HBoxContainer/Mult
+@onready var base_score_text : Label = $Panel/HBoxContainer/Panel/BaseScore
+@onready var combos_text : Label = $Panel/HBoxContainer/Panel2/Combos
+@onready var mult_text : Label = $Panel/HBoxContainer/Panel3/Mult
 @onready var cross1 : Label = $Panel/HBoxContainer/Control/Label
 @onready var cross2 : Label = $Panel/HBoxContainer/Control2/Label
 @onready var calculated_text : Label = $Calculated
@@ -40,10 +40,11 @@ func calculate():
 		
 		calculated_text.show()
 		calculated_text.text = "%d" % add_value
+		calculated_text.position = Vector2((1280 - calculated_text.size.x) * 0.5, 180)
 	)
-	SAnimation.jump(tween, calculated_text, 8, 0.5)
+	SAnimation.jump(tween, calculated_text, 8, 0.5, Callable(), true, false)
 	tween.tween_property(panel, "scale", Vector2(0.0, 0.0), 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	tween.tween_property(calculated_text, "global_position", Game.status_bar_ui.score_text.get_global_rect().get_center() + Vector2(0, +50), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	tween.tween_property(calculated_text, "global_position", Game.status_bar_ui.score_text.get_global_rect().get_center() + Vector2(-calculated_text.size.x * 0.5, 50), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	
 	var score0 = Game.score
 	tween.tween_method(func(v):
@@ -55,6 +56,5 @@ func calculate():
 	)
 
 func disappear():
-	calculated_text.position = Vector2(620, 120)
 	calculated_text.hide()
 	self.hide()

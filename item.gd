@@ -845,7 +845,7 @@ func setup(n : String):
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.modifiers["red_bouns_i"] += 1
+				Game.change_modifier("red_bouns_i", 1)
 				Game.float_text("Red +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Red))
 			)
 	elif name == "Citrine":
@@ -854,7 +854,7 @@ func setup(n : String):
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.modifiers["orange_bouns_i"] += 1
+				Game.change_modifier("orange_bouns_i", 1)
 				Game.float_text("Orange +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Orange))
 			)
 	elif name == "Emerald":
@@ -863,7 +863,7 @@ func setup(n : String):
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.modifiers["green_bouns_i"] += 1
+				Game.change_modifier("green_bouns_i", 1)
 				Game.float_text("Green +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Green))
 			)
 	elif name == "Sapphire":
@@ -872,7 +872,7 @@ func setup(n : String):
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.modifiers["blue_bouns_i"] += 1
+				Game.change_modifier("blue_bouns_i", 1)
 				Game.float_text("Blue +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Blue))
 			)
 	elif name == "Tourmaline":
@@ -881,7 +881,7 @@ func setup(n : String):
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.modifiers["pink_bouns_i"] += 1
+				Game.change_modifier("pink_bouns_i", 1)
 				Game.float_text("Pink +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Pink))
 			)
 	elif name == "StrengthPotion":

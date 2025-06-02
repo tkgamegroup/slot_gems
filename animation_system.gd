@@ -59,7 +59,7 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 
 	, 0.0, 1.0, duration)
 	return tween
 
-func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable(), do_scale : bool = true):
+func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable(), do_scale : bool = true, do_translate : bool = true):
 	if !tween:
 		tween = Game.get_tree().create_tween()
 	var parent = target.get_parent()
@@ -67,12 +67,16 @@ func jump(tween : Tween, target, height : float, duration : float, cb : Callable
 	if do_scale:
 		tween.tween_property(target, "scale", Vector2(1.0, 0.9), duration * 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		tween.tween_property(target, "scale", Vector2(1.0, 1.1), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-		tween.parallel()
-	tween.tween_property(target, "position", target.position + Vector2(0, height), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	if do_translate:
+		if do_scale:
+			tween.parallel()
+		tween.tween_property(target, "position", target.position + Vector2(0, height), duration * 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if cb.is_valid():
 		tween.tween_callback(cb)
 	if do_scale:
 		tween.tween_property(target, "scale", Vector2(1.0, 1.0), duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-		tween.parallel()
-	tween.tween_property(target, "position", target.position, duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	if do_translate:
+		if do_scale:
+			tween.parallel()
+		tween.tween_property(target, "position", target.position, duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	return tween

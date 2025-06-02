@@ -19,6 +19,7 @@ enum
 	LostSkill,
 	GainPattern,
 	LostPattern,
+	ModifierChanged,
 	GemBaseScoreChanged,
 	GemBonusScoreChanged,
 	GemEntered,

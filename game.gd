@@ -258,6 +258,31 @@ func sort_gems():
 		return a.type * 0xffff + a.rune * 0xff + (100.0 / max(a.base_score, 0.1)) < b.type * 0xffff + b.rune * 0xff + (100.0 / max(b.base_score, 0.1))
 	)
 
+func on_modifier_changed(name):
+	if name == "base_combo_i":
+		combos = max(combos, modifiers["base_combo_i"])
+	elif name == "red_bouns_i":
+		status_bar_ui.red_bouns_text.text = "%d" % modifiers["red_bouns_i"]
+	elif name == "orange_bouns_i":
+		status_bar_ui.orange_bouns_text.text = "%d" % modifiers["orange_bouns_i"]
+	elif name == "green_bouns_i":
+		status_bar_ui.green_bouns_text.text = "%d" % modifiers["green_bouns_i"]
+	elif name == "blue_bouns_i":
+		status_bar_ui.blue_bouns_text.text = "%d" % modifiers["blue_bouns_i"]
+	elif name == "pink_bouns_i":
+		status_bar_ui.pink_bouns_text.text = "%d" % modifiers["pink_bouns_i"]
+	for h in event_listeners:
+		if h.event == Event.ModifierChanged:
+			h.host.on_event.call(Event.ModifierChanged, null, {"name":name,"value":modifiers[name]})
+
+func set_modifier(name : String, v):
+	modifiers[name] = v
+	on_modifier_changed(name)
+
+func change_modifier(name : String, v):
+	modifiers[name] += v
+	on_modifier_changed(name)
+
 func gem_add_base_score(g : Gem, v : int):
 	for h in event_listeners:
 		if h.event == Event.GainGem:
@@ -368,6 +393,8 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_interval(0.3)
+	tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5)
+	tween.parallel()
 	SAnimation.quadratic_curve_to(tween, ui, calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.2 + randf() * 0.3) * sign(randf() - 0.5)), 0.5).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func():
 		base_score += add_value
@@ -451,7 +478,7 @@ func end_transition(tween : Tween):
 	)
 
 func start_game(saving : String = ""):
-	board_size = 3
+	board_size = 6
 	skills.clear()
 	skills_bar_ui.clear()
 	patterns.clear()
