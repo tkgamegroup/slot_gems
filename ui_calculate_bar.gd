@@ -8,6 +8,8 @@ extends Control
 @onready var cross2 : Label = $Panel/HBoxContainer/Control2/Label
 @onready var calculated_text : Label = $Calculated
 
+signal finished
+
 func appear():
 	panel.pivot_offset = Vector2(panel.size.x * 0.5, panel.size.y)
 	panel.scale = Vector2(0.0, 0.0)
@@ -53,6 +55,7 @@ func calculate():
 	, add_value, 0, 1.0)
 	tween.tween_callback(func():
 		disappear()
+		finished.emit()
 	)
 
 func disappear():

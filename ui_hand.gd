@@ -89,9 +89,14 @@ func _input(event: InputEvent) -> void:
 						var c = Game.board_ui.hover_coord(true)
 						if Board.is_valid(c):
 							on_board = true
-							if place_item(dragging, c):
-								SSound.sfx_drop_item.play()
-								dragging = null
+							SSound.sfx_drop_item.play()
+							Hand.swap(c, dragging.gem)
+							dragging.queue_free()
+							list.remove_child(dragging)
+							dragging = null
+							#if place_item(dragging, c):
+							#	SSound.sfx_drop_item.play()
+							#	dragging = null
 					if !on_board && dragging.action.visible: #trade
 						Game.release_gem(dragging.gem)
 						dragging.queue_free()

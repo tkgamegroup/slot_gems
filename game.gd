@@ -397,7 +397,7 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	tween.tween_interval(0.3)
 	tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5)
 	tween.parallel()
-	SAnimation.quadratic_curve_to(tween, ui, calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.2 + randf() * 0.3) * sign(randf() - 0.5)), 0.5).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+	SAnimation.quadratic_curve_to(tween, ui, calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 	tween.tween_callback(func():
 		base_score += add_value
 	)
@@ -1124,34 +1124,6 @@ func _ready() -> void:
 					break
 		if !processed:
 			calculator_bar_ui.calculate()
-			return
-			
-			history.update()
-			combos = modifiers["base_combo_i"]
-			stage = Stage.Deploy
-			animation_speed = base_animation_speed
-			save_to_file()
-			
-			Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
-			for y in Board.cy:
-				for x in Board.cx:
-					var c = Vector2i(x, y)
-					var g = Board.get_gem_at(c)
-					var i = Board.get_item_at(c)
-					if g:
-						Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
-					if i:
-						Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
-			
-			if matches == 0 && score < target_score:
-				if invincible:
-					win()
-				else:
-					lose()
-			elif score >= target_score:
-				win()
-			else:
-				end_busy()
 	)
 	board_ui.drag_dropped.connect(func(c0 : Vector2i, c1 : Vector2i):
 		if Board.is_valid(c1):
@@ -1164,4 +1136,32 @@ func _ready() -> void:
 						Board.set_gem_at(c1, g0)
 						Board.matching()
 						grabs_num -= 1
+	)
+	calculator_bar_ui.finished.connect(func():
+		history.update()
+		combos = modifiers["base_combo_i"]
+		stage = Stage.Deploy
+		animation_speed = base_animation_speed
+		save_to_file()
+		
+		Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+		for y in Board.cy:
+			for x in Board.cx:
+				var c = Vector2i(x, y)
+				var g = Board.get_gem_at(c)
+				var i = Board.get_item_at(c)
+				if g:
+					Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+				if i:
+					Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+		
+		if matches == 0 && score < target_score:
+			if invincible:
+				win()
+			else:
+				lose()
+		elif score >= target_score:
+			win()
+		else:
+			end_busy()
 	)

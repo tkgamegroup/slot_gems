@@ -20,5 +20,6 @@ func clear():
 
 func swap(coord : Vector2i, gem : Gem):
 	var og = Board.set_gem_at(coord, gem)
-	var idx = grabs.find(gem)
-	grabs[idx] = og
+	grabs.erase(gem)
+	var ui = Game.hand_ui.add_ui(og)
+	ui.position.y = 50
