@@ -8,6 +8,14 @@ const item_w = 32
 const gap = 8
 
 var dragging : UiSlot = null
+
+func release_dragging():
+	if dragging:
+		SSound.sfx_drop_item.play()
+		dragging.z_index = 0
+		dragging.action.hide()
+		dragging = null
+
 var disabled : bool = false:
 	set(v):
 		disabled = v
@@ -21,13 +29,6 @@ func get_ui(idx : int) -> UiSlot:
 	if idx >= 0 && idx < list.get_child_count():
 		return list.get_child(idx)
 	return null
-
-func release_dragging():
-	if dragging:
-		SSound.sfx_drop_item.play()
-		dragging.z_index = 0
-		dragging.action.hide()
-		dragging = null
 
 func add_ui(gem : Gem):
 	var ui = ui_slot.instantiate()
@@ -46,6 +47,12 @@ func add_ui(gem : Gem):
 					ui.z_index = 10
 	)
 	return ui
+
+func end_pos():
+	var n = list.get_child_count()
+	if n == 0:
+		return list.global_position
+	return list.global_position + Vector2(item_w * n + gap * n, 0)
 
 func place_item(ui : UiSlot, c : Vector2i):
 	if Board.place_item(c, null): # TODO
@@ -90,13 +97,12 @@ func _input(event: InputEvent) -> void:
 						if Board.is_valid(c):
 							on_board = true
 							SSound.sfx_drop_item.play()
-							Hand.swap(c, dragging.gem)
+							var gem = dragging.gem
 							dragging.queue_free()
 							list.remove_child(dragging)
 							dragging = null
+							Hand.swap(c, gem)
 							#if place_item(dragging, c):
-							#	SSound.sfx_drop_item.play()
-							#	dragging = null
 					if !on_board && dragging.action.visible: #trade
 						Game.release_gem(dragging.gem)
 						dragging.queue_free()

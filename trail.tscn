@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cn0hhoneqmo5k"]
+
+[ext_resource type="Script" uid="uid://dotrcackc4slg" path="res://trail.gd" id="1_xjhlx"]
+
+[sub_resource type="Curve" id="Curve_46ph2"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_46ph2"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.501961)
+
+[node name="Node" type="Node"]
+script = ExtResource("1_xjhlx")
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 5.0
+width_curve = SubResource("Curve_46ph2")
+gradient = SubResource("Gradient_46ph2")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
