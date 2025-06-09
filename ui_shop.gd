@@ -1,5 +1,6 @@
 extends Control
 
+const enchant_pb = preload("res://enchant_slot.tscn")
 const item_pb = preload("res://ui_shop_item.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
@@ -88,7 +89,16 @@ func enter(tween : Tween = null):
 		list2.remove_child(n)
 		n.queue_free()
 	
-	for i in 4:
+	for i in 1:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var ui = enchant_pb.instantiate()
+			ui.setup("Enchant Charming", "Charming", "+6 Base Score", "Enchant", 2, func(gem : Gem):
+				gem.base_score += 6
+			)
+			list1.add_child(ui)
+		)
+	for i in 0:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = item_pb.instantiate()
@@ -167,6 +177,12 @@ func exit(tween : Tween = null):
 		tween = get_tree().create_tween()
 	tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	tween.tween_callback(func():
+		for n in list1.get_children():
+			n.queue_free()
+			list1.remove_child(n)
+		for n in list2.get_children():
+			n.queue_free()
+			list2.remove_child(n)
 		self.hide()
 	)
 	if Game.stage == Game.Stage.LevelOver:

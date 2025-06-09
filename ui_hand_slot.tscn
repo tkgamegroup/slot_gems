@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2elj7tjepe0n"]
+[gd_scene load_steps=3 format=3 uid="uid://d2elj7tjepe0n"]
 
 [ext_resource type="Script" uid="uid://clyf0jn8q1wao" path="res://ui_hand_slot.gd" id="1_xb2mb"]
-[ext_resource type="Texture2D" uid="uid://chjsdy1exhnsw" path="res://images/blur.png" id="3_qah3a"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="4_tb125"]
 
 [node name="UiItem" type="Control"]
@@ -9,12 +8,6 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_xb2mb")
-
-[node name="Action" type="Sprite2D" parent="."]
-visible = false
-modulate = Color(0.489276, 0.337667, 0.0621191, 1)
-texture = ExtResource("3_qah3a")
-offset = Vector2(16, 16)
 
 [node name="Gem" parent="." instance=ExtResource("4_tb125")]
 position = Vector2(16, 16)

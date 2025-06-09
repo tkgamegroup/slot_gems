@@ -122,3 +122,11 @@ func _input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	self.pivot_offset = get_viewport_rect().size * 0.5
+	Drag.add_target("gem", self, func(payload, ev : String, extra : Dictionary):
+		if ev == "peek":
+			pass
+		elif ev == "peek_exited":
+			pass
+		else:
+			Hand.swap(extra["coord"], payload)
+	)

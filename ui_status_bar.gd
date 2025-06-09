@@ -40,16 +40,24 @@ func _ready() -> void:
 			Game.bag_viewer_ui.exit()
 	)
 	bag_button.mouse_entered.connect(func():
-		if Game.hand_ui && Game.hand_ui.dragging && Game.hand_ui.dragging.item.tradeable:
-			Game.hand_ui.dragging.action.show()
-			STooltip.show([Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_trade_content"))])
-		else:
-			STooltip.show([Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_content"))])
+		STooltip.show([Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_content"))])
 	)
 	bag_button.mouse_exited.connect(func():
-		if Game.hand_ui && Game.hand_ui.dragging:
-			Game.hand_ui.dragging.action.hide()
 		STooltip.close()
+	)
+	Drag.add_target("gem", bag_button, func(payload, ev : String, extra : Dictionary):
+		if ev == "peek":
+			#Drag.ui.action.show()
+			STooltip.show([Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_trade_content"))])
+		elif ev == "peek_exited":
+			#if Drag.ui:
+			#	Drag.ui.action.hide()
+			STooltip.close()
+		else:
+			pass
+			# trade
+			#Game.release_gem(dragging.gem)
+			#Hand.draw()
 	)
 	gear_button.pressed.connect(func():
 		SSound.sfx_click.play()

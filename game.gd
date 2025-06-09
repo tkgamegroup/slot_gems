@@ -443,6 +443,7 @@ func begin_busy():
 	control_ui.roll_button.disabled = true
 	control_ui.match_button.disabled = true
 	hand_ui.disabled = true
+	Drag.release()
 
 func end_busy():
 	if rolls > 0:

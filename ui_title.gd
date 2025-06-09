@@ -45,6 +45,9 @@ func _ready() -> void:
 			Game.start_game()
 		)
 		Game.end_transition(tween)
+		tween.tween_callback(func():
+			Game.roll()
+		)
 	)
 	new_game_button.mouse_entered.connect(SSound.sfx_select.play)
 	collections_button.pressed.connect(func():

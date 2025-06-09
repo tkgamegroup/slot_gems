@@ -1,7 +1,6 @@
 extends Control
 
 @onready var gem_ui : Node2D = $Gem
-@onready var action : Sprite2D = $Action
 
 var gem : Gem = null
 
@@ -11,7 +10,7 @@ func _ready() -> void:
 	gem_ui.set_image(gem.type, gem.rune)
 	
 	mouse_entered.connect(func():
-		if Game.hand_ui.dragging != self:
+		if Drag.ui != self:
 			SSound.sfx_select.play()
 			STooltip.show(gem.get_tooltip())
 	)
