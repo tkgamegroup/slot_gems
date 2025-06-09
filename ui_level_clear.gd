@@ -115,6 +115,11 @@ func enter():
 	panel.show()
 
 func exit():
+	Game.coins += coins
+	
+	for t in get_tree().get_processed_tweens():
+		t.kill()
+	
 	panel.hide()
 	self.self_modulate.a = 1.0
 	var tween = get_tree().create_tween()
@@ -122,13 +127,9 @@ func exit():
 	tween.tween_callback(func():
 		self.hide()
 	)
-	
-	Game.coins += coins
-	
-	for t in get_tree().get_processed_tweens():
-		t.kill()
-	Game.control_ui.exit()
-	Game.shop_ui.enter()
+	Game.board_ui.exit(tween)
+	Game.shop_ui.enter(tween)
+	return tween
 
 func _ready() -> void:
 	continue_button.pressed.connect(func():

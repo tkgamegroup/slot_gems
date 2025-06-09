@@ -59,8 +59,7 @@ func add_cell(c : Vector2i):
 	cell.position = get_pos(c)
 	cells_root.add_child(cell)
 
-func enter():
-	self.show()
+func enter(tween : Tween = null, trans : bool = true):
 	for y in Board.cy:
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
@@ -69,6 +68,31 @@ func enter():
 	panel.size = tilemap.map_to_local(rect.end) - panel.position
 	if Game.board_size % 2 == 0:
 		panel.position.y += 16
+	
+	if trans:
+		if !tween:
+			tween = get_tree().create_tween()
+		tween.tween_callback(func():
+			self.scale = Vector2(1.0, 0.0)
+			self.show()
+		)
+		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	else:
+		self.scale = Vector2(1.0, 1.0)
+		self.show()
+	return tween
+
+func exit(tween : Tween = null, trans : bool = true):
+	if trans:
+		if !tween:
+			tween = get_tree().create_tween()
+		tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			self.hide()
+		)
+	else:
+		self.hide()
+	return tween
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -95,3 +119,6 @@ func _input(event: InputEvent) -> void:
 				hover_ui.hide()
 			if drag_ui.visible:
 				drag_ui.position = event.position
+
+func _ready() -> void:
+	self.pivot_offset = get_viewport_rect().size * 0.5

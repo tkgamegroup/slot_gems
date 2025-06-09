@@ -18,15 +18,11 @@ var preview_matchings : Array[Node2D]
 var preview_tween : Tween = null
 
 func enter():
-	Game.board_ui.enter()
 	self.show()
 	var tween = get_tree().create_tween()
 	return tween
 
 func exit():
-	Board.clear()
-	Game.board_ui.hide()
-	Hand.clear()
 	self.hide()
 
 func _ready() -> void:

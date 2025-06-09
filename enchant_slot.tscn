@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://bvxv5b6nmq63w"]
+
+[ext_resource type="Script" uid="uid://b5pwo17ho4uyi" path="res://enchant_slot.gd" id="1_0twhe"]
+[ext_resource type="Texture2D" uid="uid://e4na8cwspcqj" path="res://images/slot_open.png" id="2_jf4wm"]
+[ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_wbchi"]
+[ext_resource type="Texture2D" uid="uid://bcsov5iskgy5q" path="res://images/slot_close.png" id="3_wbchi"]
+
+[node name="EnchantSlot" type="VBoxContainer"]
+theme_override_constants/separation = 0
+script = ExtResource("1_0twhe")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+text = "AAA"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="UiGem" parent="Control" instance=ExtResource("2_wbchi")]
+position = Vector2(22, 22)
+
+[node name="Open" type="TextureRect" parent="Control"]
+visible = false
+layout_mode = 1
+offset_right = 44.0
+offset_bottom = 44.0
+texture = ExtResource("2_jf4wm")
+
+[node name="Close" type="TextureRect" parent="Control"]
+visible = false
+layout_mode = 1
+offset_right = 44.0
+offset_bottom = 44.0
+texture = ExtResource("3_wbchi")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2

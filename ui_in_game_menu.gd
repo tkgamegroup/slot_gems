@@ -42,9 +42,11 @@ func _ready() -> void:
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
+		
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		tween.tween_callback(func():
+			Game.board_ui.exit(null, false)
 			Game.control_ui.exit()
 			Game.game_ui.hide()
 			Game.title_ui.enter()

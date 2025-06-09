@@ -490,6 +490,9 @@ func setup(_hf_cy : int):
 		for x in cx:
 			add_cell(Vector2i(x, y))
 
+func resize(_hf_cy : int):
+	pass
+
 func skip_above_unmovables(c : Vector2i) -> Vector2i:
 	var cc = c - Vector2i(0, 1)
 	while true:

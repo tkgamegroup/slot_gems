@@ -48,6 +48,7 @@ func _ready() -> void:
 		
 		var tween = get_tree().create_tween()
 		tween.tween_callback(func():
+			Game.board_ui.exit(null, false)
 			Game.control_ui.exit()
 			Game.game_ui.hide()
 			Game.title_ui.enter()

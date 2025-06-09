@@ -78,7 +78,10 @@ func _process(delta: float) -> void:
 	for i in n:
 		var ui = get_ui(i)
 		if ui != dragging:
-			ui.position = lerp(ui.position, Vector2(x_off, 0.0), 0.2)
+			var y = 0
+			if ui.selected:
+				y = -5
+			ui.position = lerp(ui.position, Vector2(x_off, y), 0.2)
 			x_off += item_w + gap
 	if dragging:
 		dragging.global_position = get_global_mouse_position() - Vector2(16, 16)
@@ -102,7 +105,6 @@ func _input(event: InputEvent) -> void:
 							list.remove_child(dragging)
 							dragging = null
 							Hand.swap(c, gem)
-							#if place_item(dragging, c):
 					if !on_board && dragging.action.visible: #trade
 						Game.release_gem(dragging.gem)
 						dragging.queue_free()

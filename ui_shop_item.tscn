@@ -1,7 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2oghrlvbbydy"]
+[gd_scene load_steps=5 format=3 uid="uid://b2oghrlvbbydy"]
 
 [ext_resource type="Script" uid="uid://cv2l3tl2csppp" path="res://ui_shop_item.gd" id="1_e4q1j"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="2_p8w24"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ubel"]
+bg_color = Color(0.114897, 0.114897, 0.114897, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cre24"]
 bg_color = Color(0.114897, 0.114897, 0.114897, 1)
@@ -11,49 +18,41 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ubel"]
-bg_color = Color(0.114897, 0.114897, 0.114897, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_color = Color(0.313695, 0.200541, 0.00778849, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p8w24"]
-bg_color = Color(0.133196, 0.133196, 0.133196, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.393085, 0.393086, 0.393085, 1)
-
-[node name="UiShopItem" type="Control"]
-custom_minimum_size = Vector2(64, 114)
-layout_mode = 3
-anchors_preset = 0
+[node name="UiShopItem" type="BoxContainer"]
 offset_right = 64.0
-offset_bottom = 114.0
+offset_bottom = 91.0
+mouse_filter = 0
 script = ExtResource("1_e4q1j")
 
-[node name="Base" type="Control" parent="."]
-anchors_preset = 0
-offset_top = 24.0
-offset_right = 40.0
-offset_bottom = 64.0
+[node name="Base" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Category" type="PanelContainer" parent="Base"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6ubel")
+
+[node name="MarginContainer" type="MarginContainer" parent="Base/Category"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="Label" type="Label" parent="Base/Category/MarginContainer"]
+layout_mode = 2
+text = "Item"
+
+[node name="Content" type="BoxContainer" parent="Base"]
+layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 
 [node name="Price" type="PanelContainer" parent="Base"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -11.0
-offset_top = 21.0
-offset_right = 35.0
-offset_bottom = 50.0
-grow_horizontal = 2
-grow_vertical = 0
+layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cre24")
 
@@ -80,35 +79,3 @@ mouse_filter = 2
 texture = ExtResource("2_p8w24")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Category" type="PanelContainer" parent="Base"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -16.0
-offset_top = -24.0
-offset_right = 40.0
-offset_bottom = 5.0
-grow_horizontal = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_6ubel")
-
-[node name="MarginContainer" type="MarginContainer" parent="Base/Category"]
-layout_mode = 2
-size_flags_vertical = 0
-mouse_filter = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
-
-[node name="Label" type="Label" parent="Base/Category/MarginContainer"]
-layout_mode = 2
-text = "Item"
-
-[node name="Content" type="PanelContainer" parent="Base"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 1
-offset_right = 64.0
-offset_bottom = 64.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_p8w24")

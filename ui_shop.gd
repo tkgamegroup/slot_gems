@@ -3,14 +3,14 @@ extends Control
 const item_pb = preload("res://ui_shop_item.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
-@onready var exit_button : Button = $PanelContainer/VBoxContainer2/Button
-@onready var list1 : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer2/HBoxContainer
-@onready var list2 : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer2/HBoxContainer2
-@onready var refresh_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton
-@onready var expand_board_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton2
-@onready var add_gems_button  : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton3
-@onready var remove_gems_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton4
-@onready var remove_item_button : Control = $PanelContainer/VBoxContainer2/HBoxContainer3/VBoxContainer/ShopButton5
+@onready var exit_button : Button = $HBoxContainer/VBoxContainer/Button
+@onready var list1 : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer
+@onready var list2 : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2
+@onready var refresh_button : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton
+@onready var expand_board_button : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton2
+@onready var add_gems_button  : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton3
+@onready var remove_gems_button : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton4
+@onready var remove_item_button : Control = $HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton5
 
 var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
@@ -57,13 +57,15 @@ func buy_randomly():
 			return item.buy()
 	return false
 
-func exit():
-	self.hide()
-	if Game.stage == Game.Stage.LevelOver:
-		Game.new_level()
-
-func enter():
-	self.show()
+func enter(tween : Tween = null):
+	if !tween:
+		tween = get_tree().create_tween()
+	
+	tween.tween_callback(func():
+		self.scale = Vector2(1.0, 0.0)
+		self.show()
+	)
+	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	
 	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.disabled = false if Game.board_size < 6 else true
@@ -74,9 +76,7 @@ func enter():
 	remove_item_button.price.text = "%d" % remove_item_price
 	remove_item_button.button.disabled = false
 	
-	var tween = get_tree().create_tween()
-	
-	var items_pool = ["Flag", "Bomb", "C4", "Minefield", "Echo Stone", "Color Palette", "Hot Dog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
+	var items_pool = ["Flag", "Bomb", "C4", "Color Palette", "Hot Dog", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
 	var relics_pool = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone", "RockBottom"]
 	var skills_pool = ["Xiao", "RoLL", "Mat.", "Qiang", "Se", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
 	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
@@ -109,7 +109,7 @@ func enter():
 			)
 			list1.add_child(ui)
 		)
-	for i in 2:
+	for i in 1:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var name = random_item(relics_pool, Game.relics)
@@ -132,34 +132,50 @@ func enter():
 				)
 				list2.add_child(ui)
 		)
-	for i in 1:
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var name = random_item(skills_pool, Game.skills)
-			if name:
-				var ui = item_pb.instantiate()
-				var skill = Skill.new()
-				skill.setup(name)
-				ui.setup("Skill", skill, skill.price, func():
-					Game.add_skill(skill)
-				)
-				list2.add_child(ui)
-		)
-	for i in 1:
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var name = random_item(patterns_pool, Game.patterns)
-			if name:
-				var ui = item_pb.instantiate()
-				var pattern = Pattern.new()
-				pattern.setup(name)
-				ui.setup("Pattern", pattern, pattern.price, func():
-					Game.add_pattern(pattern)
-				)
-				list2.add_child(ui)
-		)
+	if randf() < 0.5:
+		for i in 1:
+			tween.tween_interval(0.04)
+			tween.tween_callback(func():
+				var name = random_item(skills_pool, Game.skills)
+				if name:
+					var ui = item_pb.instantiate()
+					var skill = Skill.new()
+					skill.setup(name)
+					ui.setup("Skill", skill, skill.price, func():
+						Game.add_skill(skill)
+					)
+					list2.add_child(ui)
+			)
+	else:
+		for i in 1:
+			tween.tween_interval(0.04)
+			tween.tween_callback(func():
+				var name = random_item(patterns_pool, Game.patterns)
+				if name:
+					var ui = item_pb.instantiate()
+					var pattern = Pattern.new()
+					pattern.setup(name)
+					ui.setup("Pattern", pattern, pattern.price, func():
+						Game.add_pattern(pattern)
+					)
+					list2.add_child(ui)
+			)
+	return tween
+
+func exit(tween : Tween = null):
+	if !tween:
+		tween = get_tree().create_tween()
+	tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.tween_callback(func():
+		self.hide()
+	)
+	if Game.stage == Game.Stage.LevelOver:
+		Game.new_level(tween)
+	return tween
 
 func _ready() -> void:
+	self.pivot_offset = self.size * 0.5
+	
 	exit_button.pressed.connect(func():
 		SSound.sfx_click.play()
 		exit()

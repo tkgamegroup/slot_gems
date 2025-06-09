@@ -35,35 +35,34 @@ func buy():
 
 func _ready() -> void:
 	if cate != "":
-		cate_frame.show()
-		cate_label.text = cate
+		#cate_frame.show()
+		#cate_label.text = cate
 		if cate == "Item":
 			var ui = item_ui.instantiate()
 			ui.setup(object)
+			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
+			ui.position = Vector2(16, 16)
 		elif cate == "Skill":
 			var ui = skill_ui.instantiate()
 			ui.setup(object)
+			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
 		elif cate == "Pattern":
 			var ui = pattern_ui.instantiate()
 			ui.setup(object, true)
+			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
 		elif cate == "Relic":
 			var ui = relic_ui.instantiate()
 			ui.setup(object)
+			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
+			ui.position = Vector2(16, 16)
 	coin_text.text = "%dG" % coins
 	
-	gui_input.connect(func(event : InputEvent):
+	self.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 				buy()
-	)
-	mouse_entered.connect(func():
-		SSound.sfx_select.play()
-		base.position.y -= 5
-	)
-	mouse_exited.connect(func():
-		base.position.y += 5
 	)

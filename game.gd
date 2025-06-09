@@ -379,7 +379,8 @@ var add_score_dir : int = 1
 func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	var combos_mult = combos if affected_by_combos else 1
 	var mult = int(combos_mult * score_mult)
-	var add_value = base * mult
+	var add_value = base
+	#add_value *= mult
 	#score += add_value
 	
 	var ui = popup_txt_pb.instantiate()
@@ -662,16 +663,19 @@ func start_game(saving : String = ""):
 			add_item(item)
 		'''
 	
+		Board.setup(board_size)
 		history.init()
-		new_level()
+		control_ui.enter()
+		new_level(null, false)
 	else:
 		load_from_file(saving)
 		control_ui.enter()
+		board_ui.enter(null, false)
 		history.init()
 	
 	game_ui.show()
 
-func new_level():
+func new_level(tween : Tween = null, trans : bool = true):
 	score = 0
 	level += 1
 	target_score = get_level_score(level) * 1
@@ -692,14 +696,11 @@ func new_level():
 		if h.event == Event.LevelBegan:
 			h.host.on_event.call(Event.LevelBegan, null, null)
 	
-	Board.setup(board_size)
-	hand_ui.clear()
-	control_ui.enter()
+	board_ui.enter(tween, trans)
 	
 	save_to_file()
 	stage = Stage.Deploy
 	end_busy()
-	control_ui.match_button.disabled = true
 
 func level_end():
 	stage = Stage.LevelOver

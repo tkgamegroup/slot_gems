@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhccry11chopd"
-path="res://.godot/imported/expand_board.png-eb6508c8db6bdd5535dd48d90f299350.ctex"
+uid="uid://bcsov5iskgy5q"
+path="res://.godot/imported/slot_close.png-7197a02a46f75183ac80b1454fe53636.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/expand_board.png"
-dest_files=["res://.godot/imported/expand_board.png-eb6508c8db6bdd5535dd48d90f299350.ctex"]
+source_file="res://images/slot_close.png"
+dest_files=["res://.godot/imported/slot_close.png-7197a02a46f75183ac80b1454fe53636.ctex"]
 
 [params]
 

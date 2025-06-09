@@ -5,6 +5,8 @@ extends Control
 
 var gem : Gem = null
 
+var selected : bool = false
+
 func _ready() -> void:
 	gem_ui.set_image(gem.type, gem.rune)
 	
