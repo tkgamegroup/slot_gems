@@ -136,7 +136,7 @@ func write_game_status():
 		relics_str += r.name
 	write("Relics: %s" % relics_str)
 	write("Rolls: %d" % Game.rolls_per_level)
-	write("Matches: %d" % Game.matches_per_level)
+	write("Matches: %d" % Game.plays_per_level)
 	end_write()
 
 func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_skills : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], invincible : bool = true, _enable_shopping : bool = false):
@@ -265,14 +265,14 @@ func time_out():
 				step = TaskSteps.ToMatch
 				Game.roll()
 		elif step == TaskSteps.ToMatch:
-			if Game.bag_items.size() > 0 && Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.matches:
+			if Game.bag_items.size() > 0 && Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.plays:
 				step = TaskSteps.ToMatch
 				Game.roll()
 			else:
-				if !has_matched_pattern() && Game.rolls >= Game.matches:
+				if !has_matched_pattern() && Game.rolls >= Game.plays:
 					step = TaskSteps.ToMatch
 					Game.roll()
-				elif Game.matches > 0:
+				elif Game.plays > 0:
 					auto_place_items()
 					step = TaskSteps.GetResult
 					Game.play()

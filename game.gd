@@ -77,11 +77,15 @@ var rolls : int:
 		rolls = v
 		control_ui.rolls_text.text = "%d" % rolls
 var rolls_per_level : int
-var matches : int:
+var swaps : int:
 	set(v):
-		matches = v
-		control_ui.matches_text.text = "%d" % matches
-var matches_per_level : int
+		swaps = v
+var swaps_per_level : int
+var plays : int:
+	set(v):
+		plays = v
+		control_ui.plays_text.text = "%d" % plays
+var plays_per_level : int
 var draws_per_roll : int:
 	set(v):
 		draws_per_roll = v
@@ -441,14 +445,14 @@ func get_level_score(lv : int):
 
 func begin_busy():
 	control_ui.roll_button.disabled = true
-	control_ui.match_button.disabled = true
+	control_ui.play_button.disabled = true
 	hand_ui.disabled = true
 	Drag.release()
 
 func end_busy():
 	if rolls > 0:
 		control_ui.roll_button.disabled = false
-	control_ui.match_button.disabled = false
+	control_ui.play_button.disabled = false
 	hand_ui.disabled = false
 
 func begin_transition(tween : Tween):
@@ -517,7 +521,7 @@ func start_game(saving : String = ""):
 		combos = modifiers["base_combo_i"]
 		level = 0
 		rolls_per_level = 4
-		matches_per_level = 3
+		plays_per_level = 3
 		draws_per_roll = 5
 		pins_num_per_level = 0
 		activates_num_per_level = 0
@@ -684,7 +688,7 @@ func new_level(tween : Tween = null, trans : bool = true):
 	
 	set_props(Props.None)
 	rolls = rolls_per_level
-	matches = matches_per_level
+	plays = plays_per_level
 	modifiers["first_roll_i"] = 1
 	modifiers["first_match_i"] = 1
 	
@@ -734,9 +738,9 @@ func roll():
 		history.rolls += 1
 
 func play():
-	if matches > 0:
+	if plays > 0:
 		stage = Stage.Matching
-		matches -= 1
+		plays -= 1
 		modifiers["first_match_i"] = 0
 		
 		calculator_bar_ui.appear()
@@ -772,11 +776,11 @@ func save_to_file(name : String = "1"):
 	data["level"] = Game.level
 	data["board_size"] = Game.board_size
 	data["rolls_per_level"] = Game.rolls_per_level
-	data["matches_per_level"] = Game.matches_per_level
+	data["plays_per_level"] = Game.plays_per_level
 	data["draws_per_roll"] = Game.draws_per_roll
 	data["coins"] = Game.coins
 	data["rolls"] = Game.rolls
-	data["matches"] = Game.matches
+	data["plays"] = Game.plays
 	data["score"] = Game.score
 	data["target_score"] = Game.target_score
 	data["combos"] = Game.combos
@@ -924,11 +928,11 @@ func load_from_file(name : String = "1"):
 	level = int(data["level"])
 	board_size = int(data["board_size"])
 	rolls_per_level = int(data["rolls_per_level"])
-	matches_per_level = int(data["matches_per_level"])
+	plays_per_level = int(data["plays_per_level"])
 	draws_per_roll = int(data["draws_per_roll"])
 	coins = int(data["coins"])
 	rolls = int(data["rolls"])
-	matches = int(data["matches"])
+	plays = int(data["plays"])
 	score = int(data["score"])
 	target_score = int(data["target_score"])
 	combos = int(data["combos"])
@@ -1157,7 +1161,7 @@ func _ready() -> void:
 				if i:
 					Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 		
-		if matches == 0 && score < target_score:
+		if plays == 0 && score < target_score:
 			if invincible:
 				win()
 			else:

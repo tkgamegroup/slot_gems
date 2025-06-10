@@ -5,8 +5,8 @@ const UiProp = preload("res://ui_prop.gd")
 @onready var roll_panel : Control = $Panel
 @onready var roll_button : Button = $Panel/HBoxContainer/Roll
 @onready var rolls_text : Label = $Panel/HBoxContainer/VBoxContainer/Rolls
-@onready var match_button  : Button = $Panel/HBoxContainer/Match
-@onready var matches_text : Label = $Panel/HBoxContainer/VBoxContainer2/Matches
+@onready var play_button  : Button = $Panel/HBoxContainer/Play
+@onready var plays_text : Label = $Panel/HBoxContainer/VBoxContainer2/Plays
 @onready var action_tip_text : AdvancedLabel = $ActionTip
 @onready var props_bar : Control = $HBoxContainer
 @onready var pin_ui : UiProp = $HBoxContainer/UiProp
@@ -40,14 +40,14 @@ func _ready() -> void:
 	roll_button.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	match_button.pressed.connect(func():
+	play_button.pressed.connect(func():
 		SSound.sfx_click.play()
-		match_button.disabled = true
-		match_button.mouse_exited.emit()
+		play_button.disabled = true
+		play_button.mouse_exited.emit()
 		Game.play()
 	)
-	match_button.mouse_entered.connect(func():
-		if !match_button.disabled:
+	play_button.mouse_entered.connect(func():
+		if !play_button.disabled:
 			for n in preview_matchings:
 				n.queue_free()
 				Game.board_ui.overlay.remove_child(n)
@@ -78,13 +78,13 @@ func _ready() -> void:
 			)
 		
 		var desc = tr("tt_game_match_content")
-		if match_button.disabled && !roll_button.disabled:
+		if play_button.disabled && !roll_button.disabled:
 			desc += "\n[color=yellow](Roll the Board first)[/color]"
-		elif !match_button.disabled && preview_matchings.is_empty():
+		elif !play_button.disabled && preview_matchings.is_empty():
 			desc += "\n[color=red](No match found)[/color]"
 		STooltip.show([Pair.new(tr("tt_game_match_title"), desc)])
 	)
-	match_button.mouse_exited.connect(func():
+	play_button.mouse_exited.connect(func():
 		STooltip.close()
 		for n in preview_matchings:
 			n.queue_free()

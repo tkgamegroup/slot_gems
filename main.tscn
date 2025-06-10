@@ -74,7 +74,6 @@
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Texture2D" uid="uid://da6l4l21gf28u" path="res://images/refresh.png" id="61_ppx11"]
 [ext_resource type="Texture2D" uid="uid://26k8l8d1s2il" path="res://images/upgrade.png" id="62_1yv1y"]
-[ext_resource type="Texture2D" uid="uid://cqry17b3go13v" path="res://images/remove.png" id="63_5yh34"]
 [ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/orange.png" id="63_f1p13"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_skills_bar.gd" id="63_mpmib"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
@@ -344,6 +343,19 @@ shadow_size = 3
 shadow_offset = Vector2(4, 4)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_deavr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sn1fb"]
+bg_color = Color(0.33, 0.30756, 0.1056, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkkcx"]
 bg_color = Color(0.33, 0.30756, 0.1056, 1)
@@ -1012,7 +1024,7 @@ layout_mode = 2
 size_flags_vertical = 6
 mouse_filter = 2
 
-[node name="Match" type="Button" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="Play" type="Button" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
@@ -1037,7 +1049,7 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
 text = "ui_game_matches"
 
-[node name="Matches" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer2"]
+[node name="Plays" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.709994, 0.313104, 0, 1)
@@ -1108,9 +1120,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -232.5
-offset_top = -121.5
+offset_top = -100.0
 offset_right = 232.5
-offset_bottom = 121.5
+offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -1155,86 +1167,57 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 48
 text = "P"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_constants/separation = 8
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(304, 0)
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 84)
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/separation = 16
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 84)
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/separation = 16
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 12
 
-[node name="ShopButton" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
+[node name="ShopButton" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2/ShopButton" index="0"]
 text = "Refresh"
 icon = ExtResource("61_ppx11")
 
-[node name="ShopButton2" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
+[node name="ShopButton2" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton2" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2/ShopButton2" index="0"]
 text = "Upgrade"
 icon = ExtResource("62_1yv1y")
 
-[node name="ShopButton3" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton3" index="0"]
-text = "Add 10 Gems"
-
-[node name="ShopButton4" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton4" index="0"]
-text = "Remove"
-icon = ExtResource("63_5yh34")
-
-[node name="ShopButton5" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton5" index="0"]
-text = "Remove 1 Item"
-
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxEmpty_deavr")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_sn1fb")
 theme_override_styles/hover = SubResource("StyleBoxFlat_kkkcx")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_34ol3")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1yv1y")
@@ -2170,6 +2153,11 @@ layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_auto_place_items"
 
+[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
+text = "ui_in_game_menu_win"
+
 [node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
 anchors_preset = 15
@@ -2503,8 +2491,5 @@ metadata/_edit_use_anchors_ = true
 [editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp"]
 [editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp2"]
 [editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp3"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton2"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton3"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton4"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ShopButton5"]
+[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2/ShopButton"]
+[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/HBoxContainer/VBoxContainer2/ShopButton2"]

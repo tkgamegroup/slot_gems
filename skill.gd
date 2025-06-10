@@ -78,7 +78,7 @@ func setup(n : String):
 		image_id = 3
 		on_cast = func(tween : Tween, coords:Array[Vector2i]):
 			tween.tween_callback(func():
-				Game.matches += 1
+				Game.plays += 1
 			)
 	elif name == "Qiang":
 		requirements = [Gem.Rune.Zhe, Gem.Rune.Kou, Gem.Rune.Kou, Gem.Rune.Zhe]

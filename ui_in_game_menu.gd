@@ -5,6 +5,7 @@ extends Control
 @onready var options_button : Button = $PanelContainer/VBoxContainer/Button2
 @onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
 @onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button4
+@onready var win_button : Button = $PanelContainer/VBoxContainer/Button5
 
 func enter():
 	STooltip.close()
@@ -57,4 +58,9 @@ func _ready() -> void:
 		SSound.sfx_click.play()
 		exit()
 		STest.auto_place_items()
+	)
+	win_button.pressed.connect(func():
+		SSound.sfx_click.play()
+		exit()
+		Game.win()
 	)

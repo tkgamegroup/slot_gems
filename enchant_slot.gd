@@ -7,6 +7,8 @@ const UiGem = preload("res://ui_gem.gd")
 @onready var gem_ui : UiGem = $Control/UiGem
 @onready var img_open : TextureRect = $Control/Open
 @onready var img_close : TextureRect = $Control/Close
+@onready var particles1 : CPUParticles2D = $Control/CPUParticles2D
+@onready var particles2 : CPUParticles2D = $Control/CPUParticles2D2
 @onready var button : Button = $Button
 
 var gem : Gem = null
@@ -64,6 +66,7 @@ func _ready() -> void:
 	slot.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
 			if event.pressed && event.button_index == MOUSE_BUTTON_RIGHT:
+				SSound.sfx_drag_item.play()
 				unload_gem()
 	)
 	slot.mouse_entered.connect(func():
@@ -76,10 +79,20 @@ func _ready() -> void:
 	)
 	button.pressed.connect(func():
 		if gem && Game.coins >= cost:
+			button.disabled = true
 			Game.coins -= cost
-			callback.call(gem)
-			unload_gem()
+			SSound.sfx_coin.play()
+			particles1.emitting = true
 			var tween = get_tree().create_tween()
+			tween.tween_interval(0.7)
+			tween.tween_callback(func():
+				particles2.emitting = true
+			)
+			tween.tween_interval(0.4)
+			tween.tween_callback(func():
+				callback.call(gem)
+				unload_gem()
+			)
 			tween.tween_property(self, "modulate:a", 0.0, 0.3)
 			tween.tween_callback(func():
 				self.queue_free()

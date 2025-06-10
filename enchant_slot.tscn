@@ -1,14 +1,76 @@
-[gd_scene load_steps=6 format=3 uid="uid://bvxv5b6nmq63w"]
+[gd_scene load_steps=12 format=3 uid="uid://bvxv5b6nmq63w"]
 
 [ext_resource type="Script" uid="uid://b5pwo17ho4uyi" path="res://enchant_slot.gd" id="1_0twhe"]
 [ext_resource type="Texture2D" uid="uid://e4na8cwspcqj" path="res://images/slot_open.png" id="2_jf4wm"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_wbchi"]
 [ext_resource type="Texture2D" uid="uid://bcsov5iskgy5q" path="res://images/slot_close.png" id="3_wbchi"]
 
+[sub_resource type="Gradient" id="Gradient_jf4wm"]
+offsets = PackedFloat32Array(0.819703, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_wbchi"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jf4wm"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yk45v"]
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2(3, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jf4wm"]
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wbchi"]
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c43mu"]
+bg_color = Color(0.823529, 0.364706, 0.509804, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2(3, 2)
+
 [node name="EnchantSlot" type="VBoxContainer"]
-theme_override_constants/separation = 0
+custom_minimum_size = Vector2(44, 100)
+offset_right = 44.0
+offset_bottom = 100.0
+theme_override_constants/separation = 8
 script = ExtResource("1_0twhe")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
@@ -42,9 +104,49 @@ offset_right = 44.0
 offset_bottom = 44.0
 texture = ExtResource("3_wbchi")
 
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Control"]
+position = Vector2(22, 22)
+emitting = false
+amount = 16
+lifetime = 2.0
+one_shot = true
+preprocess = 1.7
+explosiveness = 0.9
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 80.0
+initial_velocity_max = 80.0
+orbit_velocity_min = 1.0
+orbit_velocity_max = 1.0
+scale_amount_min = 3.0
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_jf4wm")
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="Control"]
+position = Vector2(22, 22)
+emitting = false
+amount = 20
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.9
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 200.0
+linear_accel_min = 20.0
+linear_accel_max = 20.0
+scale_amount_min = 3.0
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_wbchi")
+
 [node name="Button" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
 theme_override_styles/focus = SubResource("StyleBoxEmpty_jf4wm")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_yk45v")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jf4wm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wbchi")
+theme_override_styles/normal = SubResource("StyleBoxFlat_c43mu")
 disabled = true
+text = "AAA"
