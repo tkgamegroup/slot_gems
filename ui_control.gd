@@ -1,10 +1,12 @@
 extends Control
 
+const NumberText = preload("res://number_text.gd")
 const UiProp = preload("res://ui_prop.gd")
 
-@onready var roll_panel : Control = $Panel
+@onready var panel : Control = $Panel
 @onready var roll_button : Button = $Panel/HBoxContainer/Roll
 @onready var rolls_text : Label = $Panel/HBoxContainer/VBoxContainer/Rolls
+@onready var swaps_text : NumberText = $Panel/HBoxContainer/VBoxContainer3/Swaps
 @onready var play_button  : Button = $Panel/HBoxContainer/Play
 @onready var plays_text : Label = $Panel/HBoxContainer/VBoxContainer2/Plays
 @onready var action_tip_text : AdvancedLabel = $ActionTip

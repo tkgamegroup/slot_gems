@@ -80,19 +80,20 @@ var rolls_per_level : int
 var swaps : int:
 	set(v):
 		swaps = v
+		control_ui.swaps_text.set_value(swaps)
 var swaps_per_level : int
 var plays : int:
 	set(v):
 		plays = v
 		control_ui.plays_text.text = "%d" % plays
 var plays_per_level : int
-var draws_per_roll : int:
-	set(v):
-		draws_per_roll = v
-		if hand_ui:
-			status_bar_ui.hand_metrics_text.text = "%d/%d" % [draws_per_roll, Game.max_hand_grabs]
+var draws_per_roll : int
 var next_roll_extra_draws : int = 0
-var max_hand_grabs : int = 5
+var max_hand_grabs : int:
+	set(v):
+		max_hand_grabs = v
+		if hand_ui:
+			status_bar_ui.hand_metrics_text.set_value(Game.max_hand_grabs)
 var props = Props.None
 var pins_num : int:
 	set(v):
@@ -124,7 +125,7 @@ var grabs_num_per_level : int
 var board_size : int = 0:
 	set(v):
 		board_size = v
-		status_bar_ui.board_size_text.text = "%d" % board_size
+		status_bar_ui.board_size_text.set_value(board_size)
 var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
@@ -195,7 +196,7 @@ var level : int:
 var coins : int:
 	set(v):
 		coins = v
-		status_bar_ui.coin_text.text = "%d" % coins
+		status_bar_ui.coins_text.set_value(coins)
 var buffs : Array[Buff]
 var history : History = History.new()
 
@@ -521,8 +522,10 @@ func start_game(saving : String = ""):
 		combos = modifiers["base_combo_i"]
 		level = 0
 		rolls_per_level = 4
+		swaps_per_level = 5
 		plays_per_level = 3
 		draws_per_roll = 5
+		max_hand_grabs = 5
 		pins_num_per_level = 0
 		activates_num_per_level = 0
 		grabs_num_per_level = 0
@@ -688,6 +691,7 @@ func new_level(tween : Tween = null, trans : bool = true):
 	
 	set_props(Props.None)
 	rolls = rolls_per_level
+	swaps = swaps_per_level
 	plays = plays_per_level
 	modifiers["first_roll_i"] = 1
 	modifiers["first_match_i"] = 1
@@ -738,9 +742,9 @@ func roll():
 		history.rolls += 1
 
 func play():
-	if plays > 0:
+	#if plays > 0:
 		stage = Stage.Matching
-		plays -= 1
+		#plays -= 1
 		modifiers["first_match_i"] = 0
 		
 		calculator_bar_ui.appear()
@@ -776,10 +780,12 @@ func save_to_file(name : String = "1"):
 	data["level"] = Game.level
 	data["board_size"] = Game.board_size
 	data["rolls_per_level"] = Game.rolls_per_level
+	data["swaps_per_level"] = Game.swaps_per_level
 	data["plays_per_level"] = Game.plays_per_level
 	data["draws_per_roll"] = Game.draws_per_roll
 	data["coins"] = Game.coins
 	data["rolls"] = Game.rolls
+	data["swaps"] = Game.swaps
 	data["plays"] = Game.plays
 	data["score"] = Game.score
 	data["target_score"] = Game.target_score
@@ -928,10 +934,12 @@ func load_from_file(name : String = "1"):
 	level = int(data["level"])
 	board_size = int(data["board_size"])
 	rolls_per_level = int(data["rolls_per_level"])
+	swaps_per_level = int(data["swaps_per_level"])
 	plays_per_level = int(data["plays_per_level"])
 	draws_per_roll = int(data["draws_per_roll"])
 	coins = int(data["coins"])
 	rolls = int(data["rolls"])
+	swaps = int (data["swaps"])
 	plays = int(data["plays"])
 	score = int(data["score"])
 	target_score = int(data["target_score"])
@@ -1131,6 +1139,7 @@ func _ready() -> void:
 		if !processed:
 			calculator_bar_ui.calculate()
 	)
+	'''
 	board_ui.drag_dropped.connect(func(c0 : Vector2i, c1 : Vector2i):
 		if Board.is_valid(c1):
 			if !control_ui.action_tip_text.disabled:
@@ -1143,6 +1152,7 @@ func _ready() -> void:
 						Board.matching()
 						grabs_num -= 1
 	)
+	'''
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		combos = modifiers["base_combo_i"]

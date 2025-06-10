@@ -76,7 +76,8 @@ func clear():
 		list.remove_child(n)
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(item_w * Game.max_hand_grabs + gap * (Game.max_hand_grabs - 1), 50)
+	var n = max(Game.max_hand_grabs, 5)
+	custom_minimum_size = Vector2(item_w * n + gap * (n - 1), 50)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()

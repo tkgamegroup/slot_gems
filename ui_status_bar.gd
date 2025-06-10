@@ -1,5 +1,7 @@
 extends PanelContainer
 
+const NumberText = preload("res://number_text.gd")
+
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
 @onready var red_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Label2
 @onready var orange_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Label2
@@ -9,11 +11,11 @@ extends PanelContainer
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
-@onready var board_size_text : Label = $HBoxContainer/HBoxContainer/BoardSize
+@onready var board_size_text : NumberText = $HBoxContainer/HBoxContainer/BoardSize
 @onready var hand_metrics_container : Control = $HBoxContainer/HBoxContainer4
-@onready var hand_metrics_text : Label = $HBoxContainer/HBoxContainer4/HandMetrics
-@onready var coin_container : Control = $HBoxContainer/HBoxContainer2
-@onready var coin_text : Label = $HBoxContainer/HBoxContainer2/Coin
+@onready var hand_metrics_text : NumberText = $HBoxContainer/HBoxContainer4/HandMetrics
+@onready var coins_container : Control = $HBoxContainer/HBoxContainer2
+@onready var coins_text : NumberText = $HBoxContainer/HBoxContainer2/Coins
 @onready var bag_button : Button = $HBoxContainer/HBoxContainer3/Bag
 @onready var gear_button : Button = $HBoxContainer/HBoxContainer3/Gear
 
@@ -24,10 +26,10 @@ func _ready() -> void:
 	hand_metrics_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_hand_metrics_title"), tr("tt_game_hand_metrics_content") % [Game.draws_per_roll, Game.max_hand_grabs])])
 	)
-	coin_container.mouse_entered.connect(func():
+	coins_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_coins_title"), "")])
 	)
-	coin_container.mouse_exited.connect(func():
+	coins_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	bag_button.pressed.connect(func():

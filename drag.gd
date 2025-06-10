@@ -5,6 +5,7 @@ var payload = null
 var ui : Control
 var release_cb : Callable
 var targets : Array[Triple]
+var processing : bool = false
 
 func add_target(_type : String, node, cb : Callable):
 	var t = Triple.new(_type, node, cb)
@@ -19,6 +20,15 @@ func add_target(_type : String, node, cb : Callable):
 				cb.call(null, "peek_exited", {})
 		)
 
+func remove_target(node):
+	var t = null
+	for _t in targets:
+		if _t.second == node:
+			t = _t
+			break
+	if t:
+		targets.erase(t)
+
 func start(_type : String, _payload, _ui : Control, _release_cb : Callable):
 	type = _type
 	payload = _payload
@@ -27,18 +37,24 @@ func start(_type : String, _payload, _ui : Control, _release_cb : Callable):
 	release_cb = _release_cb
 
 func release(target = null, extra : Dictionary = {}):
+	if processing:
+		return
 	if ui:
-		if release_cb.is_valid():
-			release_cb.call(target.second if target else null)
+		processing = true
+		var ok = false
 		if target:
-			target.third.call(payload, "dropped", extra)
-			target.third.call(null, "peek_exited", {})
+			ok = target.third.call(payload, "dropped", extra)
+			if ok:
+				target.third.call(null, "peek_exited", {})
+		if release_cb.is_valid():
+			release_cb.call(target.second if ok && target else null)
 		type = ""
 		payload = null
 		if ui:
 			ui.z_index = 0
 			ui = null
 		release_cb = Callable()
+		processing = false
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

@@ -115,10 +115,10 @@ func enter():
 	panel.show()
 
 func exit():
-	Game.coins += coins
-	
 	for t in get_tree().get_processed_tweens():
 		t.kill()
+	
+	Game.coins += coins
 	
 	panel.hide()
 	self.self_modulate.a = 1.0

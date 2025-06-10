@@ -62,6 +62,7 @@ tt_game_menu_title,Game Menu,游戏菜单
 ui_game_skills,Skills,技能
 ui_game_patterns,Patterns,图案
 ui_game_rolls,Rolls,滚动次数
+ui_game_swaps,Swaps,交换次数
 ui_game_matches,Matches,匹配次数
 ui_game_roll,Roll,滚动
 tt_game_roll_title,Roll,滚动

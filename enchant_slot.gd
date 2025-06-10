@@ -62,6 +62,8 @@ func _ready() -> void:
 			if gem:
 				unload_gem()
 			load_gem(payload)
+			return true
+		return false
 	)
 	slot.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
@@ -102,3 +104,4 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	if gem:
 		unload_gem()
+	Drag.remove_target(slot)

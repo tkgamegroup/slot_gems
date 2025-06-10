@@ -12,10 +12,6 @@ const outline_pb = preload("res://ui_outline.tscn")
 @onready var cells_root : Node2D = $Cells
 @onready var overlay : Node2D = $Overlay
 @onready var hover_ui : Sprite2D = $Hover
-@onready var drag_ui : AnimatedSprite2D = $Drag
-
-signal drag_dropped
-var dragging_cell : Vector2i
 
 func game_coord(c : Vector2i):
 	return c + Vector2i(Board.cx / 2, Board.cy / 2) - central_coord
@@ -28,16 +24,6 @@ func hover_coord(to_game_coord : bool = false):
 	if to_game_coord:
 		c = game_coord(c)
 	return c
-
-func start_drag(c : Vector2i):
-	dragging_cell = c
-	drag_ui.frame = Board.get_gem_at(c).type
-	drag_ui.position = tilemap.get_local_mouse_position()
-	drag_ui.show()
-
-func release_dragging():
-	dragging_cell = Vector2i(-1, -1)
-	drag_ui.hide()
 
 func get_pos(c : Vector2i):
 	return tilemap.map_to_local(c)
@@ -95,20 +81,7 @@ func exit(tween : Tween = null, trans : bool = true):
 	return tween
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.is_pressed():
-			if event.button_index == MOUSE_BUTTON_RIGHT:
-				release_dragging()
-		if event.is_released():
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				if Board:
-					if dragging_cell.x != -1 && dragging_cell.y != -1:
-						var c = hover_coord()
-						c = c + Vector2i(Board.cx / 2, Board.cy / 2) - central_coord
-						if (dragging_cell.x != c.x || dragging_cell.y != c.y):
-							drag_dropped.emit(dragging_cell, c)
-				release_dragging()
-	elif event is InputEventMouseMotion:
+	if event is InputEventMouseMotion:
 		if Board && self.visible:
 			var c = hover_coord()
 			var cc = c + Vector2i(Board.cx / 2, Board.cy / 2) - central_coord
@@ -117,8 +90,6 @@ func _input(event: InputEvent) -> void:
 				hover_ui.position = get_pos(c)
 			else:
 				hover_ui.hide()
-			if drag_ui.visible:
-				drag_ui.position = event.position
 
 func _ready() -> void:
 	self.pivot_offset = get_viewport_rect().size * 0.5
@@ -128,5 +99,6 @@ func _ready() -> void:
 		elif ev == "peek_exited":
 			pass
 		else:
-			Hand.swap(extra["coord"], payload)
+			return Hand.swap(extra["coord"], payload)
+		return false
 	)

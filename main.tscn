@@ -1,4 +1,4 @@
-[gd_scene load_steps=148 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=130 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -41,31 +41,14 @@
 [ext_resource type="Texture2D" uid="uid://b1t2da5qbvmv8" path="res://images/hover.png" id="25_2un53"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://c7txrafqs3mca" path="res://images/bag.png" id="30_fg5n8"]
-[ext_resource type="Texture2D" uid="uid://dlx4xe6lwgyhe" path="res://images/items/chain_bomb.png" id="30_pvobl"]
-[ext_resource type="Texture2D" uid="uid://bw36kvtsp3hoe" path="res://images/items/cat.png" id="30_tpxmw"]
-[ext_resource type="Texture2D" uid="uid://6a7h0coty37w" path="res://images/items/virus.png" id="31_4t65m"]
 [ext_resource type="Texture2D" uid="uid://djb5uvo3rgm82" path="res://images/pin.png" id="31_kgos7"]
+[ext_resource type="PackedScene" uid="uid://cju4gysu404r0" path="res://number_text.tscn" id="31_uatky"]
 [ext_resource type="Texture2D" uid="uid://hutjhat8drg6" path="res://images/magic_stick.png" id="32_e8bxs"]
-[ext_resource type="Texture2D" uid="uid://b5sxnv8vfemc4" path="res://images/items/lightning.png" id="32_pdjls"]
-[ext_resource type="Texture2D" uid="uid://bdrka1bbrx4tx" path="res://images/items/color_palette.png" id="33_bbu4i"]
 [ext_resource type="Script" uid="uid://uoom8njvb1lu" path="res://text_fx_popup.gd" id="33_s1bup"]
 [ext_resource type="Script" uid="uid://bgmiggfcw8k2p" path="res://ui_bag_viewer.gd" id="34_rwa0e"]
-[ext_resource type="Texture2D" uid="uid://djiwq88rqxx33" path="res://images/items/fire.png" id="34_twiol"]
-[ext_resource type="Texture2D" uid="uid://b7l4i2yq2fbq4" path="res://images/items/black_hole.png" id="35_21n2c"]
 [ext_resource type="Texture2D" uid="uid://muiuehpjgwbw" path="res://images/grab.png" id="35_m1l3k"]
 [ext_resource type="Script" uid="uid://cl7s82k7ftloq" path="res://ui_choose_reward.gd" id="36_c2aw5"]
-[ext_resource type="Texture2D" uid="uid://nutkg5fwjbtq" path="res://images/items/white_hole.png" id="36_on8vn"]
-[ext_resource type="Texture2D" uid="uid://ccv6yol4gb1h0" path="res://images/items/dog.png" id="37_bdpah"]
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
-[ext_resource type="Texture2D" uid="uid://cxv61ebf7mm4d" path="res://images/items/rooster.png" id="39_d0uxt"]
-[ext_resource type="Texture2D" uid="uid://d2t4kfvd0f4i7" path="res://images/items/hotdog.png" id="40_oeo6n"]
-[ext_resource type="Texture2D" uid="uid://c8uxxafh66nc6" path="res://images/items/magnet.png" id="42_hebng"]
-[ext_resource type="Texture2D" uid="uid://cjlf2mtfw5vvs" path="res://images/items/rainbow.png" id="43_nfpf8"]
-[ext_resource type="Texture2D" uid="uid://y3h3ck823tgj" path="res://images/items/ruby.png" id="44_iyrw6"]
-[ext_resource type="Texture2D" uid="uid://w0ddkb6yn7aa" path="res://images/items/citrine.png" id="45_mjd5e"]
-[ext_resource type="Texture2D" uid="uid://c4pcva48hq7cn" path="res://images/items/emerald.png" id="46_3tj5g"]
-[ext_resource type="Texture2D" uid="uid://bveiu3cj4i577" path="res://images/items/sapphire.png" id="47_lomq7"]
-[ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="48_awy03"]
 [ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://ui_hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
@@ -133,92 +116,6 @@ tile_shape = 3
 tile_offset_axis = 1
 tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_34ol3")
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_fftw7"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("28_1savb")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_mieac")
-}, {
-"duration": 1.0,
-"texture": ExtResource("48_awy03")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_1pecc")
-}, {
-"duration": 1.0,
-"texture": ExtResource("7_lex75")
-}, {
-"duration": 1.0,
-"texture": ExtResource("48_awy03")
-}, {
-"duration": 1.0,
-"texture": null
-}, {
-"duration": 1.0,
-"texture": ExtResource("30_pvobl")
-}, {
-"duration": 1.0,
-"texture": ExtResource("31_4t65m")
-}, {
-"duration": 1.0,
-"texture": ExtResource("32_pdjls")
-}, {
-"duration": 1.0,
-"texture": ExtResource("33_bbu4i")
-}, {
-"duration": 1.0,
-"texture": ExtResource("34_twiol")
-}, {
-"duration": 1.0,
-"texture": ExtResource("35_21n2c")
-}, {
-"duration": 1.0,
-"texture": ExtResource("36_on8vn")
-}, {
-"duration": 1.0,
-"texture": ExtResource("37_bdpah")
-}, {
-"duration": 1.0,
-"texture": ExtResource("30_tpxmw")
-}, {
-"duration": 1.0,
-"texture": ExtResource("39_d0uxt")
-}, {
-"duration": 1.0,
-"texture": ExtResource("40_oeo6n")
-}, {
-"duration": 1.0,
-"texture": ExtResource("48_awy03")
-}, {
-"duration": 1.0,
-"texture": ExtResource("42_hebng")
-}, {
-"duration": 1.0,
-"texture": ExtResource("43_nfpf8")
-}, {
-"duration": 1.0,
-"texture": ExtResource("44_iyrw6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("45_mjd5e")
-}, {
-"duration": 1.0,
-"texture": ExtResource("46_3tj5g")
-}, {
-"duration": 1.0,
-"texture": ExtResource("47_lomq7")
-}, {
-"duration": 1.0,
-"texture": ExtResource("48_awy03")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fepj7"]
 bg_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
@@ -946,11 +843,6 @@ visible = false
 modulate = Color(0.274773, 0.28, 0.2576, 1)
 texture = ExtResource("25_2un53")
 
-[node name="Drag" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Board"]
-visible = false
-modulate = Color(1, 1, 1, 0.501961)
-sprite_frames = SubResource("SpriteFrames_fftw7")
-
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
 layout_mode = 3
@@ -981,6 +873,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -999,7 +892,26 @@ theme_override_colors/font_color = Color(0, 0.505917, 0.560746, 1)
 theme_override_font_sizes/font_size = 32
 text = "9"
 
+[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = -8
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 12
+text = "ui_game_swaps"
+
+[node name="Swaps" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3" instance=ExtResource("31_uatky")]
+layout_mode = 2
+
+[node name="Text" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3/Swaps" index="0"]
+theme_override_colors/font_color = Color(0, 0.505917, 0.560746, 1)
+
 [node name="Roll" type="Button" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
@@ -1038,6 +950,7 @@ icon = ExtResource("54_eldhe")
 icon_alignment = 1
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -1406,7 +1319,7 @@ layout_mode = 2
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 22
 text = "Level 1"
 horizontal_alignment = 1
 
@@ -1433,7 +1346,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
 text = "ui_game_board_size"
 
-[node name="BoardSize" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
+[node name="BoardSize" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
 [node name="VSeparator5" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
@@ -1449,7 +1362,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
 text = "ui_game_hand_metrics"
 
-[node name="HandMetrics" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
+[node name="HandMetrics" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
 [node name="VSeparator7" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
@@ -1460,15 +1373,8 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Coin" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
+[node name="Coins" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
 
 [node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(32, 32)
@@ -2359,6 +2265,10 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Skip"
 
+[node name="Drag" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI"]
+visible = false
+modulate = Color(1, 1, 1, 0.501961)
+
 [node name="Dialog" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
 anchors_preset = 15
@@ -2488,6 +2398,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="TestTimer" type="Timer" parent="."]
 
+[editable path="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3/Swaps"]
 [editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp"]
 [editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp2"]
 [editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp3"]
