@@ -566,6 +566,26 @@ func clear_consumed():
 func fill_blanks():
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(max(0.1 * Game.animation_speed, 0.05))
+	
+	if !Game.staging_scores.is_empty():
+		tween.tween_interval(0.1)
+		for s in Game.staging_scores:
+			var subtween = get_tree().create_tween()
+			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5)
+			subtween.parallel()
+			var x = randf()
+			var y = randf()
+			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + x * 0.3, (0.1 + y * 0.1) * sign(randf() - 0.5)), 0.8 * (x * x + y * y)).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+			subtween.tween_callback(func():
+				SSound.sfx_select.play()
+				Game.base_score += s.second
+			)
+			subtween.tween_callback(s.first.queue_free)
+			tween.parallel()
+			tween.tween_subtween(subtween)
+		Game.staging_scores.clear()
+		tween.tween_interval(0.3)
+	
 	tween.tween_callback(func():
 		var filled = false
 		for x in cx:

@@ -93,7 +93,7 @@ var max_hand_grabs : int:
 	set(v):
 		max_hand_grabs = v
 		if hand_ui:
-			status_bar_ui.hand_metrics_text.set_value(Game.max_hand_grabs)
+			status_bar_ui.hand_text.set_value(Game.max_hand_grabs)
 var props = Props.None
 var pins_num : int:
 	set(v):
@@ -144,7 +144,7 @@ var base_score : int:
 		if v > base_score:
 			base_score = v
 			if base_score_tween:
-				base_score_tween.custom_step(1000.0)
+				base_score_tween.custom_step(100.0)
 			calculator_bar_ui.base_score_text.position.y = 4
 			calculator_bar_ui.base_score_text.text = "%d" % v
 			base_score_tween = get_tree().create_tween()
@@ -158,6 +158,7 @@ var base_score : int:
 				base_score_tween = null
 			base_score = v
 			calculator_bar_ui.base_score_text.text = "%d" % base_score
+var staging_scores : Array[Pair]
 var target_score : int:
 	set(v):
 		target_score = v
@@ -396,18 +397,12 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	ui.z_index = 8
 	board_ui.overlay.add_child(ui)
 	
+	staging_scores.append(Pair.new(ui, add_value))
+	
 	var tween = get_tree().create_tween()
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
 	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_interval(0.3)
-	tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.5)
-	tween.parallel()
-	SAnimation.quadratic_curve_to(tween, ui, calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
-	tween.tween_callback(func():
-		base_score += add_value
-	)
-	tween.tween_callback(ui.queue_free)
 	
 	add_score_dir *= -1
 

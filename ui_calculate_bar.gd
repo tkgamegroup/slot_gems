@@ -18,13 +18,19 @@ func appear():
 	
 	self.show()
 
+const one_over_log1_5 = 1.0 / log(1.5)
+func mult_from_combos():
+	return log(Game.combos * 1.0) * one_over_log1_5
+
 func calculate():
 	var tween = get_tree().create_tween()
 	tween.tween_interval(0.3)
-	var combos_mult = log(Game.combos * 1.0) / log(1.5)
-	var add_value = int(Game.base_score * combos_mult * Game.score_mult)
+	
+	var result = {}
+	result["combo_mult"] = mult_from_combos()
 	SAnimation.jump(tween, combos_text, 4, 0.2, func():
-		combos_text.text = "%.2f" % combos_mult
+		combos_text.text = "%.2f" % result["combo_mult"]
+		result["value"] = int(Game.base_score * result["combo_mult"] * Game.score_mult)
 	)
 	tween.tween_property(cross1, "scale:x", 1.0, 0.3)
 	tween.parallel().tween_property(cross2, "scale:x", 1.0, 0.3)
@@ -41,7 +47,7 @@ func calculate():
 		mult_text.text = "0"
 		
 		calculated_text.show()
-		calculated_text.text = "%d" % add_value
+		calculated_text.text = "%d" % result["value"]
 		calculated_text.position = Vector2((1280 - calculated_text.size.x) * 0.5, 180)
 	)
 	SAnimation.jump(tween, calculated_text, 8, 0.5, Callable(), true, false)
@@ -50,9 +56,9 @@ func calculate():
 	
 	var score0 = Game.score
 	tween.tween_method(func(v):
-		Game.score = score0 + (add_value - v)
-		calculated_text.text = "%d" % v
-	, add_value, 0, 1.0)
+		Game.score = score0 + int(v * result["value"])
+		calculated_text.text = "%d" % int((1.0 - v) * result["value"])
+	, 0.0, 1.0, 1.0)
 	tween.tween_callback(func():
 		disappear()
 		finished.emit()

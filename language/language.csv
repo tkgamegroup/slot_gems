@@ -51,9 +51,9 @@ ui_game_target_score,Score at lease %d,最少达到 %d 分
 ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
 tt_game_board_size_content,"The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2.",横向的格子数将会是 棋盘大小 x6，纵向的格子数将会是 棋盘大小 x2。
-ui_game_hand_metrics,H,手牌
-tt_game_hand_metrics_title,Hand,手牌
-tt_game_hand_metrics_content,Draw Items Per Roll: %d\nMax Items: %d,每次滚动抽取道具数: %d\n最大道具数: %d
+ui_game_hand,H,手牌
+tt_game_hand_title,Hand,手牌
+tt_game_hand_content,Max Grabs: %d,最大抓取数: %d
 tt_game_coins_title,Your Coins,你的金币
 tt_game_bag_title,Your Bag,你的包
 tt_game_bag_content,Your gems and items.,你的宝石跟道具。

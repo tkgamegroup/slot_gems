@@ -12,8 +12,8 @@ const NumberText = preload("res://number_text.gd")
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
 @onready var board_size_text : NumberText = $HBoxContainer/HBoxContainer/BoardSize
-@onready var hand_metrics_container : Control = $HBoxContainer/HBoxContainer4
-@onready var hand_metrics_text : NumberText = $HBoxContainer/HBoxContainer4/HandMetrics
+@onready var hand_container : Control = $HBoxContainer/HBoxContainer4
+@onready var hand_text : NumberText = $HBoxContainer/HBoxContainer4/Hand
 @onready var coins_container : Control = $HBoxContainer/HBoxContainer2
 @onready var coins_text : NumberText = $HBoxContainer/HBoxContainer2/Coins
 @onready var bag_button : Button = $HBoxContainer/HBoxContainer3/Bag
@@ -23,8 +23,8 @@ func _ready() -> void:
 	board_size_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)
-	hand_metrics_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new(tr("tt_game_hand_metrics_title"), tr("tt_game_hand_metrics_content") % [Game.draws_per_roll, Game.max_hand_grabs])])
+	hand_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % [Game.draws_per_roll, Game.max_hand_grabs])])
 	)
 	coins_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_coins_title"), "")])

@@ -1,4 +1,4 @@
-[gd_scene load_steps=130 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=131 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -66,6 +66,12 @@
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 [ext_resource type="Script" uid="uid://b0rh64phtex0f" path="res://ui_calculate_bar.gd" id="71_f1p13"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
+random_pitch = 1.1
+random_volume_offset_db = 5.0
+streams_count = 1
+stream_0/stream = ExtResource("4_fvcw6")
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_f1p13"]
 random_pitch = 1.1
@@ -522,8 +528,9 @@ grow_vertical = 2
 [node name="SFX" type="Node" parent="."]
 
 [node name="Select" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("4_fvcw6")
-volume_db = -30.0
+stream = SubResource("AudioStreamRandomizer_uatky")
+volume_db = -25.0
+max_polyphony = 10
 bus = &"SFX"
 
 [node name="Click" type="AudioStreamPlayer" parent="SFX"]
@@ -896,7 +903,7 @@ text = "9"
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = -8
+theme_override_constants/separation = 0
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
@@ -1360,9 +1367,9 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
-text = "ui_game_hand_metrics"
+text = "ui_game_hand"
 
-[node name="HandMetrics" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
+[node name="Hand" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
 [node name="VSeparator7" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
@@ -1373,15 +1380,15 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Coins" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
-layout_mode = 2
-
 [node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("63_yshj5")
 expand_mode = 1
+
+[node name="Coins" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
+layout_mode = 2
 
 [node name="VSeparator6" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
