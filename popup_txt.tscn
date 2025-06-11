@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://dnklw0t0do4yn"]
-
-[ext_resource type="PackedScene" uid="uid://cn0hhoneqmo5k" path="res://trail.tscn" id="1_46ph2"]
+[gd_scene format=3 uid="uid://dnklw0t0do4yn"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -17,5 +15,3 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 12
-
-[node name="Trail" parent="." instance=ExtResource("1_46ph2")]

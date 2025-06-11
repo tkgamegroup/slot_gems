@@ -37,4 +37,6 @@ func swap(coord : Vector2i, gem : Gem):
 		get_gem_from(og, Board.get_pos(coord))
 		
 		return true
+	else:
+		Game.control_ui.swaps_text.hint()
 	return false

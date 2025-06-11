@@ -27,6 +27,7 @@ const roll_speed : Curve = preload("res://roll_speed.tres")
 const particles_pb = preload("res://particles.tscn")
 const active_effect_pb = preload("res://ui_active_effect.tscn")
 const black_bg = preload("res://images/black_bg.png")
+const trail_pb = preload("res://trail.tscn")
 
 var num_tasks : int
 var show_coords : bool = false
@@ -568,21 +569,26 @@ func fill_blanks():
 	tween.tween_interval(max(0.1 * Game.animation_speed, 0.05))
 	
 	if !Game.staging_scores.is_empty():
-		tween.tween_interval(0.1)
+		var idx = 0
+		Game.staging_scores.shuffle()
 		for s in Game.staging_scores:
 			var subtween = get_tree().create_tween()
-			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5)
+			subtween.tween_interval(idx * 0.02)
+			subtween.tween_callback(func():
+				s.first.add_child(trail_pb.instantiate())
+			)
+			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * Game.animation_speed)
 			subtween.parallel()
-			var x = randf()
-			var y = randf()
-			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + x * 0.3, (0.1 + y * 0.1) * sign(randf() - 0.5)), 0.8 * (x * x + y * y)).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.animation_speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 			subtween.tween_callback(func():
 				SSound.sfx_select.play()
 				Game.base_score += s.second
 			)
 			subtween.tween_callback(s.first.queue_free)
-			tween.parallel()
+			if idx > 0:
+				tween.parallel()
 			tween.tween_subtween(subtween)
+			idx += 1
 		Game.staging_scores.clear()
 		tween.tween_interval(0.3)
 	

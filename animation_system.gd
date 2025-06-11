@@ -80,3 +80,11 @@ func jump(tween : Tween, target, height : float, duration : float, cb : Callable
 			tween.parallel()
 		tween.tween_property(target, "position", target.position, duration * 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	return tween
+
+func shake(tween : Tween, target, amount : float, duration : float):
+	if !tween:
+		tween = Game.get_tree().create_tween()
+	var original_pos = target.position
+	target.position += Vector2(sign(randf() - 0.5) * amount, sign(randf() - 0.5) * amount)
+	tween.tween_property(target, "position", original_pos, duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+	return tween
