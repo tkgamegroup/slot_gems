@@ -23,11 +23,11 @@ func enter():
 
 func _ready() -> void:
 	continue_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 	)
-	continue_button.mouse_entered.connect(SSound.sfx_select.play)
+	continue_button.mouse_entered.connect(SSound.se_select.play)
 	continue_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		exit(tween)
@@ -37,7 +37,7 @@ func _ready() -> void:
 		Game.end_transition(tween)
 	)
 	new_game_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		exit(tween)
@@ -49,20 +49,20 @@ func _ready() -> void:
 			Game.roll()
 		)
 	)
-	new_game_button.mouse_entered.connect(SSound.sfx_select.play)
+	new_game_button.mouse_entered.connect(SSound.se_select.play)
 	collections_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.collections_ui.enter()
 	)
-	collections_button.mouse_entered.connect(SSound.sfx_select.play)
+	collections_button.mouse_entered.connect(SSound.se_select.play)
 	options_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.options_ui.enter()
 	)
-	options_button.mouse_entered.connect(SSound.sfx_select.play)
+	options_button.mouse_entered.connect(SSound.se_select.play)
 	quit_button.pressed.connect(func():
 		get_tree().quit()
 	)
-	quit_button.mouse_entered.connect(SSound.sfx_select.play)
+	quit_button.mouse_entered.connect(SSound.se_select.play)
 	
 	version_text.text = "V%d.%02d.%03d" % [Game.version_major, Game.version_minor, Game.version_patch]

@@ -56,7 +56,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		var ctrl = Control.new()
 		ctrl.custom_minimum_size = Vector2(32, 36)
 		ctrl.mouse_entered.connect(func():
-			SSound.sfx_select.play()
+			SSound.se_select.play()
 			STooltip.show(g.get_tooltip())
 		)
 		ctrl.mouse_exited.connect(func():
@@ -115,11 +115,11 @@ func exit():
 
 func _ready() -> void:
 	close_button.pressed.connect(func():
-		SSound.sfx_close_bag.play()
+		SSound.se_close_bag.play()
 		exit()
 	)
 	comfirm_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 		select_callback.call(selecteds)
 	)

@@ -35,10 +35,10 @@ func _ready() -> void:
 	bag_button.pressed.connect(func():
 		if !Game.bag_viewer_ui.visible:
 			STooltip.close()
-			SSound.sfx_open_bag.play()
+			SSound.se_open_bag.play()
 			Game.bag_viewer_ui.enter()
 		else:
-			SSound.sfx_close_bag.play()
+			SSound.se_close_bag.play()
 			Game.bag_viewer_ui.exit()
 	)
 	bag_button.mouse_entered.connect(func():
@@ -62,7 +62,7 @@ func _ready() -> void:
 			#Hand.draw()
 	)
 	gear_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.toggle_in_game_menu()
 	)
 	gear_button.mouse_entered.connect(func():

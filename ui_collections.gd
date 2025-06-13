@@ -75,6 +75,6 @@ func exit():
 
 func _ready() -> void:
 	close_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 	)

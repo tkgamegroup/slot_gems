@@ -12,7 +12,7 @@ const reward_pb = preload("res://ui_reward.tscn")
 var callback : Callable
 
 func choose(idx : int):
-	SSound.sfx_click.play()
+	SSound.se_click.play()
 	buttons_list.hide()
 	var tween = Game.get_tree().create_tween()
 	var n = reward_list.get_child_count()
@@ -70,11 +70,11 @@ func exit():
 
 func _ready() -> void:
 	hide_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 	)
 	reroll_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 	)
 	skip_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 	)

@@ -34,9 +34,9 @@ func add_ui(gem : Gem):
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 				if !disabled:
 					STooltip.close()
-					SSound.sfx_drag_item.play()
+					SSound.se_drag_item.play()
 					Drag.start("gem", ui.gem, ui, func(target):
-						SSound.sfx_drop_item.play()
+						SSound.se_drop_item.play()
 						if target:
 							ui.queue_free()
 					)
@@ -48,6 +48,7 @@ func fly_gem_from(gem : Gem, pos):
 	ui.set_image(gem.type, gem.rune, gem.bound_item.image_id if gem.bound_item else 0)
 	ui.global_position = pos
 	var trail = trail_pb.instantiate()
+	trail.setup(10.0, Gem.type_color(gem.type))
 	ui.add_child(trail)
 	Game.game_ui.add_child(ui)
 	var tween = get_tree().create_tween()

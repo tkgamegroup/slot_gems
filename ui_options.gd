@@ -2,7 +2,7 @@ extends Control
 
 @onready var panel : PanelContainer = $PanelContainer
 @onready var language_select : OptionButton = $PanelContainer/VBoxContainer/GridContainer/OptionButton
-@onready var sfx_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider
+@onready var se_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider
 @onready var music_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider2
 @onready var fullscreen_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox
 @onready var performance_mode_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox2
@@ -24,7 +24,7 @@ func enter(trans = true):
 		language_select.selected = 0
 	elif locale.begins_with("zh"):
 		language_select.selected = 1
-	sfx_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.sfx_bus_index))
+	se_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.se_bus_index))
 	music_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.music_bus_index))
 	performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
 	invincible_checkbox.set_pressed_no_signal(Game.invincible)
@@ -48,32 +48,32 @@ func _ready() -> void:
 			0: TranslationServer.set_locale("en")
 			1: TranslationServer.set_locale("zh")
 	)
-	sfx_volume_slider.value_changed.connect(func(v):
-		AudioServer.set_bus_volume_db(SSound.sfx_bus_index, linear_to_db(v))
+	se_volume_slider.value_changed.connect(func(v):
+		AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(v))
 	)
 	music_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(SSound.music_bus_index, linear_to_db(v))
 	)
 	fullscreen_checkbox.toggled.connect(func(v):
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		if v:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		else:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	)
 	performance_mode_checkbox.toggled.connect(func(v):
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.performance_mode = v
 	)
 	invincible_checkbox.toggled.connect(func(v):
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.invincible = v
 	)
 	close_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 	)
-	#close_button.mouse_entered.connect(SSound.sfx_select.play)
+	#close_button.mouse_entered.connect(SSound.se_select.play)
 	command_line.text_submitted.connect(func(cl : String):
 		exit()
 		var tokens = []

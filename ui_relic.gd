@@ -11,7 +11,7 @@ func _ready() -> void:
 	sp.frame = relic.image_id
 	
 	self.mouse_entered.connect(func():
-		SSound.sfx_select.play()
+		SSound.se_select.play()
 		STooltip.show(relic.get_tooltip())
 	)
 	self.mouse_exited.connect(func():

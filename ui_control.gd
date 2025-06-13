@@ -29,7 +29,7 @@ func exit():
 
 func _ready() -> void:
 	roll_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		roll_button.disabled = true
 		Game.roll()
 	)
@@ -43,7 +43,7 @@ func _ready() -> void:
 		STooltip.close()
 	)
 	play_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		play_button.disabled = true
 		play_button.mouse_exited.emit()
 		Game.play()
@@ -58,23 +58,36 @@ func _ready() -> void:
 				preview_tween.kill()
 				preview_tween = null
 			preview_tween = get_tree().create_tween()
+			var idx = 0
 			for y in Board.cy:
 				for x in Board.cx:
 					for p in Game.patterns:
 						var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 						if !res.is_empty():
-							var n = Node2D.new()
-							var pts = SUtils.get_cells_border(res)
-							for i in range(0, pts.size(), 2):
-								var l = Line2D.new()
-								l.default_color = Color(0.0, 0.0, 0.0, 1.0)
-								l.width = 3
-								l.points = [pts[i], pts[i + 1]]
-								n.add_child(l)
-								n.modulate.a = 0.0
-							preview_tween.tween_property(n, "modulate:a", 1.0, 0.2)
-							preview_matchings.append(n)
-							Game.board_ui.overlay.add_child(n)
+							var pts = SMath.weld_lines(SUtils.get_cells_border(res), 5.0)
+							var c = Vector2(0.0, 0.0)
+							for pt in pts:
+								c += pt
+							c /= pts.size()
+							for i in pts.size():
+								pts[i] = pts[i] - c
+							var l = Line2D.new()
+							l.default_color = Color(0.0, 0.0, 0.0, 1.0)
+							l.width = 3
+							l.points = pts
+							l.modulate.a = 0.0
+							l.scale = Vector2(2.0, 2.0)
+							l.position = c
+							var subtween = get_tree().create_tween()
+							subtween.tween_interval(0.05 * idx)
+							subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
+							subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
+							if idx > 0:
+								preview_tween.parallel()
+							preview_tween.tween_subtween(subtween)
+							preview_matchings.append(l)
+							Game.board_ui.overlay.add_child(l)
+							idx += 1
 			preview_tween.tween_callback(func():
 				preview_tween = null
 			)
@@ -97,14 +110,14 @@ func _ready() -> void:
 		preview_matchings.clear()
 	)
 	pin_ui.button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.set_props(Game.Props.Pin)
 	)
 	activate_ui.button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.set_props(Game.Props.Activate)
 	)
 	grab_ui.button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		Game.set_props(Game.Props.Grab)
 	)

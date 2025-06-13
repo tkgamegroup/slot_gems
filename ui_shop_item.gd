@@ -25,7 +25,7 @@ func setup(_cate : String, _object, _coins : int, _callback : Callable):
 func buy():
 	if Game.coins < coins:
 		return false
-	SSound.sfx_coin.play()
+	SSound.se_coin.play()
 	Game.coins -= coins
 	callback.call()
 	

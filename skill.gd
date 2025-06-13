@@ -49,7 +49,7 @@ func setup(n : String):
 					)
 					
 					tween.tween_callback(func():
-						SSound.sfx_bubble.play()
+						SSound.se_bubble.play()
 						Game.add_combo()
 						for c in coords:
 							Game.add_score(Board.gem_score_at(c), Board.get_pos(c))

@@ -11,7 +11,7 @@ func _ready() -> void:
 	
 	mouse_entered.connect(func():
 		if Drag.ui != self:
-			SSound.sfx_select.play()
+			SSound.se_select.play()
 			STooltip.show(gem.get_tooltip())
 	)
 	mouse_exited.connect(func():

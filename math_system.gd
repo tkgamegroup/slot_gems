@@ -88,3 +88,33 @@ static func cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: 
 
 	var s = r0.lerp(r1, t)
 	return s
+
+static func weld_lines(src : Array, dist : float = 5.0):
+	var ret = [src[0], src[1]]
+	src.pop_front()
+	src.pop_front()
+	var ok = false
+	while !ok:
+		ok = true
+		var sp = ret.front()
+		var ep = ret.back()
+		for i in range(src.size() - 2, -2, -2):
+			if src[i + 1].distance_to(sp) < 5.0:
+				ret.push_front(src[i])
+				src.remove_at(i)
+				src.remove_at(i)
+			elif src[i].distance_to(sp) < 5.0:
+				ret.push_front(src[i + 1])
+				src.remove_at(i)
+				src.remove_at(i)
+			elif src[i].distance_to(ep) < 5.0:
+				ret.append(src[i + 1])
+				src.remove_at(i)
+				src.remove_at(i)
+			elif src[i + 1].distance_to(ep) < 5.0:
+				ret.append(src[i])
+				src.remove_at(i)
+				src.remove_at(i)
+			else:
+				ok = false
+	return ret

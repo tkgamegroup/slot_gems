@@ -44,7 +44,7 @@ func setup(_title : String, tt_title : String, tt_content : String, _button_text
 func _ready() -> void:
 	title_lb.text = title
 	title_lb.mouse_entered.connect(func():
-		SSound.sfx_select.play()
+		SSound.se_select.play()
 		STooltip.show([tooltip])
 	)
 	title_lb.mouse_exited.connect(func():
@@ -68,12 +68,12 @@ func _ready() -> void:
 	slot.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
 			if event.pressed && event.button_index == MOUSE_BUTTON_RIGHT:
-				SSound.sfx_drag_item.play()
+				SSound.se_drag_item.play()
 				unload_gem()
 	)
 	slot.mouse_entered.connect(func():
 		if gem:
-			SSound.sfx_select.play()
+			SSound.se_select.play()
 			STooltip.show(gem.get_tooltip())
 	)
 	slot.mouse_exited.connect(func():
@@ -83,7 +83,7 @@ func _ready() -> void:
 		if gem && Game.coins >= cost:
 			button.disabled = true
 			Game.coins -= cost
-			SSound.sfx_coin.play()
+			SSound.se_coin.play()
 			particles1.emitting = true
 			var tween = get_tree().create_tween()
 			tween.tween_interval(0.7)

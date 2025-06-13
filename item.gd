@@ -338,7 +338,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Board.set_state_at(coord, Cell.State.Burning)
-				SSound.sfx_start_buring.play()
+				SSound.se_start_buring.play()
 			)
 	elif name == "BlackHole":
 		image_id = 15

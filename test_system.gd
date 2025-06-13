@@ -140,7 +140,7 @@ func write_game_status():
 	end_write()
 
 func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_skills : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], invincible : bool = true, _enable_shopping : bool = false):
-	AudioServer.set_bus_volume_db(SSound.sfx_bus_index, linear_to_db(0))
+	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
 	Game.performance_mode = true
 	Game.base_animation_speed = 0.25
 	Game.animation_speed = Game.base_animation_speed

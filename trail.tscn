@@ -7,7 +7,7 @@ _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_46ph2"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.501961)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
 [node name="Node" type="Node"]
 script = ExtResource("1_xjhlx")
@@ -18,5 +18,5 @@ width_curve = SubResource("Curve_46ph2")
 gradient = SubResource("Gradient_46ph2")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.05
 autostart = true

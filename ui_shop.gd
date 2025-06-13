@@ -29,7 +29,7 @@ func buy_expand_board():
 	if expand_board_button.button.disabled || Game.coins < expand_board_price:
 		return false
 	
-	SSound.sfx_coin.play()
+	SSound.se_coin.play()
 	Game.coins -= expand_board_price
 	
 	Game.board_size += 1
@@ -178,10 +178,10 @@ func _ready() -> void:
 	self.pivot_offset = self.size * 0.5
 	
 	exit_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 	)
-	#exit_button.mouse_entered.connect(SSound.sfx_select.play)
+	#exit_button.mouse_entered.connect(SSound.se_select.play)
 	expand_board_button.button.pressed.connect(func():
 		buy_expand_board()
 	)

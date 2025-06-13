@@ -1051,7 +1051,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.is_pressed():
 			if event.keycode == KEY_ESCAPE:
-				SSound.sfx_click.play()
+				SSound.se_click.play()
 				if options_ui.visible:
 					options_ui.exit()
 				elif bag_viewer_ui.visible:

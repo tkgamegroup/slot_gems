@@ -27,7 +27,7 @@ func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : floa
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
-	SSound.sfx_explode.play()
+	SSound.se_explode.play()
 	return sp
 	
 func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : float):
@@ -41,7 +41,7 @@ func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : 
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
-	SSound.sfx_explode.play()
+	SSound.se_explode.play()
 	return sp
 
 func add_distortion(pos : Vector2, size : Vector2, z_index : int, duration : float):
@@ -85,8 +85,42 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(fx.queue_free)
-	SSound.sfx_lightning_connect.play()
+	SSound.se_lightning_connect.play()
 	return fx
+
+func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, num_extra_points : int = 8):
+	var points = []
+	points.append(Vector2(0, 0))
+	points.append(Vector2(size.x, 0))
+	points.append(Vector2(size.x, size.y))
+	points.append(Vector2(0, size.y))
+	for i in num_extra_points:
+		points.append(Vector2(randf() * size.x, randf() * size.y))
+	var indices = Geometry2D.triangulate_delaunay(points)
+	for i in range(0, indices.size(), 3):
+		var poly = Polygon2D.new()
+		var verts = []
+		var uvs = []
+		var c = Vector2(0.0, 0.0)
+		for j in 3:
+			var v = points[indices[i + j]]
+			verts.append(v - size * 0.5)
+			uvs.append(v)
+			c += v
+		c /= 3.0
+		var d = c - size * 0.5
+		if abs(d.x) + abs(d.y) < 0.5:
+			d = Vector2(1.0, 0.0)
+		d = d.normalized()
+		poly.polygon = verts
+		poly.uv = uvs
+		poly.texture = texture
+		parent.add_child(poly)
+		poly.position = pos
+		var tween = Game.get_tree().create_tween()
+		tween.tween_property(poly, "position", pos + d * 25.0, 0.5)
+		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), 0.5)
+		tween.tween_callback(poly.queue_free)
 
 func add_black_hole_rotating(pos : Vector2, size : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()

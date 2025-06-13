@@ -11,7 +11,7 @@ var rewards_count = 0
 var coins = 0
 
 func enter():
-	SSound.sfx_level_clear.play()
+	SSound.se_well_done.play()
 	STooltip.close()
 	self.self_modulate.a = 0.0
 	var tween = get_tree().create_tween()
@@ -57,7 +57,7 @@ func enter():
 		settlement_list.add_child(reward_btn)
 		txt.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
 		reward_btn.pressed.connect(func():
-			SSound.sfx_coin.play()
+			SSound.se_coin.play()
 			reward_btn.get_parent().remove_child(reward_btn)
 			reward_btn.queue_free()
 			rewards_count -= 1
@@ -133,7 +133,7 @@ func exit():
 
 func _ready() -> void:
 	continue_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 	)
-	#continue_button.mouse_entered.connect(SSound.sfx_select.play)
+	#continue_button.mouse_entered.connect(SSound.se_select.play)

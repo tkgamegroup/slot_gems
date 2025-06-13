@@ -30,16 +30,16 @@ func exit(trans = true):
 	
 func _ready() -> void:
 	resume_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 	)
 	options_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit(false)
 		Game.options_ui.enter(false)
 	)
 	main_menu_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
@@ -55,12 +55,12 @@ func _ready() -> void:
 		Game.end_transition(tween)
 	)
 	auto_place_items_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 		STest.auto_place_items()
 	)
 	win_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		exit()
 		Game.win()
 	)

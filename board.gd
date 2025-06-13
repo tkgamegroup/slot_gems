@@ -350,28 +350,10 @@ func unfreeze(c : Vector2i):
 
 func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, source = null):
 	var coords = []
-	var uis = []
 	var ptcs = []
 	for c in _coords:
 		if is_valid(c) && !cell_at(c).frozen:
 			coords.append(c)
-			uis.append(Game.get_cell_ui(c))
-			if !Game.performance_mode:
-				ptcs.append(particles_pb.instantiate())
-	if !Game.performance_mode:
-		tween.tween_callback(func():
-			for idx in coords.size():
-				var c = coords[idx]
-				var g = get_gem_at(c)
-				var ui = uis[idx]
-				ui.gem_ui.bg_sp.scale = Vector2(1.0, 1.0)
-				ui.gem_ui.z_index = 1
-				var ptc = ptcs[idx]
-				ptc.position = get_pos(c)
-				ptc.emitting = true
-				ptc.color = Gem.type_color(g.type)
-				Game.board_ui.overlay.add_child(ptc)
-		)
 	for c in coords:
 		var i = get_item_at(c)
 		if i:
@@ -386,23 +368,10 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 				return h.once
 			return false
 		)
-	if !Game.performance_mode:
-		tween.tween_method(func(t):
-			for ui in uis:
-				ui.gem_ui.bg_sp.scale = Vector2(t, t)
-		, 1.0, 1.2, max(0.1 * Game.animation_speed, 0.02)).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-		tween.tween_method(func(t):
-			for ui in uis:
-				ui.gem_ui.bg_sp.scale = Vector2(t, t)
-		, 1.2, 1.0, max(0.3 * Game.animation_speed, 0.02)).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-	else:
-		tween.tween_interval(0.02)
+	tween.tween_interval(0.02)
 	tween.tween_callback(func():
 		for i in coords.size():
 			var c = coords[i]
-			if !Game.performance_mode:
-				uis[i].gem_ui.z_index = 0
-				ptcs[i].queue_free()
 			if get_state_at(c) != Cell.State.Burning:
 				set_state_at(c, Cell.State.Consumed)
 	)
@@ -553,6 +522,11 @@ func clear_consumed():
 			var c = Vector2i(x, y)
 			var s = get_state_at(c)
 			if s == Cell.State.Consumed:
+				if !Game.performance_mode:
+					var g = get_gem_at(c)
+					if g:
+						var tex = Gem.gem_frames.get_frame_texture("default", g.type)
+						SEffect.add_break_pieces(get_pos(c), Vector2(32, 32), tex, Game.board_ui.overlay)
 				set_gem_at(c, null)
 				set_state_at(c, Cell.State.Normal)
 			elif s == Cell.State.Burning:
@@ -562,7 +536,7 @@ func clear_consumed():
 			Game.add_score(gem_score_at(c), get_pos(c), false)
 			set_gem_at(c, null)
 			set_state_at(c, Cell.State.Normal)
-		SSound.sfx_end_buring.play()
+		SSound.se_end_buring.play()
 
 func fill_blanks():
 	var tween = Game.get_tree().create_tween()
@@ -575,13 +549,15 @@ func fill_blanks():
 			var subtween = get_tree().create_tween()
 			subtween.tween_interval(idx * 0.02)
 			subtween.tween_callback(func():
-				s.first.add_child(trail_pb.instantiate())
+				var trail = trail_pb.instantiate()
+				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
+				s.first.add_child(trail)
 			)
 			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * Game.animation_speed)
 			subtween.parallel()
 			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.animation_speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 			subtween.tween_callback(func():
-				SSound.sfx_select.play()
+				SSound.se_select.play()
 				Game.base_score += s.second
 			)
 			subtween.tween_callback(s.first.queue_free)
@@ -601,7 +577,7 @@ func fill_blanks():
 					step_down_cell(c)
 					filled = true
 		if filled:
-			SSound.sfx_zap.play()
+			SSound.se_zap.play()
 			fill_blanks()
 		else:
 			filling_finished.emit()
@@ -612,16 +588,18 @@ func on_combo():
 		h.host.on_event.call(Event.Combo, null, null)
 
 func matching():
-	var no_patterns = true
+	var matched_num = 0
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(0.4)
+	
 	for y in cy:
 		for x in cx:
 			for p in Game.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
-					no_patterns = false
-					tween.tween_callback(func():
+					var subtween = Game.get_tree().create_tween()
+					subtween.tween_interval(matched_num * 0.2 * Game.animation_speed)
+					subtween.tween_callback(func():
 						p.add_exp(1)
 						
 						var burning_cells = []
@@ -639,28 +617,28 @@ func matching():
 							for cc in SMath.pick_n(cands, 1):
 								set_state_at(cc, Cell.State.Burning, {"pos":pos})
 						
-						SSound.sfx_bubble.pitch_scale = randf_range(0.9, 1.1)
-						SSound.sfx_bubble.play()
+						SSound.se_marimba_scale[matched_num % 8].play()
 						Game.add_combo()
 						for c in res:
 							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))
 					)
+					matched_num += 1
 					
-					eliminate(res, tween, ActiveReason.Pattern, p)
+					eliminate(res, subtween, ActiveReason.Pattern, p)
 					
 					var runes : Array[int] = []
 					for c in res:
 						runes.append(get_gem_at(c).rune)
 					for s in Game.skills:
 						if s.check(runes):
-							tween.tween_callback(func():
+							subtween.tween_callback(func():
 								s.add_exp(1)
 							)
 							if s.on_cast.is_valid():
 								if !Game.performance_mode:
 									var bg = Sprite2D.new()
-									tween.tween_callback(func():
-										SSound.sfx_skill.play()
+									subtween.tween_callback(func():
+										SSound.se_skill.play()
 										bg.texture = black_bg
 										var sp = AnimatedSprite2D.new()
 										sp.sprite_frames = Skill.skill_frames
@@ -670,15 +648,19 @@ func matching():
 										bg.z_index = 10
 										Game.board_ui.cells_root.add_child(bg)
 									)
-									tween.tween_property(bg, "scale", Vector2(2.0, 2.0), 1.0)
-									tween.parallel().tween_property(bg, "modulate:a", 0.0, 1.0)
-									tween.tween_callback(bg.queue_free)
+									subtween.tween_property(bg, "scale", Vector2(2.0, 2.0), 1.0)
+									subtween.parallel().tween_property(bg, "modulate:a", 0.0, 1.0)
+									subtween.tween_callback(bg.queue_free)
 								
-								s.on_cast.call(tween, res)
+								s.on_cast.call(subtween, res)
+					
+					if matched_num > 0:
+						tween.parallel()
+					tween.tween_subtween(subtween)
 					
 					Game.animation_speed *= 0.98
 					Game.animation_speed = max(0.05, Game.animation_speed)
-	if no_patterns:
+	if matched_num == 0:
 		tween.tween_interval(0.7 * Game.animation_speed)
 		tween.tween_callback(func():
 			if active_effects.is_empty():

@@ -33,15 +33,15 @@ func exit():
 
 func _ready() -> void:
 	new_run.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
 		Game.start_game()
 	)
-	#new_run.mouse_entered.connect(SSound.sfx_select.play)
+	#new_run.mouse_entered.connect(SSound.se_select.play)
 	main_menu_button.pressed.connect(func():
-		SSound.sfx_click.play()
+		SSound.se_click.play()
 		for t in get_tree().get_processed_tweens():
 			t.kill()
 		exit()
@@ -54,4 +54,4 @@ func _ready() -> void:
 			Game.title_ui.enter()
 		)
 	)
-	#main_menu_button.mouse_entered.connect(SSound.sfx_select.play)
+	#main_menu_button.mouse_entered.connect(SSound.se_select.play)
