@@ -13,6 +13,13 @@ signal finished
 func appear():
 	panel.pivot_offset = Vector2(panel.size.x * 0.5, panel.size.y)
 	panel.scale = Vector2(0.0, 0.0)
+	
+	base_score_text.text = "0"
+	combos_text.text = "0X"
+	mult_text.text = "1.0"
+	cross1.scale.x = 0.0
+	cross2.scale.x = 0.0
+	
 	var tween = get_tree().create_tween()
 	tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	
@@ -20,9 +27,14 @@ func appear():
 
 const one_over_log1_5 = 1.0 / log(1.5)
 func mult_from_combos():
-	return log(Game.combos * 1.0) * one_over_log1_5
+	return log((Game.combos + 1) * 1.0) * one_over_log1_5
 
 func calculate():
+	if Game.base_score == 0:
+		disappear()
+		finished.emit()
+		return
+	
 	var tween = get_tree().create_tween()
 	tween.tween_interval(0.3)
 	
@@ -42,17 +54,11 @@ func calculate():
 		SSound.se_calc2.play()
 	)
 	SAnimation.jump(tween, base_score_text, 4, 0.2, Callable(), false)
-	tween.parallel()
 	SAnimation.jump(tween, combos_text, 4, 0.2, Callable(), false)
-	tween.parallel()
 	SAnimation.jump(tween, mult_text, 4, 0.2, Callable(), false)
 	
 	tween.tween_interval(0.3)
 	tween.tween_callback(func():
-		base_score_text.text = "0"
-		combos_text.text = "0"
-		mult_text.text = "0"
-		
 		calculated_text.show()
 		calculated_text.text = "%d" % result["value"]
 		calculated_text.position = Vector2((1280 - calculated_text.size.x) * 0.5, 150)
@@ -68,7 +74,7 @@ func calculate():
 	tween.tween_method(func(v):
 		Game.score = score0 + int(v * result["value"])
 		calculated_text.text = "%d" % int((1.0 - v) * result["value"])
-	, 0.0, 1.0, 1.15)
+	, 0.0, 1.0, 0.5)
 	tween.tween_callback(func():
 		disappear()
 		finished.emit()

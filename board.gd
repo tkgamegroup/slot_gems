@@ -4,7 +4,6 @@ enum ActiveReason
 {
 	Pattern,
 	Item,
-	Skill,
 	Relic,
 	Burning,
 	RcAction,
@@ -360,14 +359,17 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			if i.on_eliminate.is_valid():
 				i.on_eliminate.call(c, reason, source, tween)
 			set_item_at(c, null)
-		for h in event_listeners:
-			h.host.on_event.call(Event.Eliminated, null, c)
 		SMath.remove_if(cell_at(c).event_listeners, func(h : Hook):
 			if h.event == Event.Eliminated:
-				h.on_event.call(Event.Eliminated, null, c)
+				h.host.on_event.call(Event.Eliminated, tween, c)
 				return h.once
 			return false
 		)
+	if !event_listeners.is_empty():
+		var d = {"reason":reason,"coords":coords}
+		for h in event_listeners:
+			if h.event == Event.Eliminated:
+				h.host.on_event.call(Event.Eliminated, tween, d)
 	tween.tween_interval(0.02)
 	tween.tween_callback(func():
 		for i in coords.size():
@@ -388,12 +390,12 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		sp.position = get_pos(c)
 		sp.z_index = 4
 		Game.board_ui.cells_root.add_child(sp)
-	elif type == HostType.Skill:
-		var skill : Skill = host
-		if !skill.on_active.is_valid():
+	elif type == HostType.Relic:
+		var relic : Relic = host
+		if !relic.on_active.is_valid():
 			return
 		sp = active_effect_pb.instantiate()
-		sp.global_position = skill.ui.get_global_rect().get_center()
+		sp.global_position = relic.ui.get_global_rect().get_center()
 		sp.z_index = 4
 		Game.game_ui.add_child(sp)
 	var ae = ActiveEffect.new()
@@ -415,10 +417,10 @@ func process_active_effect(ae : ActiveEffect):
 			item.mounted.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
 		if item.on_active.is_valid():
 			item.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
-	elif ae.type == HostType.Skill:
-		var skill : Skill = ae.host
-		if skill.on_active.is_valid():
-			skill.on_active.call(ae.effect_index, ae.coord, tween)
+	elif ae.type == HostType.Relic:
+		var relic : Relic = ae.host
+		if relic.on_active.is_valid():
+			relic.on_active.call(ae.effect_index, ae.coord, tween)
 	tween.tween_callback(func():
 		active_effects.remove_at(0)
 		ae.sp.queue_free()
@@ -625,34 +627,6 @@ func matching():
 					matched_num += 1
 					
 					eliminate(res, subtween, ActiveReason.Pattern, p)
-					
-					var runes : Array[int] = []
-					for c in res:
-						runes.append(get_gem_at(c).rune)
-					for s in Game.skills:
-						if s.check(runes):
-							subtween.tween_callback(func():
-								s.add_exp(1)
-							)
-							if s.on_cast.is_valid():
-								if !Game.performance_mode:
-									var bg = Sprite2D.new()
-									subtween.tween_callback(func():
-										SSound.se_skill.play()
-										bg.texture = black_bg
-										var sp = AnimatedSprite2D.new()
-										sp.sprite_frames = Skill.skill_frames
-										sp.frame = s.image_id
-										bg.add_child(sp)
-										bg.position = get_pos(res[1])
-										bg.z_index = 10
-										Game.board_ui.cells_root.add_child(bg)
-									)
-									subtween.tween_property(bg, "scale", Vector2(2.0, 2.0), 1.0)
-									subtween.parallel().tween_property(bg, "modulate:a", 0.0, 1.0)
-									subtween.tween_callback(bg.queue_free)
-								
-								s.on_cast.call(subtween, res)
 					
 					if matched_num > 0:
 						tween.parallel()

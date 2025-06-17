@@ -24,7 +24,7 @@ func _ready() -> void:
 		STooltip.show([Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)
 	hand_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % [Game.draws_per_roll, Game.max_hand_grabs])])
+		STooltip.show([Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % Game.max_hand_grabs)])
 	)
 	coins_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_coins_title"), "")])

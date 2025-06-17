@@ -7,7 +7,7 @@ w_wild_desc,Can match with any color.,可以与任何颜色匹配。
 w_eliminate,Eliminate,消除
 w_eliminate_desc,Effect when the cell is eliminated.,格子被消除时的效果。
 w_active,Active,激活
-w_active_desc,Active effects will stack and process one by one when the matching stops.,激活的效果会堆叠起来，在匹配停止时一个接个地处理。
+w_active_desc,Stack and process one by one when the matching stops.,堆叠起来并在匹配停止时一个接一个地处理。
 w_place,Place,放置
 w_place_desc,Effect when the this Item is placed into the board. ,当此道具被放置到棋盘时的效果。
 w_quick,Quick,快速
@@ -69,6 +69,8 @@ tt_game_roll_title,Roll,滚动
 tt_game_roll_content,"Roll the board, unpinned and unfrozen gems will be replaced to new ones, then draw new items.",滚动棋盘，未固定跟未冰冻的宝石会被替换成新的，然后抽取新的道具。
 tt_game_match_title,Match,匹配
 tt_game_match_content,"Start matching patterns and get score. When there are no matched patterns, matching stops.",开始匹配图案并得分。当没有匹配的图案时，匹配终止。
+ui_shop_title,SHOP,商店
+ui_shop_target,Improve your run,变得更强吧
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
@@ -83,9 +85,9 @@ gem_pink,Pink,粉
 gem_colorless,Colorless,无色
 gem_wild,Wild,狂野
 rune_none,None,无
-rune_zhe,Zhe,折
-rune_cha,Cha,叉
-rune_kou,Kou,口
+rune_destroy,Destroy,破坏
+rune_wisdom,Wisdom,灵智
+rune_grow,Grow,生长
 gem_desc,Score: %d%s,分数: %d%s
 skill_name_Xiao,Xiao,消
 skill_desc_Xiao,Eliminate one random rune after next roll.,在下次滚动之后消除一种随机的符文。
@@ -231,3 +233,27 @@ relic_name_PinkStone,Pink Stone,粉石
 relic_desc_PinkStone,Pink gems' base score +{value}.,粉色宝石的基础分数+{value}。
 relic_name_RockBottom,Rock Bottom,谷底石
 relic_desc_RockBottom,Gems' score will not descent.,
+relic_name_Aries,Aries,白羊座
+relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells in {range_i} w_range at random location.,当匹配到至少3个破坏符文时：(w_active) 在随机的位置爆炸并消除{range_i}w_range内的格子。
+relic_name_Taurus,Taurus,金牛座
+relic_desc_Taurus,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Gemini,Gemini,双子座
+relic_desc_Gemini,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Cancer,Cancer,巨蟹座
+relic_desc_Cancer,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Leo,Leo,狮子座
+relic_desc_Leo,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Virgo,Virgo,处女座
+relic_desc_Virgo,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Libra,Libra,天秤座
+relic_desc_Libra,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Scorpio,Scorpio,天蝎座
+relic_desc_Scorpio,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Sagittarius,Sagittarius,射手座
+relic_desc_Sagittarius,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Capricorn,Capricorn,摩羯座
+relic_desc_Capricorn,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Aquarius,Aquarius,水瓶座
+relic_desc_Aquarius,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_name_Pisces,Pisces ,双鱼座
+relic_desc_Pisces,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：

@@ -8,7 +8,6 @@ extends Control
 @onready var close_button = $PanelContainer/VBoxContainer/Button
 
 const item_ui = preload("res://ui_item.tscn")
-const skill_ui = preload("res://ui_skill.tscn")
 const pattern_ui = preload("res://ui_pattern.tscn")
 const relic_ui = preload("res://ui_relic.tscn")
 
@@ -39,13 +38,6 @@ func enter():
 		var ui = item_ui.instantiate()
 		ui.setup(i)
 		item_list.add_child(ui)
-	var skills = ["Xiao", "Roll", "Match", "Qiang", "Se", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
-	for n in skills:
-		var s = Skill.new()
-		s.setup(n)
-		var ui = skill_ui.instantiate()
-		ui.setup(s)
-		skill_list.add_child(ui)
 	var patterns = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	for n in patterns:
 		var p = Pattern.new()

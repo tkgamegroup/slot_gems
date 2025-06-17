@@ -10,9 +10,9 @@ const distortion = preload("res://fx_distortion.tscn")
 const lightning = preload("res://fx_lightning.tscn")
 const leading_line_pb = preload("res://leading_line.tscn")
 
-func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3):
+func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width = 8.0):
 	var l = SEffect.leading_line_pb.instantiate()
-	l.setup(p0, p1, 0.3, duration)
+	l.setup(p0, p1, 0.3, duration, width)
 	l.z_index = 3
 	Game.board_ui.cells_root.add_child(l)
 

@@ -27,9 +27,10 @@ const UiControl = preload("res://ui_control.gd")
 const UiHand = preload("res://ui_hand.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
-const UiSkillsBar = preload("res://ui_skills_bar.gd")
+const UiRelicsBar = preload("res://ui_relics_bar.gd")
 const UiPatternsBar = preload("res://ui_patterns_bar.gd")
 const UiCalculatorBar = preload("res://ui_calculate_bar.gd")
+const UiBanner = preload("res://banner.gd")
 const UiDialog = preload("res://ui_dialog.gd")
 const UiOptions = preload("res://ui_options.gd")
 const UiCollections = preload("res://ui_collections.gd")
@@ -58,10 +59,10 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/UI/Shop
 @onready var game_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game
 @onready var status_bar_ui : UiStatusBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
-@onready var relics_bar_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/RelicsBar
-@onready var skills_bar_ui : UiSkillsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/SkillsBar
+@onready var relics_bar_ui : UiRelicsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar
 @onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
 @onready var calculator_bar_ui : UiCalculatorBar = $/root/Main/SubViewportContainer/SubViewport/UI/CalculateBar
+@onready var banner_ui : UiBanner = $/root/Main/SubViewportContainer/SubViewport/UI/Banner
 @onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/UI/Dialog
 @onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/UI/Options
 @onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/UI/Collections
@@ -70,6 +71,7 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var level_clear_ui : UiLevelClear = $/root/Main/SubViewportContainer/SubViewport/UI/LevelClear
 @onready var choose_reward_ui : UiChooseReward = $/root/Main/SubViewportContainer/SubViewport/UI/ChooseReward
 @onready var bag_viewer_ui : UiBagViewer = $/root/Main/SubViewportContainer/SubViewport/UI/BagViewer
+@onready var blocker_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Blocker
 
 var stage : int = Stage.Deploy
 var rolls : int:
@@ -113,7 +115,7 @@ var activates_num : int:
 		else:
 			control_ui.activate_ui.hide()
 var activates_num_per_level : int
-var grabs_num : int:
+var grabs_num : int = 5:
 	set(v):
 		grabs_num = v
 		if grabs_num > 0:
@@ -122,11 +124,10 @@ var grabs_num : int:
 		else:
 			control_ui.grab_ui.hide()
 var grabs_num_per_level : int
-var board_size : int = 0:
+var board_size : int = 3:
 	set(v):
 		board_size = v
 		status_bar_ui.board_size_text.set_value(board_size)
-var skills : Array[Skill]
 var patterns : Array[Pattern]
 var gems : Array[Gem]
 var bag_gems : Array[Gem] = []
@@ -194,7 +195,7 @@ var level : int:
 	set(v):
 		level = v
 		status_bar_ui.level_text.text = tr("ui_game_level") % level
-var coins : int:
+var coins : int = 10:
 	set(v):
 		coins = v
 		status_bar_ui.coins_text.set_value(coins)
@@ -329,13 +330,6 @@ func release_item(i : Item):
 	Buff.clear_if_not(i, Buff.Duration.Eternal)
 	bag_items.append(i)
 
-func add_skill(s : Skill, boardcast : bool = true):
-	if boardcast:
-		if s.on_event.is_valid():
-			s.on_event.call(Event.GainSkill, null, s)
-	skills.append(s)
-	skills_bar_ui.add_ui(s)
-
 func add_pattern(p : Pattern, boardcast : bool = true):
 	if boardcast:
 		for h in event_listeners:
@@ -452,6 +446,8 @@ func end_busy():
 	hand_ui.disabled = false
 
 func begin_transition(tween : Tween):
+	blocker_ui.show()
+	
 	trans_sp.sprite_frames = null
 	trans_sp.frame = 0
 	var mat = ShaderMaterial.new()
@@ -479,12 +475,10 @@ func end_transition(tween : Tween):
 	, 3.2, 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
 		Game.subviewport_container.material = null
+		blocker_ui.hide()
 	)
 
 func start_game(saving : String = ""):
-	board_size = 6
-	skills.clear()
-	skills_bar_ui.clear()
 	patterns.clear()
 	patterns_bar_ui.clear()
 	relics.clear()
@@ -510,12 +504,17 @@ func start_game(saving : String = ""):
 	modifiers["explode_range_i"] = 0
 	modifiers["explode_power_i"] = 0
 	
+	status_bar_ui.board_size_text.enable_change = false
+	status_bar_ui.hand_text.enable_change = false
+	status_bar_ui.coins_text.enable_change = false
+	
 	if saving == "":
 		score = 0
 		target_score = 0
 		score_mult = 1.0
 		combos = modifiers["base_combo_i"]
 		level = 0
+		board_size = 3
 		rolls_per_level = 4
 		swaps_per_level = 5
 		plays_per_level = 3
@@ -525,11 +524,6 @@ func start_game(saving : String = ""):
 		activates_num_per_level = 0
 		grabs_num_per_level = 0
 		coins = 10
-		
-		for i in 0:
-			var s = Skill.new()
-			s.setup("Fang")
-			add_skill(s)
 		
 		for i in 1:
 			var p = Pattern.new()
@@ -550,85 +544,85 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 0:
+		for i in 1:
 			var r = Relic.new()
-			r.setup("HighExplosives")
+			r.setup("Aries")
 			add_relic(r)
 		
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Zhe
+			g.rune = Gem.Rune.Destroy
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Cha
+			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Kou
+			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
-			g.rune = Gem.Rune.Zhe
+			g.rune = Gem.Rune.Destroy
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
-			g.rune = Gem.Rune.Cha
+			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
-			g.rune = Gem.Rune.Kou
+			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
-			g.rune = Gem.Rune.Zhe
+			g.rune = Gem.Rune.Destroy
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
-			g.rune = Gem.Rune.Cha
+			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
-			g.rune = Gem.Rune.Kou
+			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
-			g.rune = Gem.Rune.Zhe
+			g.rune = Gem.Rune.Destroy
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
-			g.rune = Gem.Rune.Cha
+			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
-			g.rune = Gem.Rune.Kou
+			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
-			g.rune = Gem.Rune.Zhe
+			g.rune = Gem.Rune.Destroy
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
-			g.rune = Gem.Rune.Cha
+			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
 		for i in 72:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
-			g.rune = Gem.Rune.Kou
+			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		
 		for i in 1:
@@ -669,16 +663,34 @@ func start_game(saving : String = ""):
 		Board.setup(board_size)
 		history.init()
 		control_ui.enter()
-		new_level(null, false)
+		
+		status_bar_ui.level_text.modulate.a = 0.0
+		status_bar_ui.level_target.modulate.a = 0.0
+		begin_busy()
+		var tween = get_tree().create_tween()
+		tween.tween_interval(1.1)
+		tween.tween_callback(func():
+			board_ui.enter(null, false)
+			Game.roll()
+			new_level()
+		)
 	else:
+		status_bar_ui.level_text.modulate.a = 1.0
+		status_bar_ui.level_target.modulate.a = 1.0
 		load_from_file(saving)
 		control_ui.enter()
 		board_ui.enter(null, false)
 		history.init()
 	
+	status_bar_ui.board_size_text.enable_change = true
+	status_bar_ui.hand_text.enable_change = true
+	status_bar_ui.coins_text.enable_change = true
 	game_ui.show()
 
-func new_level(tween : Tween = null, trans : bool = true):
+func new_level(tween : Tween = null):
+	if !tween:
+		tween = get_tree().create_tween()
+	
 	score = 0
 	level += 1
 	target_score = get_level_score(level) * 1
@@ -700,11 +712,33 @@ func new_level(tween : Tween = null, trans : bool = true):
 		if h.event == Event.LevelBegan:
 			h.host.on_event.call(Event.LevelBegan, null, null)
 	
-	board_ui.enter(tween, trans)
-	
 	save_to_file()
 	stage = Stage.Deploy
 	end_busy()
+	
+	tween.tween_interval(1.0)
+	banner_ui.appear(tr("ui_game_level") % level, tr("ui_game_target_score") % target_score, tween)
+	var temp_text1 = banner_ui.text1.duplicate()
+	var temp_text2 = banner_ui.text2.duplicate()
+	temp_text1.size = status_bar_ui.level_text.size
+	temp_text2.size = status_bar_ui.level_target.size
+	tween.tween_interval(1.0)
+	tween.tween_callback(func():
+		banner_ui.disappear()
+		banner_ui.add_child(temp_text1)
+		banner_ui.add_child(temp_text2)
+	)
+	tween.tween_property(temp_text1, "global_position", status_bar_ui.level_text.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	tween.parallel().tween_property(temp_text2, "global_position", status_bar_ui.level_target.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	tween.tween_callback(func():
+		status_bar_ui.level_text.modulate.a = 1.0
+		status_bar_ui.level_target.modulate.a = 1.0
+	)
+	tween.tween_callback(func():
+		banner_ui.hide()
+		temp_text1.queue_free()
+		temp_text2.queue_free()
+	)
 
 func level_end():
 	stage = Stage.LevelOver
@@ -722,7 +756,7 @@ func lose():
 	game_over_ui.enter()
 
 func roll():
-	if rolls > 0:
+	#if rolls > 0:
 		stage = Stage.Rolling
 		rolls -= 1
 		score_mult = 1.0
@@ -767,7 +801,6 @@ func save_to_file(name : String = "1"):
 		d["host_type"] = h.host_type
 		match h.host_type:
 			HostType.Item: d["host"] = Game.items.find(h.host)
-			HostType.Skill: d["host"] = Game.skills.find(h.host)
 			HostType.Relic: d["host"] = Game.relics.find(h.host)
 		d["once"] = h.once
 	
@@ -850,13 +883,6 @@ func save_to_file(name : String = "1"):
 	for i in Game.bag_items:
 		bag_items.append(Game.items.find(i))
 	data["bag_items"] = bag_items
-	var skills = []
-	for s in Game.skills:
-		var skill = {}
-		skill["name"] = s.name
-		skill["extra"] = s.extra.duplicate()
-		skills.append(skill)
-	data["skills"] = skills
 	var patterns = []
 	for p in Game.patterns:
 		var pattern = {}
@@ -921,7 +947,6 @@ func load_from_file(name : String = "1"):
 		var host = null
 		match host_type:
 			HostType.Item: host = Game.items[host_idx]
-			HostType.Skill: host = Game.skills[host_idx]
 			HostType.Relic: host = Game.relics[host_idx]
 		var h = Hook.new(int(d["event"]), host, host_type, d["once"])
 		return h
@@ -983,12 +1008,6 @@ func load_from_file(name : String = "1"):
 	var bag_items = data["bag_items"]
 	for idx in bag_items:
 		Game.bag_items.append(Game.items[idx])
-	var skills = data["skills"]
-	for skill in skills:
-		var s = Skill.new()
-		s.setup(skill["name"])
-		s.extra = SUtils.read_dictionary(skill["extra"])
-		add_skill(s, false)
 	var patterns = data["patterns"]
 	for pattern in patterns:
 		var p = Pattern.new()
@@ -1134,20 +1153,6 @@ func _ready() -> void:
 		if !processed:
 			calculator_bar_ui.calculate()
 	)
-	'''
-	board_ui.drag_dropped.connect(func(c0 : Vector2i, c1 : Vector2i):
-		if Board.is_valid(c1):
-			if !control_ui.action_tip_text.disabled:
-				if props == Props.Grab:
-					if grabs_num > 0:
-						var g0 = Board.get_gem_at(c0)
-						var g1 = Board.get_gem_at(c1)
-						Board.set_gem_at(c0, g1)
-						Board.set_gem_at(c1, g0)
-						Board.matching()
-						grabs_num -= 1
-	)
-	'''
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		combos = modifiers["base_combo_i"]

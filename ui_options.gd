@@ -120,23 +120,12 @@ func _ready() -> void:
 					i.setup(tt)
 					Game.add_item(i)
 					Game.bag_items.append(i)
-			elif cmd == "as":
-				var num = 1
-				var tt = tokens[1]
-				if tt.is_valid_int():
-					num = int(tt)
-					tt = tokens[2]
-				for j in num:
-					var s = Skill.new()
-					s.setup(tt)
-					Game.add_skill(s)
 			elif cmd == "test":
 				var mode = 0
 				var level_count = 1
 				var task_count = 1
 				var saving = ""
 				var additional_items = []
-				var additional_skills = []
 				var additional_patterns = []
 				var additional_relics = []
 				var enable_shopping = false
@@ -164,16 +153,6 @@ func _ready() -> void:
 							i += 1
 						for j in num:
 							additional_items.append(tt)
-					elif t == "-as":
-						var num = 1
-						var tt = tokens[i + 1]
-						i += 1
-						if tt.is_valid_int():
-							num = int(tt)
-							tt = tokens[i + 1]
-							i += 1
-						for j in num:
-							additional_skills.append(tt)
 					elif t == "-ap":
 						var num = 1
 						var tt = tokens[i + 1]
@@ -196,6 +175,6 @@ func _ready() -> void:
 							additional_relics.append(tt)
 					elif t == "-es":
 						enable_shopping = true
-				STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_skills,additional_patterns, additional_relics, true, enable_shopping)
+				STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_patterns, additional_relics, true, enable_shopping)
 		command_line.clear()
 	)

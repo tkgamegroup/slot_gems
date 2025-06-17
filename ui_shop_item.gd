@@ -7,7 +7,6 @@ extends Control
 @onready var coin_text : Label = $Base/Price/MarginContainer/HBoxContainer/Label
 
 const item_ui = preload("res://ui_item.tscn")
-const skill_ui = preload("res://ui_skill.tscn")
 const pattern_ui = preload("res://ui_pattern.tscn")
 const relic_ui = preload("res://ui_relic.tscn")
 
@@ -43,11 +42,6 @@ func _ready() -> void:
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
 			ui.position = Vector2(16, 16)
-		elif cate == "Skill":
-			var ui = skill_ui.instantiate()
-			ui.setup(object)
-			ui.mouse_filter = Control.MOUSE_FILTER_PASS
-			content.add_child(ui)
 		elif cate == "Pattern":
 			var ui = pattern_ui.instantiate()
 			ui.setup(object, true)

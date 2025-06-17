@@ -18,9 +18,9 @@ enum Type
 enum Rune
 {
 	None,
-	Zhe,
-	Cha,
-	Kou,
+	Destroy,
+	Wisdom,
+	Grow,
 	Count = 3
 }
 
@@ -93,23 +93,23 @@ static func type_img(t : int):
 
 static func rune_name(r : int):
 	match r:
-		Rune.Zhe: return "Zhe"
-		Rune.Cha: return "Cha"
-		Rune.Kou: return "Kou"
+		Rune.Destroy: return "Destroy"
+		Rune.Wisdom: return "Wisdom"
+		Rune.Grow: return "Grow"
 	return "None"
 
 static func rune_display_name(r : int):
 	match r:
-		Rune.Zhe: return Game.tr("rune_zhe")
-		Rune.Cha: return Game.tr("rune_cha")
-		Rune.Kou: return Game.tr("rune_kou")
+		Rune.Destroy: return Game.tr("rune_destroy")
+		Rune.Wisdom: return Game.tr("rune_wisdom")
+		Rune.Grow: return Game.tr("rune_grow")
 	return "None"
 
 static func rune_icon(r : int):
 	match r:
-		Rune.Zhe: return "res://images/rune_zhe.png"
-		Rune.Cha: return "res://images/rune_cha.png"
-		Rune.Kou: return "res://images/rune_kou.png"
+		Rune.Destroy: return "res://images/rune_destroy.png"
+		Rune.Wisdom: return "res://images/rune_wisdom.png"
+		Rune.Grow: return "res://images/rune_grow.png"
 	return ""
 
 func get_base_score():

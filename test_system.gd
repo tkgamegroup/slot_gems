@@ -22,7 +22,6 @@ enum TaskSteps
 var filename : String
 var saving : String
 var additional_items : Array
-var additional_skills : Array
 var additional_patterns : Array
 var additional_relics : Array
 var mode : int
@@ -77,10 +76,6 @@ func start_game():
 		i.setup(n)
 		Game.add_item(i)
 		Game.bag_items.append(i)
-	for n in additional_skills:
-		var s = Skill.new()
-		s.setup(n)
-		Game.add_skill(s)
 	for n in additional_patterns:
 		var p = Pattern.new()
 		p.setup(n)
@@ -117,12 +112,6 @@ func write_game_status():
 			items_str += ", "
 		items_str += i.name
 	write("Items: %s" % items_str)
-	var skills_str = ""
-	for s in Game.skills:
-		if !skills_str.is_empty():
-			skills_str += ", "
-		skills_str += s.name
-	write("Skills: %s" % skills_str)
 	var patterns_str = ""
 	for p in Game.patterns:
 		if !patterns_str.is_empty():
@@ -139,7 +128,7 @@ func write_game_status():
 	write("Matches: %d" % Game.plays_per_level)
 	end_write()
 
-func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_skills : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], invincible : bool = true, _enable_shopping : bool = false):
+func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], invincible : bool = true, _enable_shopping : bool = false):
 	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
 	Game.performance_mode = true
 	Game.base_animation_speed = 0.25
@@ -163,7 +152,6 @@ func start_test(_mode : int, _level_count : int, _task_count : int, fn : String 
 	
 	saving = _saving
 	additional_items = _additional_items
-	additional_skills = _additional_skills
 	additional_patterns = _additional_patterns
 	additional_relics = _additional_relics
 	Game.invincible = invincible

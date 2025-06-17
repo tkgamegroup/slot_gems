@@ -4,11 +4,11 @@ const enchant_pb = preload("res://enchant_slot.tscn")
 const item_pb = preload("res://ui_shop_item.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
-@onready var exit_button : Button = $HBoxContainer/HBoxContainer/VBoxContainer2/Button
-@onready var list1 : Control = $HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer
-@onready var list2 : Control = $HBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2
-@onready var refresh_button : Control = $HBoxContainer/HBoxContainer/VBoxContainer2/ShopButton
-@onready var expand_board_button : Control = $HBoxContainer/HBoxContainer/VBoxContainer2/ShopButton2
+@onready var exit_button : Button = $HBoxContainer/VBoxContainer2/Button
+@onready var list1 : Control = $HBoxContainer/VBoxContainer/HBoxContainer
+@onready var list2 : Control = $HBoxContainer/VBoxContainer/HBoxContainer2
+@onready var refresh_button : Control = $HBoxContainer/VBoxContainer2/ShopButton
+@onready var expand_board_button : Control = $HBoxContainer/VBoxContainer2/ShopButton2
 
 var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
@@ -53,18 +53,24 @@ func enter(tween : Tween = null):
 	if !tween:
 		tween = get_tree().create_tween()
 	
+	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
+	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
+		Game.status_bar_ui.level_text.text = tr("ui_shop_title")
+		Game.status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
+		
 		self.scale = Vector2(1.0, 0.0)
 		self.show()
 	)
-	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
+	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
+	tween.parallel().tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	
 	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.disabled = false if Game.board_size < 6 else true
 	
 	var items_pool = ["Flag", "Bomb", "C4", "Color Palette", "Hot Dog", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
 	var relics_pool = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone", "RockBottom"]
-	var skills_pool = ["Xiao", "RoLL", "Mat.", "Qiang", "Se", "Huan", "Chou", "Jin", "Bao", "Fang", "Fen", "Xing"]
 	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	
 	for n in list1.get_children():
@@ -127,34 +133,19 @@ func enter(tween : Tween = null):
 				)
 				list2.add_child(ui)
 		)
-	if randf() < 0.5:
-		for i in 1:
-			tween.tween_interval(0.04)
-			tween.tween_callback(func():
-				var name = random_item(skills_pool, Game.skills)
-				if name:
-					var ui = item_pb.instantiate()
-					var skill = Skill.new()
-					skill.setup(name)
-					ui.setup("Skill", skill, skill.price, func():
-						Game.add_skill(skill)
-					)
-					list2.add_child(ui)
-			)
-	else:
-		for i in 1:
-			tween.tween_interval(0.04)
-			tween.tween_callback(func():
-				var name = random_item(patterns_pool, Game.patterns)
-				if name:
-					var ui = item_pb.instantiate()
-					var pattern = Pattern.new()
-					pattern.setup(name)
-					ui.setup("Pattern", pattern, pattern.price, func():
-						Game.add_pattern(pattern)
-					)
-					list2.add_child(ui)
-			)
+	for i in 1:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var name = random_item(patterns_pool, Game.patterns)
+			if name:
+				var ui = item_pb.instantiate()
+				var pattern = Pattern.new()
+				pattern.setup(name)
+				ui.setup("Pattern", pattern, pattern.price, func():
+					Game.add_pattern(pattern)
+				)
+				list2.add_child(ui)
+		)
 	return tween
 
 func exit(tween : Tween = null):
@@ -171,6 +162,7 @@ func exit(tween : Tween = null):
 		self.hide()
 	)
 	if Game.stage == Game.Stage.LevelOver:
+		Game.board_ui.enter(tween, true)
 		Game.new_level(tween)
 	return tween
 

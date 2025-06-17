@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=16 format=3 uid="uid://40bpuolcf1pa"]
+[gd_resource type="SpriteFrames" load_steps=28 format=3 uid="uid://40bpuolcf1pa"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_jhdk4"]
 [ext_resource type="Texture2D" uid="uid://b53u6jlu530x8" path="res://images/smile.png" id="2_01ho6"]
@@ -15,6 +15,18 @@
 [ext_resource type="Texture2D" uid="uid://chbr6sjhiqdpx" path="res://images/relics/green_stone.png" id="12_aniqy"]
 [ext_resource type="Texture2D" uid="uid://c6l8s5agpf32k" path="res://images/relics/blue_stone.png" id="13_ok8o2"]
 [ext_resource type="Texture2D" uid="uid://be7eka2nod1st" path="res://images/relics/pink_stone.png" id="14_oersu"]
+[ext_resource type="Texture2D" uid="uid://cnkpgautfb5sr" path="res://images/relics/aries.png" id="16_ok8o2"]
+[ext_resource type="Texture2D" uid="uid://borj6rnx66exj" path="res://images/relics/taurus.png" id="17_oersu"]
+[ext_resource type="Texture2D" uid="uid://1ugk4ccoksu1" path="res://images/relics/gemini.png" id="18_m1dnc"]
+[ext_resource type="Texture2D" uid="uid://cgy0ti0nysy5h" path="res://images/relics/cancer.png" id="19_2ve00"]
+[ext_resource type="Texture2D" uid="uid://b0pn2b24mqkfr" path="res://images/relics/leo.png" id="20_a5srb"]
+[ext_resource type="Texture2D" uid="uid://cnx73ivj7vhvn" path="res://images/relics/virgo.png" id="21_t2nwl"]
+[ext_resource type="Texture2D" uid="uid://dd2t7jjge84om" path="res://images/relics/libra.png" id="22_qsaxu"]
+[ext_resource type="Texture2D" uid="uid://c38x6g1ny2p16" path="res://images/relics/scorpio.png" id="23_pf2js"]
+[ext_resource type="Texture2D" uid="uid://3rt0xdy2kb1d" path="res://images/relics/capricorn.png" id="24_4rswp"]
+[ext_resource type="Texture2D" uid="uid://c6c3gq4mfiexj" path="res://images/relics/sagittarius.png" id="24_oersu"]
+[ext_resource type="Texture2D" uid="uid://cvemrk8tu6qct" path="res://images/relics/aquarius.png" id="25_i2pox"]
+[ext_resource type="Texture2D" uid="uid://cslmd2bn43hp4" path="res://images/relics/pisces.png" id="26_bby5i"]
 
 [resource]
 animations = [{
@@ -63,6 +75,42 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("2_01ho6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_ok8o2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_oersu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_m1dnc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_2ve00")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_a5srb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_t2nwl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_qsaxu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_pf2js")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_oersu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_4rswp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_i2pox")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_bby5i")
 }],
 "loop": true,
 "name": &"default",

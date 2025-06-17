@@ -15,8 +15,6 @@ enum
 	LostItem,
 	GainRelic,
 	LostRelic,
-	GainSkill,
-	LostSkill,
 	GainPattern,
 	LostPattern,
 	ModifierChanged,

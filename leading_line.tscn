@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cuymy3p04xr0e"]
 
 [ext_resource type="Texture2D" uid="uid://crkqqw65wvb4a" path="res://images/line_segment.png" id="1_8e1k0"]
-[ext_resource type="Script" path="res://leading_line.gd" id="2_b8x3e"]
+[ext_resource type="Script" uid="uid://b1wyjmci71c3m" path="res://leading_line.gd" id="2_b8x3e"]
 
 [sub_resource type="Curve" id="Curve_5moag"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.450549), 0.0, 0.0, 0, 0]
