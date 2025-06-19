@@ -546,7 +546,7 @@ func start_game(saving : String = ""):
 		
 		for i in 1:
 			var r = Relic.new()
-			r.setup("Aries")
+			r.setup("Aquarius")
 			add_relic(r)
 		
 		for i in 72:

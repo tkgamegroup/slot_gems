@@ -236,24 +236,24 @@ relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座
 relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells in {range_i} w_range at random location.,当匹配到至少3个破坏符文时：(w_active) 在随机的位置爆炸并消除{range_i}w_range内的格子。
 relic_name_Taurus,Taurus,金牛座
-relic_desc_Taurus,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Taurus,When matching at least 3 Grow runes:,当匹配到至少3个生长符文时：
 relic_name_Gemini,Gemini,双子座
-relic_desc_Gemini,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Gemini,When matching at least 3 Wisdom runes:,当匹配到至少3个灵智符文时：
 relic_name_Cancer,Cancer,巨蟹座
-relic_desc_Cancer,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes:",当匹配到至少1个灵智、和2个生长符文时：
 relic_name_Leo,Leo,狮子座
-relic_desc_Leo,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Leo,"When matching at least 2 Destroy, and 1 Grow runes:",当匹配到至少2个破坏、和1个生长符文时：
 relic_name_Virgo,Virgo,处女座
-relic_desc_Virgo,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
 relic_name_Libra,Libra,天秤座
-relic_desc_Libra,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Libra,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
 relic_name_Scorpio,Scorpio,天蝎座
-relic_desc_Scorpio,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes:,当匹配到至少2个破坏、和1个灵智符文时：
 relic_name_Sagittarius,Sagittarius,射手座
-relic_desc_Sagittarius,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Sagittarius,When matching at least 2 Destroy and 1 Wisdom runes:,当匹配到至少2个破坏、和1个灵智符文时：
 relic_name_Capricorn,Capricorn,摩羯座
-relic_desc_Capricorn,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes:",当匹配到至少1个破坏、和1个生长符文时：
 relic_name_Aquarius,Aquarius,水瓶座
-relic_desc_Aquarius,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Aquarius,When matching at least 3 Wisdom runes:,当匹配到至少3个灵智符文时：
 relic_name_Pisces,Pisces ,双鱼座
-relic_desc_Pisces,"When matching at least 1 Destroy, 1 Wisdom, and 1 Grow runes:",当匹配到至少1个破坏、1个灵智、和1个生长符文时：
+relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少1个灵智、和2个生长符文时：

@@ -24,13 +24,16 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 	for c in coords:
 		var p = Pair.new(c, Board.get_gem_at(c).rune)
 		if p.second == Gem.Rune.Destroy:
+			if num_destroy < need_destroy:
+				runes.append(p)
 			num_destroy += 1
-			runes.append(p)
 		elif p.second == Gem.Rune.Wisdom:
-			num_wisdom += 1
+			if num_wisdom < need_wisdom:
+				num_wisdom += 1
 			runes.append(p)
 		elif p.second == Gem.Rune.Grow:
-			num_grow += 1
+			if num_grow < need_grow:
+				num_grow += 1
 			runes.append(p)
 	if num_destroy >= need_destroy && num_wisdom >= need_wisdom && num_grow >= num_grow:
 		var sps = []
@@ -271,33 +274,30 @@ func setup(n : String):
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 0, 3, data["coords"], tween)
+					active_constellation(0, 3, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var d = {}
 			d.target = Vector2i(-1, -1)
 			d.target_item = null
-			d.target_effect = null
 			d.place = Vector2i(-1, -1)
 			d.sp = null
-			tween.tween_callback(func():
-				var targets = Board.filter(func(g : Gem, i : Item):
-					return g && i != null
-				)
-				for ae in Board.active_effects:
-					if ae.type == HostType.Item:
-						targets.append(ae.coord)
-				var places = Board.filter(func(g : Gem, i : Item):
-					return g && !i && Board.get_active_effects_at(g.coord).is_empty()
-				)
-				if !targets.is_empty() && !places.is_empty():
-					d.target = targets.pick_random()
-					d.target_item = Board.get_item_at(d.target)
-					if !d.target_item:
-						d.target_effect = Board.get_active_effects_at(d.target).front()
-					d.place = places.pick_random()
-					
-					SEffect.add_leading_line(ui.get_global_rect().get_center(), Board.get_pos(d.target))
+			
+			var targets = Board.filter(func(g : Gem, i : Item):
+				return g && i != null
 			)
+			for ae in Board.active_effects:
+				if ae.type == HostType.Item:
+					targets.append(ae.coord)
+			var places = Board.filter(func(g : Gem, i : Item):
+				return g && !i && Board.get_active_effects_at(g.coord).is_empty()
+			)
+			if !targets.is_empty() && !places.is_empty():
+				d.target = targets.pick_random()
+				d.target_item = Board.get_item_at(d.target)
+				d.place = places.pick_random()
+				
+				SEffect.add_leading_line(ui.get_global_rect().get_center(), Board.get_pos(d.target))
+			
 			tween.tween_interval(0.3)
 			tween.tween_callback(func():
 				if d.target_item:
@@ -305,13 +305,6 @@ func setup(n : String):
 					d.sp.position = Board.get_pos(d.target)
 					d.sp.sprite_frames = Item.item_frames
 					d.sp.frame = d.target_item.image_id
-					d.sp.z_index = 4
-					Game.board_ui.cells_root.add_child(d.sp)
-				elif d.target_effect:
-					d.sp = Board.active_effect_pb.instantiate()
-					d.sp.position = Board.get_pos(d.target)
-					d.sp.sprite_frames = Item.item_frames
-					d.sp.frame = d.target_effect.host.image_id
 					d.sp.z_index = 4
 					Game.board_ui.cells_root.add_child(d.sp)
 			)
@@ -329,9 +322,6 @@ func setup(n : String):
 					Game.items.append(new_item)
 					
 					Board.set_item_at(d.place, new_item)
-				elif d.target_effect:
-					Board.activate(d.target_effect.host, d.target_effect.type, d.target_effect.effect_index, d.place, Board.ActiveReason.Duplicate)
-					pass
 				if d.sp:
 					d.sp.queue_free()
 			)
@@ -399,20 +389,18 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(2, 1, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			tween.tween_callback(func():
-				var cands = Board.filter(func(gem : Gem, item : Item):
-					return gem != null
-				)
-				if !cands.is_empty():
-					var ui_pos = ui.get_global_rect().get_center()
-					var targets = SMath.pick_n(cands, 3) 
-					tween.tween_callback(func():
-						for c in targets:
-							SEffect.add_leading_line(ui_pos, Board.get_pos(c))
-					)
-					tween.tween_interval(0.3)
-					Board.eliminate(targets, tween, Board.ActiveReason.Relic, self)
+			var cands = Board.filter(func(gem : Gem, item : Item):
+				return gem != null
 			)
+			if !cands.is_empty():
+				var ui_pos = ui.get_global_rect().get_center()
+				var targets = SMath.pick_n(cands, 1) 
+				tween.tween_callback(func():
+					for c in targets:
+						SEffect.add_leading_line(ui_pos, Board.get_pos(c))
+				)
+				tween.tween_interval(0.3)
+				Board.eliminate(targets, tween, Board.ActiveReason.Relic, self)
 	elif name == "Sagittarius":
 		image_id = 23
 		price = 5
@@ -437,6 +425,7 @@ func setup(n : String):
 					active_constellation(1, 0, 2, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			tween.tween_callback(func():
+				SSound.se_coin.play()
 				Game.float_text("+1G", ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.1, 0.0))
 				Game.coins += 1
 			)
@@ -451,23 +440,30 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 3, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			tween.tween_callback(func():
-				var cands = Board.filter(func(gem : Gem, item : Item):
-					return gem != null
-				)
-				if !cands.is_empty():
-					var ui_pos = ui.get_global_rect().get_center()
-					var targets = SMath.pick_n(cands, 1) 
-					tween.tween_callback(func():
-						for c in targets:
-							SEffect.add_leading_line(ui_pos, Board.get_pos(c))
-					)
-					tween.tween_interval(0.3)
-					tween.tween_callback(func():
-						for c in targets:
-							Board.get_gem_at(c).base_score += 1
-					)
+			var cands = Board.filter(func(gem : Gem, item : Item):
+				return gem != null
 			)
+			if !cands.is_empty():
+				var ui_pos = ui.get_global_rect().get_center()
+				var targets = SMath.pick_n(cands, 1) 
+				tween.tween_callback(func():
+					for c in targets:
+						var g = Board.get_gem_at(c)
+						if g:
+							SEffect.add_leading_line(ui_pos, Board.get_pos(c))
+				)
+				tween.tween_interval(0.3)
+				tween.tween_callback(func():
+					var ok = false
+					for c in targets:
+						var g = Board.get_gem_at(c)
+						if g:
+							Game.float_text("+1", Board.get_pos(c), Color(0.7, 0.3, 0.9))
+							g.base_score += 1
+							ok = true
+					if ok:
+						SSound.se_vibra.play()
+				)
 	elif name == "Pisces":
 		image_id = 26
 		price = 5
@@ -479,24 +475,30 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 1, 2, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			tween.tween_callback(func():
-				var cands = Board.filter(func(gem : Gem, item : Item):
-					if gem && gem.type != Gem.Type.Wild:
-						return true
-					return false
-				)
-				if !cands.is_empty():
-					var ui_pos = ui.get_global_rect().get_center()
-					var targets = SMath.pick_n(cands, 2) 
-					tween.tween_callback(func():
-						for c in targets:
+			var cands = Board.filter(func(gem : Gem, item : Item):
+				if gem && gem.type != Gem.Type.Wild:
+					return true
+				return false
+			)
+			if !cands.is_empty():
+				var ui_pos = ui.get_global_rect().get_center()
+				var targets = SMath.pick_n(cands, 2) 
+				tween.tween_callback(func():
+					for c in targets:
+						var g = Board.get_gem_at(c)
+						if g && g.type != Gem.Type.Wild:
 							SEffect.add_leading_line(ui_pos, Board.get_pos(c))
-					)
-					tween.tween_interval(0.3)
-					tween.tween_callback(func():
-						for c in targets:
-							Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild})
-					)
+				)
+				tween.tween_interval(0.3)
+				tween.tween_callback(func():
+					var ok = false
+					for c in targets:
+						var g = Board.get_gem_at(c)
+						if g && g.type != Gem.Type.Wild:
+							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.OnBoard)
+							ok = true
+					if ok:
+						SSound.se_vibra.play()
 				)
 
 func get_tooltip():
