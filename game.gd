@@ -20,6 +20,7 @@ const version_major : int = 1
 const version_minor : int = 0
 const version_patch : int = 3
 
+const UiGem = preload("res://ui_gem.gd")
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
 const UiBoard = preload("res://ui_board.gd")
@@ -39,7 +40,9 @@ const UiGameOver = preload("res://ui_game_over.gd")
 const UiLevelClear = preload("res://ui_level_clear.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
 const UiBagViewer = preload("res://ui_bag_viewer.gd")
+const gem_ui = preload("res://ui_gem.tscn")
 const popup_txt_pb = preload("res://popup_txt.tscn")
+const trail_pb = preload("res://trail.tscn")
 const mask_shader = preload("res://mask.gdshader")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
@@ -420,6 +423,42 @@ func add_status(s : String, col : Color):
 		status_tween = null
 	)
 
+func delete_gem(g : Gem):
+	if g.coord.x != -1 && g.coord.y == -1:
+		var idx = g.coord.x
+		var ui = Game.hand_ui.get_ui(idx)
+		ui.gem_ui.dissolve(0.5)
+		var tween = get_tree().create_tween()
+		tween.tween_interval(0.5)
+		tween.tween_callback(func():
+			Game.gems.erase(g)
+			Hand.draw()
+		)
+
+func duplicate_gem(g : Gem):
+	if g.coord.x != -1 && g.coord.y == -1:
+		var idx = g.coord.x
+		var original_ui = hand_ui.get_ui(idx)
+		var ui = gem_ui.instantiate()
+		ui.set_image(g.type, g.rune, g.bound_item.image_id if g.bound_item else 0)
+		ui.position = original_ui.global_position + Vector2(16.0, 16.0)
+		control_ui.add_child(ui)
+		var tween = get_tree().create_tween()
+		tween.tween_property(ui, "position", ui.position + Vector2(0.0, -40.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			ui.add_child(trail_pb.instantiate())
+		)
+		tween.tween_property(ui, "position", status_bar_ui.bag_button.get_global_rect().get_center(), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(ui, "scale", Vector2(0.2, 0.2), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			var new_g = Gem.new()
+			new_g.type = g.type
+			new_g.rune = g.rune
+			new_g.base_score = g.base_score
+			new_g.bonus_score = g.bonus_score
+			add_gem(new_g)
+		)
+
 func get_level_score(lv : int):
 	# 300, 800, 2000, 5000, 11000, 20000, 35000, 50000
 	match lv:
@@ -546,7 +585,7 @@ func start_game(saving : String = ""):
 		
 		for i in 1:
 			var r = Relic.new()
-			r.setup("Aquarius")
+			r.setup("Gemini")
 			add_relic(r)
 		
 		for i in 72:

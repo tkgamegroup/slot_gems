@@ -21,6 +21,13 @@ func draw():
 	ui.position.y = 50
 	return ui
 
+func erase(idx : int):
+	var g = grabs[idx]
+	grabs.erase(g)
+	
+	Game.hand_ui.remove_ui(idx)
+	return g
+
 func clear():
 	for g in grabs:
 		Game.release_gem(g)

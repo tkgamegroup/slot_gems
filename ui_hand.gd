@@ -7,6 +7,7 @@ const trail_pb = preload("res://trail.tscn")
 
 @onready var list = $Control
 const item_w = 32
+const item_h = 32
 const gap = 8
 
 var disabled : bool = false:
@@ -43,6 +44,11 @@ func add_ui(gem : Gem):
 	)
 	return ui
 
+func remove_ui(idx : int):
+	var n = list.get_child(idx)
+	n.queue_free()
+	list.remove_child(n)
+
 func fly_gem_from(gem : Gem, pos):
 	var ui = gem_ui.instantiate()
 	ui.set_image(gem.type, gem.rune, gem.bound_item.image_id if gem.bound_item else 0)
@@ -60,6 +66,9 @@ func fly_gem_from(gem : Gem, pos):
 		slot.position = final_pos - list.global_position
 	)
 	return tween
+
+func get_pos(idx : int):
+	return list.global_position + Vector2((item_w + gap) * idx + item_w * 0.5, item_h * 0.5)
 
 func end_pos():
 	return list.global_position + Vector2((item_w + gap) * list.get_child_count(), 0)

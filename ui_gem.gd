@@ -34,6 +34,7 @@ func set_image(_type : int, _rune : int, _item : int = 0):
 func dissolve(duration : float):
 	bg_sp.material = dissolve_mat
 	rune_sp.material = dissolve_mat
+	item_sp.material = dissolve_mat
 	var tween = get_tree().create_tween()
 	tween.tween_method(func(t):
 		dissolve_mat.set_shader_parameter("dissolve", t)
