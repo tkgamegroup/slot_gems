@@ -26,9 +26,6 @@ func get_ui(idx : int) -> UiSlot:
 func add_ui(gem : Gem):
 	var ui = slot_ui.instantiate()
 	ui.gem = gem
-	gem.coord = Vector2i(list.get_child_count(), -1)
-	if gem.bound_item:
-		gem.bound_item.coord = Vector2i(list.get_child_count(), -1)
 	list.add_child(ui)
 	ui.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
@@ -39,7 +36,7 @@ func add_ui(gem : Gem):
 					Drag.start("gem", ui.gem, ui, func(target):
 						SSound.se_drop_item.play()
 						if target:
-							ui.queue_free()
+							Hand.erase(ui.get_index())
 					)
 	)
 	return ui

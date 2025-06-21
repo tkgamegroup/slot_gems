@@ -383,8 +383,6 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	var combos_mult = combos if affected_by_combos else 1
 	var mult = int(combos_mult * score_mult)
 	var add_value = base
-	#add_value *= mult
-	#score += add_value
 	
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
@@ -423,41 +421,54 @@ func add_status(s : String, col : Color):
 		status_tween = null
 	)
 
-func delete_gem(g : Gem):
-	if g.coord.x != -1 && g.coord.y == -1:
-		var idx = g.coord.x
-		var ui = Game.hand_ui.get_ui(idx)
-		ui.gem_ui.dissolve(0.5)
-		var tween = get_tree().create_tween()
-		tween.tween_interval(0.5)
-		tween.tween_callback(func():
-			Game.gems.erase(g)
+func delete_gem(g : Gem, ui, from : String = "hand"):
+	var idx = g.coord.x
+	SSound.se_trash.play()
+	ui.dissolve(0.5)
+	var tween = get_tree().create_tween()
+	tween.tween_interval(0.5)
+	tween.tween_callback(func():
+		if from == "hand":
+			Hand.erase(idx)
+		Game.bag_gems.erase(g)
+		Game.gems.erase(g)
+		if from == "hand" || from == "craft_slot":
 			Hand.draw()
-		)
+	)
 
-func duplicate_gem(g : Gem):
-	if g.coord.x != -1 && g.coord.y == -1:
-		var idx = g.coord.x
-		var original_ui = hand_ui.get_ui(idx)
-		var ui = gem_ui.instantiate()
-		ui.set_image(g.type, g.rune, g.bound_item.image_id if g.bound_item else 0)
-		ui.position = original_ui.global_position + Vector2(16.0, 16.0)
-		control_ui.add_child(ui)
-		var tween = get_tree().create_tween()
-		tween.tween_property(ui, "position", ui.position + Vector2(0.0, -40.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-		tween.tween_callback(func():
-			ui.add_child(trail_pb.instantiate())
-		)
-		tween.tween_property(ui, "position", status_bar_ui.bag_button.get_global_rect().get_center(), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-		tween.parallel().tween_property(ui, "scale", Vector2(0.2, 0.2), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-		tween.tween_callback(func():
-			var new_g = Gem.new()
-			new_g.type = g.type
-			new_g.rune = g.rune
-			new_g.base_score = g.base_score
-			new_g.bonus_score = g.bonus_score
-			add_gem(new_g)
-		)
+func duplicate_gem(g : Gem, ui, from : String = "hand"):
+	SSound.se_enchant.play()
+	var new_ui = gem_ui.instantiate()
+	new_ui.set_image(g.type, g.rune, g.bound_item.image_id if g.bound_item else 0)
+	new_ui.position = ui.global_position
+	if from == "hand":
+		new_ui.position += Vector2(16.0, 16.0)
+	game_ui.add_child(new_ui)
+	var tween = get_tree().create_tween()
+	tween.tween_property(new_ui, "position", new_ui.position + Vector2(0.0, -40.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	tween.tween_callback(func():
+		new_ui.add_child(trail_pb.instantiate())
+	)
+	tween.tween_property(new_ui, "position", status_bar_ui.bag_button.get_global_rect().get_center(), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.parallel().tween_property(new_ui, "scale", Vector2(0.2, 0.2), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.tween_callback(func():
+		new_ui.queue_free()
+		var new_g = Gem.new()
+		new_g.type = g.type
+		new_g.rune = g.rune
+		new_g.base_score = g.base_score
+		new_g.bonus_score = g.bonus_score
+		new_g.mult = g.mult
+		for b in g.buffs:
+			var new_b = Buff.new()
+			new_b.uid = Buff.s_uid
+			Buff.s_uid += 1
+			new_b.type = b.type
+			new_b.host = new_g
+			new_b.duration = b.duration
+			new_b.data = b.data.duplicate(true)
+		add_gem(new_g)
+	)
 
 func get_level_score(lv : int):
 	# 300, 800, 2000, 5000, 11000, 20000, 35000, 50000
@@ -730,38 +741,39 @@ func new_level(tween : Tween = null):
 	if !tween:
 		tween = get_tree().create_tween()
 	
-	score = 0
-	level += 1
-	target_score = get_level_score(level) * 1
-	history.level_reset()
-	
-	set_props(Props.None)
-	rolls = rolls_per_level
-	swaps = swaps_per_level
-	plays = plays_per_level
-	modifiers["first_roll_i"] = 1
-	modifiers["first_match_i"] = 1
-	
-	if level_clear_ui.visible:
-		level_clear_ui.exit()
-	if game_over_ui.visible:
-		game_over_ui.exit()
-	
-	for h in event_listeners:
-		if h.event == Event.LevelBegan:
-			h.host.on_event.call(Event.LevelBegan, null, null)
-	
-	save_to_file()
-	stage = Stage.Deploy
-	end_busy()
-	
+	tween.tween_callback(func():
+		score = 0
+		level += 1
+		target_score = get_level_score(level) * 1
+		history.level_reset()
+		
+		set_props(Props.None)
+		rolls = rolls_per_level
+		swaps = swaps_per_level
+		plays = plays_per_level
+		modifiers["first_roll_i"] = 1
+		modifiers["first_match_i"] = 1
+		6
+		if level_clear_ui.visible:
+			level_clear_ui.exit()
+		if game_over_ui.visible:
+			game_over_ui.exit()
+		
+		for h in event_listeners:
+			if h.event == Event.LevelBegan:
+				h.host.on_event.call(Event.LevelBegan, null, null)
+		
+		save_to_file()
+		stage = Stage.Deploy
+		end_busy()
+	)
 	tween.tween_interval(1.0)
-	banner_ui.appear(tr("ui_game_level") % level, tr("ui_game_target_score") % target_score, tween)
+	banner_ui.appear(tr("ui_game_level") % (level + 1), tr("ui_game_target_score") % get_level_score(level + 1), tween)
 	var temp_text1 = banner_ui.text1.duplicate()
 	var temp_text2 = banner_ui.text2.duplicate()
 	temp_text1.size = status_bar_ui.level_text.size
 	temp_text2.size = status_bar_ui.level_target.size
-	tween.tween_interval(1.0)
+	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		banner_ui.disappear()
 		banner_ui.add_child(temp_text1)
@@ -834,7 +846,7 @@ func save_to_file(name : String = "1"):
 		d["uid"] = b.uid
 		d["type"] = b.type
 		d["duration"] = b.duration
-		d["data"] = b.data.duplicate()
+		d["data"] = b.data.duplicate(true)
 	var save_hook = func(h : Hook, d : Dictionary):
 		d["event"] = h.event
 		d["host_type"] = h.host_type
@@ -886,6 +898,7 @@ func save_to_file(name : String = "1"):
 		gem["rune"] = g.rune
 		gem["base_score"] = g.base_score
 		gem["bonus_score"] = g.bonus_score
+		gem["mult"] = g.mult
 		gem["coord"] = g.coord
 		var buffs = []
 		for b in g.buffs:
@@ -1020,6 +1033,7 @@ func load_from_file(name : String = "1"):
 		g.rune = int(gem["rune"])
 		g.base_score = int(gem["base_score"])
 		g.bonus_score = int(gem["bonus_score"])
+		g.mult = gem["mult"]
 		g.coord = str_to_var("Vector2i" + gem["coord"])
 		var buffs = gem["buffs"]
 		for buff in buffs:

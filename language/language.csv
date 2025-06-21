@@ -4,6 +4,20 @@ w_colorless,Colorless,无光
 w_colorless_desc,Can not match with any color.,不可以与任何颜色匹配。
 w_wild,Wild,狂野
 w_wild_desc,Can match with any color.,可以与任何颜色匹配。
+w_omni,Omni,全能
+w_omni_desc,Can use as any rune.,可以代替任何符文。
+w_enchant,Enchant,附魔
+w_enchant_desc,Buff the gem.,增益宝石。
+w_enchant_charming,Charming,迷人的
+w_enchant_charming_desc,+6 Base Score.,+6 基础分数。
+w_enchant_sharp,Sharp,锐利的
+w_enchant_sharp_desc,+0.4 Mult.,+0.4 倍率。
+w_socket,Socket,镶嵌
+w_socket_desc,Embed an item into the gem. It will remove the rune of the gem.,把道具镶嵌到宝石中。会移除宝石上的符文。
+w_delete,Delete,删除
+w_delete_desc,Delete the gem.,删除宝石。
+w_duplicate,Duplicate,复制
+w_duplicate_desc,Duplicate the gem.,复制宝石。
 w_eliminate,Eliminate,消除
 w_eliminate_desc,Effect when the cell is eliminated.,格子被消除时的效果。
 w_active,Active,激活
@@ -71,6 +85,8 @@ tt_game_match_title,Match,匹配
 tt_game_match_content,"Start matching patterns and get score. When there are no matched patterns, matching stops.",开始匹配图案并得分。当没有匹配的图案时，匹配终止。
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
+ui_shop_refresh,Refresh,刷新
+ui_shop_upgrade,Upgrade,升级
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
@@ -89,6 +105,8 @@ rune_destroy,Destroy,破坏
 rune_wisdom,Wisdom,灵智
 rune_grow,Grow,生长
 gem_desc,Score: %d%s,分数: %d%s
+gem_mult,Mult: %.1f,倍率: %.1f
+gem_enchant,Enchant: %s,附魔: %s
 skill_name_Xiao,Xiao,消
 skill_desc_Xiao,Eliminate one random rune after next roll.,在下次滚动之后消除一种随机的符文。
 skill_name_Roll,RoLL,RoLL

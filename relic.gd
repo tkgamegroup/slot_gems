@@ -285,8 +285,7 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					if idx < Hand.grabs.size():
-						SSound.se_vibra.play()
-						Game.duplicate_gem(Hand.grabs[idx])
+						Game.duplicate_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
 				)
 	elif name == "Cancer":
 		image_id = 18
@@ -377,7 +376,7 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					if idx < Hand.grabs.size():
-						Game.delete_gem(Hand.grabs[idx])
+						Game.delete_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
 				)
 	elif name == "Sagittarius":
 		image_id = 23

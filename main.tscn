@@ -1,4 +1,4 @@
-[gd_scene load_steps=144 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=146 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -49,6 +49,8 @@
 [ext_resource type="AudioStream" uid="uid://byb7qfmj4ce2k" path="res://sounds/score_counting.wav" id="20_wy5fy"]
 [ext_resource type="Script" uid="uid://cejdm385qie14" path="res://ui_board.gd" id="21_34ol3"]
 [ext_resource type="AudioStream" uid="uid://dclq4u83610do" path="res://sounds/calc2.wav" id="21_phcyf"]
+[ext_resource type="AudioStream" uid="uid://2khtvdvdvbr0" path="res://sounds/enchant.wav" id="23_birbe"]
+[ext_resource type="AudioStream" uid="uid://3wg5uqxalyav" path="res://sounds/trash.wav" id="24_f1p13"]
 [ext_resource type="Texture2D" uid="uid://b1t2da5qbvmv8" path="res://images/hover.png" id="25_2un53"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://c7txrafqs3mca" path="res://images/bag.png" id="30_fg5n8"]
@@ -640,18 +642,23 @@ bus = &"SFX"
 
 [node name="Calc1" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("20_5dllo")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="Calc2" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("21_phcyf")
-max_polyphony = 10
 bus = &"SFX"
 
 [node name="ScoreCounting" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("20_wy5fy")
 volume_db = -5.0
-max_polyphony = 10
+bus = &"SFX"
+
+[node name="Enchant" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("23_birbe")
+bus = &"SFX"
+
+[node name="Trash" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("24_f1p13")
 bus = &"SFX"
 
 [node name="OpenBag" type="AudioStreamPlayer" parent="SFX"]
@@ -1165,7 +1172,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2/ShopButton" index="0"]
-text = "Refresh"
+text = "ui_shop_refresh"
 icon = ExtResource("61_ppx11")
 
 [node name="ShopButton2" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
@@ -1173,7 +1180,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2/ShopButton2" index="0"]
-text = "Upgrade"
+text = "ui_shop_upgrade"
 icon = ExtResource("62_1yv1y")
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2"]

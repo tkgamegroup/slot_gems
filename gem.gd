@@ -21,6 +21,7 @@ enum Rune
 	Destroy,
 	Wisdom,
 	Grow,
+	Omni,
 	Count = 3
 }
 
@@ -32,6 +33,7 @@ var rune : int = Rune.None
 
 var base_score : int = 4
 var bonus_score : int = 0
+var mult : float = 0.0
 var coord : Vector2i = Vector2i(-1, -1)
 var buffs : Array[Buff]
 var bound_item : Item = null
@@ -124,13 +126,23 @@ func get_base_score():
 	return ret
 
 func get_name():
-	var b = Buff.find_typed(self, Buff.Type.ChangeColor)
-	if b:
-		return "[color=GRAY][s]%s[/s][/color] %s (%s)" % [type_display_name(b.data["original_color_i"]), type_display_name(type), rune_display_name(rune)]
-	return "%s (%s)" % [type_display_name(type), rune_display_name(rune)]
+	var ret = ""
+	var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
+	if color_change && color_change.duration != Buff.Duration.Eternal:
+		ret = "[color=GRAY][s]%s[/s][/color] %s" % [type_display_name(color_change.data["original_color_i"]), type_display_name(type)]
+	else:
+		ret = type_display_name(type)
+	if rune != Rune.None:
+		ret += " (%s)" % rune_display_name(rune)
+	return ret
 
 func get_description():
-	return tr("gem_desc") % [get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
+	var ret = tr("gem_desc") % [get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
+	if mult != 0.0:
+		ret += "\n" + tr("gem_mult") % mult
+	for enchant in Buff.find_all_typed(self, Buff.Type.Enchant):
+		ret += "\n[color=GREEN]%s[/color]" % (tr("gem_enchant") % tr(enchant.data["type"]))
+	return ret
 
 func get_tooltip():
 	var ret : Array[Pair] = []

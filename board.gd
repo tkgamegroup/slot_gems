@@ -622,7 +622,10 @@ func matching():
 						SSound.se_marimba_scale[matched_num % 8].play()
 						Game.add_combo()
 						for c in res:
+							var g = get_gem_at(c)
 							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))
+							if g.mult != 0.0:
+								Game.score_mult += g.mult
 					)
 					matched_num += 1
 					

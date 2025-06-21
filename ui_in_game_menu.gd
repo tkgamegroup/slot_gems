@@ -41,7 +41,7 @@ func _ready() -> void:
 	main_menu_button.pressed.connect(func():
 		SSound.se_click.play()
 		for t in get_tree().get_processed_tweens():
-			t.kill()
+			t.custom_step(100.0)
 		exit()
 		
 		var tween = Game.get_tree().create_tween()

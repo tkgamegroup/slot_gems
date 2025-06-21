@@ -6,7 +6,8 @@ enum Type
 {
 	None,
 	ChangeColor,
-	ValueModifier
+	ValueModifier,
+	Enchant
 }
 
 enum Duration
@@ -79,16 +80,26 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 				b.data["mult"] = parms["mult"]
 			b.data["target"] = target
 			b.data["sub_attr"] = sub_attr
+		Type.Enchant:
+			b.data["type"] = parms["type"]
+			b.data["bid"] = parms["bid"]
 	host.buffs.append(b)
 	if type == Type.ValueModifier:
 		SUtils.calc_value_with_modifiers(host, b.data["target"], b.data["sub_attr"])
 	return b.uid
 
-static func find_typed(host, type : int):
+static func find_typed(host, type : int) -> Buff:
 	for b in host.buffs:
 		if b.type == type:
 			return b
 	return null
+
+static func find_all_typed(host, type : int) -> Array[Buff]:
+	var ret : Array[Buff] = []
+	for b in host.buffs:
+		if b.type == type:
+			ret.append(b)
+	return ret
 
 static func clear(host, durations : Array[int]):
 	SMath.remove_if(host.buffs, func(b : Buff):

@@ -2,7 +2,8 @@ extends Control
 
 const UiGem = preload("res://ui_gem.gd")
 
-@onready var title_lb : RichTextLabel = $RichTextLabel
+@onready var type_txt : Label = $HBoxContainer/Label
+@onready var thing_txt : RichTextLabel = $HBoxContainer/RichTextLabel
 @onready var slot : Control = $Control
 @onready var gem_ui : UiGem = $Control/UiGem
 @onready var img_open : TextureRect = $Control/Open
@@ -12,9 +13,8 @@ const UiGem = preload("res://ui_gem.gd")
 @onready var button : Button = $Button
 
 var gem : Gem = null
-var title : String
-var tooltip : Pair
-var button_text : String
+var type : String
+var thing : String
 var cost : int = 0
 var callback : Callable
 
@@ -34,23 +34,32 @@ func unload_gem():
 		button.disabled = true
 		gem = null
 
-func setup(_title : String, tt_title : String, tt_content : String, _button_text : String, _cost : int, cb : Callable):
-	title = _title
-	tooltip = Pair.new(tt_title, tt_content)
-	button_text = _button_text
+func setup(_type : String, _thing : String, _cost : int, cb : Callable):
+	type = _type
+	thing = _thing
 	cost = _cost
 	callback = cb
 
 func _ready() -> void:
-	title_lb.text = title
-	title_lb.mouse_entered.connect(func():
+	type_txt.text = tr(type)
+	type_txt.mouse_entered.connect(func():
 		SSound.se_select.play()
-		STooltip.show([tooltip])
+		STooltip.show([Pair.new(tr(type), tr(type + "_desc"))])
 	)
-	title_lb.mouse_exited.connect(func():
+	type_txt.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	button.text = "%s %dG" % [button_text, cost]
+	
+	thing_txt.text = tr(thing)
+	if !thing.is_empty():
+		thing_txt.mouse_entered.connect(func():
+			SSound.se_select.play()
+			STooltip.show([Pair.new(tr(thing), tr(thing + "_desc"))])
+		)
+		thing_txt.mouse_exited.connect(func():
+			STooltip.close()
+		)
+	button.text = "%dG" % cost
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			img_open.modulate = Color(0.7, 0.7, 0.7, 1.0)
@@ -84,18 +93,31 @@ func _ready() -> void:
 			button.disabled = true
 			Game.coins -= cost
 			SSound.se_coin.play()
-			particles1.emitting = true
+			
 			var tween = get_tree().create_tween()
-			tween.tween_interval(0.7)
+			tween.tween_interval(0.2)
+			if type == "w_enchant":
+				particles1.emitting = true
+				tween.tween_interval(0.7)
+				tween.tween_callback(func():
+					SSound.se_enchant.play()
+					particles2.emitting = true
+				)
+				tween.tween_interval(0.4)
 			tween.tween_callback(func():
-				particles2.emitting = true
+				if callback.call(gem):
+					gem = null
 			)
-			tween.tween_interval(0.4)
+			if type == "w_delete":
+				tween.tween_interval(0.7)
+			elif type == "w_duplicate":
+				tween.tween_interval(1.3)
+			else:
+				tween.tween_interval(0.3)
 			tween.tween_callback(func():
-				callback.call(gem)
 				unload_gem()
 			)
-			tween.tween_property(self, "modulate:a", 0.0, 0.3)
+			tween.tween_property(self, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 			tween.tween_callback(func():
 				self.queue_free()
 			)

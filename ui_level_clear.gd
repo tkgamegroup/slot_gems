@@ -116,7 +116,7 @@ func enter():
 
 func exit():
 	for t in get_tree().get_processed_tweens():
-		t.kill()
+		t.custom_step(100.0)
 	
 	Game.coins += coins
 	

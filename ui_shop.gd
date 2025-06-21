@@ -1,6 +1,6 @@
 extends Control
 
-const enchant_pb = preload("res://enchant_slot.tscn")
+const craft_slot_pb = preload("res://craft_slot.tscn")
 const item_pb = preload("res://ui_shop_item.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
@@ -12,6 +12,8 @@ const gem_ui = preload("res://ui_gem.tscn")
 
 var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
+var refresh_price : int = 3
+var refresh_increase : int = 1
 
 func random_item(cands : Array, list):
 	var indices = SMath.get_shuffled_indices(cands.size())
@@ -49,28 +51,12 @@ func buy_randomly():
 			return item.buy()
 	return false
 
-func enter(tween : Tween = null):
+func refresh(tween : Tween = null):
 	if !tween:
 		tween = get_tree().create_tween()
 	
-	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
-	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(func():
-		Game.status_bar_ui.level_text.text = tr("ui_shop_title")
-		Game.status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
-		
-		self.scale = Vector2(1.0, 0.0)
-		self.show()
-	)
-	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
-	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
-	tween.parallel().tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	
-	expand_board_button.price.text = "%d" % expand_board_price
-	expand_board_button.button.disabled = false if Game.board_size < 6 else true
-	
 	var items_pool = ["Flag", "Bomb", "C4", "Color Palette", "Hot Dog", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
-	var relics_pool = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone", "RockBottom"]
+	var relics_pool = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone"]
 	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	
 	for n in list1.get_children():
@@ -83,10 +69,38 @@ func enter(tween : Tween = null):
 	for i in 1:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
-			var ui = enchant_pb.instantiate()
-			ui.setup("Charming", "Charming", "+6 Base Score", "Enchant", 2, func(gem : Gem):
-				gem.base_score += 6
-			)
+			var ui = craft_slot_pb.instantiate()
+			if randf() >= 1.5:
+				if randf() >= 0.5:
+					if randf() >= 1.5:
+						ui.setup("w_enchant", "w_enchant_charming", 2, func(gem : Gem):
+							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
+							Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+						)
+					else:
+						ui.setup("w_enchant", "w_enchant_sharp", 2, func(gem : Gem):
+							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
+							Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+						)
+				else:
+					if randf() >= 0.5:
+						ui.setup("w_enchant", "w_ild", 5, func(gem : Gem):
+							gem.type = Gem.Type.Wild
+						)
+					else:
+						ui.setup("w_enchant", "w_omni", 5, func(gem : Gem):
+							gem.rune = Gem.Rune.Omni
+						)
+			else:
+				if randf() >= 1.5:
+					ui.setup("w_delete", "", 2, func(gem : Gem):
+						Game.delete_gem(gem, ui.gem_ui, "craft_slot")
+						return true
+					)
+				else:
+					ui.setup("w_duplicate", "", 2, func(gem : Gem):
+						Game.duplicate_gem(gem, ui.gem_ui, "craft_slot")
+					)
 			list1.add_child(ui)
 		)
 	for i in 0:
@@ -119,8 +133,8 @@ func enter(tween : Tween = null):
 				var relic = Relic.new()
 				relic.setup(name)
 				ui.setup("Relic", relic, relic.price, func():
-					var img = ui.image
-					img.reparent(self)
+					var img = AnimatedSprite2D.new()
+					self.add_child(img)
 					
 					var tween2 = Game.get_tree().create_tween()
 					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
@@ -146,12 +160,41 @@ func enter(tween : Tween = null):
 				)
 				list2.add_child(ui)
 		)
+	
+	return tween
+
+func enter(tween : Tween = null):
+	if !tween:
+		tween = get_tree().create_tween()
+	
+	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
+	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
+	tween.tween_callback(func():
+		Game.status_bar_ui.level_text.text = tr("ui_shop_title")
+		Game.status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
+		
+		self.scale = Vector2(1.0, 0.0)
+		self.show()
+	)
+	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
+	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
+	tween.parallel().tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	
+	expand_board_button.price.text = "%d" % expand_board_price
+	expand_board_button.button.disabled = !(Game.board_size < 6)
+	
+	refresh_button.price.text = "%d" % refresh_price
+	
+	refresh(tween)
+	
 	return tween
 
 func exit(tween : Tween = null):
 	if !tween:
 		tween = get_tree().create_tween()
 	tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.parallel().tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
+	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		for n in list1.get_children():
 			n.queue_free()
@@ -176,4 +219,7 @@ func _ready() -> void:
 	#exit_button.mouse_entered.connect(SSound.se_select.play)
 	expand_board_button.button.pressed.connect(func():
 		buy_expand_board()
+	)
+	refresh_button.button.pressed.connect(func():
+		refresh()
 	)

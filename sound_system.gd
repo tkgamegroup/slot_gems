@@ -17,6 +17,8 @@ extends Node
 @onready var se_calc1 : AudioStreamPlayer = $/root/Main/SFX/Calc1
 @onready var se_calc2 : AudioStreamPlayer = $/root/Main/SFX/Calc2
 @onready var se_score_counting : AudioStreamPlayer = $/root/Main/SFX/ScoreCounting
+@onready var se_enchant : AudioStreamPlayer = $/root/Main/SFX/Enchant
+@onready var se_trash : AudioStreamPlayer = $/root/Main/SFX/Trash
 @onready var se_open_bag : AudioStreamPlayer = $/root/Main/SFX/OpenBag
 @onready var se_close_bag : AudioStreamPlayer = $/root/Main/SFX/CloseBag
 @onready var se_drag_item : AudioStreamPlayer = $/root/Main/SFX/DragItem
