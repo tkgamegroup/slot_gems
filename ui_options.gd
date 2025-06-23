@@ -34,6 +34,9 @@ func enter(trans = true):
 	panel.show()
 
 func exit():
+	if Game.game_ui.visible:
+		SSound.music_clear()
+	
 	panel.hide()
 	self.self_modulate.a = 1.0
 	var tween = get_tree().create_tween()

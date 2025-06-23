@@ -87,6 +87,7 @@ ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
 ui_shop_upgrade,Upgrade,升级
+ui_buy,Buy,购买
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项

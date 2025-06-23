@@ -1,7 +1,10 @@
 extends Node
 
-@onready var se_bus_index = AudioServer.get_bus_index("SFX")
-@onready var music_bus_index = AudioServer.get_bus_index("Music")
+@onready var se_bus_index : int = AudioServer.get_bus_index("SFX")
+@onready var music_bus_index : int = AudioServer.get_bus_index("Music")
+@onready var music_eq : AudioEffectEQ = AudioServer.get_bus_effect(music_bus_index, 0)
+var music_eq_tween : Tween = null
+var music_eq_t : float = 0.0
 
 @onready var se_select : AudioStreamPlayer = $/root/Main/SFX/Select
 @onready var se_click : AudioStreamPlayer = $/root/Main/SFX/Click
@@ -35,6 +38,30 @@ extends Node
 
 var se_marimba_scale : Array[AudioStreamPlayer]
 
+func music_less_clear():
+	if music_eq_tween:
+		music_eq_tween.kill()
+		music_eq_tween = null
+	music_eq_tween = get_tree().create_tween()
+	music_eq_tween.tween_method(func(t : float):
+		music_eq.set_band_gain_db(2, -30.0 * t)
+		music_eq.set_band_gain_db(3, -30.0 * t)
+		music_eq.set_band_gain_db(4, -20.0 * t)
+		music_eq_t = t
+	, music_eq_t, 1.0, (1.0 - music_eq_t) * 1.5)
+
+func music_clear():
+	if music_eq_tween:
+		music_eq_tween.kill()
+		music_eq_tween = null
+	music_eq_tween = get_tree().create_tween()
+	music_eq_tween.tween_method(func(t : float):
+		music_eq.set_band_gain_db(2, -30.0 * t)
+		music_eq.set_band_gain_db(3, -30.0 * t)
+		music_eq.set_band_gain_db(4, -20.0 * t)
+		music_eq_t = t
+	, music_eq_t, 0.0, (music_eq_t - 0.0) * 1.5)
+
 func _ready() -> void:
 	se_marimba_scale.append($/root/Main/SFX/Marimba1)
 	se_marimba_scale.append($/root/Main/SFX/Marimba2)
@@ -45,5 +72,9 @@ func _ready() -> void:
 	se_marimba_scale.append($/root/Main/SFX/Marimba7)
 	se_marimba_scale.append($/root/Main/SFX/Marimba8)
 	music.finished.connect(func():
-		music.play()
+		var tween = get_tree().create_tween()
+		tween.tween_interval(1.0)
+		tween.tween_callback(func():
+			music.play()
+		)
 	)

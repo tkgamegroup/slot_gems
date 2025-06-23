@@ -2,12 +2,14 @@ extends PanelContainer
 
 const NumberText = preload("res://number_text.gd")
 
+@onready var score_container : Control = $HBoxContainer/VBoxContainer
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
 @onready var red_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Label2
 @onready var orange_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Label2
 @onready var green_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Label2
 @onready var blue_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Label2
 @onready var pink_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Label2
+@onready var level_container : Control = $HBoxContainer/VBoxContainer4
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
@@ -20,6 +22,12 @@ const NumberText = preload("res://number_text.gd")
 @onready var gear_button : Button = $HBoxContainer/HBoxContainer3/Gear
 
 func _ready() -> void:
+	score_container.mouse_entered.connect(func():
+		STooltip.close()
+	)
+	level_container.mouse_entered.connect(func():
+		STooltip.close()
+	)
 	board_size_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)

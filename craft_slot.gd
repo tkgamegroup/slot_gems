@@ -1,6 +1,7 @@
 extends Control
 
 const UiGem = preload("res://ui_gem.gd")
+const ShopButton = preload("res://shop_button.gd")
 
 @onready var type_txt : Label = $HBoxContainer/Label
 @onready var thing_txt : RichTextLabel = $HBoxContainer/RichTextLabel
@@ -10,7 +11,7 @@ const UiGem = preload("res://ui_gem.gd")
 @onready var img_close : TextureRect = $Control/Close
 @onready var particles1 : CPUParticles2D = $Control/CPUParticles2D
 @onready var particles2 : CPUParticles2D = $Control/CPUParticles2D2
-@onready var button : Button = $Button
+@onready var button : ShopButton = $ShopButton
 
 var gem : Gem = null
 var type : String
@@ -19,11 +20,12 @@ var cost : int = 0
 var callback : Callable
 
 func load_gem(_gem : Gem):
-	gem = _gem
-	img_open.hide()
-	img_close.show()
-	gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id if gem.bound_item else 0)
-	button.disabled = false
+	if _gem:
+		gem = _gem
+		img_open.hide()
+		img_close.show()
+		gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id if gem.bound_item else 0)
+		button.button.disabled = false
 
 func unload_gem():
 	if gem:
@@ -31,7 +33,7 @@ func unload_gem():
 		img_open.show()
 		img_close.hide()
 		gem_ui.set_image(0, 0, 0)
-		button.disabled = true
+		button.button.disabled = true
 		gem = null
 
 func setup(_type : String, _thing : String, _cost : int, cb : Callable):
@@ -59,7 +61,9 @@ func _ready() -> void:
 		thing_txt.mouse_exited.connect(func():
 			STooltip.close()
 		)
-	button.text = "%dG" % cost
+	button.button.text = tr(type)
+	button.button.disabled = true
+	button.price.text = "%d" % cost
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			img_open.modulate = Color(0.7, 0.7, 0.7, 1.0)
@@ -88,9 +92,9 @@ func _ready() -> void:
 	slot.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	button.pressed.connect(func():
+	button.button.pressed.connect(func():
 		if gem && Game.coins >= cost:
-			button.disabled = true
+			button.button.disabled = true
 			Game.coins -= cost
 			SSound.se_coin.play()
 			

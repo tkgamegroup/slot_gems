@@ -6,7 +6,7 @@ extends Control
 
 func appear(_text1 : String, _text2 : String, tween : Tween = null):
 	var vp = get_viewport_rect().size
-	self.position = Vector2(vp.x, (vp.y - self.size.y) / 4.0)
+	self.position = Vector2(vp.x, (vp.y - self.size.y) / 5.0)
 	bg.modulate.a = 1.0
 	text1.text = _text1
 	text2.text = _text2

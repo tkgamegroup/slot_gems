@@ -12,7 +12,8 @@ const gem_ui = preload("res://ui_gem.tscn")
 
 var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
-var refresh_price : int = 3
+var refresh_base_price : int = 3
+var refresh_price : int
 var refresh_increase : int = 1
 
 func random_item(cands : Array, list):
@@ -55,6 +56,10 @@ func refresh(tween : Tween = null):
 	if !tween:
 		tween = get_tree().create_tween()
 	
+	refresh_price += refresh_increase
+	refresh_button.button.disabled = true
+	refresh_button.price.text = "%d" % refresh_price
+	
 	var items_pool = ["Flag", "Bomb", "C4", "Color Palette", "Hot Dog", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
 	var relics_pool = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone"]
 	var patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
@@ -70,37 +75,59 @@ func refresh(tween : Tween = null):
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = craft_slot_pb.instantiate()
-			if randf() >= 1.5:
+			if randf() >= 0.4:
 				if randf() >= 0.5:
-					if randf() >= 1.5:
-						ui.setup("w_enchant", "w_enchant_charming", 2, func(gem : Gem):
-							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
-							Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+					ui.setup("w_enchant", "w_enchant_charming", 3, func(gem : Gem):
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
+						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+					)
+				else:
+					ui.setup("w_enchant", "w_enchant_sharp", 3, func(gem : Gem):
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
+						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+					)
+			else:
+				if randf() >= 0.25:
+					if randf() >= 0.5:
+						ui.setup("w_delete", "", 2, func(gem : Gem):
+							Game.delete_gem(gem, ui.gem_ui, "craft_slot")
+							return true
 						)
 					else:
-						ui.setup("w_enchant", "w_enchant_sharp", 2, func(gem : Gem):
-							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
-							Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+						ui.setup("w_duplicate", "", 5, func(gem : Gem):
+							Game.duplicate_gem(gem, ui.gem_ui, "craft_slot")
 						)
 				else:
 					if randf() >= 0.5:
-						ui.setup("w_enchant", "w_ild", 5, func(gem : Gem):
+						ui.setup("w_enchant", "w_wild", 8, func(gem : Gem):
 							gem.type = Gem.Type.Wild
 						)
 					else:
-						ui.setup("w_enchant", "w_omni", 5, func(gem : Gem):
+						ui.setup("w_enchant", "w_omni", 8, func(gem : Gem):
 							gem.rune = Gem.Rune.Omni
 						)
-			else:
-				if randf() >= 1.5:
-					ui.setup("w_delete", "", 2, func(gem : Gem):
-						Game.delete_gem(gem, ui.gem_ui, "craft_slot")
-						return true
-					)
-				else:
-					ui.setup("w_duplicate", "", 2, func(gem : Gem):
-						Game.duplicate_gem(gem, ui.gem_ui, "craft_slot")
-					)
+			list1.add_child(ui)
+		)
+	for i in 3:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var ui = item_pb.instantiate()
+			var gem = Gem.new()
+			gem.type = randi() % Gem.Type.Count + 1
+			gem.rune = randi() % Gem.Rune.Count + 1
+			ui.setup("Gem", gem, 1, func():
+				var img = ui.image
+				img.reparent(self)
+				
+				var tween2 = Game.get_tree().create_tween()
+				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+				tween2.parallel()
+				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+				tween2.tween_callback(func():
+					Game.add_gem(gem)
+					img.queue_free()
+				)
+			)
 			list1.add_child(ui)
 		)
 	for i in 0:
@@ -160,7 +187,9 @@ func refresh(tween : Tween = null):
 				)
 				list2.add_child(ui)
 		)
-	
+	tween.tween_callback(func():
+		refresh_button.button.disabled = false
+	)
 	return tween
 
 func enter(tween : Tween = null):
@@ -183,6 +212,7 @@ func enter(tween : Tween = null):
 	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.disabled = !(Game.board_size < 6)
 	
+	refresh_price = refresh_base_price
 	refresh_button.price.text = "%d" % refresh_price
 	
 	refresh(tween)

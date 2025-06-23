@@ -8,6 +8,7 @@ extends Control
 @onready var win_button : Button = $PanelContainer/VBoxContainer/Button5
 
 func enter():
+	SSound.music_less_clear()
 	STooltip.close()
 	self.self_modulate.a = 0.0
 	var tween = get_tree().create_tween()
@@ -30,11 +31,11 @@ func exit(trans = true):
 	
 func _ready() -> void:
 	resume_button.pressed.connect(func():
+		SSound.music_clear()
 		SSound.se_click.play()
 		exit()
 	)
 	options_button.pressed.connect(func():
-		SSound.se_click.play()
 		exit(false)
 		Game.options_ui.enter(false)
 	)
@@ -55,11 +56,13 @@ func _ready() -> void:
 		Game.end_transition(tween)
 	)
 	auto_place_items_button.pressed.connect(func():
+		SSound.music_clear()
 		SSound.se_click.play()
 		exit()
 		STest.auto_place_items()
 	)
 	win_button.pressed.connect(func():
+		SSound.music_clear()
 		SSound.se_click.play()
 		exit()
 		Game.win()

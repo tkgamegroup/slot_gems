@@ -28,6 +28,9 @@ func _ready() -> void:
 	continue_button.mouse_entered.connect(SSound.se_select.play)
 	continue_button.pressed.connect(func():
 		SSound.se_click.play()
+		
+		SSound.music_clear()
+		
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		exit(tween)
@@ -38,6 +41,9 @@ func _ready() -> void:
 	)
 	new_game_button.pressed.connect(func():
 		SSound.se_click.play()
+		
+		SSound.music_clear()
+		
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		exit(tween)
@@ -63,3 +69,5 @@ func _ready() -> void:
 	quit_button.mouse_entered.connect(SSound.se_select.play)
 	
 	version_text.text = "V%d.%02d.%03d" % [Game.version_major, Game.version_minor, Game.version_patch]
+	
+	SSound.music_less_clear()

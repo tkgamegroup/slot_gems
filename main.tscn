@@ -1,4 +1,4 @@
-[gd_scene load_steps=146 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=145 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -9,7 +9,6 @@
 [ext_resource type="AudioStream" uid="uid://cdbsvo83ubsau" path="res://sounds/board_setup.wav" id="5_43hdn"]
 [ext_resource type="Texture2D" uid="uid://do6b6cyshhe7t" path="res://images/green.png" id="6_1pecc"]
 [ext_resource type="AudioStream" uid="uid://cppphhvtr7mif" path="res://sounds/roll.wav" id="6_5xeb6"]
-[ext_resource type="AudioStream" uid="uid://byqjjkj1fohha" path="res://sounds/loop.wav" id="6_lm7v5"]
 [ext_resource type="AudioStream" uid="uid://d0vbvx1gvhi4t" path="res://sounds/slot_button.wav" id="7_17ivb"]
 [ext_resource type="Texture2D" uid="uid://vtgmwfo14dwb" path="res://images/blue.png" id="7_lex75"]
 [ext_resource type="AudioStream" uid="uid://dlhp0bbwk311u" path="res://sounds/tom.wav" id="8_30oiv"]
@@ -716,7 +715,8 @@ stream = ExtResource("31_c2n8d")
 bus = &"SFX"
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_lm7v5")
+volume_db = -10.0
+autoplay = true
 bus = &"Music"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]

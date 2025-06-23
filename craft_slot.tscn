@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://bvxv5b6nmq63w"]
+[gd_scene load_steps=8 format=3 uid="uid://bvxv5b6nmq63w"]
 
 [ext_resource type="Script" uid="uid://b5pwo17ho4uyi" path="res://craft_slot.gd" id="1_vs883"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_dl41d"]
 [ext_resource type="Texture2D" uid="uid://e4na8cwspcqj" path="res://images/slot_open.png" id="3_ea0bt"]
 [ext_resource type="Texture2D" uid="uid://bcsov5iskgy5q" path="res://images/slot_close.png" id="4_81fa8"]
+[ext_resource type="PackedScene" uid="uid://d0m0h6ygbqre" path="res://shop_button.tscn" id="5_dl41d"]
 
 [sub_resource type="Gradient" id="Gradient_jf4wm"]
 offsets = PackedFloat32Array(0.819703, 1)
@@ -11,60 +12,6 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="Gradient" id="Gradient_wbchi"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jf4wm"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yk45v"]
-bg_color = Color(0.41, 0.1804, 0.253107, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 5.0
-expand_margin_top = 4.0
-expand_margin_right = 5.0
-expand_margin_bottom = 4.0
-shadow_size = 1
-shadow_offset = Vector2(3, 2)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jf4wm"]
-bg_color = Color(0.41, 0.1804, 0.253107, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 5.0
-expand_margin_top = 4.0
-expand_margin_right = 5.0
-expand_margin_bottom = 4.0
-shadow_size = 1
-shadow_offset = Vector2(1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wbchi"]
-bg_color = Color(0.41, 0.1804, 0.253107, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 5.0
-expand_margin_top = 4.0
-expand_margin_right = 5.0
-expand_margin_bottom = 4.0
-shadow_size = 1
-shadow_offset = Vector2(1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c43mu"]
-bg_color = Color(0.823529, 0.364706, 0.509804, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 5.0
-expand_margin_top = 4.0
-expand_margin_right = 5.0
-expand_margin_bottom = 4.0
-shadow_size = 1
-shadow_offset = Vector2(3, 2)
 
 [node name="EnchantSlot" type="VBoxContainer"]
 custom_minimum_size = Vector2(44, 100)
@@ -80,10 +27,12 @@ size_flags_horizontal = 4
 [node name="Label" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
-theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 20
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 20
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
@@ -145,14 +94,6 @@ scale_amount_min = 3.0
 scale_amount_max = 3.0
 color_ramp = SubResource("Gradient_wbchi")
 
-[node name="Button" type="Button" parent="."]
+[node name="ShopButton" parent="." instance=ExtResource("5_dl41d")]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 12
-theme_override_styles/focus = SubResource("StyleBoxEmpty_jf4wm")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_yk45v")
-theme_override_styles/hover = SubResource("StyleBoxFlat_jf4wm")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_wbchi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_c43mu")
-disabled = true
-text = "AAA"

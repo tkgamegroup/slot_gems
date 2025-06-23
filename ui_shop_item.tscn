@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2oghrlvbbydy"]
+[gd_scene load_steps=4 format=3 uid="uid://b2oghrlvbbydy"]
 
 [ext_resource type="Script" uid="uid://cv2l3tl2csppp" path="res://ui_shop_item.gd" id="1_e4q1j"]
-[ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="2_p8w24"]
+[ext_resource type="PackedScene" uid="uid://d0m0h6ygbqre" path="res://shop_button.tscn" id="3_c0efl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ubel"]
 bg_color = Color(0.114897, 0.114897, 0.114897, 1)
@@ -10,72 +10,40 @@ border_width_top = 2
 border_width_right = 2
 border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cre24"]
-bg_color = Color(0.114897, 0.114897, 0.114897, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.313695, 0.200541, 0.00778849, 1)
-
-[node name="UiShopItem" type="BoxContainer"]
+[node name="UiShopItem" type="VBoxContainer"]
 offset_right = 64.0
 offset_bottom = 91.0
 mouse_filter = 0
 script = ExtResource("1_e4q1j")
 
-[node name="Base" type="VBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="Category" type="PanelContainer" parent="Base"]
+[node name="Category" type="PanelContainer" parent="."]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6ubel")
 
-[node name="MarginContainer" type="MarginContainer" parent="Base/Category"]
+[node name="MarginContainer" type="MarginContainer" parent="Category"]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_right = 8
 
-[node name="Label" type="Label" parent="Base/Category/MarginContainer"]
+[node name="Label" type="Label" parent="Category/MarginContainer"]
 layout_mode = 2
 text = "Item"
 
-[node name="Content" type="BoxContainer" parent="Base"]
+[node name="Content" type="BoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="Price" type="PanelContainer" parent="Base"]
+[node name="ShopButton" parent="." instance=ExtResource("3_c0efl")]
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_cre24")
 
-[node name="MarginContainer" type="MarginContainer" parent="Base/Price"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = -4
+[node name="Button" parent="ShopButton" index="0"]
+text = "ui_buy"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Base/Price/MarginContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-
-[node name="Label" type="Label" parent="Base/Price/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "2"
-
-[node name="Sprite2D" type="TextureRect" parent="Base/Price/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("2_p8w24")
-expand_mode = 1
-stretch_mode = 5
+[editable path="ShopButton"]

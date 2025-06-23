@@ -564,7 +564,7 @@ func start_game(saving : String = ""):
 		score_mult = 1.0
 		combos = modifiers["base_combo_i"]
 		level = 0
-		board_size = 3
+		board_size = 6
 		rolls_per_level = 4
 		swaps_per_level = 5
 		plays_per_level = 3
@@ -594,7 +594,7 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Gemini")
 			add_relic(r)
@@ -836,6 +836,7 @@ func toggle_in_game_menu():
 		STooltip.close()
 		in_game_menu_ui.enter()
 	else:
+		SSound.music_clear()
 		in_game_menu_ui.exit()
 
 func save_to_file(name : String = "1"):
