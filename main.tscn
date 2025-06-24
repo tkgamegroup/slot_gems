@@ -1,4 +1,4 @@
-[gd_scene load_steps=145 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=146 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -262,6 +262,8 @@ expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 shadow_size = 3
 shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_phcyf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_deavr"]
 
@@ -1122,6 +1124,7 @@ theme_override_font_sizes/font_size = 24
 
 [node name="Shop" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
+custom_minimum_size = Vector2(425, 295)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1153,6 +1156,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/separation = 16
+
+[node name="HSeparator" type="HSeparator" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_phcyf")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(64, 100)
@@ -1283,10 +1290,12 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
+mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Control"]
 scale = Vector2(0.5, 0.5)
@@ -1299,10 +1308,12 @@ text = "0"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
+mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Control"]
 scale = Vector2(0.5, 0.5)
@@ -1315,10 +1326,12 @@ text = "0"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
+mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Control"]
 scale = Vector2(0.5, 0.5)
@@ -1334,10 +1347,12 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
 layout_mode = 2
+mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Control"]
 scale = Vector2(0.5, 0.5)
@@ -1350,10 +1365,12 @@ text = "0"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
 layout_mode = 2
+mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Control"]
 scale = Vector2(0.5, 0.5)
@@ -1464,14 +1481,61 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 [node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 
-[node name="Bag" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="Bag" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/align_to_largest_stylebox = 0
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ejirs")
 icon = ExtResource("30_fg5n8")
 icon_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 12
+text = "0"
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 12
+text = "0/0"
 
 [node name="Gear" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 layout_mode = 2

@@ -1,7 +1,8 @@
 extends Control
 
-var central_coord = Vector2i(26, 12)
+const central_coord = Vector2i(26, 12)
 
+const UiCell = preload("res://ui_cell.gd")
 const cell_pb = preload("res://ui_cell.tscn")
 const outline_pb = preload("res://ui_outline.tscn")
 
@@ -27,6 +28,35 @@ func hover_coord(to_game_coord : bool = false):
 
 func get_pos(c : Vector2i):
 	return tilemap.map_to_local(c)
+
+func get_cell(c : Vector2i) -> UiCell:
+	return cells_root.get_child(c.y * Board.cx + c.x)
+
+func update_cell(c : Vector2i):
+	var cell = Board.get_cell(c)
+	var ui = get_cell(c)
+	ui.set_duplicant(false)
+	var g = Board.get_gem_at(c)
+	if g:
+		ui.set_gem_image(g.type, g.rune)
+		var i = Board.get_item_at(c)
+		if i:
+			ui.set_item_image(i.image_id, i.mounted.image_id if i.mounted else 0)
+			ui.set_duplicant(i.duplicant)
+		else:
+			ui.set_item_image(0, 0)
+	else:
+		ui.set_gem_image(0, 0)
+		ui.set_item_image(0, 0)
+	if cell.state == Cell.State.Normal:
+		ui.gem_ui.position = Vector2(0, 0)
+		ui.gem_ui.scale = Vector2(1, 1)
+		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	elif cell.state == Cell.State.Consumed:
+		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
+	ui.burn.visible = cell.state == Cell.State.Burning
+	ui.pinned.visible = cell.pinned
+	ui.frozen.visible = cell.frozen
 
 func clear():
 	for n in outlines_root.get_children():

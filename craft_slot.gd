@@ -5,6 +5,8 @@ const ShopButton = preload("res://shop_button.gd")
 
 @onready var type_txt : Label = $HBoxContainer/Label
 @onready var thing_txt : RichTextLabel = $HBoxContainer/RichTextLabel
+@onready var socket_sp_ctrl : Control = $HBoxContainer/Control
+@onready var socket_sp : AnimatedSprite2D = $HBoxContainer/Control/SocketSP
 @onready var slot : Control = $Control
 @onready var gem_ui : UiGem = $Control/UiGem
 @onready var img_open : TextureRect = $Control/Open
@@ -55,17 +57,27 @@ func _ready() -> void:
 	if thing is String:
 		thing_txt.text = tr(thing)
 	else:
-		thing_txt.text = "[img width=16]%s[/img]"
-	thing_txt.mouse_entered.connect(func():
-		SSound.se_select.play()
-		var desc = ""
-		if thing is String:
-			desc = tr(thing + "_desc")
-		STooltip.show([Pair.new(tr(thing), desc)])
-	)
-	thing_txt.mouse_exited.connect(func():
-		STooltip.close()
-	)
+		var item = thing as Item
+		socket_sp.frame = item.image_id
+		thing_txt.hide()
+		socket_sp_ctrl.show()
+	if thing is String:
+		thing_txt.mouse_entered.connect(func():
+			SSound.se_select.play()
+			STooltip.show([Pair.new(tr(thing), tr(thing + "_desc"))])
+		)
+		thing_txt.mouse_exited.connect(func():
+			STooltip.close()
+		)
+	else:
+		socket_sp_ctrl.mouse_entered.connect(func():
+			SSound.se_select.play()
+			var item = thing as Item
+			STooltip.show(item.get_tooltip())
+		)
+		socket_sp_ctrl.mouse_exited.connect(func():
+			STooltip.close()
+		)
 	button.button.text = tr(type)
 	button.button.disabled = true
 	button.price.text = "%d" % cost
@@ -106,7 +118,9 @@ func _ready() -> void:
 			var tween = get_tree().create_tween()
 			tween.tween_interval(0.2)
 			if type == "w_enchant":
-				particles1.emitting = true
+				tween.tween_callback(func():
+					particles1.emitting = true
+				)
 				tween.tween_interval(0.7)
 				tween.tween_callback(func():
 					SSound.se_enchant.play()
@@ -114,15 +128,35 @@ func _ready() -> void:
 				)
 				tween.tween_interval(0.4)
 			elif type == "w_socket":
-				pass
+				socket_sp.reparent(self)
+				tween.tween_property(socket_sp, "position", slot.get_rect().get_center() - Vector2(16.0, 16.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 			tween.tween_callback(func():
+				if type == "w_enchant":
+					pass
+				elif type == "w_socket":
+					pass
+				elif type == "w_delete":
+					pass
+				elif type == "w_duplicate":
+					pass
+				
 				if callback.call(gem):
 					gem = null
 			)
 			if type == "w_enchant":
 				tween.tween_interval(0.3)
 			elif type == "w_socket":
-				tween.tween_interval(0.3)
+				tween.tween_callback(func():
+					socket_sp.hide()
+					gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id)
+					particles1.emitting = true
+				)
+				tween.tween_interval(0.7)
+				tween.tween_callback(func():
+					SSound.se_enchant.play()
+					particles2.emitting = true
+				)
+				tween.tween_interval(0.7)
 			elif type == "w_delete":
 				tween.tween_interval(0.7)
 			elif type == "w_duplicate":

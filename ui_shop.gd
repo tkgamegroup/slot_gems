@@ -35,9 +35,21 @@ func buy_expand_board():
 	SSound.se_coin.play()
 	Game.coins -= expand_board_price
 	
-	Game.board_size += 1
 	expand_board_price += expand_board_price_increase
 	expand_board_button.button.disabled = true
+	
+	Game.board_size += 1
+	Board.resize(Game.board_size)
+	for y in Board.cy:
+		for x in Board.cx:
+			var c = Vector2i(x, y)
+			var g = Board.get_gem_at(c)
+			if !g:
+				g = Game.get_gem()
+				Board.set_gem_at(c, g)
+			else:
+				Game.board_ui.update_cell(c)
+	
 	return true
 
 func buy_randomly():
@@ -56,9 +68,7 @@ func refresh(tween : Tween = null):
 	if !tween:
 		tween = get_tree().create_tween()
 	
-	refresh_price += refresh_increase
 	refresh_button.button.disabled = true
-	refresh_button.price.text = "%d" % refresh_price
 	
 	var items_pool = ["Flag", "Bomb", "C4", "Color Palette", "Hot Dog", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline"]
 	var relics_pool = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone"]
@@ -106,19 +116,7 @@ func refresh(tween : Tween = null):
 						gem.type = randi() % Gem.Type.Count + 1
 						gem.rune = Gem.Rune.Omni
 						price = 5
-			ui.setup("Gem", gem, price, func():
-				var img = AnimatedSprite2D.new()
-				Game.game_ui.add_child(img)
-				
-				var tween2 = Game.get_tree().create_tween()
-				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-				tween2.parallel()
-				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
-				tween2.tween_callback(func():
-					Game.add_gem(gem)
-					img.queue_free()
-				)
-			)
+			ui.setup("gem", gem, price)
 			list1.add_child(ui)
 		)
 	for i in 1:
@@ -129,27 +127,15 @@ func refresh(tween : Tween = null):
 				var ui = item_pb.instantiate()
 				var relic = Relic.new()
 				relic.setup(name)
-				ui.setup("Relic", relic, relic.price, func():
-					var img = AnimatedSprite2D.new()
-					Game.game_ui.add_child(img)
-					
-					var tween2 = Game.get_tree().create_tween()
-					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-					tween2.parallel()
-					SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
-					tween2.tween_callback(func():
-						Game.add_relic(relic)
-						img.queue_free()
-					)
-				)
+				ui.setup("relic", relic, relic.price)
 				list1.add_child(ui)
 		)
 	for i in 1:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = craft_slot_pb.instantiate()
-			if randf() >= 0.4:
-				if randf() >= 0.5:
+			if randf() >= 0.0:
+				if randf() >= 1.5:
 					if randf() >= 0.5:
 						ui.setup("w_enchant", "w_enchant_charming", 3, func(gem : Gem):
 							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
@@ -165,6 +151,7 @@ func refresh(tween : Tween = null):
 					item.setup(items_pool.pick_random())
 					ui.setup("w_socket", item, 5, func(gem : Gem):
 						Game.add_item(item)
+						gem.rune = Gem.Rune.None
 						gem.bound_item = item
 					)
 			else:
@@ -197,9 +184,7 @@ func refresh(tween : Tween = null):
 				var ui = item_pb.instantiate()
 				var pattern = Pattern.new()
 				pattern.setup(name)
-				ui.setup("Pattern", pattern, pattern.price, func():
-					Game.add_pattern(pattern)
-				)
+				ui.setup("pattern", pattern, pattern.price)
 				list2.add_child(ui)
 		)
 	tween.tween_callback(func():
@@ -207,7 +192,7 @@ func refresh(tween : Tween = null):
 	)
 	return tween
 
-func enter(tween : Tween = null):
+func enter(tween : Tween = null, do_refresh : bool = true):
 	if !tween:
 		tween = get_tree().create_tween()
 	
@@ -230,7 +215,8 @@ func enter(tween : Tween = null):
 	refresh_price = refresh_base_price
 	refresh_button.price.text = "%d" % refresh_price
 	
-	refresh(tween)
+	if do_refresh:
+		refresh(tween)
 	
 	return tween
 
@@ -266,5 +252,13 @@ func _ready() -> void:
 		buy_expand_board()
 	)
 	refresh_button.button.pressed.connect(func():
+		if Game.coins < refresh_price:
+			return
+		SSound.se_coin.play()
+		Game.coins -= refresh_price
+		
+		refresh_price += refresh_increase
+		refresh_button.price.text = "%d" % refresh_price
+		
 		refresh()
 	)

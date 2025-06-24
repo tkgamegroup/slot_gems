@@ -27,6 +27,8 @@ const UiBoard = preload("res://ui_board.gd")
 const UiControl = preload("res://ui_control.gd")
 const UiHand = preload("res://ui_hand.gd")
 const UiShop = preload("res://ui_shop.gd")
+const UiShopItem = preload("res://ui_shop_item.gd")
+const CraftSlot = preload("res://craft_slot.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
 const UiRelicsBar = preload("res://ui_relics_bar.gd")
 const UiPatternsBar = preload("res://ui_patterns_bar.gd")
@@ -241,9 +243,6 @@ func set_props(t : int):
 		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Drag Around[img width=32]res://images/mouse_right_button.png[/img]Cancel"
 		Input.set_custom_mouse_cursor(grab_cursor, Input.CURSOR_ARROW, Vector2(5, 20))
 
-func get_cell_ui(c : Vector2i) -> UiCell:
-	return board_ui.cells_root.get_child(c.y * Board.cx + c.x)
-
 func add_gem(g : Gem, boardcast : bool = true):
 	if boardcast:
 		for h in event_listeners:
@@ -251,6 +250,19 @@ func add_gem(g : Gem, boardcast : bool = true):
 				h.host.on_event.call(Event.GainGem, null, g)
 	gems.append(g)
 	bag_gems.append(g)
+	
+	status_bar_ui.gem_count_text.text = "%d" % gems.size()
+
+func remove_gem(g : Gem, boardcast : bool = true):
+	bag_gems.erase(g)
+	gems.erase(g)
+	
+	if boardcast:
+		for h in event_listeners:
+			if h.event == Event.GainGem:
+				h.host.on_event.call(Event.LostGem, null, g)
+	
+	status_bar_ui.gem_count_text.text = "%d" % gems.size()
 
 func get_gem(g : Gem = null):
 	if g:
@@ -430,8 +442,7 @@ func delete_gem(g : Gem, ui, from : String = "hand"):
 	tween.tween_callback(func():
 		if from == "hand":
 			Hand.erase(idx)
-		Game.bag_gems.erase(g)
-		Game.gems.erase(g)
+		remove_gem(g)
 		if from == "hand" || from == "craft_slot":
 			Hand.draw()
 	)
@@ -562,9 +573,9 @@ func start_game(saving : String = ""):
 		score = 0
 		target_score = 0
 		score_mult = 1.0
-		combos = modifiers["base_combo_i"]
+		combos = 0
 		level = 0
-		board_size = 6
+		board_size = 3
 		rolls_per_level = 4
 		swaps_per_level = 5
 		plays_per_level = 3
@@ -599,77 +610,77 @@ func start_game(saving : String = ""):
 			r.setup("Gemini")
 			add_relic(r)
 		
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
 			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Orange
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
 			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Green
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
 			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Blue
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
 			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
-		for i in 72:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Pink
 			g.rune = Gem.Rune.Grow
@@ -810,8 +821,6 @@ func roll():
 	#if rolls > 0:
 		stage = Stage.Rolling
 		rolls -= 1
-		score_mult = 1.0
-		animation_speed = base_animation_speed
 		Board.roll()
 		var draw_num = draws_per_roll
 		draw_num = min(draw_num, bag_items.size())
@@ -826,6 +835,10 @@ func play():
 		stage = Stage.Matching
 		#plays -= 1
 		modifiers["first_match_i"] = 0
+	
+		combos = modifiers["base_combo_i"]
+		score_mult = 1.0
+		animation_speed = base_animation_speed
 		
 		calculator_bar_ui.appear()
 		begin_busy()
@@ -974,6 +987,43 @@ func save_to_file(name : String = "1"):
 		cell["event_listeners"] = event_listeners
 		cells.append(cell)
 	data["cells"] = cells
+	data["shopping"] = shop_ui.visible
+	if shop_ui.visible:
+		var list1 = []
+		for n in shop_ui.list1.get_children():
+			var ui = n as UiShopItem
+			var item = {}
+			item["cate"] = ui.cate
+			if ui.cate == "gem":
+				var g = ui.object as Gem
+				var object = {}
+				object["type"] = g.type
+				object["rune"] = g.rune
+				object["base_score"] = g.base_score
+				var enchants = []
+				for b in Buff.find_all_typed(g, Buff.Type.Enchant):
+					enchants.append(b.data["type"])
+				object["enchants"] = enchants
+				item["object"] = object
+			elif ui.cate == "relic":
+				var r = ui.object as Relic
+				var object = {}
+				object["name"] = r.name
+				item["object"] = object
+			item["price"] = ui.price
+			list1.append(item)
+		data["shop_list1"] = list1
+		var list2 = []
+		for n in shop_ui.list2.get_children():
+			var ui = n as CraftSlot
+			var slot = {}
+			slot["type"] = ui.type
+			if ui.thing is String:
+				slot["thing"] = ui.thing
+			else:
+				var i = ui.thing as Item
+				slot["thing"] = i.name
+		data["shop_list2"] = list2
 	
 	var file = FileAccess.open("user://save%s.json" % name, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data, "\t", false))
@@ -1094,7 +1144,7 @@ func load_from_file(name : String = "1"):
 	for cell in cells:
 		var coord = str_to_var("Vector2i" + cell["coord"])
 		var c = Board.add_cell(coord)
-		var ui = Game.get_cell_ui(coord)
+		var ui = Game.board_ui.get_cell(coord)
 		var gem_idx = cell["gem"]
 		var item_idx = cell["item"]
 		if gem_idx != -1:
@@ -1209,7 +1259,6 @@ func _ready() -> void:
 	)
 	calculator_bar_ui.finished.connect(func():
 		history.update()
-		combos = modifiers["base_combo_i"]
 		stage = Stage.Deploy
 		animation_speed = base_animation_speed
 		save_to_file()

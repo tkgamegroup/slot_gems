@@ -15,31 +15,62 @@ const relic_ui = preload("res://ui_relic.tscn")
 var cate : String
 var object
 var price : int
-var callback : Callable
 
-func setup(_cate : String, _object, _price : int, _callback : Callable):
+func setup(_cate : String, _object, _price : int):
 	cate = _cate
 	object = _object
 	price = _price
-	callback = _callback
 
 func buy():
 	if Game.coins < price:
 		Game.status_bar_ui.coins_text.hint()
 		return false
+	
+	button.button.disabled = true
 	SSound.se_coin.play()
 	Game.coins -= price
-	callback.call()
 	
-	get_parent().remove_child(self)
-	self.queue_free()
+	if cate == "gem":
+		var ui = gem_ui.instantiate()
+		ui.set_image(object.type, object.rune, 0)
+		ui.position = self.global_position
+		ui.scale = Vector2(2.0, 2.0)
+		Game.game_ui.add_child(ui)
+		
+		var tween = Game.get_tree().create_tween()
+		tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.4)
+		tween.parallel()
+		SAnimation.cubic_curve_to(tween, ui, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+		tween.tween_callback(func():
+			Game.add_gem(object)
+			ui.queue_free()
+			self.queue_free()
+		)
+	elif cate == "relic":
+		var img = AnimatedSprite2D.new()
+		img.sprite_frames = Relic.relic_frames
+		img.frame = object.image_id
+		img.position = self.global_position
+		img.scale = Vector2(2.0, 2.0)
+		Game.game_ui.add_child(img)
+		
+		var tween = Game.get_tree().create_tween()
+		SAnimation.cubic_curve_to(tween, img, Game.relics_bar_ui.get_pos(-1), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+		tween.tween_callback(func():
+			Game.add_relic(object)
+			img.queue_free()
+			self.queue_free()
+		)
+	
+	self.hide()
+	
 	return true
 
 func _ready() -> void:
 	if cate != "":
 		#cate_frame.show()
 		#cate_label.text = cate
-		if cate == "Gem":
+		if cate == "gem":
 			var ctrl = Control.new()
 			ctrl.custom_minimum_size = Vector2(64, 64)
 			var ui = gem_ui.instantiate()
@@ -55,18 +86,18 @@ func _ready() -> void:
 			)
 			content.add_child(ctrl)
 			ui.position = Vector2(32, 32)
-		elif cate == "Item":
+		elif cate == "item":
 			var ui = item_ui.instantiate()
 			ui.setup(object)
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
 			ui.position = Vector2(16, 16)
-		elif cate == "Pattern":
+		elif cate == "pattern":
 			var ui = pattern_ui.instantiate()
 			ui.setup(object, true)
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
-		elif cate == "Relic":
+		elif cate == "relic":
 			var ui = relic_ui.instantiate()
 			ui.setup(object)
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS

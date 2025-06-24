@@ -21,6 +21,8 @@ var cx : int
 var cy : int
 const cx_mult : int = 3
 var cells : Array[Cell]
+var curr_min_gem_num : int
+var next_min_gem_num : int
 
 const roll_speed : Curve = preload("res://roll_speed.tres")
 const particles_pb = preload("res://particles.tscn")
@@ -135,7 +137,7 @@ func format_coord(c : Vector2i):
 			c.y = c.y - Board.cy
 	return c
 
-func cell_at(c : Vector2i):
+func get_cell(c : Vector2i):
 	c = format_coord(c)
 	if !is_valid(c):
 		return null
@@ -158,18 +160,14 @@ func set_gem_at(c : Vector2i, g : Gem):
 			h.host.on_event.call(Event.GemLeft, null, og)
 		Game.release_gem(og)
 	cell.gem = g
-	var ui = Game.get_cell_ui(c)
 	if g:
 		g.coord = c
 		for h in event_listeners:
 			h.host.on_event.call(Event.GemEntered, null, g)
-		ui.set_gem_image(g.type, g.rune)
 	else:
-		ui.set_gem_image(0, 0)
 		cell.pinned = false
 		cell.frozen = false
-		ui.pinned.hide()
-		ui.frozen.hide()
+	Game.board_ui.update_cell(c)
 	return og
 
 func get_item_at(c : Vector2i):
@@ -201,9 +199,7 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 		for h in event_listeners:
 			h.host.on_event.call(Event.ItemEntered, null, i)
 	cell.item = i
-	var ui = Game.get_cell_ui(c)
-	ui.set_item_image(i.image_id if i else 0)
-	ui.set_duplicant(i.duplicant if i else false)
+	Game.board_ui.update_cell(c)
 	return oi
 
 func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
@@ -223,7 +219,7 @@ func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
 			if !oi.on_mount.call(i):
 				return true
 		oi.mounted = i
-		Game.get_cell_ui(c).set_item_image(oi.image_id, i.image_id)
+		Game.board_ui.update_cell(c)
 		return true
 	else:
 		set_item_at(c, i, reason)
@@ -245,20 +241,13 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 	if cells[idx].state == s:
 		return false
 	cells[idx].state = s
-	var ui = Game.get_cell_ui(c)
-	if s == Cell.State.Normal:
-		ui.gem_ui.position = Vector2(0, 0)
-		ui.gem_ui.scale = Vector2(1, 1)
-		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
-		ui.burn.hide()
-	elif s == Cell.State.Consumed:
-		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
-	elif s == Cell.State.Burning:
-		ui.burn.show()
-		if extra.has("pos"):
-			var tween = Game.get_tree().create_tween()
-			ui.burn.global_position = extra.pos
-			tween.tween_property(ui.burn, "position", Vector2(0, 0), 0.15)
+	Game.board_ui.update_cell(c)
+	'''
+	if extra.has("pos"):
+		var tween = Game.get_tree().create_tween()
+		ui.burn.global_position = extra.pos
+		tween.tween_property(ui.burn, "position", Vector2(0, 0), 0.15)
+	'''
 	return true
 
 func filter(cb : Callable) -> Array[Vector2i]:
@@ -310,9 +299,8 @@ func pin(c : Vector2i):
 	if cell.pinned || cell.frozen:
 		return false
 	if get_gem_at(c):
-		var ui = Game.get_cell_ui(c)
-		ui.pinned.show()
 		cell.pinned = true
+		Game.board_ui.update_cell(c)
 		return true
 
 func unpin(c : Vector2i):
@@ -320,9 +308,8 @@ func unpin(c : Vector2i):
 	if !is_valid(c):
 		return false
 	var idx = c.y * cx + c.x
-	var ui = Game.get_cell_ui(c)
-	ui.pinned.hide()
 	cells[idx].pinned = false
+	Game.board_ui.update_cell(c)
 
 func freeze(c : Vector2i):
 	c = format_coord(c)
@@ -333,9 +320,8 @@ func freeze(c : Vector2i):
 	if cell.frozen:
 		return false
 	if get_gem_at(c):
-		var ui = Game.get_cell_ui(c)
-		ui.frozen.show()
 		cell.frozen = true
+		Game.board_ui.update_cell(c)
 		return true
 
 func unfreeze(c : Vector2i):
@@ -343,15 +329,14 @@ func unfreeze(c : Vector2i):
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
-	var ui = Game.get_cell_ui(c)
-	ui.frozen.hide()
 	cells[idx].frozen = false
+	Game.board_ui.update_cell(c)
 
 func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, source = null):
 	var coords = []
 	var ptcs = []
 	for c in _coords:
-		if is_valid(c) && !cell_at(c).frozen:
+		if is_valid(c) && !get_cell(c).frozen:
 			coords.append(c)
 	for c in coords:
 		var i = get_item_at(c)
@@ -359,7 +344,7 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			if i.on_eliminate.is_valid():
 				i.on_eliminate.call(c, reason, source, tween)
 			set_item_at(c, null)
-		SMath.remove_if(cell_at(c).event_listeners, func(h : Hook):
+		SMath.remove_if(get_cell(c).event_listeners, func(h : Hook):
 			if h.event == Event.Eliminated:
 				h.host.on_event.call(Event.Eliminated, tween, c)
 				return h.once
@@ -453,6 +438,11 @@ func add_cell(c : Vector2i):
 	Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
 	return cell
 
+func update_min_gem_number():
+	curr_min_gem_num = cx * cy * 2
+	next_min_gem_num = (cx + 6) * (cy + 2) * 2
+	Game.status_bar_ui.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
+
 func setup(_hf_cy : int):
 	clear()
 	
@@ -461,16 +451,40 @@ func setup(_hf_cy : int):
 	for y in cy:
 		for x in cx:
 			add_cell(Vector2i(x, y))
+	update_min_gem_number()
 
 func resize(_hf_cy : int):
-	pass
+	var old_cells = cells.duplicate()
+	var old_cx = cx
+	var old_cy = cy
+	cy = _hf_cy * 2
+	cx = cy * cx_mult
+	var offset = Vector2i((cx - old_cx) / 2, (cy - old_cy) / 2)
+	for cell in old_cells:
+		cell.coord = cell.coord + offset
+	cells.clear()
+	Game.board_ui.clear()
+	for y in cy:
+		for x in cx:
+			var c = Vector2i(x, y)
+			var added = false
+			for cell in old_cells:
+				if cell.coord == c:
+					cells.append(cell)
+					added = true
+					break
+			if !added:
+				add_cell(c)
+			else:
+				Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
+	update_min_gem_number()
 
 func skip_above_unmovables(c : Vector2i) -> Vector2i:
 	var cc = c - Vector2i(0, 1)
 	while true:
 		if cc.y < 0:
 			return cc
-		if !cell_at(cc).is_unmovable():
+		if !get_cell(cc).is_unmovable():
 			return cc
 		cc.y -= 1
 	return Vector2i(-1, -1)
@@ -510,10 +524,10 @@ func roll():
 	for yy in cy:
 		for xx in cx:
 			var c = Vector2i(xx, yy)
-			if !cell_at(c).is_unmovable():
+			if !get_cell(c).is_unmovable():
 				set_item_at(c, null)
 				set_gem_at(c, null)
-				cell_at(c).event_listeners.clear()
+				get_cell(c).event_listeners.clear()
 	
 	roll_step()
 

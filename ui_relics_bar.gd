@@ -40,6 +40,11 @@ func clear():
 			list.remove_child(n)
 		list.custom_minimum_size = Vector2(item_w, 0)
 
+func get_pos(idx : int):
+	if idx == -1:
+		idx = list.get_child_count()
+	return list.global_position + Vector2(0, (item_h + gap) * idx)
+
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(item_w, 0)
 	

@@ -32,7 +32,7 @@ func die():
 		Type.ChangeColor: 
 			host.type = data["original_color_i"]
 			if host.coord.x != -1 && host.coord.y != -1:
-				Game.get_cell_ui(host.coord).set_gem_image(host.type, host.rune)
+				Game.board_ui.get_cell(host.coord).set_gem_image(host.type, host.rune)
 		Type.ValueModifier:
 			type = Type.None
 			SUtils.calc_value_with_modifiers(host, data["target"], data["sub_attr"])
@@ -49,7 +49,7 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 			b.data["original_color_i"] = host.type
 			host.type = parms["color"]
 			if host.coord.x != -1 && host.coord.y != -1:
-				Game.get_cell_ui(host.coord).set_gem_image(host.type, host.rune)
+				Game.board_ui.get_cell(host.coord).set_gem_image(host.type, host.rune)
 		Type.ValueModifier:
 			var target = parms["target"]
 			var sub_attr = parms["sub_attr"] if parms.has("sub_attr") else ""

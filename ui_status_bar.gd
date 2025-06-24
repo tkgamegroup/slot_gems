@@ -4,10 +4,15 @@ const NumberText = preload("res://number_text.gd")
 
 @onready var score_container : Control = $HBoxContainer/VBoxContainer
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
+@onready var red_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer
 @onready var red_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Label2
+@onready var orange_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2
 @onready var orange_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Label2
+@onready var green_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3
 @onready var green_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Label2
+@onready var blue_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer
 @onready var blue_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Label2
+@onready var pink_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
 @onready var pink_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Label2
 @onready var level_container : Control = $HBoxContainer/VBoxContainer4
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
@@ -18,10 +23,42 @@ const NumberText = preload("res://number_text.gd")
 @onready var hand_text : NumberText = $HBoxContainer/HBoxContainer4/Hand
 @onready var coins_container : Control = $HBoxContainer/HBoxContainer2
 @onready var coins_text : NumberText = $HBoxContainer/HBoxContainer2/Coins
-@onready var bag_button : Button = $HBoxContainer/HBoxContainer3/Bag
+@onready var bag_button : Button = $HBoxContainer/HBoxContainer3/Control/Bag
+@onready var gem_count_text : Label = $HBoxContainer/HBoxContainer3/Control/VBoxContainer/Label
+@onready var gem_count_limit_text : Label = $HBoxContainer/HBoxContainer3/Control/VBoxContainer/Label2
 @onready var gear_button : Button = $HBoxContainer/HBoxContainer3/Gear
 
 func _ready() -> void:
+	red_bouns_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Red Bouns", "%d" % Game.modifiers["red_bouns_i"])])
+	)
+	red_bouns_container.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	orange_bouns_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Orange Bouns", "%d" % Game.modifiers["orange_bouns_i"])])
+	)
+	orange_bouns_container.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	green_bouns_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Green Bouns", "%d" % Game.modifiers["green_bouns_i"])])
+	)
+	green_bouns_container.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	blue_bouns_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Blue Bouns", "%d" % Game.modifiers["blue_bouns_i"])])
+	)
+	blue_bouns_container.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	pink_bouns_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Pink Bouns", "%d" % Game.modifiers["pink_bouns_i"])])
+	)
+	pink_bouns_container.mouse_exited.connect(func():
+		STooltip.close()
+	)
 	score_container.mouse_entered.connect(func():
 		STooltip.close()
 	)
@@ -68,6 +105,18 @@ func _ready() -> void:
 			# trade
 			#Game.release_gem(dragging.gem)
 			#Hand.draw()
+	)
+	gem_count_text.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Gem Count", "%d" % Game.gems.size())])
+	)
+	gem_count_text.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	gem_count_limit_text.mouse_entered.connect(func():
+		STooltip.show([Pair.new("Gem Count Limit", "Upgrade Board Need Gems: %d\nMinimum Gems: %d" % [Board.next_min_gem_num, Board.curr_min_gem_num])])
+	)
+	gem_count_limit_text.mouse_exited.connect(func():
+		STooltip.close()
 	)
 	gear_button.pressed.connect(func():
 		SSound.se_click.play()

@@ -185,7 +185,7 @@ func setup(n : String):
 			for i in setup_range + 1:
 				for c in Board.offset_ring(coord, i):
 					if Board.is_valid(c):
-						Board.cell_at(c).event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Item, true))
+						Board.get_cell(c).event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Item, true))
 						coords.append(c)
 			return true
 		on_event = func(event : int, tween : Tween, data):
@@ -360,7 +360,7 @@ func setup(n : String):
 					Game.board_ui.underlay.add_child(fx)
 					
 					for c in coords:
-						var ui = Game.get_cell_ui(c).gem
+						var ui = Game.board_ui.get_cell(c).gem
 						var data = {"ui":ui,"vel":SMath.tangent2(Board.get_pos(c) - pos).normalized() * 1.4}
 						var tween2 = Game.get_tree().create_tween()
 						tween2.tween_method(func(t):
@@ -402,7 +402,7 @@ func setup(n : String):
 			)
 			tween.tween_method(func(r : float):
 				for c in coords:
-					var ui = Game.get_cell_ui(c).gem
+					var ui = Game.board_ui.get_cell(c).gem
 					if pos.distance_to(ui.global_position) < r:
 						ui.scale = Vector2(0.0, 0.0).max(ui.scale - Vector2(0.1, 0.1))
 			, 0.0, 1200.0, 3.0)
