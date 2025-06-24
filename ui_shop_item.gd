@@ -41,9 +41,10 @@ func _ready() -> void:
 		#cate_label.text = cate
 		if cate == "Gem":
 			var ctrl = Control.new()
-			ctrl.custom_minimum_size = Vector2(32, 32)
+			ctrl.custom_minimum_size = Vector2(64, 64)
 			var ui = gem_ui.instantiate()
 			ui.set_image(object.type, object.rune)
+			ui.scale = Vector2(2.0, 2.0)
 			ctrl.add_child(ui)
 			ctrl.mouse_entered.connect(func():
 				SSound.se_select.play()
@@ -53,7 +54,7 @@ func _ready() -> void:
 				STooltip.close()
 			)
 			content.add_child(ctrl)
-			ui.position = Vector2(16, 16)
+			ui.position = Vector2(32, 32)
 		elif cate == "Item":
 			var ui = item_ui.instantiate()
 			ui.setup(object)

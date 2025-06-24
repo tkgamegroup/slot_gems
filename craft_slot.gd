@@ -15,7 +15,7 @@ const ShopButton = preload("res://shop_button.gd")
 
 var gem : Gem = null
 var type : String
-var thing : String
+var thing
 var cost : int = 0
 var callback : Callable
 
@@ -36,7 +36,7 @@ func unload_gem():
 		button.button.disabled = true
 		gem = null
 
-func setup(_type : String, _thing : String, _cost : int, cb : Callable):
+func setup(_type : String, _thing, _cost : int, cb : Callable):
 	type = _type
 	thing = _thing
 	cost = _cost
@@ -52,15 +52,20 @@ func _ready() -> void:
 		STooltip.close()
 	)
 	
-	thing_txt.text = tr(thing)
-	if !thing.is_empty():
-		thing_txt.mouse_entered.connect(func():
-			SSound.se_select.play()
-			STooltip.show([Pair.new(tr(thing), tr(thing + "_desc"))])
-		)
-		thing_txt.mouse_exited.connect(func():
-			STooltip.close()
-		)
+	if thing is String:
+		thing_txt.text = tr(thing)
+	else:
+		thing_txt.text = "[img width=16]%s[/img]"
+	thing_txt.mouse_entered.connect(func():
+		SSound.se_select.play()
+		var desc = ""
+		if thing is String:
+			desc = tr(thing + "_desc")
+		STooltip.show([Pair.new(tr(thing), desc)])
+	)
+	thing_txt.mouse_exited.connect(func():
+		STooltip.close()
+	)
 	button.button.text = tr(type)
 	button.button.disabled = true
 	button.price.text = "%d" % cost
@@ -108,16 +113,20 @@ func _ready() -> void:
 					particles2.emitting = true
 				)
 				tween.tween_interval(0.4)
+			elif type == "w_socket":
+				pass
 			tween.tween_callback(func():
 				if callback.call(gem):
 					gem = null
 			)
-			if type == "w_delete":
+			if type == "w_enchant":
+				tween.tween_interval(0.3)
+			elif type == "w_socket":
+				tween.tween_interval(0.3)
+			elif type == "w_delete":
 				tween.tween_interval(0.7)
 			elif type == "w_duplicate":
 				tween.tween_interval(1.3)
-			else:
-				tween.tween_interval(0.3)
 			tween.tween_callback(func():
 				unload_gem()
 			)

@@ -71,20 +71,101 @@ func refresh(tween : Tween = null):
 		list2.remove_child(n)
 		n.queue_free()
 	
+	for i in 3:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var ui = item_pb.instantiate()
+			var gem = Gem.new()
+			var price = 0
+			if randf() > 0.4:
+				gem.type = randi() % Gem.Type.Count + 1
+				gem.rune = randi() % Gem.Rune.Count + 1
+				price = 1
+			else:
+				if randf() > 0.25:
+					gem.type = randi() % Gem.Type.Count + 1
+					gem.rune = randi() % Gem.Rune.Count + 1
+					if randf() > 0.5:
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
+						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+					else:
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
+						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+					price = 2
+				else:
+					if randf() > 0.66:
+						gem.type = Gem.Type.Colorless
+						gem.rune = randi() % Gem.Rune.Count + 1
+						gem.base_score = 30
+						price = 4
+					elif randf() > 0.5:
+						gem.type = Gem.Type.Wild
+						gem.rune = randi() % Gem.Rune.Count + 1
+						price = 5
+					else:
+						gem.type = randi() % Gem.Type.Count + 1
+						gem.rune = Gem.Rune.Omni
+						price = 5
+			ui.setup("Gem", gem, price, func():
+				var img = AnimatedSprite2D.new()
+				Game.game_ui.add_child(img)
+				
+				var tween2 = Game.get_tree().create_tween()
+				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+				tween2.parallel()
+				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+				tween2.tween_callback(func():
+					Game.add_gem(gem)
+					img.queue_free()
+				)
+			)
+			list1.add_child(ui)
+		)
+	for i in 1:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var name = random_item(relics_pool, Game.relics)
+			if name:
+				var ui = item_pb.instantiate()
+				var relic = Relic.new()
+				relic.setup(name)
+				ui.setup("Relic", relic, relic.price, func():
+					var img = AnimatedSprite2D.new()
+					Game.game_ui.add_child(img)
+					
+					var tween2 = Game.get_tree().create_tween()
+					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
+					tween2.parallel()
+					SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+					tween2.tween_callback(func():
+						Game.add_relic(relic)
+						img.queue_free()
+					)
+				)
+				list1.add_child(ui)
+		)
 	for i in 1:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = craft_slot_pb.instantiate()
 			if randf() >= 0.4:
 				if randf() >= 0.5:
-					ui.setup("w_enchant", "w_enchant_charming", 3, func(gem : Gem):
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
-						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
-					)
+					if randf() >= 0.5:
+						ui.setup("w_enchant", "w_enchant_charming", 3, func(gem : Gem):
+							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
+							Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+						)
+					else:
+						ui.setup("w_enchant", "w_enchant_sharp", 3, func(gem : Gem):
+							var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
+							Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+						)
 				else:
-					ui.setup("w_enchant", "w_enchant_sharp", 3, func(gem : Gem):
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
-						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+					var item = Item.new()
+					item.setup(items_pool.pick_random())
+					ui.setup("w_socket", item, 5, func(gem : Gem):
+						Game.add_item(item)
+						gem.bound_item = item
 					)
 			else:
 				if randf() >= 0.25:
@@ -106,75 +187,9 @@ func refresh(tween : Tween = null):
 						ui.setup("w_enchant", "w_omni", 8, func(gem : Gem):
 							gem.rune = Gem.Rune.Omni
 						)
-			list1.add_child(ui)
-		)
-	for i in 3:
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var ui = item_pb.instantiate()
-			var gem = Gem.new()
-			gem.type = randi() % Gem.Type.Count + 1
-			gem.rune = randi() % Gem.Rune.Count + 1
-			ui.setup("Gem", gem, 1, func():
-				var img = ui.image
-				img.reparent(self)
-				
-				var tween2 = Game.get_tree().create_tween()
-				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-				tween2.parallel()
-				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
-				tween2.tween_callback(func():
-					Game.add_gem(gem)
-					img.queue_free()
-				)
-			)
-			list1.add_child(ui)
+			list2.add_child(ui)
 		)
 	for i in 0:
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var ui = item_pb.instantiate()
-			var item = Item.new()
-			item.setup(items_pool.pick_random())
-			ui.setup("Item", item, item.price, func():
-				var img = ui.image
-				img.reparent(self)
-				
-				var tween2 = Game.get_tree().create_tween()
-				tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-				tween2.parallel()
-				SAnimation.cubic_curve_to(tween2, img, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
-				tween2.tween_callback(func():
-					Game.add_item(item)
-					img.queue_free()
-				)
-			)
-			list1.add_child(ui)
-		)
-	for i in 1:
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var name = random_item(relics_pool, Game.relics)
-			if name:
-				var ui = item_pb.instantiate()
-				var relic = Relic.new()
-				relic.setup(name)
-				ui.setup("Relic", relic, relic.price, func():
-					var img = AnimatedSprite2D.new()
-					self.add_child(img)
-					
-					var tween2 = Game.get_tree().create_tween()
-					tween2.tween_property(img, "scale", Vector2(1.0, 1.0), 0.3)
-					tween2.parallel()
-					SAnimation.cubic_curve_to(tween2, img, Game.relics_bar_ui.get_global_rect().end, Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
-					tween2.tween_callback(func():
-						Game.add_relic(relic)
-						img.queue_free()
-					)
-				)
-				list2.add_child(ui)
-		)
-	for i in 1:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var name = random_item(patterns_pool, Game.patterns)
