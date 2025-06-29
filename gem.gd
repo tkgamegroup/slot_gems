@@ -58,8 +58,8 @@ static func type_display_name(t : int):
 		Type.Green: return Game.tr("gem_green")
 		Type.Blue: return Game.tr("gem_blue")
 		Type.Pink: return Game.tr("gem_pink")
-		Type.Colorless: return Game.tr("gem_colorless")
-		Type.Wild: return Game.tr("gem_wild")
+		Type.Colorless: return "w_colorless"
+		Type.Wild: return "w_wild"
 	return ""
 
 static func name_to_type(s : String):
@@ -98,6 +98,7 @@ static func rune_name(r : int):
 		Rune.Destroy: return "Destroy"
 		Rune.Wisdom: return "Wisdom"
 		Rune.Grow: return "Grow"
+		Rune.Omni: return "Omni"
 	return "None"
 
 static func rune_display_name(r : int):
@@ -105,6 +106,7 @@ static func rune_display_name(r : int):
 		Rune.Destroy: return Game.tr("rune_destroy")
 		Rune.Wisdom: return Game.tr("rune_wisdom")
 		Rune.Grow: return Game.tr("rune_grow")
+		Rune.Omni: return "w_omni"
 	return "None"
 
 static func rune_icon(r : int):
@@ -112,6 +114,7 @@ static func rune_icon(r : int):
 		Rune.Destroy: return "res://images/rune_destroy.png"
 		Rune.Wisdom: return "res://images/rune_wisdom.png"
 		Rune.Grow: return "res://images/rune_grow.png"
+		Rune.Omni: return "res://images/rune_omni.png"
 	return ""
 
 func get_base_score():
@@ -125,7 +128,7 @@ func get_base_score():
 		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["pink_bouns_i"]
 	return ret
 
-func get_name():
+func get_tt_name():
 	var ret = ""
 	var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
 	if color_change && color_change.duration != Buff.Duration.Eternal:
@@ -146,5 +149,7 @@ func get_description():
 
 func get_tooltip():
 	var ret : Array[Pair] = []
-	ret.append(Pair.new(get_name(), get_description()))
+	ret.append(Pair.new(get_tt_name(), get_description()))
+	if bound_item:
+		ret.append_array(bound_item.get_tooltip())
 	return ret

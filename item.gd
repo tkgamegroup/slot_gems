@@ -171,7 +171,7 @@ func setup(n : String):
 				var coords = Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 				tween.tween_callback(func():
 					for c in coords:
-						var v = randi_range(0, 3)
+						var v = Game.rng.randi_range(0, 3)
 						Game.float_text("%dG" % v, Board.get_pos(c), Color(0.9, 0.75, 0.25))
 						Game.coins += v
 				)
@@ -213,7 +213,7 @@ func setup(n : String):
 						places.append(c)
 				tween.tween_callback(func():
 					Game.add_combo()
-					Game.add_score(Board.gem_score_at(places.pick_random()), Board.get_pos(coord))
+					Game.add_score(Board.gem_score_at(SMath.pick_random(places, Game.rng)), Board.get_pos(coord))
 				)
 				Board.eliminate([coord], tween, Board.ActiveReason.Item, self)
 			elif effect_index == 1:
@@ -228,7 +228,7 @@ func setup(n : String):
 					if Board.is_valid(c) && !Board.get_item_at(c):
 						places.append(c)
 				if !places.is_empty():
-					places = SMath.pick_n(places, 2)
+					places = SMath.pick_n_random(places, 2, Game.rng)
 					for c in places:
 						var new_item = Item.new()
 						new_item.setup("Virus")
@@ -326,7 +326,7 @@ func setup(n : String):
 				)
 				if !cands.is_empty():
 					var pos = Board.get_pos(coord)
-					var targets = SMath.pick_n(cands, 3) 
+					var targets = SMath.pick_n_random(cands, 3, Game.rng) 
 					for c in targets:
 						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
@@ -462,7 +462,7 @@ func setup(n : String):
 					if Board.is_valid(c) && !coords.has(c):
 						cands.append(c)
 				if !cands.is_empty():
-					var c = cands.pick_random()
+					var c = SMath.pick_random(cands, Game.rng)
 					var pos = Board.get_pos(c)
 					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
 					coords.append(c)
@@ -518,7 +518,7 @@ func setup(n : String):
 					if Board.is_valid(c) && !coords.has(c):
 						cands.append(c)
 				if !cands.is_empty():
-					var c = cands.pick_random()
+					var c = SMath.pick_random(cands, Game.rng)
 					var pos = Board.get_pos(c)
 					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
 					coords.append(c)
@@ -559,7 +559,7 @@ func setup(n : String):
 					if i.coord.x == -1 && i.coord.y == -1 && i.category == "Animal":
 						cands.append(i)
 				if !cands.is_empty():
-					var item = cands.pick_random()
+					var item = SMath.pick_random(cands, Game.rng)
 					var tween = Game.get_tree().create_tween()
 					tween.tween_callback(func():
 						SEffect.add_leading_line(Board.get_pos(coord), Game.status_bar_ui.bag_button.get_global_rect().get_center())
@@ -576,7 +576,7 @@ func setup(n : String):
 				if i.coord.x == -1 && i.coord.y == -1 && i.category == "Animal":
 					cands.append(i)
 			if !cands.is_empty():
-				var item = cands.pick_random()
+				var item = SMath.pick_random(cands, Game.rng)
 				var tween = Game.get_tree().create_tween()
 				tween.tween_callback(func():
 					SEffect.add_leading_line(Board.get_pos(coord), Game.status_bar_ui.bag_button.get_global_rect().get_center())
@@ -595,7 +595,7 @@ func setup(n : String):
 				return item && item.category == "Food"
 			)
 			if !targets.is_empty():
-				var c = targets.pick_random()
+				var c = SMath.pick_random(targets, Game.rng)
 				var i = Board.get_item_at(c)
 				var score = i.extra["score"]
 				var pos = Board.get_pos(c)
@@ -675,7 +675,7 @@ func setup(n : String):
 			var coords : Array[Vector2i] = []
 			for i in min(extra.num, 3):
 				var sub_coords : Array[Vector2i] = []
-				var d = SMath.pick_and_remove(arr)
+				var d = SMath.pick_and_remove(arr, Game.rng)
 				match d:
 					0: 
 						for x in Board.cx:
@@ -777,7 +777,7 @@ func setup(n : String):
 			)
 			if !cands.is_empty():
 				var pos = Board.get_pos(coord)
-				var targets = SMath.pick_n(cands, 5) 
+				var targets = SMath.pick_n_random(cands, 5, Game.rng) 
 				tween.tween_callback(func():
 					for c in targets:
 						SEffect.add_leading_line(pos, Board.get_pos(c))
@@ -920,7 +920,7 @@ func setup(n : String):
 						cands.append(c)
 				if !cands.is_empty():
 					var arr = []
-					for c in SMath.pick_n(cands, 2):
+					for c in SMath.pick_n_random(cands, 2, Game.rng):
 						arr.append(Triple.new(c, Board.get_pos(c), null))
 						coords.append(c)
 					tween.tween_interval(0.1)

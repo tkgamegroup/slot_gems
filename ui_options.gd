@@ -112,6 +112,8 @@ func _ready() -> void:
 				Game.lose()
 			elif cmd == "shop":
 				Game.shop_ui.enter()
+			elif cmd == "gold":
+				Game.coins += int(tokens[1])
 			elif cmd == "ai":
 				var num = 1
 				var tt = tokens[1]
@@ -122,7 +124,10 @@ func _ready() -> void:
 					var i = Item.new()
 					i.setup(tt)
 					Game.add_item(i)
-					Game.bag_items.append(i)
+			elif cmd == "ar":
+				var r = Relic.new()
+				r.setup(tokens[1])
+				Game.add_relic(r)
 			elif cmd == "test":
 				var mode = 0
 				var level_count = 1

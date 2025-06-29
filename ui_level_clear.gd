@@ -4,10 +4,10 @@ const settlement_ui = preload("res://ui_settlement.tscn")
 
 @onready var panel : PanelContainer = $PanelContainer
 @onready var title : RichTextLabel = $PanelContainer/VBoxContainer/Label
-@onready var continue_button : Button = $PanelContainer/VBoxContainer/Button
+@onready var button : Button = $PanelContainer/VBoxContainer/Button
+@onready var button_text : RichTextLabel = $PanelContainer/VBoxContainer/Button/RichTextLabel
 @onready var settlement_list : VBoxContainer = $PanelContainer/VBoxContainer/VBoxContainer
 @onready var particles = $PanelContainer/CPUParticles2D
-var rewards_count = 0
 var coins = 0
 
 func enter():
@@ -21,54 +21,46 @@ func enter():
 	for n in settlement_list.get_children():
 		settlement_list.remove_child(n)
 		n.queue_free()
-	continue_button.disabled = true
-	continue_button.hide()
-	title.text = "[popup span=12.0 dura=1.2]Level Clear![/popup]"
+	button.modulate.a = 0.0
+	button.disabled = true
+	title.text = "[popup span=12.0 dura=1.2]%s[/popup]" % tr("ui_level_clear_title")
 	particles.emitting = true
 	
 	tween.tween_callback(func():
 		var ui_s = settlement_ui.instantiate()
-		ui_s.name_str = "Level Rewards"
+		ui_s.name_str = tr("ui_level_clear_level_rewards")
 		ui_s.value_str = "5[img]res://images/coin.png[/img]"
 		settlement_list.add_child(ui_s)
 	)
 	coins += 5
-	tween.tween_interval(0.3)
-	tween.tween_callback(func():
-		var ui_s = settlement_ui.instantiate()
-		ui_s.name_str = "Rolls"
-		ui_s.value_str = "%d[img]res://images/coin.png[/img]" % Game.rolls
-		settlement_list.add_child(ui_s)
-	)
-	coins += Game.rolls
-	tween.tween_interval(0.2)
-	tween.tween_callback(func():
-		rewards_count += 1
-		var reward_btn = Button.new()
-		reward_btn.text = " "
-		var txt = RichTextLabel.new()
-		txt.bbcode_enabled = true
-		txt.fit_content = true
-		txt.autowrap_mode = TextServer.AUTOWRAP_OFF
-		txt.text = "Take %d[img]res://images/coin.png[/img]" % coins
-		txt.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		reward_btn.add_child(txt)
-		reward_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-		settlement_list.add_child(reward_btn)
-		txt.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
-		reward_btn.pressed.connect(func():
-			SSound.se_coin.play()
-			reward_btn.get_parent().remove_child(reward_btn)
-			reward_btn.queue_free()
-			rewards_count -= 1
-			exit()
+	if Game.swaps > 0:
+		tween.tween_interval(0.1)
+		tween.tween_callback(func():
+			var ui_s = settlement_ui.instantiate()
+			ui_s.name_str = tr("ui_level_clear_swap_rewards")
+			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % Game.swaps
+			settlement_list.add_child(ui_s)
 		)
+		coins += Game.swaps
+	if Game.coins >= 10:
+		tween.tween_interval(0.1)
+		tween.tween_callback(func():
+			var ui_s = settlement_ui.instantiate()
+			ui_s.name_str = tr("ui_level_clear_interest")
+			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % int(Game.coins / 10)
+			settlement_list.add_child(ui_s)
+		)
+		coins += int(Game.coins / 10)
+	tween.tween_interval(0.1)
+	tween.tween_callback(func():
+		button.modulate.a = 1.0
+		button.disabled = false
+		button_text.text = "%s[img]res://images/coin.png[/img]" % (tr("ui_level_clear_button_text") % coins)
 	)
 	
 	"""
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
-		rewards_count += 1
 		var reward_btn = Button.new()
 		reward_btn.text = "Select a Reward"
 		reward_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -77,9 +69,7 @@ func enter():
 		reward_btn.pressed.connect(func():
 			reward_btn.get_parent().remove_child(reward_btn)
 			reward_btn.queue_free()
-			rewards_count -= 1
-			if rewards_count == 0:
-				continue_button.disabled = false
+			button.disabled = false
 			
 			var rewards = []
 			
@@ -106,9 +96,6 @@ func enter():
 		)
 	)
 	tween.tween_interval(0.3)
-	tween.tween_callback(func():
-		continue_button.show()
-	)
 	"""
 	
 	self.show()
@@ -132,8 +119,8 @@ func exit():
 	return tween
 
 func _ready() -> void:
-	continue_button.pressed.connect(func():
-		SSound.se_click.play()
+	button.pressed.connect(func():
+		SSound.se_coin.play()
 		exit()
 	)
-	#continue_button.mouse_entered.connect(SSound.se_select.play)
+	#button.mouse_entered.connect(SSound.se_select.play)

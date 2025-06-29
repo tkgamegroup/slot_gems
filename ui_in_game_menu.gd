@@ -6,6 +6,7 @@ extends Control
 @onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
 @onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button4
 @onready var win_button : Button = $PanelContainer/VBoxContainer/Button5
+@onready var lose_button : Button = $PanelContainer/VBoxContainer/Button6
 
 func enter():
 	SSound.music_less_clear()
@@ -48,7 +49,10 @@ func _ready() -> void:
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		tween.tween_callback(func():
-			Game.board_ui.exit(null, false)
+			if Game.board_ui.visible:
+				Game.board_ui.exit(null, false)
+			elif Game.shop_ui.visible:
+				Game.shop_ui.exit(null, false)
 			Game.control_ui.exit()
 			Game.game_ui.hide()
 			Game.title_ui.enter()
@@ -66,4 +70,10 @@ func _ready() -> void:
 		SSound.se_click.play()
 		exit()
 		Game.win()
+	)
+	lose_button.pressed.connect(func():
+		SSound.music_clear()
+		SSound.se_click.play()
+		exit()
+		Game.lose()
 	)

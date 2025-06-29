@@ -46,9 +46,13 @@ func show(contents : Array[Pair], delay : float = 0.05):
 				c.second = c.second.replace("w_colorless", "[color=gray][b]%s[/b][/color]" % tr("w_colorless"))
 				add_word_desc(tr("w_colorless"), words, tr("w_colorless_desc"))
 			if c.second.find("w_wild") != -1 || c.first.find("w_wild") != -1:
-				c.first.replace("w_wild", tr("w_wild"))
+				c.first = c.first.replace("w_wild", tr("w_wild"))
 				c.second = c.second.replace("w_wild", "[color=gray][b]%s[/b][/color]" % tr("w_wild"))
 				add_word_desc(tr("w_wild"), words, tr("w_wild_desc"))
+			if c.second.find("w_omni") != -1 || c.first.find("w_omni") != -1:
+				c.first = c.first.replace("w_omni", tr("w_omni"))
+				c.second = c.second.replace("w_omni", "[color=gray][b]%s[/b][/color]" % tr("w_omni"))
+				add_word_desc(tr("w_omni"), words, tr("w_omni_desc"))
 			if c.second.find("w_eliminate") != -1:
 				c.second = c.second.replace("w_eliminate", "[color=gray][b]%s[/b][/color]" % tr("w_eliminate"))
 				add_word_desc("w_eliminate", words, tr("w_eliminate_desc"))

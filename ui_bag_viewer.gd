@@ -39,12 +39,12 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	if _select_num == 0:
-		title.text = "Bag"
+		title.text = tr("ui_bag_viewer_title")
 		legend1.show()
 		legend2.hide()
 		comfirm_button.hide()
 	else:
-		title.text = "Bag (%s)" % select_prompt
+		title.text = tr("ui_bag_viewer_title") + " " + select_prompt
 		legend2.show()
 		legend1.hide()
 		comfirm_button.show()
@@ -64,7 +64,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		)
 		var ui = gem_ui.instantiate()
 		ui.position = Vector2(16, 16)
-		ui.set_image(g.type, g.rune)
+		ui.set_image(g.type, g.rune, g.bound_item.image_id if g.bound_item else 0)
 		ctrl.add_child(ui)
 		var bar = create_bar()
 		ctrl.add_child(bar)
@@ -85,7 +85,11 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 			if g.coord.x != -1 && g.coord.y != -1:
 				bar.color = Color(0.9, 0.6, 0.3, 1.0)
 				bar.show()
+			elif g.coord.x != -1:
+				bar.color = Color(0.5, 0.8, 0.6)
+				bar.show()
 		gem_list.add_child(ctrl)
+	'''
 	for i in Game.items:
 		var ui = item_ui.instantiate()
 		ui.custom_minimum_size = Vector2(32, 36)
@@ -100,6 +104,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 			bar.color = Color(0.5, 0.8, 0.6, 1.0)
 			bar.show()
 		item_list.add_child(ui)
+	'''
 	
 	self.show()
 	panel.show()

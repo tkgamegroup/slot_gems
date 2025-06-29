@@ -17,7 +17,7 @@ func _ready() -> void:
 	for c in coords:
 		var cc = Board.cube_to_oddq(c)
 		tilemap.set_cell(cc, 0, Vector2i(0, 0))
-	if no_exp_bar:
+	if no_exp_bar || true:
 		exp_bar.hide()
 	self.mouse_entered.connect(func():
 		STooltip.show(pattern.get_tooltip())

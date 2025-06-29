@@ -18,8 +18,7 @@ const ShopButton = preload("res://shop_button.gd")
 var gem : Gem = null
 var type : String
 var thing
-var cost : int = 0
-var callback : Callable
+var price : int = 0
 
 func load_gem(_gem : Gem):
 	if _gem:
@@ -38,11 +37,10 @@ func unload_gem():
 		button.button.disabled = true
 		gem = null
 
-func setup(_type : String, _thing, _cost : int, cb : Callable):
+func setup(_type : String, _thing, _price : int):
 	type = _type
 	thing = _thing
-	cost = _cost
-	callback = cb
+	price = _price
 
 func _ready() -> void:
 	type_txt.text = tr(type)
@@ -80,7 +78,7 @@ func _ready() -> void:
 		)
 	button.button.text = tr(type)
 	button.button.disabled = true
-	button.price.text = "%d" % cost
+	button.price.text = "%d" % price
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			img_open.modulate = Color(0.7, 0.7, 0.7, 1.0)
@@ -110,64 +108,85 @@ func _ready() -> void:
 		STooltip.close()
 	)
 	button.button.pressed.connect(func():
-		if gem && Game.coins >= cost:
-			button.button.disabled = true
-			Game.coins -= cost
-			SSound.se_coin.play()
-			
-			var tween = get_tree().create_tween()
-			tween.tween_interval(0.2)
-			if type == "w_enchant":
-				tween.tween_callback(func():
-					particles1.emitting = true
-				)
-				tween.tween_interval(0.7)
-				tween.tween_callback(func():
-					SSound.se_enchant.play()
-					particles2.emitting = true
-				)
-				tween.tween_interval(0.4)
-			elif type == "w_socket":
-				socket_sp.reparent(self)
-				tween.tween_property(socket_sp, "position", slot.get_rect().get_center() - Vector2(16.0, 16.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		if !gem || Game.coins < price:
+			Game.status_bar_ui.coins_text.hint()
+			return
+		if type == "w_enchant":
+			var es = Buff.find_all_typed(gem, Buff.Type.Enchant)
+			if es.size() >= 2:
+				SSound.se_error.play()
+				Game.banner_ui.show_tip(tr("ui_enchant_quantity_limit"), "", 1.0)
+				return
+		
+		button.button.disabled = true
+		Game.coins -= price
+		SSound.se_coin.play()
+		
+		var tween = get_tree().create_tween()
+		tween.tween_interval(0.2)
+		if type == "w_enchant":
 			tween.tween_callback(func():
-				if type == "w_enchant":
-					pass
-				elif type == "w_socket":
-					pass
-				elif type == "w_delete":
-					pass
-				elif type == "w_duplicate":
-					pass
-				
-				if callback.call(gem):
-					gem = null
+				particles1.emitting = true
 			)
+			tween.tween_interval(0.7)
+			tween.tween_callback(func():
+				SSound.se_enchant.play()
+				particles2.emitting = true
+			)
+			tween.tween_interval(0.4)
+		elif type == "w_socket":
+			socket_sp.reparent(self)
+			tween.tween_property(socket_sp, "position", slot.get_rect().get_center() - Vector2(16.0, 16.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
 			if type == "w_enchant":
-				tween.tween_interval(0.3)
+				if thing == "w_enchant_charming":
+					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
+					Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+				elif thing == "w_enchant_sharp":
+					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
+					Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+				elif thing == "w_wild":
+					var bid = Buff.create(gem, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.Eternal)
+					Buff.create(gem, Buff.Type.Enchant, {"type":"w_wild","bid":bid}, Buff.Duration.Eternal)
+				elif thing == "w_omni":
+					var bid = Buff.create(gem, Buff.Type.ChangeRune, {"rune":Gem.Rune.Omni}, Buff.Duration.Eternal)
+					Buff.create(gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, Buff.Duration.Eternal)
 			elif type == "w_socket":
-				tween.tween_callback(func():
-					socket_sp.hide()
-					gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id)
-					particles1.emitting = true
-				)
-				tween.tween_interval(0.7)
-				tween.tween_callback(func():
-					SSound.se_enchant.play()
-					particles2.emitting = true
-				)
-				tween.tween_interval(0.7)
+				Game.add_item(thing)
+				gem.rune = Gem.Rune.None
+				gem.bound_item = thing
 			elif type == "w_delete":
-				tween.tween_interval(0.7)
+				Game.delete_gem(gem, gem_ui, "craft_slot")
+				gem = null
 			elif type == "w_duplicate":
-				tween.tween_interval(1.3)
+				Game.duplicate_gem(gem, gem_ui, "craft_slot")
+		)
+		if type == "w_enchant":
+			tween.tween_interval(0.3)
+		elif type == "w_socket":
 			tween.tween_callback(func():
-				unload_gem()
+				socket_sp.hide()
+				gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id)
+				particles1.emitting = true
 			)
-			tween.tween_property(self, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			tween.tween_interval(0.7)
 			tween.tween_callback(func():
-				self.queue_free()
+				SSound.se_enchant.play()
+				particles2.emitting = true
 			)
+			tween.tween_interval(0.7)
+		elif type == "w_delete":
+			tween.tween_interval(0.7)
+		elif type == "w_duplicate":
+			tween.tween_interval(1.3)
+		tween.tween_callback(func():
+			unload_gem()
+		)
+		tween.tween_property(self, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			Game.save_to_file()
+			self.queue_free()
+		)
 	)
 
 func _exit_tree() -> void:

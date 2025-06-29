@@ -49,19 +49,35 @@ static func find_and_remove(arr : Array, what):
 			return true
 	return false
 
-static func pick_and_remove(arr : Array):
-	var idx = randi_range(0, arr.size() - 1)
+static func pick_random(arr : Array, rng : RandomNumberGenerator = null):
+	if rng:
+		return arr[rng.randi_range(0, arr.size() - 1)]
+	return arr.pick_random()
+
+static func pick_and_remove(arr : Array, rng : RandomNumberGenerator = null):
+	var idx = -1
+	if rng:
+		idx = rng.randi_range(0, arr.size() - 1)
+	else:
+		idx = randi_range(0, arr.size() - 1)
 	var ret = arr[idx]
 	arr.remove_at(idx)
 	return ret
 
-static func pick_n(arr : Array, n : int) -> Array:
+static func pick_n_random(arr : Array, n : int, rng : RandomNumberGenerator = null) -> Array:
 	var ret = []
 	for i in min(n, arr.size()):
-		ret.append(pick_and_remove(arr))
+		ret.append(pick_and_remove(arr, rng))
 		if ret.is_empty():
 			break
 	return ret
+
+static func shuffle(arr : Array, rng : RandomNumberGenerator):
+	for i in arr.size() - 2:
+		var j = rng.randi_range(i, arr.size() - 1)
+		var tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
 
 static func remove_if(arr : Array, cb : Callable):
 	var targets = []
@@ -71,6 +87,12 @@ static func remove_if(arr : Array, cb : Callable):
 			targets.append(item)
 	for t in targets:
 		arr.erase(t)
+
+static func int_to_base64(v : int):
+	var bytes = PackedByteArray()
+	bytes.resize(4)
+	bytes.encode_s32(0, v)
+	return Marshalls.raw_to_base64(bytes)
 
 static func quadratic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, t: float):
 	var q0 = p0.lerp(p1, t)

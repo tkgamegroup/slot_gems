@@ -76,6 +76,7 @@ func add_cell(c : Vector2i):
 	cells_root.add_child(cell)
 
 func enter(tween : Tween = null, trans : bool = true):
+	tilemap.clear()
 	for y in Board.cy:
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))

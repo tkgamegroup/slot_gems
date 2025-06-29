@@ -5,15 +5,15 @@ const NumberText = preload("res://number_text.gd")
 @onready var score_container : Control = $HBoxContainer/VBoxContainer
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
 @onready var red_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer
-@onready var red_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Label2
+@onready var red_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText
 @onready var orange_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2
-@onready var orange_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Label2
+@onready var orange_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText
 @onready var green_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3
-@onready var green_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Label2
+@onready var green_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText
 @onready var blue_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer
-@onready var blue_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Label2
+@onready var blue_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText
 @onready var pink_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
-@onready var pink_bouns_text : Label = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Label2
+@onready var pink_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
 @onready var level_container : Control = $HBoxContainer/VBoxContainer4
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
@@ -30,31 +30,31 @@ const NumberText = preload("res://number_text.gd")
 
 func _ready() -> void:
 	red_bouns_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Red Bouns", "%d" % Game.modifiers["red_bouns_i"])])
+		STooltip.show([Pair.new(tr("tt_red_base_score"), "%d" % Game.modifiers["red_bouns_i"])])
 	)
 	red_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	orange_bouns_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Orange Bouns", "%d" % Game.modifiers["orange_bouns_i"])])
+		STooltip.show([Pair.new(tr("tt_orange_base_score"), "%d" % Game.modifiers["orange_bouns_i"])])
 	)
 	orange_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	green_bouns_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Green Bouns", "%d" % Game.modifiers["green_bouns_i"])])
+		STooltip.show([Pair.new(tr("tt_green_base_score"), "%d" % Game.modifiers["green_bouns_i"])])
 	)
 	green_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	blue_bouns_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Blue Bouns", "%d" % Game.modifiers["blue_bouns_i"])])
+		STooltip.show([Pair.new(tr("tt_blue_base_score"), "%d" % Game.modifiers["blue_bouns_i"])])
 	)
 	blue_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	pink_bouns_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Pink Bouns", "%d" % Game.modifiers["pink_bouns_i"])])
+		STooltip.show([Pair.new(tr("tt_pink_base_score"), "%d" % Game.modifiers["pink_bouns_i"])])
 	)
 	pink_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -72,7 +72,7 @@ func _ready() -> void:
 		STooltip.show([Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % Game.max_hand_grabs)])
 	)
 	coins_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new(tr("tt_game_coins_title"), "")])
+		STooltip.show([Pair.new(tr("tt_game_coins_title"), "%d" % Game.coins)])
 	)
 	coins_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -107,13 +107,13 @@ func _ready() -> void:
 			#Hand.draw()
 	)
 	gem_count_text.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Gem Count", "%d" % Game.gems.size())])
+		STooltip.show([Pair.new(tr("tt_game_gem_number"), "%d" % Game.gems.size())])
 	)
 	gem_count_text.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	gem_count_limit_text.mouse_entered.connect(func():
-		STooltip.show([Pair.new("Gem Count Limit", "Upgrade Board Need Gems: %d\nMinimum Gems: %d" % [Board.next_min_gem_num, Board.curr_min_gem_num])])
+		STooltip.show([Pair.new("", tr("tt_game_upgrade_number_and_min_number") % [Board.next_min_gem_num, Board.curr_min_gem_num])])
 	)
 	gem_count_limit_text.mouse_exited.connect(func():
 		STooltip.close()

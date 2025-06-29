@@ -69,7 +69,7 @@ func _input(event: InputEvent) -> void:
 					# drop on target
 					for t in targets:
 						if t.first == type:
-							if t.second == Game.board_ui:
+							if t.second == Game.board_ui && Game.board_ui.visible:
 								var c = Game.board_ui.hover_coord(true)
 								if Board.is_valid(c):
 									target = t

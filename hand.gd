@@ -47,6 +47,8 @@ func swap(coord : Vector2i, gem : Gem):
 		Game.swaps -= 1
 		
 		var og = Board.set_gem_at(coord, gem)
+		if gem.bound_item:
+			Board.set_item_at(coord, gem.bound_item)
 		get_gem_from(og, Board.get_pos(coord))
 		
 		return true

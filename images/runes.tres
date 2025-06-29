@@ -1,9 +1,10 @@
-[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://bgpse251ihp38"]
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://bgpse251ihp38"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_fku6t"]
 [ext_resource type="Texture2D" uid="uid://03641uiumwkc" path="res://images/rune_destroy.png" id="2_q3pnh"]
 [ext_resource type="Texture2D" uid="uid://bil43w0xe883m" path="res://images/rune_wisdom.png" id="3_7dsvm"]
 [ext_resource type="Texture2D" uid="uid://cu1rt4xk7q85q" path="res://images/rune_grow.png" id="4_u8fhl"]
+[ext_resource type="Texture2D" uid="uid://cmcx8t2hv88dh" path="res://images/rune_omni.png" id="5_7dsvm"]
 
 [resource]
 animations = [{
@@ -19,6 +20,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("4_u8fhl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_7dsvm")
 }],
 "loop": true,
 "name": &"default",

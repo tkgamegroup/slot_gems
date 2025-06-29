@@ -13,6 +13,8 @@ var enable_change : bool = true
 var tween : Tween = null
 
 func set_value(v : int):
+	if v == value:
+		return
 	if !enable_change:
 		value = v
 		text.text = "%d" % value
@@ -50,6 +52,8 @@ func set_value(v : int):
 
 var hint_tween : Tween = null
 func hint():
+	SSound.se_error.play()
+	
 	if hint_tween:
 		hint_tween.custom_step(100.0)
 	var original_color = text.get_theme_color("font_color")

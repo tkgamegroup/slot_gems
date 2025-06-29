@@ -15,21 +15,28 @@ const relic_ui = preload("res://ui_relic.tscn")
 var cate : String
 var object
 var price : int
+var quantity : int
 
-func setup(_cate : String, _object, _price : int):
+func setup(_cate : String, _object, _price : int, _quantity : int = 1):
 	cate = _cate
 	object = _object
 	price = _price
+	quantity = _quantity
 
 func buy():
 	if Game.coins < price:
 		Game.status_bar_ui.coins_text.hint()
+		return false
+	if cate == "relic" && Game.relics.size() >= 7:
+		SSound.se_error.play()
+		Game.banner_ui.show_tip(tr("ui_relics_count_limit"), "", 1.0)
 		return false
 	
 	button.button.disabled = true
 	SSound.se_coin.play()
 	Game.coins -= price
 	
+	var tween = Game.get_tree().create_tween()
 	if cate == "gem":
 		var ui = gem_ui.instantiate()
 		ui.set_image(object.type, object.rune, 0)
@@ -37,14 +44,13 @@ func buy():
 		ui.scale = Vector2(2.0, 2.0)
 		Game.game_ui.add_child(ui)
 		
-		var tween = Game.get_tree().create_tween()
 		tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.4)
 		tween.parallel()
 		SAnimation.cubic_curve_to(tween, ui, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 		tween.tween_callback(func():
 			Game.add_gem(object)
+			Game.sort_gems()
 			ui.queue_free()
-			self.queue_free()
 		)
 	elif cate == "relic":
 		var img = AnimatedSprite2D.new()
@@ -54,13 +60,15 @@ func buy():
 		img.scale = Vector2(2.0, 2.0)
 		Game.game_ui.add_child(img)
 		
-		var tween = Game.get_tree().create_tween()
 		SAnimation.cubic_curve_to(tween, img, Game.relics_bar_ui.get_pos(-1), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 		tween.tween_callback(func():
 			Game.add_relic(object)
 			img.queue_free()
-			self.queue_free()
 		)
+	tween.tween_callback(func():
+		Game.save_to_file()
+		self.queue_free()
+	)
 	
 	self.hide()
 	

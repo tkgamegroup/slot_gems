@@ -18,7 +18,7 @@ enum Props
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 3
+const version_patch : int = 4
 
 const UiGem = preload("res://ui_gem.gd")
 const UiCell = preload("res://ui_cell.gd")
@@ -45,6 +45,8 @@ const UiBagViewer = preload("res://ui_bag_viewer.gd")
 const gem_ui = preload("res://ui_gem.tscn")
 const popup_txt_pb = preload("res://popup_txt.tscn")
 const trail_pb = preload("res://trail.tscn")
+const craft_slot_pb = preload("res://craft_slot.tscn")
+const shop_item_pb = preload("res://ui_shop_item.tscn")
 const mask_shader = preload("res://mask.gdshader")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
@@ -79,6 +81,7 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var blocker_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Blocker
 
 var stage : int = Stage.Deploy
+var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 var rolls : int:
 	set(v):
 		rolls = v
@@ -254,6 +257,9 @@ func add_gem(g : Gem, boardcast : bool = true):
 	status_bar_ui.gem_count_text.text = "%d" % gems.size()
 
 func remove_gem(g : Gem, boardcast : bool = true):
+	if g.bound_item:
+		remove_item(g.bound_item, boardcast)
+		g.bound_item = null
 	bag_gems.erase(g)
 	gems.erase(g)
 	
@@ -268,7 +274,7 @@ func get_gem(g : Gem = null):
 	if g:
 		bag_gems.erase(g)
 		return g
-	return SMath.pick_and_remove(bag_gems)
+	return SMath.pick_and_remove(bag_gems, Game.rng)
 
 func release_gem(g : Gem):
 	g.bonus_score = 0
@@ -285,15 +291,15 @@ func on_modifier_changed(name):
 	if name == "base_combo_i":
 		combos = max(combos, modifiers["base_combo_i"])
 	elif name == "red_bouns_i":
-		status_bar_ui.red_bouns_text.text = "%d" % modifiers["red_bouns_i"]
+		status_bar_ui.red_bouns_text.set_value(modifiers["red_bouns_i"])
 	elif name == "orange_bouns_i":
-		status_bar_ui.orange_bouns_text.text = "%d" % modifiers["orange_bouns_i"]
+		status_bar_ui.orange_bouns_text.set_value(modifiers["orange_bouns_i"])
 	elif name == "green_bouns_i":
-		status_bar_ui.green_bouns_text.text = "%d" % modifiers["green_bouns_i"]
+		status_bar_ui.green_bouns_text.set_value(modifiers["green_bouns_i"])
 	elif name == "blue_bouns_i":
-		status_bar_ui.blue_bouns_text.text = "%d" % modifiers["blue_bouns_i"]
+		status_bar_ui.blue_bouns_text.set_value(modifiers["blue_bouns_i"])
 	elif name == "pink_bouns_i":
-		status_bar_ui.pink_bouns_text.text = "%d" % modifiers["pink_bouns_i"]
+		status_bar_ui.pink_bouns_text.set_value(modifiers["pink_bouns_i"])
 	for h in event_listeners:
 		if h.event == Event.ModifierChanged:
 			h.host.on_event.call(Event.ModifierChanged, null, {"name":name,"value":modifiers[name]})
@@ -328,11 +334,20 @@ func add_item(i : Item, boardcast : bool = true):
 	items.append(i)
 	bag_items.append(i)
 
+func remove_item(i : Item, boardcast : bool = true):
+	bag_items.erase(i)
+	items.erase(i)
+	
+	if boardcast:
+		for h in event_listeners:
+			if h.event == Event.GainGem:
+				h.host.on_event.call(Event.LostItem, null, i)
+
 func get_item(i : Item = null):
 	if i:
 		bag_items.erase(i)
 		return i
-	return SMath.pick_and_remove(bag_items)
+	return SMath.pick_and_remove(bag_items, Game.rng)
 
 func release_item(i : Item):
 	if i.duplicant:
@@ -478,21 +493,39 @@ func duplicate_gem(g : Gem, ui, from : String = "hand"):
 			new_b.host = new_g
 			new_b.duration = b.duration
 			new_b.data = b.data.duplicate(true)
+			new_g.buffs.append(new_b)
+		if g.bound_item:
+			var new_i = Item.new()
+			new_i.setup(g.bound_item.name)
+			add_item(new_i)
+			new_g.bound_item = new_i
 		add_gem(new_g)
+		sort_gems()
 	)
 
 func get_level_score(lv : int):
-	# 300, 800, 2000, 5000, 11000, 20000, 35000, 50000
-	match lv:
-		1: return 50000000
-		2: return 90000000
-		3: return 150000000
-		4: return 210000000
-		5: return 280000000
-		6: return 360000000
-		7: return 450000000
-		8: return 600000000
-	return 1000000000
+	if lv <= 10:
+		return lv * (2 * 300 + (lv - 1) * 100) / 2
+	elif lv <= 20:
+		var a = get_level_score(10)
+		var n = lv - 10
+		for i in n:
+			var x = lerp(0.1, 0.3, i / 9.0)
+			var c = lerp(1000, 10000, i / 9.0)
+			a = (1.0 + x) * a + c
+		a = int(a / 500) * 500
+		return a
+	elif lv <= 24:
+		var a = get_level_score(20)
+		var n = lv - 10
+		for i in n:
+			var x = 0.5
+			var c = 30000
+			a = (1.0 + x) * a + c
+		a = int(a / 1000) * 1000
+		return a
+	else:
+		return 1000000000
 
 func begin_busy():
 	control_ui.roll_button.disabled = true
@@ -549,6 +582,9 @@ func start_game(saving : String = ""):
 	items.clear()
 	bag_items.clear()
 	
+	Board.clear()
+	Hand.clear()
+	
 	Buff.clear(Game, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.ThisLevel, Buff.Duration.Eternal])
 	event_listeners.clear()
 	Board.event_listeners.clear()
@@ -570,6 +606,8 @@ func start_game(saving : String = ""):
 	status_bar_ui.coins_text.enable_change = false
 	
 	if saving == "":
+		rng.seed = Time.get_ticks_msec()
+		
 		score = 0
 		target_score = 0
 		score_mult = 1.0
@@ -686,23 +724,23 @@ func start_game(saving : String = ""):
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		
-		for i in 1:
+		for i in 0:
 			var item = Item.new()
 			item.setup("DyeRed")
 			add_item(item)
-		for i in 1:
+		for i in 0:
 			var item = Item.new()
 			item.setup("DyeOrange")
 			add_item(item)
-		for i in 1:
+		for i in 0:
 			var item = Item.new()
 			item.setup("DyeGreen")
 			add_item(item)
-		for i in 1:
+		for i in 0:
 			var item = Item.new()
 			item.setup("DyeBlue")
 			add_item(item)
-		for i in 1:
+		for i in 0:
 			var item = Item.new()
 			item.setup("DyePink")
 			add_item(item)
@@ -739,8 +777,6 @@ func start_game(saving : String = ""):
 		status_bar_ui.level_text.modulate.a = 1.0
 		status_bar_ui.level_target.modulate.a = 1.0
 		load_from_file(saving)
-		control_ui.enter()
-		board_ui.enter(null, false)
 		history.init()
 	
 	status_bar_ui.board_size_text.enable_change = true
@@ -786,7 +822,7 @@ func new_level(tween : Tween = null):
 	temp_text2.size = status_bar_ui.level_target.size
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
-		banner_ui.disappear()
+		banner_ui.disappear(null, true)
 		banner_ui.add_child(temp_text1)
 		banner_ui.add_child(temp_text2)
 	)
@@ -823,7 +859,7 @@ func roll():
 		rolls -= 1
 		Board.roll()
 		var draw_num = draws_per_roll
-		draw_num = min(draw_num, bag_items.size())
+		draw_num = min(draw_num, bag_gems.size())
 		for i in draw_num:
 			Hand.draw()
 		modifiers["first_roll_i"] = 0
@@ -870,6 +906,8 @@ func save_to_file(name : String = "1"):
 		d["once"] = h.once
 	
 	var data = {}
+	data["seed"] = Game.rng.seed
+	data["rng_state"] = Game.rng.state
 	data["level"] = Game.level
 	data["board_size"] = Game.board_size
 	data["rolls_per_level"] = Game.rolls_per_level
@@ -920,6 +958,7 @@ func save_to_file(name : String = "1"):
 			save_buff.call(b, buff)
 			buffs.append(buff)
 		gem["buffs"] = buffs
+		gem["bound_item"] = Game.items.find(g.bound_item)
 		gems.append(gem)
 	data["gems"] = gems
 	var bag_gems = []
@@ -989,6 +1028,9 @@ func save_to_file(name : String = "1"):
 	data["cells"] = cells
 	data["shopping"] = shop_ui.visible
 	if shop_ui.visible:
+		data["shop_refresh_price"] = shop_ui.refresh_price
+		data["shop_enable_expand_board"] = !shop_ui.expand_board_button.button.disabled
+		data["shop_expand_board_price"] = shop_ui.expand_board_price
 		var list1 = []
 		for n in shop_ui.list1.get_children():
 			var ui = n as UiShopItem
@@ -1000,10 +1042,12 @@ func save_to_file(name : String = "1"):
 				object["type"] = g.type
 				object["rune"] = g.rune
 				object["base_score"] = g.base_score
-				var enchants = []
-				for b in Buff.find_all_typed(g, Buff.Type.Enchant):
-					enchants.append(b.data["type"])
-				object["enchants"] = enchants
+				var buffs = []
+				for b in g.buffs:
+					var buff = {}
+					save_buff.call(b, buff)
+					game_buffs.append(buff)
+				object["buffs"] = buffs
 				item["object"] = object
 			elif ui.cate == "relic":
 				var r = ui.object as Relic
@@ -1023,6 +1067,8 @@ func save_to_file(name : String = "1"):
 			else:
 				var i = ui.thing as Item
 				slot["thing"] = i.name
+			slot["price"] = ui.price
+			list2.append(slot)
 		data["shop_list2"] = list2
 	
 	var file = FileAccess.open("user://save%s.json" % name, FileAccess.WRITE)
@@ -1054,6 +1100,8 @@ func load_from_file(name : String = "1"):
 		var h = Hook.new(int(d["event"]), host, host_type, d["once"])
 		return h
 	
+	rng.seed = int(data["seed"])
+	rng.state = int(data["rng_state"])
 	level = int(data["level"])
 	board_size = int(data["board_size"])
 	rolls_per_level = int(data["rolls_per_level"])
@@ -1072,12 +1120,15 @@ func load_from_file(name : String = "1"):
 	for buff in game_buffs:
 		var b = load_buff.call(buff, Game)
 		Game.buffs.append(b)
-	modifiers = SUtils.read_dictionary(data["modifiers"])
+	var saved_modifiers = SUtils.read_dictionary(data["modifiers"])
+	for k in saved_modifiers:
+		Game.set_modifier(k, saved_modifiers[k])
 	
 	Board.cx = int(data["cx"])
 	Board.cy = int(data["cy"])
 	
 	var gems = data["gems"]
+	var bound_item_pair = []
 	for gem in gems:
 		var g = Gem.new()
 		g.type = int(gem["type"])
@@ -1090,11 +1141,15 @@ func load_from_file(name : String = "1"):
 		for buff in buffs:
 			var b = load_buff.call(buff, g)
 			g.buffs.append(b)
+		var idx = int(gem["bound_item"])
+		if idx != -1:
+			bound_item_pair.append(Pair.new(g, idx))
 		add_gem(g, false)
 	var bag_gems = data["bag_gems"]
 	for idx in bag_gems:
 		Game.bag_gems.append(Game.gems[idx])
 	var items = data["items"]
+	var item_mounted_pair = []
 	for item in items:
 		var i = Item.new()
 		i.setup(item["name"])
@@ -1102,6 +1157,9 @@ func load_from_file(name : String = "1"):
 		i.duplicant = item["duplicant"]
 		i.tradeable = item["tradeable"]
 		i.mountable = item["mountable"]
+		var idx = int("mounted")
+		if idx != -1:
+			item_mounted_pair.append(Pair.new(i, idx))
 		i.coord = str_to_var("Vector2i" + item["coord"])
 		var buffs = item["buffs"]
 		for buff in buffs:
@@ -1109,6 +1167,10 @@ func load_from_file(name : String = "1"):
 			i.buffs.append(b)
 		i.extra = SUtils.read_dictionary(item["extra"])
 		add_item(i, false)
+	for p in bound_item_pair:
+		p.first.bound_item = Game.items[p.second]
+	for p in item_mounted_pair:
+		p.first.mounted = Game.items[p.second]
 	var bag_items = data["bag_items"]
 	for idx in bag_items:
 		Game.bag_items.append(Game.items[idx])
@@ -1163,6 +1225,50 @@ func load_from_file(name : String = "1"):
 			Board.pin(coord)
 		if cell["frozen"]:
 			Board.freeze(coord)
+	
+	control_ui.enter()
+	
+	var shopping = data["shopping"]
+	if shopping:
+		shop_ui.refresh_price = int(data["shop_refresh_price"])
+		shop_ui.expand_board_button.button.disabled = !data["shop_enable_expand_board"]
+		shop_ui.expand_board_price = data["shop_expand_board_price"]
+		shop_ui.clear()
+		var list1 = data["shop_list1"]
+		for item in list1:
+			var ui = shop_item_pb.instantiate()
+			var cate = item["cate"]
+			if cate == "gem":
+				var object = item["object"]
+				var g = Gem.new()
+				g.type = object["type"]
+				g.rune = object["rune"]
+				g.base_score = int(object["base_score"])
+				var buffs = object["buffs"]
+				for buff in buffs:
+					var b = load_buff.call(buff, g)
+					g.buffs.append(b)
+				ui.setup("gem", g, item["price"])
+			elif cate == "relic":
+				var object = item["object"]
+				var r = Relic.new()
+				r.setup(object["name"])
+				ui.setup("relic", r, item["price"])
+			shop_ui.list1.add_child(ui)
+		var list2 = data["shop_list2"]
+		for slot in list2:
+			var ui = craft_slot_pb.instantiate()
+			var type = slot["type"]
+			if type == "w_socket":
+				var i = Item.new()
+				i.setup(slot["thing"])
+				ui.setup(type, i, slot["price"])
+			else:
+				ui.setup(type, slot["thing"], slot["price"])
+			shop_ui.list2.add_child(ui)
+		shop_ui.enter(null, false)
+	else:
+		board_ui.enter(null, false)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -1274,7 +1380,7 @@ func _ready() -> void:
 				if i:
 					Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 		
-		if plays == 0 && score < target_score:
+		if swaps == 0 && score < target_score:
 			if invincible:
 				win()
 			else:

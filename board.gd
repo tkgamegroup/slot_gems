@@ -438,9 +438,9 @@ func add_cell(c : Vector2i):
 	Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
 	return cell
 
-func update_min_gem_number():
-	curr_min_gem_num = cx * cy * 2
-	next_min_gem_num = (cx + 6) * (cy + 2) * 2
+func update_gem_quantity_limit():
+	curr_min_gem_num = (cx * cy) + 10
+	next_min_gem_num = (cx + 6) * (cy + 2) + 50
 	Game.status_bar_ui.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
 
 func setup(_hf_cy : int):
@@ -451,7 +451,7 @@ func setup(_hf_cy : int):
 	for y in cy:
 		for x in cx:
 			add_cell(Vector2i(x, y))
-	update_min_gem_number()
+	update_gem_quantity_limit()
 
 func resize(_hf_cy : int):
 	var old_cells = cells.duplicate()
@@ -477,7 +477,7 @@ func resize(_hf_cy : int):
 				add_cell(c)
 			else:
 				Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
-	update_min_gem_number()
+	update_gem_quantity_limit()
 
 func skip_above_unmovables(c : Vector2i) -> Vector2i:
 	var cc = c - Vector2i(0, 1)
@@ -630,7 +630,7 @@ func matching():
 								if get_state_at(cc) != Cell.State.Burning:
 									cands.append(cc)
 							var pos = get_pos(c)
-							for cc in SMath.pick_n(cands, 1):
+							for cc in SMath.pick_n_random(cands, 1, Game.rng):
 								set_state_at(cc, Cell.State.Burning, {"pos":pos})
 						
 						SSound.se_marimba_scale[matched_num % 8].play()
@@ -729,7 +729,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 						cands.append(_i)
 				if cands.is_empty():
 					return
-				items[i] = cands.pick_random()
+				items[i] = SMath.pick_random(cands, Game.rng)
 			
 			var places = filter(func(g : Gem, i : Item):
 				return g && !i && get_active_effects_at(g.coord).is_empty()
@@ -738,7 +738,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 				target_coords.append(Vector2i(-1, -1))
 				sps.append(null)
 			else:
-				target_coords.append(places.pick_random())
+				target_coords.append(SMath.pick_random(places, Game.rng))
 				
 				var sp = AnimatedSprite2D.new()
 				sp.position = Game.status_bar_ui.bag_button.get_global_rect().get_center()

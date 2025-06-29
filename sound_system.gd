@@ -34,6 +34,7 @@ var music_eq_t : float = 0.0
 @onready var se_end_buring : AudioStreamPlayer = $/root/Main/SFX/EndBurning
 @onready var se_level_clear : AudioStreamPlayer = $/root/Main/SFX/LevelClear
 @onready var se_well_done : AudioStreamPlayer = $/root/Main/SFX/WellDone
+@onready var se_error : AudioStreamPlayer = $/root/Main/SFX/Error
 @onready var music : AudioStreamPlayer = $/root/Main/Music
 
 var se_marimba_scale : Array[AudioStreamPlayer]

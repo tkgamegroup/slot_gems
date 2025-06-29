@@ -60,6 +60,11 @@ ui_collections_relics,Relics,遗物
 ui_game_score,Score,分数
 ui_game_combos,Combos,连击
 ui_game_mult,Mult,倍率
+tt_red_base_score,Red gems' base score,红色宝石基础分数
+tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
+tt_green_base_score,Green gems' base score,绿色宝石基础分数
+tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
+tt_pink_base_score,Pink gems' base score,粉色宝石基础分数
 ui_game_level,Level %d,关卡 %d
 ui_game_target_score,Score at lease %d,最少达到 %d 分
 ui_game_board_size,BS,棋盘
@@ -70,10 +75,12 @@ tt_game_hand_title,Hand,手牌
 tt_game_hand_content,Max Grabs: %d,最大抓取数: %d
 tt_game_coins_title,Your Coins,你的金币
 tt_game_bag_title,Your Bag,你的包
+tt_game_gem_number,Number Of Gems,宝石数量
+tt_game_upgrade_number_and_min_number,Minimum number of gems required to upgrade Board Size: %d\nMinimum number of gems: %d,升级棋盘大小所需最少宝石数量：%d\n最少宝石数量：%d
 tt_game_bag_content,Your gems and items.,你的宝石跟道具。
 tt_game_bag_trade_content,Drop the item here to exchange another item.,把道具拖拽到这来交换另一个道具。
 tt_game_menu_title,Game Menu,游戏菜单
-ui_game_skills,Skills,技能
+ui_game_relics,Relics,遗物
 ui_game_patterns,Patterns,图案
 ui_game_rolls,Rolls,滚动次数
 ui_game_swaps,Swaps,交换次数
@@ -83,16 +90,40 @@ tt_game_roll_title,Roll,滚动
 tt_game_roll_content,"Roll the board, unpinned and unfrozen gems will be replaced to new ones, then draw new items.",滚动棋盘，未固定跟未冰冻的宝石会被替换成新的，然后抽取新的道具。
 tt_game_match_title,Match,匹配
 tt_game_match_content,"Start matching patterns and get score. When there are no matched patterns, matching stops.",开始匹配图案并得分。当没有匹配的图案时，匹配终止。
+ui_bag_viewer_title,Bag,包
+ui_bag_viewer_gems,Gems,宝石
+ui_bag_viewer_on_board,On Board,棋盘上
+ui_bag_viewer_in_hand,In Hand,手中
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
-ui_shop_upgrade,Upgrade,升级
+ui_shop_upgrade,Board Size\nUpgrade,棋盘大小\n升级
+ui_shop_upgrade_insufficient_quantity_title,Not Enough Gems,宝石数量不足
+ui_shop_upgrade_insufficient_quantity_content,Requires at least %d gems,需要至少%d个宝石
+ui_shop_exit,Exit,退出
 ui_buy,Buy,购买
+ui_enchant_quantity_limit,Gem can have up to 2 enchantments,宝石最多拥有2个附魔
+ui_relics_count_limit,You can have up to 7 relics,您最多拥有7个遗物
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
 ui_in_game_menu_main_menu,Main Menu,主菜单
 ui_in_game_menu_auto_place_items,Auto Place Items,自动放道具
+ui_in_game_menu_win,Win,赢
+ui_in_game_menu_lose,Lose,输
+ui_level_clear_title,Level Clear!,过关！
+ui_level_clear_level_rewards,Level Reward,关卡奖励
+ui_level_clear_swap_rewards,Swaps,交换次数
+ui_level_clear_interest,Interest,利息
+ui_level_clear_button_text,Take %d,拿走 %d
+ui_game_over_title,Game Over,游戏结束
+ui_game_over_desc,You have used up swaps but didn't reach the target score.,你已经用完交换次数却没有达到目标分数。
+ui_game_over_max_match,Max Match Score,最高匹配分数
+ui_game_over_swaps,Swaps,交换次数
+ui_game_over_level,Level,关卡
+ui_game_over_seed,Seed,种子
+ui_game_over_new_run,New Run,新的一局
+ui_game_over_main_menu,Main Menu,主菜单
 gem_none,None,无
 gem_red,Red,红
 gem_orange,Orange,橙
@@ -105,6 +136,7 @@ rune_none,None,无
 rune_destroy,Destroy,破坏
 rune_wisdom,Wisdom,灵智
 rune_grow,Grow,生长
+rune_omni,Omni,全能
 gem_desc,Score: %d%s,分数: %d%s
 gem_mult,Mult: %.1f,倍率: %.1f
 gem_enchant,Enchant: %s,附魔: %s
@@ -133,6 +165,7 @@ skill_desc_Fen,+{percentage}% of the target score and +{basic_value} score. (Not
 skill_name_Xing,Xing,幸
 skill_desc_Xing,+0.5 Score Mult.,+0.5的分数倍率。
 skill_requirements,Requirements: ,需求：
+pattern_name_prefix,Pattern: ,图案：
 pattern_desc,LV: %d\nExp: %d/%d\nMult: %d,等级：%d\n经验：%d/%d\n倍率：%d
 item_name_DyeRed,Dye: Red,染色剂：红
 item_desc_DyeRed,w_quick: Change gem to red color temporarily.,w_quick：临时改变宝石颜色为红。
@@ -209,15 +242,15 @@ item_desc_Princess,w_aura: All gems +7 score.\nw_eliminate: (w_active) Gems in 1
 item_name_Mage,Mage,大法师
 item_desc_Mage,w_eliminate: (w_active) Turn gems in 1 w_range to Wild until the end of level.,
 item_name_Ruby,Ruby,红宝石
-item_desc_Ruby,w_eliminate: +1 base score to Red.,w_eliminate：红色基础分数+1。
+item_desc_Ruby,w_eliminate: Red gems' base score +1.,w_eliminate：红色宝石的基础分数+1。
 item_name_Citrine,Citrine,黄水晶
-item_desc_Citrine,w_eliminate: +1 base score to Orange.,w_eliminate：黄色基础分数+1。
+item_desc_Citrine,w_eliminate: Orange gems' base score +1.,w_eliminate：黄色宝石的基础分数+1。
 item_name_Emerald,Emerald,绿宝石
-item_desc_Emerald,w_eliminate: +1 base score to Green.,w_eliminate：绿色基础分数+1。
+item_desc_Emerald,w_eliminate: Green gems' base score +1.,w_eliminate：绿色宝石的基础分数+1。
 item_name_Sapphire,Sapphire,蓝宝石
-item_desc_Sapphire,w_eliminate: +1 base score to Blue.,w_eliminate：蓝色基础分数+1。
+item_desc_Sapphire,w_eliminate: Blue gems' base score +1.,w_eliminate：蓝色宝石的基础分数+1。
 item_name_Tourmaline,Tourmaline,粉宝石
-item_desc_Tourmaline,w_eliminate: +1 base score to Pink.,w_eliminate：粉色基础分数+1。
+item_desc_Tourmaline,w_eliminate: Pink gems' base score +1.,w_eliminate：粉色宝石的基础分数+1。
 item_name_StrengthPotion,Strength Potion,力量药水
 item_desc_StrengthPotion,w_quick: Target Item +10 w_power until the end of level.,w_quick：使目标道具直到关卡结束前获得+10w_power。
 item_name_EchoTotem,Echo Totem,回音图腾
@@ -255,24 +288,24 @@ relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座
 relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells in {range_i} w_range at random location.,当匹配到至少3个破坏符文时：(w_active) 在随机的位置爆炸并消除{range_i}w_range内的格子。
 relic_name_Taurus,Taurus,金牛座
-relic_desc_Taurus,When matching at least 3 Grow runes:,当匹配到至少3个生长符文时：
+relic_desc_Taurus,When matching at least 3 Grow runes: +{base_value} Score and get Score of {percentage}% of Target Score.,当匹配到至少3个生长符文时：+{base_value}分数并且获得目标分数{percentage}%的分数。
 relic_name_Gemini,Gemini,双子座
-relic_desc_Gemini,When matching at least 3 Wisdom runes:,当匹配到至少3个灵智符文时：
+relic_desc_Gemini,When matching at least 3 Wisdom runes: (w_active) Duplicate 1 random gem from Hand.,当匹配到至少3个灵智符文时：(w_active) 复制手中的1个随机宝石。
 relic_name_Cancer,Cancer,巨蟹座
 relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes:",当匹配到至少1个灵智、和2个生长符文时：
 relic_name_Leo,Leo,狮子座
-relic_desc_Leo,"When matching at least 2 Destroy, and 1 Grow runes:",当匹配到至少2个破坏、和1个生长符文时：
+relic_desc_Leo,"When matching at least 2 Destroy, and 1 Grow runes: +1 Swaps.",当匹配到至少2个破坏、和1个生长符文时：+1 交换次数。
 relic_name_Virgo,Virgo,处女座
-relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
+relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes: +0.5 Mult.",当匹配到至少2个灵智、和1个生长符文时：+0.5倍率。
 relic_name_Libra,Libra,天秤座
 relic_desc_Libra,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
 relic_name_Scorpio,Scorpio,天蝎座
-relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes:,当匹配到至少2个破坏、和1个灵智符文时：
+relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Delete 1 random gem from Hand.,当匹配到至少2个破坏、和1个灵智符文时：(w_active) 从手中删除1个随机的宝石。
 relic_name_Sagittarius,Sagittarius,射手座
-relic_desc_Sagittarius,When matching at least 2 Destroy and 1 Wisdom runes:,当匹配到至少2个破坏、和1个灵智符文时：
+relic_desc_Sagittarius,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Eliminate 1 most valuable gem.,当匹配到至少2个破坏、和1个灵智符文时： (w_active) 消除1个最有价值的宝石。
 relic_name_Capricorn,Capricorn,摩羯座
-relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes:",当匹配到至少1个破坏、和1个生长符文时：
+relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes: Coins +2.",当匹配到至少1个破坏、和2个生长符文时：金币+2。
 relic_name_Aquarius,Aquarius,水瓶座
-relic_desc_Aquarius,When matching at least 3 Wisdom runes:,当匹配到至少3个灵智符文时：
+relic_desc_Aquarius,"When matching at least 3 Wisdom runes: (w_active) Select 1 random gem, its Base Score +1.",当匹配到至少3个灵智符文时：(w_active) 选择1个随机宝石，它的基础分数+1。
 relic_name_Pisces,Pisces ,双鱼座
-relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少1个灵智、和2个生长符文时：
+relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes: (w_active) Turn 2 random gems into w_wild in this Level.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 使2个随机宝石变为w_wild，直到关卡结束。
