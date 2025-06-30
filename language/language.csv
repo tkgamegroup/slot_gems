@@ -89,7 +89,7 @@ ui_game_roll,Roll,滚动
 tt_game_roll_title,Roll,滚动
 tt_game_roll_content,"Roll the board, unpinned and unfrozen gems will be replaced to new ones, then draw new items.",滚动棋盘，未固定跟未冰冻的宝石会被替换成新的，然后抽取新的道具。
 tt_game_match_title,Match,匹配
-tt_game_match_content,"Start matching patterns and get score. When there are no matched patterns, matching stops.",开始匹配图案并得分。当没有匹配的图案时，匹配终止。
+tt_game_match_content,Start matching patterns and get score.,开始匹配图案并得分。
 ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
@@ -296,7 +296,7 @@ relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes:",当匹配
 relic_name_Leo,Leo,狮子座
 relic_desc_Leo,"When matching at least 2 Destroy, and 1 Grow runes: +1 Swaps.",当匹配到至少2个破坏、和1个生长符文时：+1 交换次数。
 relic_name_Virgo,Virgo,处女座
-relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes: +0.5 Mult.",当匹配到至少2个灵智、和1个生长符文时：+0.5倍率。
+relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes: +{value} Mult.",当匹配到至少2个灵智、和1个生长符文时：+{value}倍率。
 relic_name_Libra,Libra,天秤座
 relic_desc_Libra,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
 relic_name_Scorpio,Scorpio,天蝎座
@@ -304,8 +304,8 @@ relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes: (w_activ
 relic_name_Sagittarius,Sagittarius,射手座
 relic_desc_Sagittarius,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Eliminate 1 most valuable gem.,当匹配到至少2个破坏、和1个灵智符文时： (w_active) 消除1个最有价值的宝石。
 relic_name_Capricorn,Capricorn,摩羯座
-relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes: Coins +2.",当匹配到至少1个破坏、和2个生长符文时：金币+2。
+relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes: Coins +{amount}.",当匹配到至少1个破坏、和2个生长符文时：金币+{amount}。
 relic_name_Aquarius,Aquarius,水瓶座
-relic_desc_Aquarius,"When matching at least 3 Wisdom runes: (w_active) Select 1 random gem, its Base Score +1.",当匹配到至少3个灵智符文时：(w_active) 选择1个随机宝石，它的基础分数+1。
+relic_desc_Aquarius,"When matching at least 3 Wisdom runes: (w_active) Select 1 random gem, its Base Score +{value}.",当匹配到至少3个灵智符文时：(w_active) 选择1个随机宝石，它的基础分数+{value}。
 relic_name_Pisces,Pisces ,双鱼座
 relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes: (w_active) Turn 2 random gems into w_wild in this Level.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 使2个随机宝石变为w_wild，直到关卡结束。

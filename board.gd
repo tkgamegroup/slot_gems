@@ -440,7 +440,7 @@ func add_cell(c : Vector2i):
 
 func update_gem_quantity_limit():
 	curr_min_gem_num = (cx * cy) + 10
-	next_min_gem_num = (cx + 6) * (cy + 2) + 50
+	next_min_gem_num = (cx + 6) * (cy + 2) + 20
 	Game.status_bar_ui.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
 
 func setup(_hf_cy : int):

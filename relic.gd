@@ -58,11 +58,11 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 		var idx = 0
 		for sp in sps:
 			var subtween = Game.get_tree().create_tween()
-			subtween.tween_interval(idx * 0.1)
-			subtween.tween_property(sp, "scale", Vector2(1.5, 1.5), 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-			subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8)
-			subtween.tween_property(sp, "position", c, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-			subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			subtween.tween_interval(idx * 0.1 * Game.animation_speed)
+			subtween.tween_property(sp, "scale", Vector2(1.5, 1.5), 0.2 * Game.animation_speed).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+			subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * Game.animation_speed)
+			#subtween.tween_property(sp, "position", c, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * Game.animation_speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 			if idx > 0:
 				tween.parallel()
 			tween.tween_subtween(subtween)
@@ -70,9 +70,9 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 		if do_active:
 			tween.tween_callback(func():
 				SSound.se_skill.play()
-				SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3, 2.0)
+				SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3 * Game.animation_speed, 2.0)
 			)
-			tween.tween_interval(0.3)
+			tween.tween_interval(0.3 * Game.animation_speed)
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
 			)
@@ -324,6 +324,7 @@ func setup(n : String):
 					tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Virgo":
 		image_id = 20
+		extra["value"] = 0.2
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -332,8 +333,9 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 2, 1, data["coords"], tween, false)
 					tween.tween_callback(func():
-						Game.float_text("+0.5 Mult", ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.7, 0.3, 0.9))
-						Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":0.5})
+						var value = extra["value"]
+						Game.float_text("+%.1f Mult" % value, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.7, 0.3, 0.9))
+						Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":value})
 					)
 					tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Libra":
@@ -406,6 +408,7 @@ func setup(n : String):
 				Board.eliminate([target], tween, Board.ActiveReason.Relic, self)
 	elif name == "Capricorn":
 		image_id = 24
+		extra["amount"] = 2
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -414,13 +417,15 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(1, 0, 2, data["coords"], tween, false)
 					tween.tween_callback(func():
+						var amount = extra["amount"]
 						SSound.se_coin.play()
-						Game.float_text("+2G", ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.8, 0.0))
-						Game.coins += 2
+						Game.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.8, 0.0))
+						Game.coins += amount
 					)
 					tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Aquarius":
 		image_id = 25
+		extra["value"] = 1
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -443,12 +448,13 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
+					var value = extra["value"]
 					var ok = false
 					for c in targets:
 						var g = Board.get_gem_at(c)
 						if g:
-							Game.float_text("+1", Board.get_pos(c), Color(0.7, 0.3, 0.9))
-							g.base_score += 1
+							Game.float_text("+%d" % value, Board.get_pos(c), Color(0.7, 0.3, 0.9))
+							g.base_score += value
 							ok = true
 					if ok:
 						SSound.se_vibra.play()
