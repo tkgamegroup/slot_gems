@@ -50,4 +50,3 @@ mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 fit_content = true
-autowrap_mode = 2

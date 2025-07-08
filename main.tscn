@@ -1,4 +1,4 @@
-[gd_scene load_steps=148 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=157 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -80,6 +80,7 @@
 [ext_resource type="Script" uid="uid://b5qjvjf6wb7ty" path="res://banner.gd" id="69_phcyf"]
 [ext_resource type="Script" uid="uid://b0rh64phtex0f" path="res://ui_calculate_bar.gd" id="71_f1p13"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
+[ext_resource type="Script" uid="uid://caypb4y5bf3py" path="res://ui_tutorial.gd" id="80_f1p13"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
 random_pitch = 1.1
@@ -445,6 +446,48 @@ expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0hxn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swlj1"]
+bg_color = Color(0.48332, 0.653856, 0.462999, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+shadow_size = 3
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f1p13"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4obbf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yysqy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
+content_margin_left = 8.0
+content_margin_right = 4.0
+bg_color = Color(0.428631, 0.621801, 0.791661, 1)
+corner_radius_top_left = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vieuh"]
+content_margin_left = 8.0
+content_margin_right = 4.0
+bg_color = Color(0.428631, 0.621801, 0.791661, 1)
+corner_radius_top_left = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjja3"]
+content_margin_left = 8.0
+content_margin_right = 4.0
+bg_color = Color(0.3328, 0.43264, 0.52, 1)
+corner_radius_top_left = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ovcoh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5t1e"]
 bg_color = Color(0.713726, 0.333333, 0.145098, 1)
@@ -2071,6 +2114,79 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
+[node name="Tutorial" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("80_f1p13")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
+custom_minimum_size = Vector2(600, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer"]
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_selected_color = Color(0.151276, 0.151276, 0.151276, 1)
+theme_override_constants/side_margin = 0
+theme_override_font_sizes/font_size = 28
+theme_override_styles/tab_focus = SubResource("StyleBoxEmpty_f1p13")
+theme_override_styles/tab_disabled = SubResource("StyleBoxEmpty_4obbf")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yysqy")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_yvsr8")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_vieuh")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_yjja3")
+current_tab = 0
+
+[node name="Tab1" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/TabContainer/Tab1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+
+[node name="Tab2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Tab3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Tab4" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ovcoh")
+text = "ui_close"
+
 [node name="Options" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
 anchors_preset = 15
@@ -2230,17 +2346,22 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_main_menu"
 
 [node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
+text = "ui_in_game_menu_tutorial"
+
+[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_auto_place_items"
 
-[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_win"
 
-[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button7" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_lose"

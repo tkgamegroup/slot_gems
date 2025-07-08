@@ -94,6 +94,8 @@ ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
 ui_bag_viewer_in_hand,In Hand,手中
+ui_tutorial_how_to_play_title,How To Play,玩法
+ui_tutorial_how_to_play_text,, - 从底部的手牌中拖拽一个宝石到棋盘上来交换。\n – 点击开始按钮来开始匹配图案并得分。
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
@@ -108,6 +110,7 @@ ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
 ui_in_game_menu_main_menu,Main Menu,主菜单
+ui_in_game_menu_tutorial,Tutorial,教程
 ui_in_game_menu_auto_place_items,Auto Place Items,自动放道具
 ui_in_game_menu_win,Win,赢
 ui_in_game_menu_lose,Lose,输

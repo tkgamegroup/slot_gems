@@ -4,9 +4,10 @@ extends Control
 @onready var resume_button : Button = $PanelContainer/VBoxContainer/Button
 @onready var options_button : Button = $PanelContainer/VBoxContainer/Button2
 @onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
-@onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button4
-@onready var win_button : Button = $PanelContainer/VBoxContainer/Button5
-@onready var lose_button : Button = $PanelContainer/VBoxContainer/Button6
+@onready var tutorial_button : Button = $PanelContainer/VBoxContainer/Button4
+@onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button5
+@onready var win_button : Button = $PanelContainer/VBoxContainer/Button6
+@onready var lose_button : Button = $PanelContainer/VBoxContainer/Button7
 
 func enter():
 	SSound.music_less_clear()
@@ -58,6 +59,12 @@ func _ready() -> void:
 			Game.title_ui.enter()
 		)
 		Game.end_transition(tween)
+	)
+	tutorial_button.pressed.connect(func():
+		SSound.music_clear()
+		SSound.se_click.play()
+		exit()
+		Game.tutorial_ui.show()
 	)
 	auto_place_items_button.pressed.connect(func():
 		SSound.music_clear()
