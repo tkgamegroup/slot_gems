@@ -64,7 +64,7 @@ func _ready() -> void:
 		SSound.music_clear()
 		SSound.se_click.play()
 		exit()
-		Game.tutorial_ui.show()
+		Game.tutorial_ui.enter()
 	)
 	auto_place_items_button.pressed.connect(func():
 		SSound.music_clear()

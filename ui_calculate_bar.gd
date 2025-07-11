@@ -25,10 +25,6 @@ func appear():
 	
 	self.show()
 
-const one_over_log1_5 = 1.0 / log(1.5)
-func mult_from_combos():
-	return log((Game.combos + 1) * 1.0) * one_over_log1_5
-
 func calculate():
 	if Game.base_score == 0:
 		disappear()
@@ -39,7 +35,7 @@ func calculate():
 	tween.tween_interval(0.3)
 	
 	var result = {}
-	result["combo_mult"] = mult_from_combos()
+	result["combo_mult"] = Game.mult_from_combos(Game.combos)
 	tween.tween_callback(func():
 		SSound.se_calc1.play()
 	)

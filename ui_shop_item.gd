@@ -48,7 +48,11 @@ func buy():
 		tween.parallel()
 		SAnimation.cubic_curve_to(tween, ui, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 		tween.tween_callback(func():
-			Game.add_gem(object)
+			var original = object as Gem
+			for i in quantity:
+				var gem = Gem.new()
+				Game.copy_gem(original, gem)
+				Game.add_gem(gem)
 			Game.sort_gems()
 			ui.queue_free()
 		)
@@ -93,6 +97,16 @@ func _ready() -> void:
 				STooltip.close()
 			)
 			content.add_child(ctrl)
+			if quantity > 1:
+				var lb = Label.new()
+				lb.text = "x%d" % quantity
+				lb.position = Vector2(40, 40)
+				lb.add_theme_color_override("font_shadow_color", Color.BLACK)
+				lb.add_theme_color_override("font_outline_color", Color.BLACK)
+				lb.add_theme_constant_override("shadow_offset_x", 2)
+				lb.add_theme_constant_override("shadow_offset_y", 2)
+				lb.add_theme_constant_override("outline_size", 1)
+				ctrl.add_child(lb)
 			ui.position = Vector2(32, 32)
 		elif cate == "item":
 			var ui = item_ui.instantiate()

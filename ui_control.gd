@@ -16,7 +16,8 @@ const UiProp = preload("res://ui_prop.gd")
 @onready var grab_ui : UiProp = $HBoxContainer/UiProp3
 @onready var debug_text : Label = $DebugText
 
-var preview_matchings : Array[Node2D]
+var preview_matchings : Array[Array]
+var preview_lines : Array[Node2D]
 var preview_tween : Tween = null
 
 func enter():
@@ -50,10 +51,11 @@ func _ready() -> void:
 	)
 	play_button.mouse_entered.connect(func():
 		if !play_button.disabled:
-			for n in preview_matchings:
+			preview_matchings.clear()
+			for n in preview_lines:
 				n.queue_free()
 				Game.board_ui.overlay.remove_child(n)
-			preview_matchings.clear()
+			preview_lines.clear()
 			if preview_tween:
 				preview_tween.kill()
 				preview_tween = null
@@ -64,6 +66,7 @@ func _ready() -> void:
 					for p in Game.patterns:
 						var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 						if !res.is_empty():
+							preview_matchings.append(res)
 							var pts = SMath.weld_lines(SUtils.get_cells_border(res), 5.0)
 							var c = Vector2(0.0, 0.0)
 							for pt in pts:
@@ -85,7 +88,7 @@ func _ready() -> void:
 							if idx > 0:
 								preview_tween.parallel()
 							preview_tween.tween_subtween(subtween)
-							preview_matchings.append(l)
+							preview_lines.append(l)
 							Game.board_ui.overlay.add_child(l)
 							idx += 1
 			preview_tween.tween_callback(func():
@@ -93,21 +96,31 @@ func _ready() -> void:
 			)
 		
 		var desc = tr("tt_game_match_content")
-		if play_button.disabled && !roll_button.disabled:
-			desc += "\n[color=yellow](Roll the Board first)[/color]"
-		elif !play_button.disabled && preview_matchings.is_empty():
-			desc += "\n[color=red](No match found)[/color]"
+		if !play_button.disabled:
+			var base = 0
+			var combos = 0
+			var mult = 1.0
+			for m in preview_matchings:
+				combos += 1
+				for c in m:
+					var g = Board.get_gem_at(c)
+					if g:
+						base += g.get_base_score()
+						mult += g.mult
+			desc += "\n"
+			desc += tr("tt_at_least_score") % int(base * Game.mult_from_combos(combos) * mult)
 		STooltip.show([Pair.new(tr("tt_game_match_title"), desc)])
 	)
 	play_button.mouse_exited.connect(func():
 		STooltip.close()
-		for n in preview_matchings:
+		preview_matchings.clear()
+		for n in preview_lines:
 			n.queue_free()
 			Game.board_ui.overlay.remove_child(n)
 		if preview_tween:
 			preview_tween.kill()
 			preview_tween = null
-		preview_matchings.clear()
+		preview_lines.clear()
 	)
 	pin_ui.button.pressed.connect(func():
 		SSound.se_click.play()

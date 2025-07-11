@@ -87,19 +87,21 @@ func refresh(tween : Tween = null):
 			var ui = shop_item_pb.instantiate()
 			var gem = Gem.new()
 			var price = 0
+			var quantity = 1
 			if Game.rng.randf() > 0.4:
 				gem.type = Game.rng.randi() % Gem.Type.Count + 1
 				gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
 				price = 1
+				quantity = 5
 			else:
 				if Game.rng.randf() > 0.25:
 					gem.type = Game.rng.randi() % Gem.Type.Count + 1
 					gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
 					if Game.rng.randf() > 0.5:
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":6}, Buff.Duration.Eternal)
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":24}, Buff.Duration.Eternal)
 						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
 					else:
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
 						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
 					price = 2
 				else:
@@ -107,7 +109,7 @@ func refresh(tween : Tween = null):
 						gem.type = Gem.Type.Colorless
 						gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
 						gem.base_score = 30
-						price = 4
+						price = 2
 					elif Game.rng.randf() > 0.5:
 						gem.type = Gem.Type.Wild
 						gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
@@ -116,7 +118,7 @@ func refresh(tween : Tween = null):
 						gem.type = Game.rng.randi() % Gem.Type.Count + 1
 						gem.rune = Gem.Rune.Omni
 						price = 5
-			ui.setup("gem", gem, price)
+			ui.setup("gem", gem, price, quantity)
 			list1.add_child(ui)
 		)
 	var not_owned_relics = []

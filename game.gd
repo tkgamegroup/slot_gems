@@ -195,7 +195,10 @@ var combos : int = 0:
 				combos_tween = null
 			combos = v
 			calculator_bar_ui.combos_text.text = "%dX" % combos
-		
+
+const one_over_log1_5 = 1.0 / log(1.5)
+func mult_from_combos(combos : int):
+	return log((combos + 1) * 1.0) * one_over_log1_5
 
 var score_mult : float = 1.0:
 	set(v):
@@ -391,18 +394,18 @@ func add_combo():
 	Buff.clear(self, [Buff.Duration.ThisCombo])
 	Board.on_combo()
 
-func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0)):
+func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0), font_size : int = 16):
+	pos += Vector2(randf() * 10.0 - 5.0, randf() * 10.0 - 5.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
-	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
 	lb.text = txt
 	lb.add_theme_color_override("font_color", color)
-	ui.z_index = 10
+	lb.add_theme_font_size_override("font_size", font_size)
+	ui.z_index = 4
 	board_ui.overlay.add_child(ui)
 	var tween = get_tree().create_tween()
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
-	tween.parallel().tween_property(ui, "scale", Vector2(0.8, 0.8), 0.5)
 	tween.tween_callback(func():
 		ui.queue_free()
 	)
@@ -464,6 +467,27 @@ func delete_gem(g : Gem, ui, from : String = "hand"):
 			Hand.draw()
 	)
 
+func copy_gem(src : Gem, dst : Gem):
+	dst.type = src.type
+	dst.rune = src.rune
+	dst.base_score = src.base_score
+	dst.bonus_score = src.bonus_score
+	dst.mult = src.mult
+	for b in src.buffs:
+		var new_b = Buff.new()
+		new_b.uid = Buff.s_uid
+		Buff.s_uid += 1
+		new_b.type = b.type
+		new_b.host = dst
+		new_b.duration = b.duration
+		new_b.data = b.data.duplicate(true)
+		dst.buffs.append(new_b)
+	if src.bound_item:
+		var new_i = Item.new()
+		new_i.setup(src.bound_item.name)
+		add_item(new_i)
+		dst.bound_item = new_i
+
 func duplicate_gem(g : Gem, ui, from : String = "hand"):
 	SSound.se_enchant.play()
 	var new_ui = gem_ui.instantiate()
@@ -482,25 +506,7 @@ func duplicate_gem(g : Gem, ui, from : String = "hand"):
 	tween.tween_callback(func():
 		new_ui.queue_free()
 		var new_g = Gem.new()
-		new_g.type = g.type
-		new_g.rune = g.rune
-		new_g.base_score = g.base_score
-		new_g.bonus_score = g.bonus_score
-		new_g.mult = g.mult
-		for b in g.buffs:
-			var new_b = Buff.new()
-			new_b.uid = Buff.s_uid
-			Buff.s_uid += 1
-			new_b.type = b.type
-			new_b.host = new_g
-			new_b.duration = b.duration
-			new_b.data = b.data.duplicate(true)
-			new_g.buffs.append(new_b)
-		if g.bound_item:
-			var new_i = Item.new()
-			new_i.setup(g.bound_item.name)
-			add_item(new_i)
-			new_g.bound_item = new_i
+		copy_gem(g, new_g)
 		add_gem(new_g)
 		sort_gems()
 	)
@@ -645,9 +651,9 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 0:
+		for i in 1:
 			var r = Relic.new()
-			r.setup("Gemini")
+			r.setup("Leo")
 			add_relic(r)
 		
 		for i in 16:

@@ -63,6 +63,9 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 			subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * Game.animation_speed)
 			#subtween.tween_property(sp, "position", c, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 			subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * Game.animation_speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			subtween.tween_callback(func():
+				sp.queue_free()
+			)
 			if idx > 0:
 				tween.parallel()
 			tween.tween_subtween(subtween)
@@ -76,6 +79,8 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
 			)
+		return true
+	return false
 
 func setup(n : String):
 	name = n
@@ -266,11 +271,11 @@ func setup(n : String):
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 0, 3, data["coords"], tween, false)
-					tween.tween_callback(func():
-						Game.add_score(int(Game.target_score * (0.01 * extra["percentage"])) + extra["basic_value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
-					)
-					tween.tween_interval(0.5 * Game.animation_speed)
+					if active_constellation(0, 0, 3, data["coords"], tween, false):
+						tween.tween_callback(func():
+							Game.add_score(int(Game.target_score * (0.01 * extra["percentage"])) + extra["basic_value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
+						)
+						tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Gemini":
 		image_id = 17
 		on_event = func(event : int, tween : Tween, data):
@@ -311,17 +316,17 @@ func setup(n : String):
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(2, 0, 1, data["coords"], tween, false)
-					tween.tween_callback(func():
-						var ui_pos = ui.get_global_rect().get_center()
-						SEffect.add_leading_line(ui_pos, Game.control_ui.swaps_text.get_global_rect().get_center())
-					)
-					tween.tween_interval(0.3)
-					tween.tween_callback(func():
-						SSound.se_vibra.play()
-						Game.swaps += 1
-					)
-					tween.tween_interval(0.5 * Game.animation_speed)
+					if active_constellation(2, 1, 1, data["coords"], tween, false):
+						tween.tween_callback(func():
+							var ui_pos = ui.get_global_rect().get_center()
+							SEffect.add_leading_line(ui_pos, Game.control_ui.swaps_text.get_global_rect().get_center())
+						)
+						tween.tween_interval(0.3)
+						tween.tween_callback(func():
+							SSound.se_vibra.play()
+							Game.swaps += 1
+						)
+						tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Virgo":
 		image_id = 20
 		extra["value"] = 0.2
@@ -331,13 +336,13 @@ func setup(n : String):
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 2, 1, data["coords"], tween, false)
-					tween.tween_callback(func():
-						var value = extra["value"]
-						Game.float_text("+%.1f Mult" % value, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.7, 0.3, 0.9))
-						Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":value})
-					)
-					tween.tween_interval(0.5 * Game.animation_speed)
+					if active_constellation(0, 2, 1, data["coords"], tween, false):
+						tween.tween_callback(func():
+							var value = extra["value"]
+							Game.float_text("+%.1f Mult" % value, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.7, 0.3, 0.9), 22)
+							Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":value})
+						)
+						tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Libra":
 		image_id = 21
 		on_event = func(event : int, tween : Tween, data):
@@ -415,14 +420,14 @@ func setup(n : String):
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(1, 0, 2, data["coords"], tween, false)
-					tween.tween_callback(func():
-						var amount = extra["amount"]
-						SSound.se_coin.play()
-						Game.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.8, 0.0))
-						Game.coins += amount
-					)
-					tween.tween_interval(0.5 * Game.animation_speed)
+					if active_constellation(1, 0, 2, data["coords"], tween, false):
+						tween.tween_callback(func():
+							var amount = extra["amount"]
+							SSound.se_coin.play()
+							Game.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.8, 0.0), 22)
+							Game.coins += amount
+						)
+						tween.tween_interval(0.5 * Game.animation_speed)
 	elif name == "Aquarius":
 		image_id = 25
 		extra["value"] = 1
@@ -453,7 +458,7 @@ func setup(n : String):
 					for c in targets:
 						var g = Board.get_gem_at(c)
 						if g:
-							Game.float_text("+%d" % value, Board.get_pos(c), Color(0.7, 0.3, 0.9))
+							Game.float_text("+%d" % value, Board.get_pos(c), Color(0.7, 0.3, 0.9), 22)
 							g.base_score += value
 							ok = true
 					if ok:
