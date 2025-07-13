@@ -117,6 +117,11 @@ func _ready() -> void:
 				SSound.se_error.play()
 				Game.banner_ui.show_tip(tr("ui_enchant_quantity_limit"), "", 1.0)
 				return
+		if type == "w_delete":
+			if Game.gems.size() - 1 < Board.curr_min_gem_num:
+				SSound.se_error.play()
+				Game.banner_ui.show_tip(tr("ui_delete_gem_count_limit") % Board.curr_min_gem_num, "", 1.0)
+				return
 		
 		button.button.disabled = true
 		Game.coins -= price
@@ -140,7 +145,7 @@ func _ready() -> void:
 		tween.tween_callback(func():
 			if type == "w_enchant":
 				if thing == "w_enchant_charming":
-					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":24}, Buff.Duration.Eternal)
+					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":40}, Buff.Duration.Eternal)
 					Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
 				elif thing == "w_enchant_sharp":
 					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
@@ -158,6 +163,7 @@ func _ready() -> void:
 			elif type == "w_delete":
 				Game.delete_gem(gem, gem_ui, "craft_slot")
 				gem = null
+				Game.shop_ui.delete_price += Game.shop_ui.delete_price_increase
 			elif type == "w_duplicate":
 				Game.duplicate_gem(gem, gem_ui, "craft_slot")
 		)

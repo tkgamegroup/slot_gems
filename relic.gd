@@ -375,7 +375,7 @@ func setup(n : String):
 					active_constellation(2, 1, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var idx = randi() % Hand.grabs.size()
-			if idx != -1:
+			if idx != -1 && Game.gems.size() - 1 >= Board.curr_min_gem_num:
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
 					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx))

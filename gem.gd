@@ -80,7 +80,7 @@ static func type_color(t : int) -> Color:
 		Type.Orange: return Color(255.0 / 255.0, 186.0 / 255.0, 7.0 / 255.0)
 		Type.Green: return Color(157.0 / 255.0, 192.0 / 255.0, 64.0 / 255.0)
 		Type.Blue: return Color(143.0 / 255.0, 223.0 / 255.0, 246.0 / 255.0)
-		Type.Pink: return Color(230.0 / 255.0, 53.0 / 255.0, 108.0 / 255.0)
+		Type.Pink: return Color(226.0 / 255.0, 53.0 / 255.0, 206.0 / 255.0)
 	return Color.WHITE
 
 static func type_img(t : int):

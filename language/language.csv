@@ -9,7 +9,7 @@ w_omni_desc,Can use as any rune.,可以代替任何符文。
 w_enchant,Enchant,附魔
 w_enchant_desc,Buff the gem.,增益宝石。
 w_enchant_charming,Charming,迷人的
-w_enchant_charming_desc,+24 Base Score.,+24 基础分数。
+w_enchant_charming_desc,+40 Base Score.,+40 基础分数。
 w_enchant_sharp,Sharp,锐利的
 w_enchant_sharp_desc,+1.0 Mult.,+1.0 倍率。
 w_socket,Socket,镶嵌
@@ -96,7 +96,8 @@ ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
 ui_bag_viewer_in_hand,In Hand,手中
 ui_tutorial_how_to_play_title,How To Play,玩法
-ui_tutorial_how_to_play_text, - Drag a gem from Hand to Board to swap them.\n – Click the start button to match patterns and score.\n – Only the colors of the gems are count for matching., - 从手上拖拽一个宝石到棋盘上来交换。\n – 点击开始按钮来开始匹配图案并得分。\n – 只有宝石的颜色参与匹配。
+ui_tutorial_how_to_play_text, - Drag a gem from Hand to Board to swap them.\n – Click the start button to match patterns and score.\n – Only the colors of the gems are used for matching., - 从手上拖拽一个宝石到棋盘上来交换。\n – 点击开始按钮来开始匹配图案并得分。\n – 只有宝石的颜色参与匹配。
+ui_tutorial_gem_text, - A gem ,
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
@@ -106,6 +107,7 @@ ui_shop_upgrade_insufficient_quantity_content,Requires at least %d gems,需要�
 ui_shop_exit,Exit,退出
 ui_buy,Buy,购买
 ui_enchant_quantity_limit,Gem can have up to 2 enchantments,宝石最多拥有2个附魔
+ui_delete_gem_count_limit,You can’t have less than %d gems,你不能拥有低于%d个宝石
 ui_relics_count_limit,You can have up to 7 relics,您最多拥有7个遗物
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续

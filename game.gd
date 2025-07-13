@@ -134,6 +134,7 @@ var grabs_num : int = 5:
 		else:
 			control_ui.grab_ui.hide()
 var grabs_num_per_level : int
+var action_stack : Array
 var board_size : int = 3:
 	set(v):
 		board_size = v
@@ -535,6 +536,15 @@ func get_level_score(lv : int):
 	else:
 		return 1000000000
 
+func get_level_reward(lv : int):
+	if lv % 3 == 0:
+		return 10
+	elif lv % 3 == 1:
+		return 5
+	elif lv % 3 == 2:
+		return 7
+	return 0
+
 func begin_busy():
 	control_ui.roll_button.disabled = true
 	control_ui.play_button.disabled = true
@@ -651,7 +661,7 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Leo")
 			add_relic(r)
@@ -786,11 +796,68 @@ func start_game(saving : String = ""):
 		status_bar_ui.level_target.modulate.a = 1.0
 		load_from_file(saving)
 		history.init()
+		refresh_cluster_levels()
 	
 	status_bar_ui.board_size_text.enable_change = true
 	status_bar_ui.hand_text.enable_change = true
 	status_bar_ui.coins_text.enable_change = true
 	game_ui.show()
+
+func refresh_cluster_levels():
+	if level_clear_ui.visible:
+		var lv0 = int((level - 1) / 3) * 3
+		if lv0 + 1 <= level:
+			status_bar_ui.cluster_level1_sp.frame = 2
+		else:
+			status_bar_ui.cluster_level1_sp.frame = 0
+		if lv0 + 2 <= level:
+			status_bar_ui.cluster_level2_sp.frame = 2
+		else:
+			status_bar_ui.cluster_level2_sp.frame = 0
+		if lv0 + 3 <= level:
+			status_bar_ui.cluster_level3_sp.frame = 2
+		else:
+			status_bar_ui.cluster_level3_sp.frame = 0
+	elif shop_ui.visible:
+		var lv0 = int(level / 3) * 3
+		if lv0 + 1 <= level:
+			status_bar_ui.cluster_level1_sp.frame = 2
+		elif lv0 + 1 == level + 1:
+			status_bar_ui.cluster_level1_sp.frame = 1
+		else:
+			status_bar_ui.cluster_level1_sp.frame = 0
+		if lv0 + 2 <= level:
+			status_bar_ui.cluster_level2_sp.frame = 2
+		elif lv0 + 2 == level + 1:
+			status_bar_ui.cluster_level2_sp.frame = 1
+		else:
+			status_bar_ui.cluster_level2_sp.frame = 0
+		if lv0 + 3 <= level:
+			status_bar_ui.cluster_level3_sp.frame = 2
+		elif lv0 + 3 == level + 1:
+			status_bar_ui.cluster_level3_sp.frame = 1
+		else:
+			status_bar_ui.cluster_level3_sp.frame = 0
+	else:
+		var lv0 = int((level - 1) / 3) * 3
+		if lv0 + 1 < level:
+			status_bar_ui.cluster_level1_sp.frame = 2
+		elif lv0 + 1 == level:
+			status_bar_ui.cluster_level1_sp.frame = 1
+		else:
+			status_bar_ui.cluster_level1_sp.frame = 0
+		if lv0 + 2 < level:
+			status_bar_ui.cluster_level2_sp.frame = 2
+		elif lv0 + 2 == level:
+			status_bar_ui.cluster_level2_sp.frame = 1
+		else:
+			status_bar_ui.cluster_level2_sp.frame = 0
+		if lv0 + 3 < level:
+			status_bar_ui.cluster_level3_sp.frame = 2
+		elif lv0 + 3 == level:
+			status_bar_ui.cluster_level3_sp.frame = 1
+		else:
+			status_bar_ui.cluster_level3_sp.frame = 0
 
 func new_level(tween : Tween = null):
 	if !tween:
@@ -801,6 +868,7 @@ func new_level(tween : Tween = null):
 		level += 1
 		target_score = get_level_score(level) * 1
 		history.level_reset()
+		refresh_cluster_levels()
 		
 		set_props(Props.None)
 		rolls = rolls_per_level
@@ -845,6 +913,10 @@ func new_level(tween : Tween = null):
 		temp_text1.queue_free()
 		temp_text2.queue_free()
 	)
+	if level == 0:
+		tween.tween_callback(func():
+			tutorial_ui.enter()
+		)
 
 func level_end():
 	stage = Stage.LevelOver
@@ -856,6 +928,7 @@ func level_end():
 func win():
 	level_end()
 	level_clear_ui.enter()
+	refresh_cluster_levels()
 
 func lose():
 	level_end()

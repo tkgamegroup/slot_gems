@@ -14,7 +14,9 @@ var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
 var refresh_base_price : int = 3
 var refresh_price : int
-var refresh_increase : int = 1
+var refresh_price_increase : int = 1
+var delete_price : int
+var delete_price_increase : int = 1
 
 func clear():
 	for n in list1.get_children():
@@ -91,14 +93,18 @@ func refresh(tween : Tween = null):
 			if Game.rng.randf() > 0.4:
 				gem.type = Game.rng.randi() % Gem.Type.Count + 1
 				gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
-				price = 1
-				quantity = 5
+				if Game.rng.randf() > 0.5:
+					price = 1
+					quantity = 5
+				else:
+					price = 0
+					quantity = 1
 			else:
 				if Game.rng.randf() > 0.25:
 					gem.type = Game.rng.randi() % Gem.Type.Count + 1
 					gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
 					if Game.rng.randf() > 0.5:
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":24}, Buff.Duration.Eternal)
+						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":40}, Buff.Duration.Eternal)
 						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
 					else:
 						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
@@ -108,8 +114,8 @@ func refresh(tween : Tween = null):
 					if Game.rng.randf() > 0.66:
 						gem.type = Gem.Type.Colorless
 						gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
-						gem.base_score = 30
-						price = 2
+						gem.base_score = 60
+						price = 1
 					elif Game.rng.randf() > 0.5:
 						gem.type = Gem.Type.Wild
 						gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
@@ -146,24 +152,24 @@ func refresh(tween : Tween = null):
 			if Game.rng.randf() >= 0.4:
 				if Game.rng.randf() >= 0.5:
 					if Game.rng.randf() >= 0.5:
-						ui.setup("w_enchant", "w_enchant_charming", 3)
+						ui.setup("w_enchant", "w_enchant_charming", 1)
 					else:
-						ui.setup("w_enchant", "w_enchant_sharp", 3)
+						ui.setup("w_enchant", "w_enchant_sharp", 1)
 				else:
 					var item = Item.new()
 					item.setup(SMath.pick_random(items_pool, Game.rng))
-					ui.setup("w_socket", item, 5)
+					ui.setup("w_socket", item, 3)
 			else:
 				if Game.rng.randf() >= 0.25:
 					if Game.rng.randf() >= 0.5:
-						ui.setup("w_delete", "", 2)
+						ui.setup("w_delete", "", delete_price)
 					else:
-						ui.setup("w_duplicate", "", 5)
+						ui.setup("w_duplicate", "", 4)
 				else:
 					if Game.rng.randf() >= 0.5:
-						ui.setup("w_enchant", "w_wild", 8)
+						ui.setup("w_enchant", "w_wild", 6)
 					else:
-						ui.setup("w_enchant", "w_omni", 8)
+						ui.setup("w_enchant", "w_omni", 6)
 			list2.add_child(ui)
 		)
 	var not_owned_patterns = []
@@ -209,12 +215,16 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
 	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
 	tween.parallel().tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.tween_callback(func():
+		Game.refresh_cluster_levels()
+	)
 	
 	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.disabled = !(Game.board_size < 6)
 	
 	refresh_price = refresh_base_price
 	refresh_button.price.text = "%d" % refresh_price
+	delete_price = 0
 	
 	if do_refresh:
 		refresh(tween)
@@ -262,7 +272,7 @@ func _ready() -> void:
 		SSound.se_coin.play()
 		Game.coins -= refresh_price
 		
-		refresh_price += refresh_increase
+		refresh_price += refresh_price_increase
 		refresh_button.price.text = "%d" % refresh_price
 		
 		refresh()
