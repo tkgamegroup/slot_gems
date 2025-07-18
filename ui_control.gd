@@ -14,6 +14,7 @@ const UiProp = preload("res://ui_prop.gd")
 @onready var pin_ui : UiProp = $HBoxContainer/UiProp
 @onready var activate_ui : UiProp = $HBoxContainer/UiProp2
 @onready var grab_ui : UiProp = $HBoxContainer/UiProp3
+@onready var undo_button : Button = $Undo
 @onready var debug_text : Label = $DebugText
 
 var preview_matchings : Array[Array]
@@ -133,4 +134,18 @@ func _ready() -> void:
 	grab_ui.button.pressed.connect(func():
 		SSound.se_click.play()
 		Game.set_props(Game.Props.Grab)
+	)
+	undo_button.pressed.connect(func():
+		SSound.se_click.play()
+		if !Game.action_stack.is_empty():
+			var p = Game.action_stack.back()
+			for i in Hand.grabs.size():
+				if Hand.grabs[i] == p.second:
+					Hand.erase(i)
+					Hand.swap(p.first, p.second)
+					break
+			Game.swaps += 1
+			Game.action_stack.pop_back()
+			if Game.action_stack.is_empty():
+				undo_button.hide()
 	)

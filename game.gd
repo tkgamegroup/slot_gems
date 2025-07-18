@@ -134,7 +134,7 @@ var grabs_num : int = 5:
 		else:
 			control_ui.grab_ui.hide()
 var grabs_num_per_level : int
-var action_stack : Array
+var action_stack : Array[Pair]
 var board_size : int = 3:
 	set(v):
 		board_size = v
@@ -220,17 +220,27 @@ var modifiers : Dictionary
 
 var base_animation_speed = 1.0
 var animation_speed = base_animation_speed
-var invincible : bool = false
+var crt_mode : bool = true:
+	set(v):
+		if crt_mode != v:
+			crt_mode = v
+			if crt_mode && !performance_mode:
+				crt.show()
+			else:
+				crt.hide()
 var performance_mode : bool = false:
 	set(v):
 		if performance_mode != v:
 			performance_mode = v
 			if !performance_mode:
 				background.show()
-				crt.show()
 			else:
 				background.hide()
+			if crt_mode && !performance_mode:
+				crt.show()
+			else:
 				crt.hide()
+var invincible : bool = false
 
 func set_props(t : int):
 	props = t
@@ -956,6 +966,9 @@ func play():
 		combos = modifiers["base_combo_i"]
 		score_mult = 1.0
 		animation_speed = base_animation_speed
+		
+		action_stack.clear()
+		control_ui.undo_button.hide()
 		
 		calculator_bar_ui.appear()
 		begin_busy()

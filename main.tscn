@@ -1,4 +1,4 @@
-[gd_scene load_steps=153 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=160 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -63,6 +63,7 @@
 [ext_resource type="Script" uid="uid://cl7s82k7ftloq" path="res://ui_choose_reward.gd" id="36_c2aw5"]
 [ext_resource type="AudioStream" uid="uid://c3nq5i3wax3bd" path="res://sounds/error.wav" id="37_birbe"]
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
+[ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
 [ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://ui_hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
@@ -78,10 +79,12 @@
 [ext_resource type="SpriteFrames" uid="uid://ce4mcwrcnqlca" path="res://images/dot.tres" id="64_ovcoh"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
+[ext_resource type="Texture2D" uid="uid://np31u18iwfdo" path="res://images/quetion_mark.png" id="68_1yv1y"]
 [ext_resource type="Script" uid="uid://b5qjvjf6wb7ty" path="res://banner.gd" id="69_phcyf"]
 [ext_resource type="Script" uid="uid://b0rh64phtex0f" path="res://ui_calculate_bar.gd" id="71_f1p13"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
 [ext_resource type="Texture2D" uid="uid://m6bdw8xllrnw" path="res://images/tutorial/elements_en.png" id="74_4obbf"]
+[ext_resource type="Texture2D" uid="uid://bbh7xqdxi817y" path="res://images/left.png" id="75_ppx11"]
 [ext_resource type="Script" uid="uid://caypb4y5bf3py" path="res://ui_tutorial.gd" id="80_f1p13"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
@@ -144,6 +147,15 @@ tile_shape = 3
 tile_offset_axis = 1
 tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_34ol3")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_23xmf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fepj7"]
 bg_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
@@ -462,7 +474,11 @@ expand_margin_bottom = 8.0
 shadow_size = 3
 shadow_offset = Vector2(4, 4)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ppx11"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ovcoh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1yv1y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5t1e"]
 bg_color = Color(0.713726, 0.333333, 0.145098, 1)
@@ -973,6 +989,20 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_4wyqg")
 
+[node name="Undo" type="Button" parent="SubViewportContainer/SubViewport/UI/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 420.0
+offset_top = -40.0
+offset_right = 460.0
+grow_vertical = 0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_23xmf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_yvsr8")
+icon = ExtResource("45_5yh34")
+
 [node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Control"]
 layout_mode = 1
 anchors_preset = 7
@@ -1259,6 +1289,7 @@ layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 96
 
 [node name="TopBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -1624,6 +1655,14 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
 icon = ExtResource("38_us2c3")
 icon_alignment = 1
 
+[node name="Tutorial" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
+icon = ExtResource("68_1yv1y")
+icon_alignment = 1
+
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -1636,7 +1675,7 @@ anchor_bottom = 1.0
 offset_right = 153.0
 grow_vertical = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 96
 
 [node name="RelicsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer"]
 layout_mode = 2
@@ -1684,7 +1723,7 @@ offset_left = -115.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 96
 
 [node name="PatternsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2"]
 layout_mode = 2
@@ -2130,7 +2169,6 @@ grow_vertical = 2
 script = ExtResource("80_f1p13")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
-custom_minimum_size = Vector2(600, 150)
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -2150,14 +2188,38 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 20
 bbcode_enabled = true
+scroll_active = false
+meta_underlined = false
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="Prev" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ppx11")
+icon = ExtResource("75_ppx11")
+expand_icon = true
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ovcoh")
 text = "ui_close"
 
-[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
+[node name="Next" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_1yv1y")
+icon = ExtResource("54_eldhe")
+expand_icon = true
+
+[node name="Elements" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -2245,7 +2307,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_options_performance_mode"
+text = "ui_options_crt"
 
 [node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -2254,7 +2316,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "ui_options_invincible"
+text = "ui_options_performance_mode"
 
 [node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -2262,6 +2324,15 @@ layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "ui_options_invincible"
+
+[node name="CheckBox4" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
+
+[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_command_line"
 
@@ -2323,6 +2394,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_main_menu"
 
 [node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_tutorial"

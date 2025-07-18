@@ -43,15 +43,7 @@ func clear():
 	Game.hand_ui.clear()
 
 func swap(coord : Vector2i, gem : Gem):
-	if Game.swaps > 0:
-		Game.swaps -= 1
-		
-		var og = Board.set_gem_at(coord, gem)
-		if gem.bound_item:
-			Board.set_item_at(coord, gem.bound_item)
-		get_gem_from(og, Board.get_pos(coord))
-		
-		return true
-	else:
-		Game.control_ui.swaps_text.hint()
-	return false
+	var og = Board.set_gem_at(coord, gem)
+	if gem.bound_item:
+		Board.set_item_at(coord, gem.bound_item)
+	get_gem_from(og, Board.get_pos(coord))

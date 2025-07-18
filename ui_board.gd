@@ -130,6 +130,16 @@ func _ready() -> void:
 		elif ev == "peek_exited":
 			pass
 		else:
-			return Hand.swap(extra["coord"], payload)
+			var coord = extra["coord"]
+			var g1 = payload as Gem
+			if Game.swaps > 0:
+				Game.swaps -= 1
+				var g2 = Board.get_gem_at(coord)
+				Hand.swap(coord, g1)
+				Game.action_stack.append(Pair.new(coord, g2))
+				Game.control_ui.undo_button.show()
+				return true
+			else:
+				Game.control_ui.swaps_text.hint()
 		return false
 	)

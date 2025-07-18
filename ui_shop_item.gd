@@ -27,9 +27,9 @@ func buy():
 	if Game.coins < price:
 		Game.status_bar_ui.coins_text.hint()
 		return false
-	if cate == "relic" && Game.relics.size() >= 7:
+	if cate == "relic" && Game.relics.size() >= 5:
 		SSound.se_error.play()
-		Game.banner_ui.show_tip(tr("ui_relics_count_limit"), "", 1.0)
+		Game.banner_ui.show_tip(tr("ui_relics_count_limit") % 5, "", 1.0)
 		return false
 	
 	button.button.disabled = true

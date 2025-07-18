@@ -33,6 +33,7 @@ const NumberText = preload("res://number_text.gd")
 @onready var gem_count_text : Label = $HBoxContainer/HBoxContainer3/Control/VBoxContainer/Label
 @onready var gem_count_limit_text : Label = $HBoxContainer/HBoxContainer3/Control/VBoxContainer/Label2
 @onready var gear_button : Button = $HBoxContainer/HBoxContainer3/Gear
+@onready var tutorial_button : Button = $HBoxContainer/HBoxContainer3/Tutorial
 
 func _ready() -> void:
 	red_bouns_container.mouse_entered.connect(func():
@@ -162,5 +163,15 @@ func _ready() -> void:
 		STooltip.show([Pair.new(tr("tt_game_menu_title"), "")])
 	)
 	gear_button.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	tutorial_button.pressed.connect(func():
+		SSound.se_click.play()
+		Game.tutorial_ui.enter()
+	)
+	tutorial_button.mouse_entered.connect(func():
+		STooltip.show([Pair.new(tr("tt_game_tutorial"), "")])
+	)
+	tutorial_button.mouse_exited.connect(func():
 		STooltip.close()
 	)

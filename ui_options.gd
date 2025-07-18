@@ -5,8 +5,9 @@ extends Control
 @onready var se_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider
 @onready var music_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider2
 @onready var fullscreen_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox
-@onready var performance_mode_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox2
-@onready var invincible_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox3
+@onready var crt_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox2
+@onready var performance_mode_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox3
+@onready var invincible_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox4
 @onready var close_button : Button = $PanelContainer/VBoxContainer/Button
 @onready var command_line : LineEdit = $PanelContainer/VBoxContainer/GridContainer/LineEdit
 
@@ -26,6 +27,7 @@ func enter(trans = true):
 		language_select.selected = 1
 	se_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.se_bus_index))
 	music_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.music_bus_index))
+	crt_checkbox.set_pressed_no_signal(Game.crt_mode)
 	performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
 	invincible_checkbox.set_pressed_no_signal(Game.invincible)
 	fullscreen_checkbox.set_pressed_no_signal(DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -63,6 +65,10 @@ func _ready() -> void:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		else:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	)
+	crt_checkbox.toggled.connect(func(v):
+		SSound.se_click.play()
+		Game.crt_mode = v
 	)
 	performance_mode_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
