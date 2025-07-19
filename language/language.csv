@@ -49,6 +49,7 @@ ui_options_language,Language,语言
 ui_options_sfx_volume,SFX Volume,音效音量
 ui_options_music_volume,Music Volume,音乐音量
 ui_options_fullscreen,Fullscreen,全屏
+ui_options_game_speed,Game Speed,游戏速度
 ui_options_performance_mode,Performance Mode,性能模式
 ui_options_invincible,Invincible,无敌
 ui_options_command_line,Command Line,命令行
@@ -97,7 +98,7 @@ ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
 ui_bag_viewer_in_hand,In Hand,手中
 ui_tutorial_how_to_play_title,How To Play,玩法
-ui_tutorial_how_to_play_text, - Drag a gem from Hand to Board to swap them.\n - Click the start button to match patterns and score.\n - Only the colors of the gems are used for matching., - 从手上拖拽一个宝石到棋盘上来交换。\n - 点击开始按钮来开始匹配图案并得分。\n - 只有宝石的颜色参与匹配。
+ui_tutorial_how_to_play_text," - Drag a gem from Hand to Board to swap them. (You start with 5 Swaps per level)\n - Click the start button to match patterns and score.\n - Only the colors of the gems are used for matching.\n - You pass the level when you reach the target score. When you use up all the Swaps but don’t reach the target score, you lose the game.", - 从手上拖拽一个宝石到棋盘上来交换。（一开始你每关有5次交换）\n - 点击开始按钮来开始匹配图案并得分。\n - 只有宝石的颜色参与匹配。\n - 当你达到目标分数时，你过关。当你用完所有的交换次数却没有达到目标分数，你游戏失败。
 ui_tutorial_gem_text," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_pink][img]res://images/pink.png[/img][/url], also [url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n - Runes do not participate in pattern matching. Specific combinations of runes can be used to activate zodiac signs, such as [url=relic_Leo][img]res://images/relics/leo.png[/img][/url].", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_pink][img]res://images/pink.png[/img][/url]，还有[url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url]。\n - 宝石可以有3种符文[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n - 符文不参与图案的匹配。特定组合的符文可以用于激活星座，例如：[url=relic_Leo][img]res://images/relics/leo.png[/img][/url]。
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧

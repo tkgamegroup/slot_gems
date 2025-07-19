@@ -28,11 +28,11 @@ bg_color = Color(0.817521, 0.817521, 0.817521, 1)
 bg_color = Color(1, 1, 1, 1)
 
 [node name="UiPattern" type="Control"]
-custom_minimum_size = Vector2(52, 84)
+custom_minimum_size = Vector2(52, 72)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 52.0
-offset_bottom = 84.0
+offset_bottom = 72.0
 size_flags_horizontal = 4
 script = ExtResource("1_wvl8u")
 

@@ -262,7 +262,7 @@ func setup(n : String):
 								coords.append(cc)
 				arr.clear()
 				arr.append_array(arr2)
-				tween.tween_interval(0.4 * Game.animation_speed)
+				tween.tween_interval(0.4 * Game.speed)
 			tween.tween_callback(func():
 				for sp in sps:
 					sp.queue_free()
@@ -300,11 +300,11 @@ func setup(n : String):
 						var cc = Board.cube_to_offset(c)
 						coords.append(cc)
 					tween.tween_callback(func():
-						var fx = SEffect.add_lighning(Board.get_pos(p0), Board.get_pos(p1), 3, 0.5 * Game.animation_speed)
+						var fx = SEffect.add_lighning(Board.get_pos(p0), Board.get_pos(p1), 3, 0.5 * Game.speed)
 						Game.board_ui.cells_root.add_child(fx)
 					)
 				coords.append(targets.back())
-				tween.tween_interval(0.5 * Game.animation_speed)
+				tween.tween_interval(0.5 * Game.speed)
 				tween.tween_callback(func():
 						Game.add_combo()
 						for c in coords:
@@ -464,7 +464,7 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = SMath.pick_random(cands, Game.rng)
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.speed)
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
@@ -520,7 +520,7 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = SMath.pick_random(cands, Game.rng)
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * Game.speed)
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
@@ -599,7 +599,7 @@ func setup(n : String):
 				var i = Board.get_item_at(c)
 				var score = i.extra["score"]
 				var pos = Board.get_pos(c)
-				SAnimation.move_to(tween, item_ui, pos, 0.4 * Game.animation_speed)
+				SAnimation.move_to(tween, item_ui, pos, 0.4 * Game.speed)
 				tween.tween_callback(func():
 					Game.add_combo()
 					Game.add_score(score, pos)
@@ -695,11 +695,11 @@ func setup(n : String):
 				var p0 = Board.get_pos(sub_coords.front())
 				var p1 = Board.get_pos(sub_coords.back())
 				tween.tween_callback(func():
-					var sp = SEffect.add_slash(p0, p1, 3, 0.5 * Game.animation_speed)
+					var sp = SEffect.add_slash(p0, p1, 3, 0.5 * Game.speed)
 					Game.board_ui.cells_root.add_child(sp)
 				)
 				coords.append_array(sub_coords)
-			tween.tween_interval(0.5 * Game.animation_speed)
+			tween.tween_interval(0.5 * Game.speed)
 			tween.tween_callback(func():
 				Game.add_combo()
 				for c in coords:
@@ -754,7 +754,7 @@ func setup(n : String):
 			coords.append(coord)
 			for c in Board.offset_neighbors(coord):
 				coords.append(c)
-			tween.tween_interval(0.5 * Game.animation_speed)
+			tween.tween_interval(0.5 * Game.speed)
 			tween.tween_callback(func():
 				for c in coords:
 					var g = Board.get_gem_at(c)
@@ -932,7 +932,7 @@ func setup(n : String):
 						Game.board_ui.cells_root.add_child(sp)
 						t.third = sp
 						tween.parallel()
-						SAnimation.quadratic_curve_to(tween, sp, t.second, Vector2(0.5, 0.5), 0.4 * Game.animation_speed)
+						SAnimation.quadratic_curve_to(tween, sp, t.second, Vector2(0.5, 0.5), 0.4 * Game.speed)
 					tween.tween_callback(func():
 						Game.add_combo()
 						for t in arr:

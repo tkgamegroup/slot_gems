@@ -184,7 +184,7 @@ var combos : int = 0:
 				combos_tween.custom_step(1000.0)
 			calculator_bar_ui.combos_text.position.y = 0
 			combos_tween = get_tree().create_tween()
-			SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * Game.animation_speed, func():
+			SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * Game.speed, func():
 				calculator_bar_ui.combos_text.text = "%dX" % v
 			)
 			combos_tween.tween_callback(func():
@@ -218,8 +218,8 @@ var history : History = History.new()
 
 var modifiers : Dictionary
 
-var base_animation_speed = 1.0
-var animation_speed = base_animation_speed
+var base_speed = 1.0
+var speed = 1.0 / base_speed
 var crt_mode : bool = true:
 	set(v):
 		if crt_mode != v:
@@ -965,7 +965,7 @@ func play():
 	
 		combos = modifiers["base_combo_i"]
 		score_mult = 1.0
-		animation_speed = base_animation_speed
+		speed = 1.0 / base_speed
 		
 		action_stack.clear()
 		control_ui.undo_button.hide()
@@ -1460,7 +1460,7 @@ func _ready() -> void:
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		stage = Stage.Deploy
-		animation_speed = base_animation_speed
+		speed = 1.0 / base_speed
 		save_to_file()
 		
 		Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])

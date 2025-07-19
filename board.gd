@@ -411,7 +411,7 @@ func process_active_effect(ae : ActiveEffect):
 		ae.sp.queue_free()
 		clear_consumed()
 	)
-	tween.tween_interval(0.4 * Game.animation_speed)
+	tween.tween_interval(0.4 * Game.speed)
 	tween.tween_callback(func():
 		fill_blanks()
 	)
@@ -556,7 +556,7 @@ func clear_consumed():
 
 func fill_blanks():
 	var tween = Game.get_tree().create_tween()
-	tween.tween_interval(max(0.1 * Game.animation_speed, 0.05))
+	tween.tween_interval(max(0.1 * Game.speed, 0.05))
 	
 	if !Game.staging_scores.is_empty():
 		var idx = 0
@@ -569,9 +569,9 @@ func fill_blanks():
 				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
 				s.first.add_child(trail)
 			)
-			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * Game.animation_speed)
+			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * Game.speed)
 			subtween.parallel()
-			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.animation_speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 			subtween.tween_callback(func():
 				SSound.se_select.play()
 				Game.base_score += s.second
@@ -614,7 +614,7 @@ func matching():
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
 					var subtween = Game.get_tree().create_tween()
-					subtween.tween_interval(matched_num * 0.2 * Game.animation_speed)
+					subtween.tween_interval(matched_num * 0.2 * Game.speed)
 					subtween.tween_callback(func():
 						p.add_exp(1)
 						
@@ -649,10 +649,10 @@ func matching():
 						tween.parallel()
 					tween.tween_subtween(subtween)
 					
-					Game.animation_speed *= 0.98
-					Game.animation_speed = max(0.05, Game.animation_speed)
+					Game.speed *= 0.98
+					Game.speed = max(0.05, Game.speed)
 	if matched_num == 0:
-		tween.tween_interval(0.7 * Game.animation_speed)
+		tween.tween_interval(0.7 * Game.speed)
 		tween.tween_callback(func():
 			if active_effects.is_empty():
 				matching_finished.emit()
@@ -662,10 +662,10 @@ func matching():
 		)
 	else:
 		tween.tween_callback(clear_consumed)
-		tween.tween_interval(0.4 * Game.animation_speed)
+		tween.tween_interval(0.4 * Game.speed)
 		tween.tween_callback(fill_blanks)
-	Game.animation_speed *= 0.98
-	Game.animation_speed = max(0.05, Game.animation_speed)
+	Game.speed *= 0.98
+	Game.speed = max(0.05, Game.speed)
 
 func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null, source = null):
 	var outer_tween = (tween != null)
@@ -675,9 +675,9 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 	var target_pos = get_pos(target_coord)
 	if cast_pos != target_pos:
 		tween.tween_callback(func():
-			SEffect.add_leading_line(cast_pos, target_pos, 0.3 * Game.animation_speed)
+			SEffect.add_leading_line(cast_pos, target_pos, 0.3 * Game.speed)
 		)
-		tween.tween_interval(0.4 * Game.animation_speed)
+		tween.tween_interval(0.4 * Game.speed)
 	var coords : Array[Vector2i] = []
 	var r = range + Game.modifiers["explode_range_i"]
 	var p = power + Game.modifiers["explode_power_i"]
@@ -692,12 +692,12 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 				coords.append(c)
 	tween.tween_callback(func():
 		var pos = get_pos(target_coord)
-		var sp_expl = SEffect.add_explosion(pos, fx_sz, 3, 0.5 * Game.animation_speed)
+		var sp_expl = SEffect.add_explosion(pos, fx_sz, 3, 0.5 * Game.speed)
 		Game.board_ui.cells_root.add_child(sp_expl)
-		var fx = SEffect.add_distortion(pos, fx_sz, 4, 0.5 * Game.animation_speed)
+		var fx = SEffect.add_distortion(pos, fx_sz, 4, 0.5 * Game.speed)
 		Game.board_ui.cells_root.add_child(fx)
 	)
-	tween.tween_interval(0.5 * Game.animation_speed)
+	tween.tween_interval(0.5 * Game.speed)
 	tween.tween_callback(func():
 		var data = {"source":source,"coord":target_coord,"range":range,"power":power}
 		for h in event_listeners:
@@ -753,9 +753,9 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 		for i in target_coords.size():
 			if sps[i] != null:
 				tween2.parallel()
-				SAnimation.cubic_curve_to(tween2, sps[i], get_pos(target_coords[i]), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.7 * Game.animation_speed)
+				SAnimation.cubic_curve_to(tween2, sps[i], get_pos(target_coords[i]), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.7 * Game.speed)
 	)
-	tween.tween_interval(0.7 * Game.animation_speed)
+	tween.tween_interval(0.7 * Game.speed)
 	tween.tween_callback(func():
 		for i in items.size():
 			if sps[i] != null:

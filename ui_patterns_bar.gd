@@ -3,8 +3,10 @@ extends PanelContainer
 const pattern_pb = preload("res://ui_pattern.tscn")
 
 @onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
+@onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
+
 const item_w = 52
-const item_h = 84
+const item_h = 72
 const gap = 16
 
 var dragging : Control = null
@@ -32,6 +34,7 @@ func add_ui(p : Pattern):
 				drag_pos = event.position
 				ui.z_index = 1
 	)
+	number_text.text = "(%d/%d)" % [list.get_child_count(), 4]
 
 func clear():
 	if list:
@@ -39,6 +42,7 @@ func clear():
 			n.queue_free()
 			list.remove_child(n)
 		list.custom_minimum_size = Vector2(item_w, 0)
+		number_text.text = "(%d/%d)" % [list.get_child_count(), 4]
 
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(item_w, 0)

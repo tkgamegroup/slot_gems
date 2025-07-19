@@ -58,11 +58,11 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 		var idx = 0
 		for sp in sps:
 			var subtween = Game.get_tree().create_tween()
-			subtween.tween_interval(idx * 0.1 * Game.animation_speed)
-			subtween.tween_property(sp, "scale", Vector2(1.5, 1.5), 0.2 * Game.animation_speed).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-			subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * Game.animation_speed)
+			subtween.tween_interval(idx * 0.1 * Game.speed)
+			subtween.tween_property(sp, "scale", Vector2(1.5, 1.5), 0.2 * Game.speed).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+			subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * Game.speed)
 			#subtween.tween_property(sp, "position", c, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-			subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * Game.animation_speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * Game.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 			subtween.tween_callback(func():
 				sp.queue_free()
 			)
@@ -73,9 +73,9 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 		if do_active:
 			tween.tween_callback(func():
 				SSound.se_skill.play()
-				SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3 * Game.animation_speed, 2.0)
+				SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3 * Game.speed, 2.0)
 			)
-			tween.tween_interval(0.3 * Game.animation_speed)
+			tween.tween_interval(0.3 * Game.speed)
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
 			)
@@ -275,7 +275,7 @@ func setup(n : String):
 						tween.tween_callback(func():
 							Game.add_score(int(Game.target_score * (0.01 * extra["percentage"])) + extra["basic_value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
 						)
-						tween.tween_interval(0.5 * Game.animation_speed)
+						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Gemini":
 		image_id = 17
 		on_event = func(event : int, tween : Tween, data):
@@ -326,7 +326,7 @@ func setup(n : String):
 							SSound.se_vibra.play()
 							Game.swaps += 1
 						)
-						tween.tween_interval(0.5 * Game.animation_speed)
+						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Virgo":
 		image_id = 20
 		extra["value"] = 0.2
@@ -342,7 +342,7 @@ func setup(n : String):
 							Game.float_text("+%.1f Mult" % value, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.7, 0.3, 0.9), 22)
 							Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":value})
 						)
-						tween.tween_interval(0.5 * Game.animation_speed)
+						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Libra":
 		image_id = 21
 		on_event = func(event : int, tween : Tween, data):
@@ -427,7 +427,7 @@ func setup(n : String):
 							Game.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.8, 0.0), 22)
 							Game.coins += amount
 						)
-						tween.tween_interval(0.5 * Game.animation_speed)
+						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Aquarius":
 		image_id = 25
 		extra["value"] = 1

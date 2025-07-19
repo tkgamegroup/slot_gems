@@ -12,11 +12,9 @@ var view_idx : int = 0
 func update_view():
 	match view_idx:
 		0: 
-			panel.size = Vector2(600, 150)
 			text.text = tr("ui_tutorial_how_to_play_text")
 			elements_image.show()
 		1: 
-			panel.size = Vector2(600, 250)
 			text.text = tr("ui_tutorial_gem_text")
 			elements_image.hide()
 	prev_button.disabled = view_idx == 0

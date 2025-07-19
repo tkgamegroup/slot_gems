@@ -5,6 +5,7 @@ extends Control
 @onready var se_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider
 @onready var music_volume_slider : HSlider = $PanelContainer/VBoxContainer/GridContainer/HSlider2
 @onready var fullscreen_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox
+@onready var game_speed_select : OptionButton = $PanelContainer/VBoxContainer/GridContainer/OptionButton2
 @onready var crt_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox2
 @onready var performance_mode_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox3
 @onready var invincible_checkbox : CheckBox = $PanelContainer/VBoxContainer/GridContainer/CheckBox4
@@ -31,6 +32,14 @@ func enter(trans = true):
 	performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
 	invincible_checkbox.set_pressed_no_signal(Game.invincible)
 	fullscreen_checkbox.set_pressed_no_signal(DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
+	if Game.base_speed > 0.4 && Game.base_speed < 0.6:
+		game_speed_select.selected = 0
+	elif Game.base_speed > 0.9 && Game.base_speed < 1.1:
+		game_speed_select.selected = 1
+	elif Game.base_speed > 1.9 && Game.base_speed < 2.1:
+		game_speed_select.selected = 2
+	elif Game.base_speed > 3.9 && Game.base_speed < 4.1:
+		game_speed_select.selected = 3
 	
 	self.show()
 	panel.show()
@@ -52,6 +61,8 @@ func _ready() -> void:
 		match idx:
 			0: TranslationServer.set_locale("en")
 			1: TranslationServer.set_locale("zh")
+		Game.level = Game.level
+		Game.target_score = Game.target_score
 	)
 	se_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(v))
@@ -65,6 +76,14 @@ func _ready() -> void:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		else:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	)
+	game_speed_select.item_selected.connect(func(idx):
+		match idx:
+			0: Game.base_speed = 0.5
+			1: Game.base_speed = 1.0
+			2: Game.base_speed = 2.0
+			3: Game.base_speed = 4.0
+		Game.speed = 1.0 / Game.base_speed
 	)
 	crt_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()

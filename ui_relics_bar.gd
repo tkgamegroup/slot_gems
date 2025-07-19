@@ -1,6 +1,7 @@
 extends PanelContainer
 
 @onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
+@onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
 
 const relic_pb = preload("res://ui_relic.tscn")
 const item_w = 104
@@ -32,6 +33,7 @@ func add_ui(r : Relic):
 				drag_pos = event.position
 				ui.z_index = 1
 	)
+	number_text.text = "(%d/%d)" % [list.get_child_count(), 5]
 
 func clear():
 	if list:
@@ -39,6 +41,7 @@ func clear():
 			n.queue_free()
 			list.remove_child(n)
 		list.custom_minimum_size = Vector2(item_w, 0)
+		number_text.text = "(%d/%d)" % [list.get_child_count(), 4]
 
 func get_pos(idx : int):
 	if idx == -1:

@@ -1693,11 +1693,19 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
 text = "ui_game_relics"
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "(0/5)"
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -1740,11 +1748,18 @@ theme_override_constants/margin_bottom = 8
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
 text = "ui_game_patterns"
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "(3/4)"
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -2173,9 +2188,9 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -300.0
+offset_left = -400.0
 offset_top = 100.0
-offset_right = 300.0
+offset_right = 400.0
 offset_bottom = 250.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
@@ -2188,7 +2203,6 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 20
 bbcode_enabled = true
-scroll_active = false
 meta_underlined = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
@@ -2307,6 +2321,23 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
 [node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+text = "ui_options_game_speed"
+
+[node name="OptionButton2" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "0.5"
+popup/item_0/id = 0
+popup/item_1/text = "1"
+popup/item_1/id = 1
+popup/item_2/text = "2"
+popup/item_2/id = 2
+popup/item_3/text = "4"
+popup/item_3/id = 3
+
+[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
 text = "ui_options_crt"
 
 [node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
@@ -2314,7 +2345,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_performance_mode"
 
@@ -2323,7 +2354,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_invincible"
 
@@ -2332,7 +2363,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label9" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_command_line"
 
