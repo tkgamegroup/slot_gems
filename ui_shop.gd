@@ -104,11 +104,9 @@ func refresh(tween : Tween = null):
 					gem.type = Game.rng.randi() % Gem.Type.Count + 1
 					gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
 					if Game.rng.randf() > 0.5:
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":40}, Buff.Duration.Eternal)
-						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+						Game.enchant_gem(gem, "w_enchant_charming")
 					else:
-						var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
-						Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+						Game.enchant_gem(gem, "w_enchant_sharp")
 					price = 2
 				else:
 					if Game.rng.randf() > 0.66:

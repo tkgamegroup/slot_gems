@@ -3,8 +3,6 @@ extends Node
 @onready var timer : Timer = $/root/Main/TestTimer
 @onready var label : Label = $/root/Main/SubViewportContainer/SubViewport/UI/TestingText
 
-# test 10 1 "" "" 1 1
-
 enum Mode
 {
 	AverageScore,
@@ -167,7 +165,7 @@ func start_test(_mode : int, _level_count : int, _task_count : int, fn : String 
 	label.show()
 
 func time_out():
-	if Game.stage == Game.Stage.Deploy:
+	if Game.stage == Game.Stage.Deploy || Game.stage == Game.Stage.LevelOver:
 		if step == TaskSteps.ToRoll:
 			if Game.level_clear_ui.visible || Game.game_over_ui.visible:
 				var curr_task = records.back()
@@ -251,17 +249,18 @@ func time_out():
 				Game.game_over_ui.hide()
 			else:
 				step = TaskSteps.ToMatch
-				Game.roll()
+				#Game.roll()
 		elif step == TaskSteps.ToMatch:
-			if Game.bag_items.size() > 0 && Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.plays:
-				step = TaskSteps.ToMatch
-				Game.roll()
-			else:
-				if !has_matched_pattern() && Game.rolls >= Game.plays:
-					step = TaskSteps.ToMatch
-					Game.roll()
-				elif Game.plays > 0:
-					auto_place_items()
+			#if Game.bag_items.size() > 0 && Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.plays:
+			#	step = TaskSteps.ToMatch
+			#	Game.roll()
+			#else:
+				#if !has_matched_pattern() && Game.rolls >= Game.plays:
+				#	step = TaskSteps.ToMatch
+				#	Game.roll()
+				#elif Game.plays > 0:
+					auto_swap_gems()
+					#auto_place_items()
 					step = TaskSteps.GetResult
 					Game.play()
 		elif step == TaskSteps.GetResult:
@@ -274,6 +273,8 @@ func time_out():
 			curr_level.combos += his.last_matching_combos
 			curr_level.matchings.append(MatchingRecord.new())
 			step = TaskSteps.ToRoll
+			if his.last_matching_score == 0:
+				Game.lose()
 		elif step == TaskSteps.ToShop:
 			if Game.shop_ui.visible:
 				for i in 5:
@@ -281,6 +282,62 @@ func time_out():
 				Game.shop_ui.exit()
 				step = TaskSteps.ToRoll
 				write_game_status()
+
+func get_missing_one_places() -> Array[Array]:
+	var ret : Array[Array] = []
+	for i in Gem.Type.Count:
+		ret.append([])
+	for y in Board.cy:
+		for x in Board.cx:
+			var c = Vector2i(x, y)
+			for p in Game.patterns:
+				for col in Gem.Type.Count:
+					var res : Array[Vector2i] = p.differ(c, col + 1)
+					if !res.is_empty():
+						ret[col].append(res[0])
+	return ret
+
+func auto_swap_gems():
+	var changed = true
+	while changed:
+		changed = false
+		var missing_one_places : Array[Array] = get_missing_one_places()
+		for g in Hand.grabs:
+			if g.type == Gem.Type.Red:
+				var arr = missing_one_places[Gem.Type.Red - 1]
+				if !arr.is_empty():
+					if Game.swaps > 0:
+						Game.swaps -= 1
+						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						changed = true
+			elif g.type == Gem.Type.Orange:
+				var arr = missing_one_places[Gem.Type.Orange - 1]
+				if !arr.is_empty():
+					if Game.swaps > 0:
+						Game.swaps -= 1
+						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						changed = true
+			elif g.type == Gem.Type.Green:
+				var arr = missing_one_places[Gem.Type.Green - 1]
+				if !arr.is_empty():
+					if Game.swaps > 0:
+						Game.swaps -= 1
+						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						changed = true
+			elif g.type == Gem.Type.Blue:
+				var arr = missing_one_places[Gem.Type.Blue - 1]
+				if !arr.is_empty():
+					if Game.swaps > 0:
+						Game.swaps -= 1
+						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						changed = true
+			elif g.type == Gem.Type.Pink:
+				var arr = missing_one_places[Gem.Type.Pink - 1]
+				if !arr.is_empty():
+					if Game.swaps > 0:
+						Game.swaps -= 1
+						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						changed = true
 
 func auto_place_items():
 	if !Hand.grabs.is_empty():
@@ -291,46 +348,36 @@ func auto_place_items():
 		for i in Hand.grabs.size():
 			var ui = Game.hand_ui.get_ui(i)
 			item_uis.append(ui)
-		var one_less_places : Array[Array] = []
-		for i in Gem.Type.Count:
-			one_less_places.append([])
-		for y in cy:
-			for x in cx:
-				var c = Vector2i(x, y)
-				for p in Game.patterns:
-					for col in Gem.Type.Count:
-						var res : Array[Vector2i] = p.differ(c, col + 1)
-						if !res.is_empty():
-							one_less_places[col].append(res[0])
+		var missing_one_places : Array[Array] = get_missing_one_places()
 		SMath.remove_if(item_uis, func(ui):
 			var item = ui.item
 			if item.name.begins_with("DyeRed"):
-				var arr = one_less_places[Gem.Type.Red - 1]
+				var arr = missing_one_places[Gem.Type.Red - 1]
 				if !arr.is_empty():
 					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyeOrange"):
-				var arr = one_less_places[Gem.Type.Orange - 1]
+				var arr = missing_one_places[Gem.Type.Orange - 1]
 				if !arr.is_empty():
 					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyeGreen"):
-				var arr = one_less_places[Gem.Type.Green - 1]
+				var arr = missing_one_places[Gem.Type.Green - 1]
 				if !arr.is_empty():
 					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyeBlue"):
-				var arr = one_less_places[Gem.Type.Blue - 1]
+				var arr = missing_one_places[Gem.Type.Blue - 1]
 				if !arr.is_empty():
 					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyePink"):
-				var arr = one_less_places[Gem.Type.Pink - 1]
+				var arr = missing_one_places[Gem.Type.Pink - 1]
 				if !arr.is_empty():
 					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name == "ColorPalette":
-				for arr in one_less_places:
+				for arr in missing_one_places:
 					if !arr.is_empty():
 						if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
 							return true

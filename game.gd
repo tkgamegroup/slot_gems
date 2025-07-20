@@ -522,6 +522,14 @@ func duplicate_gem(g : Gem, ui, from : String = "hand"):
 		sort_gems()
 	)
 
+func enchant_gem(g : Gem, type : String):
+	var bid = -1
+	if type == "w_enchant_charming":
+		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_score","add":40}, Buff.Duration.Eternal)
+	elif type == "w_enchant_sharp":
+		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
+	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
+
 func get_level_score(lv : int):
 	if lv <= 10:
 		return lv * (2 * 300 + (lv - 1) * 100) / 2
@@ -637,14 +645,15 @@ func start_game(saving : String = ""):
 		rng.seed = Time.get_ticks_msec()
 		
 		score = 0
+		base_score = 0
 		target_score = 0
 		score_mult = 1.0
 		combos = 0
 		level = 0
 		board_size = 3
-		rolls_per_level = 4
+		rolls_per_level = 0
 		swaps_per_level = 5
-		plays_per_level = 3
+		plays_per_level = 0
 		draws_per_roll = 5
 		max_hand_grabs = 5
 		pins_num_per_level = 0
@@ -791,6 +800,7 @@ func start_game(saving : String = ""):
 		history.init()
 		control_ui.enter()
 		
+		# setting here so that text positions will be all right
 		status_bar_ui.level_text.modulate.a = 0.0
 		status_bar_ui.level_target.modulate.a = 0.0
 		begin_busy()
@@ -886,7 +896,7 @@ func new_level(tween : Tween = null):
 		plays = plays_per_level
 		modifiers["first_roll_i"] = 1
 		modifiers["first_match_i"] = 1
-		6
+		
 		if level_clear_ui.visible:
 			level_clear_ui.exit()
 		if game_over_ui.visible:
@@ -900,33 +910,37 @@ func new_level(tween : Tween = null):
 		stage = Stage.Deploy
 		end_busy()
 	)
-	tween.tween_interval(1.0)
-	banner_ui.appear(tr("ui_game_level") % (level + 1), tr("ui_game_target_score") % get_level_score(level + 1), tween)
-	var temp_text1 = banner_ui.text1.duplicate()
-	var temp_text2 = banner_ui.text2.duplicate()
-	temp_text1.size = status_bar_ui.level_text.size
-	temp_text2.size = status_bar_ui.level_target.size
-	tween.tween_interval(0.5)
-	tween.tween_callback(func():
-		banner_ui.disappear(null, true)
-		banner_ui.add_child(temp_text1)
-		banner_ui.add_child(temp_text2)
-	)
-	tween.tween_property(temp_text1, "global_position", status_bar_ui.level_text.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	tween.parallel().tween_property(temp_text2, "global_position", status_bar_ui.level_target.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	tween.tween_callback(func():
+	if !STest.testing:
+		tween.tween_interval(1.0)
+		banner_ui.appear(tr("ui_game_level") % (level + 1), tr("ui_game_target_score") % get_level_score(level + 1), tween)
+		var temp_text1 = banner_ui.text1.duplicate()
+		var temp_text2 = banner_ui.text2.duplicate()
+		temp_text1.size = status_bar_ui.level_text.size
+		temp_text2.size = status_bar_ui.level_target.size
+		tween.tween_interval(0.5)
+		tween.tween_callback(func():
+			banner_ui.disappear(null, true)
+			banner_ui.add_child(temp_text1)
+			banner_ui.add_child(temp_text2)
+		)
+		tween.tween_property(temp_text1, "global_position", status_bar_ui.level_text.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(temp_text2, "global_position", status_bar_ui.level_target.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			status_bar_ui.level_text.modulate.a = 1.0
+			status_bar_ui.level_target.modulate.a = 1.0
+		)
+		tween.tween_callback(func():
+			banner_ui.hide()
+			temp_text1.queue_free()
+			temp_text2.queue_free()
+		)
+		if level == 0:
+			tween.tween_callback(func():
+				tutorial_ui.enter()
+			)
+	else:
 		status_bar_ui.level_text.modulate.a = 1.0
 		status_bar_ui.level_target.modulate.a = 1.0
-	)
-	tween.tween_callback(func():
-		banner_ui.hide()
-		temp_text1.queue_free()
-		temp_text2.queue_free()
-	)
-	if level == 0:
-		tween.tween_callback(func():
-			tutorial_ui.enter()
-		)
 
 func level_end():
 	stage = Stage.LevelOver

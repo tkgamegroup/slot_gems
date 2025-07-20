@@ -265,6 +265,8 @@ func setup(n : String):
 				tween.tween_subtween(subtween)
 	elif name == "Taurus":
 		image_id = 16
+		extra["basic_value"] = 500
+		extra["percentage"] = 2
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:

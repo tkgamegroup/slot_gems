@@ -42,8 +42,17 @@ func clear():
 	
 	Game.hand_ui.clear()
 
-func swap(coord : Vector2i, gem : Gem):
+func swap(coord : Vector2i, gem : Gem, remove_ui : bool = true, immediately : bool = false):
+	if remove_ui:
+		for i in grabs.size():
+			if grabs[i] == gem:
+				erase(i)
+				break
 	var og = Board.set_gem_at(coord, gem)
 	if gem.bound_item:
 		Board.set_item_at(coord, gem.bound_item)
-	get_gem_from(og, Board.get_pos(coord))
+	if immediately:
+		Game.hand_ui.add_ui(og)
+		add_gem(og)
+	else:
+		get_gem_from(og, Board.get_pos(coord))

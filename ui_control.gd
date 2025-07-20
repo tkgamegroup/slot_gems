@@ -139,11 +139,7 @@ func _ready() -> void:
 		SSound.se_click.play()
 		if !Game.action_stack.is_empty():
 			var p = Game.action_stack.back()
-			for i in Hand.grabs.size():
-				if Hand.grabs[i] == p.second:
-					Hand.erase(i)
-					Hand.swap(p.first, p.second)
-					break
+			Hand.swap(p.first, p.second)
 			Game.swaps += 1
 			Game.action_stack.pop_back()
 			if Game.action_stack.is_empty():

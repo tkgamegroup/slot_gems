@@ -135,7 +135,7 @@ func _ready() -> void:
 			if Game.swaps > 0:
 				Game.swaps -= 1
 				var g2 = Board.get_gem_at(coord)
-				Hand.swap(coord, g1)
+				Hand.swap(coord, g1, false)
 				Game.action_stack.append(Pair.new(coord, g2))
 				Game.control_ui.undo_button.show()
 				return true

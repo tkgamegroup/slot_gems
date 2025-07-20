@@ -145,11 +145,9 @@ func _ready() -> void:
 		tween.tween_callback(func():
 			if type == "w_enchant":
 				if thing == "w_enchant_charming":
-					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"base_score","add":40}, Buff.Duration.Eternal)
-					Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_charming","bid":bid}, Buff.Duration.Eternal)
+					Game.enchant_gem(gem, "w_enchant_charming")
 				elif thing == "w_enchant_sharp":
-					var bid = Buff.create(gem, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
-					Buff.create(gem, Buff.Type.Enchant, {"type":"w_enchant_sharp","bid":bid}, Buff.Duration.Eternal)
+					Game.enchant_gem(gem, "w_enchant_sharp")
 				elif thing == "w_wild":
 					var bid = Buff.create(gem, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.Eternal)
 					Buff.create(gem, Buff.Type.Enchant, {"type":"w_wild","bid":bid}, Buff.Duration.Eternal)
