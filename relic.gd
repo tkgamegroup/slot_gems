@@ -199,38 +199,43 @@ func setup(n : String):
 					Board.event_listeners.append(Hook.new(Event.Combo, self, HostType.Relic, false))
 			elif event == Event.Combo:
 				if Game.combos > 0 && Game.combos % 5 == 0:
-					Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":4.0}, Buff.Duration.ThisCombo)
+					Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_mult","set":5.0}, Buff.Duration.ThisCombo)
 	elif name == "RedStone":
 		image_id = 9
-		extra["value"] = 10
+		extra["value"] = 20
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("red_bouns_i", extra["value"])
 	elif name == "OrangeStone":
 		image_id = 10
-		extra["value"] = 10
+		extra["value"] = 20
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("orange_bouns_i", extra["value"])
 	elif name == "GreenStone":
 		image_id = 11
-		extra["value"] = 10
+		extra["value"] = 20
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("green_bouns_i", extra["value"])
 	elif name == "BlueStone":
 		image_id = 12
-		extra["value"] = 10
+		extra["value"] = 20
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("blue_bouns_i", extra["value"])
 	elif name == "PinkStone":
 		image_id = 13
-		extra["value"] = 10
+		extra["value"] = 20
+		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -265,8 +270,7 @@ func setup(n : String):
 				tween.tween_subtween(subtween)
 	elif name == "Taurus":
 		image_id = 16
-		extra["basic_value"] = 500
-		extra["percentage"] = 2
+		extra["value"] = 500
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -275,7 +279,7 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					if active_constellation(0, 0, 3, data["coords"], tween, false):
 						tween.tween_callback(func():
-							Game.add_score(int(Game.target_score * (0.01 * extra["percentage"])) + extra["basic_value"], ui.get_global_rect().get_center() + Vector2(84, 0), false)
+							Game.add_score(extra["value"], ui.get_global_rect().get_center() + Vector2(84, 0))
 						)
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Gemini":
@@ -340,9 +344,9 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					if active_constellation(0, 2, 1, data["coords"], tween, false):
 						tween.tween_callback(func():
-							var value = extra["value"]
-							Game.float_text("+%.1f Mult" % value, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.7, 0.3, 0.9), 22)
-							Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":value})
+							var v = extra["value"]
+							var pos = ui.get_global_rect().get_center() + Vector2(84, 0)
+							Game.add_mult(v, pos)
 						)
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Libra":

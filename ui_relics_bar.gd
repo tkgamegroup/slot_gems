@@ -33,7 +33,7 @@ func add_ui(r : Relic):
 				drag_pos = event.position
 				ui.z_index = 1
 	)
-	number_text.text = "(%d/%d)" % [list.get_child_count(), 5]
+	number_text.text = "(%d/%d)" % [list.get_child_count(), Game.MaxRelics]
 
 func clear():
 	if list:
@@ -41,7 +41,7 @@ func clear():
 			n.queue_free()
 			list.remove_child(n)
 		list.custom_minimum_size = Vector2(item_w, 0)
-		number_text.text = "(%d/%d)" % [list.get_child_count(), 4]
+		number_text.text = "(%d/%d)" % [list.get_child_count(), Game.MaxRelics]
 
 func get_pos(idx : int):
 	if idx == -1:

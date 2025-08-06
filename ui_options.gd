@@ -61,8 +61,7 @@ func _ready() -> void:
 		match idx:
 			0: TranslationServer.set_locale("en")
 			1: TranslationServer.set_locale("zh")
-		Game.level = Game.level
-		Game.target_score = Game.target_score
+		Game.update_level_text(Game.level)
 	)
 	se_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(v))
@@ -161,6 +160,7 @@ func _ready() -> void:
 				var additional_items = []
 				var additional_patterns = []
 				var additional_relics = []
+				var additional_enchants = []
 				var enable_shopping = false
 				for i in range(1, tokens.size()):
 					var t = tokens[i]
@@ -206,8 +206,11 @@ func _ready() -> void:
 							i += 1
 						for j in num:
 							additional_relics.append(tt)
+					elif t == "-ac":
+						additional_enchants.append(tokens[i + 1])
+						i += 1
 					elif t == "-es":
 						enable_shopping = true
-				STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_patterns, additional_relics, true, enable_shopping)
+				STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_patterns, additional_relics, additional_enchants, true, enable_shopping)
 		command_line.clear()
 	)

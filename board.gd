@@ -549,7 +549,7 @@ func clear_consumed():
 				burning_cells.append(c)
 	if burning_cells.size() > 0:
 		for c in burning_cells:
-			Game.add_score(gem_score_at(c), get_pos(c), false)
+			Game.add_score(gem_score_at(c), get_pos(c))
 			set_gem_at(c, null)
 			set_state_at(c, Cell.State.Normal)
 		SSound.se_end_buring.play()
@@ -558,12 +558,13 @@ func fill_blanks():
 	var tween = Game.get_tree().create_tween()
 	tween.tween_interval(max(0.1 * Game.speed, 0.05))
 	
-	if !Game.staging_scores.is_empty():
-		var idx = 0
+	var staging_idx = 0
+	if !Game.staging_scores.is_empty() || !Game.staging_mults.is_empty():
 		Game.staging_scores.shuffle()
+		Game.staging_mults.shuffle()
 		for s in Game.staging_scores:
 			var subtween = get_tree().create_tween()
-			subtween.tween_interval(idx * 0.02)
+			subtween.tween_interval(staging_idx * 0.02)
 			subtween.tween_callback(func():
 				var trail = trail_pb.instantiate()
 				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
@@ -577,11 +578,32 @@ func fill_blanks():
 				Game.base_score += s.second
 			)
 			subtween.tween_callback(s.first.queue_free)
-			if idx > 0:
+			if staging_idx > 0:
 				tween.parallel()
 			tween.tween_subtween(subtween)
-			idx += 1
+			staging_idx += 1
+		for s in Game.staging_mults:
+			var subtween = get_tree().create_tween()
+			subtween.tween_interval(staging_idx * 0.02)
+			subtween.tween_callback(func():
+				var trail = trail_pb.instantiate()
+				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
+				s.first.add_child(trail)
+			)
+			subtween.tween_property(s.first, "scale", Vector2(0.8, 0.8), 0.5 * Game.speed)
+			subtween.parallel()
+			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.mult_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+			subtween.tween_callback(func():
+				SSound.se_select.play()
+				Game.score_mult += s.second
+			)
+			subtween.tween_callback(s.first.queue_free)
+			if staging_idx > 0:
+				tween.parallel()
+			tween.tween_subtween(subtween)
+			staging_idx += 1
 		Game.staging_scores.clear()
+		Game.staging_mults.clear()
 		tween.tween_interval(0.3)
 	
 	tween.tween_callback(func():
@@ -637,9 +659,10 @@ func matching():
 						Game.add_combo()
 						for c in res:
 							var g = get_gem_at(c)
-							Game.add_score(gem_score_at(c) * p.mult, get_pos(c))
+							var pos = get_pos(c)
+							Game.add_score(gem_score_at(c) * p.mult, pos)
 							if g.mult != 0.0:
-								Game.score_mult += g.mult
+								Game.add_mult(g.mult, pos)
 					)
 					matched_num += 1
 					

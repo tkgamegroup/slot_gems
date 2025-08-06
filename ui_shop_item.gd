@@ -29,7 +29,7 @@ func buy():
 		return false
 	if cate == "relic" && Game.relics.size() >= 5:
 		SSound.se_error.play()
-		Game.banner_ui.show_tip(tr("ui_relics_count_limit") % 5, "", 1.0)
+		Game.banner_ui.show_tip(tr("ui_relics_count_limit") % Game.MaxRelics, "", 1.0)
 		return false
 	
 	button.button.disabled = true

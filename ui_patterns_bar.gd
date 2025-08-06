@@ -34,7 +34,7 @@ func add_ui(p : Pattern):
 				drag_pos = event.position
 				ui.z_index = 1
 	)
-	number_text.text = "(%d/%d)" % [list.get_child_count(), 4]
+	number_text.text = "(%d/%d)" % [list.get_child_count(), Game.MaxPatterns]
 
 func clear():
 	if list:
@@ -42,7 +42,7 @@ func clear():
 			n.queue_free()
 			list.remove_child(n)
 		list.custom_minimum_size = Vector2(item_w, 0)
-		number_text.text = "(%d/%d)" % [list.get_child_count(), 4]
+		number_text.text = "(%d/%d)" % [list.get_child_count(), Game.MaxPatterns]
 
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(item_w, 0)

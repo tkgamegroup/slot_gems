@@ -67,7 +67,7 @@ tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
 tt_pink_base_score,Pink gems' base score,粉色宝石基础分数
 ui_game_level,Level %d,关卡 %d
-ui_game_target_score,Score at lease %d,最少达到 %d 分
+ui_game_target_score,Score at lease %d (Reward: %d%s),最少达到 %d 分 （奖励：%d%s）
 ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
 tt_game_board_size_content,"The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2.",横向的格子数将会是 棋盘大小 x6，纵向的格子数将会是 棋盘大小 x2。
@@ -280,7 +280,7 @@ relic_desc_MobiusStrip,The upper and lower parts of the Board are connected.,棋
 relic_name_Premeditation,Premeditation,预谋
 relic_desc_Premeditation,Combo starts from 3.,连击从3开始。
 relic_name_PentagramPower,Pentagram Power,五角之力
-relic_desc_PentagramPower,"Every 5 Combos, get +4 Score Mult in that Combo.",每当有5个连击，那次连击获得+4分数倍率。
+relic_desc_PentagramPower,"Every 5 Combos, get 5 times Score and Mult in that combo.",每5个连击，那次连击获得5被分数与倍率。
 relic_name_RedStone,Red Stone,红石
 relic_desc_RedStone,Red gems' base score +{value}.,红色宝石的基础分数+{value}。
 relic_name_OrangeStone,Orange Stone,橙石
@@ -296,7 +296,7 @@ relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座
 relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells in {range_i} w_range at random location.,当匹配到至少3个破坏符文时：(w_active) 在随机的位置爆炸并消除{range_i}w_range内的格子。
 relic_name_Taurus,Taurus,金牛座
-relic_desc_Taurus,When matching at least 3 Grow runes: +{base_value} Score and get Score of {percentage}% of Target Score.,当匹配到至少3个生长符文时：+{base_value}分数并且获得目标分数{percentage}%的分数。
+relic_desc_Taurus,When matching at least 3 Grow runes: +{value} Score.,当匹配到至少3个生长符文时：+{value}分数。
 relic_name_Gemini,Gemini,双子座
 relic_desc_Gemini,When matching at least 3 Wisdom runes: (w_active) Duplicate 1 random gem from Hand.,当匹配到至少3个灵智符文时：(w_active) 复制手中的1个随机宝石。
 relic_name_Cancer,Cancer,巨蟹座

@@ -438,7 +438,7 @@ func setup(n : String):
 				if ae.host.category == "Animal":
 					targets.append(ae.host)
 			tween.tween_callback(func():
-				Game.add_score(extra["value"] * targets.size(), Board.get_pos(coord), false)
+				Game.add_score(extra["value"] * targets.size(), Board.get_pos(coord))
 			)
 	elif name == "Cat":
 		image_id = 19
@@ -655,7 +655,7 @@ func setup(n : String):
 		extra["value"] = 625
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.add_score(extra["value"], Board.get_pos(coord), false)
+				Game.add_score(extra["value"], Board.get_pos(coord))
 			)
 	elif name == "IaiCut":
 		image_id = 28
@@ -722,8 +722,8 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				var v = extra["value"]
-				Game.float_text("+%.1f Mult" % v, Board.get_pos(coord), Color(0.7, 0.3, 0.9))
-				Buff.create(Game, Buff.Type.ValueModifier, {"target":"score_mult","add":v})
+				var pos = Board.get_pos(coord)
+				Game.add_mult(v, pos)
 			)
 	elif name == "Idol":
 		image_id = 31

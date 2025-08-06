@@ -20,6 +20,9 @@ const version_major : int = 1
 const version_minor : int = 0
 const version_patch : int = 4
 
+const MaxRelics : int = 5
+const MaxPatterns : int = 4
+
 const UiGem = preload("res://ui_gem.gd")
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
@@ -146,10 +149,12 @@ var items : Array[Item]
 var bag_items : Array[Item] = []
 var relics : Array[Relic]
 var event_listeners : Array[Hook]
+var level : int
 var score : int:
 	set(v):
 		score = v
 		status_bar_ui.score_text.text = "%d" % score
+var target_score : int
 var base_score_tween : Tween
 var base_score : int:
 	set(v):
@@ -171,10 +176,7 @@ var base_score : int:
 			base_score = v
 			calculator_bar_ui.base_score_text.text = "%d" % base_score
 var staging_scores : Array[Pair]
-var target_score : int:
-	set(v):
-		target_score = v
-		status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % (tr("ui_game_target_score") % target_score)
+var staging_mults : Array[Pair]
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
@@ -201,14 +203,11 @@ const one_over_log1_5 = 1.0 / log(1.5)
 func mult_from_combos(combos : int):
 	return log((combos + 1) * 1.0) * one_over_log1_5
 
+var gain_mult : float = 1.0
 var score_mult : float = 1.0:
 	set(v):
 		score_mult = v
 		calculator_bar_ui.mult_text.text = "%.1f" % score_mult
-var level : int:
-	set(v):
-		level = v
-		status_bar_ui.level_text.text = tr("ui_game_level") % level
 var coins : int = 10:
 	set(v):
 		coins = v
@@ -422,20 +421,18 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 	)
 
 var add_score_dir : int = 1
-func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
-	var combos_mult = combos if affected_by_combos else 1
-	var mult = int(combos_mult * score_mult)
-	var add_value = base
-	
+func add_score(value : int, pos : Vector2):
+	value = int(value * gain_mult)
+	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
 	var lb : Label = ui.get_child(0)
-	lb.text = "%d" % add_value
+	lb.text = "%d" % value
 	ui.z_index = 8
 	board_ui.overlay.add_child(ui)
 	
-	staging_scores.append(Pair.new(ui, add_value))
+	staging_scores.append(Pair.new(ui, value))
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
@@ -443,6 +440,28 @@ func add_score(base : int, pos : Vector2, affected_by_combos : bool = true):
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 	
 	add_score_dir *= -1
+
+var add_mult_dir : int = 1
+func add_mult(value : float, pos : Vector2):
+	value = int(value * gain_mult)
+	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
+	var ui = popup_txt_pb.instantiate()
+	ui.position = pos
+	ui.scale = Vector2(1.3, 1.3)
+	var lb : Label = ui.get_child(0)
+	lb.text = "%.1f" % value
+	lb.add_theme_color_override("font_color", Color(1.0, 0.8, 0.3))
+	ui.z_index = 6
+	board_ui.overlay.add_child(ui)
+	
+	staging_mults.append(Pair.new(ui, value))
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
+	tween.tween_property(ui, "position:x", pos.x + add_mult_dir * 5, 0.2)
+	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	
+	add_mult_dir *= -1
 
 var status_tween : Tween
 func add_status(s : String, col : Color):
@@ -527,7 +546,7 @@ func enchant_gem(g : Gem, type : String):
 	if type == "w_enchant_charming":
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_score","add":40}, Buff.Duration.Eternal)
 	elif type == "w_enchant_sharp":
-		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"mult","add":1.0}, Buff.Duration.Eternal)
+		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
 
 func get_level_score(lv : int):
@@ -648,6 +667,7 @@ func start_game(saving : String = ""):
 		base_score = 0
 		target_score = 0
 		score_mult = 1.0
+		gain_mult = 1.0
 		combos = 0
 		level = 0
 		board_size = 3
@@ -660,6 +680,7 @@ func start_game(saving : String = ""):
 		activates_num_per_level = 0
 		grabs_num_per_level = 0
 		coins = 10
+		update_level_text(level, target_score)
 		
 		for i in 1:
 			var p = Pattern.new()
@@ -682,7 +703,7 @@ func start_game(saving : String = ""):
 		
 		for i in 0:
 			var r = Relic.new()
-			r.setup("Leo")
+			r.setup("Taurus")
 			add_relic(r)
 		
 		for i in 16:
@@ -823,6 +844,17 @@ func start_game(saving : String = ""):
 	status_bar_ui.coins_text.enable_change = true
 	game_ui.show()
 
+func get_level_desc(target : int, reward : int):
+	return tr("ui_game_target_score") % [target, reward, "[img width=16]res://images/coin.png[/img]"]
+
+func update_level_text(lv : int, target : int = -1, reward : int = -1):
+	status_bar_ui.level_text.text = tr("ui_game_level") % lv
+	if target == -1:
+		target = get_level_score(lv)
+	if reward == -1:
+		reward = get_level_reward(lv)
+	status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % get_level_desc(target, reward)
+
 func refresh_cluster_levels():
 	if level_clear_ui.visible:
 		var lv0 = int((level - 1) / 3) * 3
@@ -888,6 +920,7 @@ func new_level(tween : Tween = null):
 		level += 1
 		target_score = get_level_score(level) * 1
 		history.level_reset()
+		update_level_text(level, target_score)
 		refresh_cluster_levels()
 		
 		set_props(Props.None)
@@ -912,7 +945,7 @@ func new_level(tween : Tween = null):
 	)
 	if !STest.testing:
 		tween.tween_interval(1.0)
-		banner_ui.appear(tr("ui_game_level") % (level + 1), tr("ui_game_target_score") % get_level_score(level + 1), tween)
+		banner_ui.appear(tr("ui_game_level") % (level + 1), get_level_desc(get_level_score(level + 1), get_level_reward(level + 1)), tween)
 		var temp_text1 = banner_ui.text1.duplicate()
 		var temp_text2 = banner_ui.text2.duplicate()
 		temp_text1.size = status_bar_ui.level_text.size
@@ -979,6 +1012,7 @@ func play():
 	
 		combos = modifiers["base_combo_i"]
 		score_mult = 1.0
+		gain_mult = 1.0
 		speed = 1.0 / base_speed
 		
 		action_stack.clear()
@@ -1210,20 +1244,20 @@ func load_from_file(name : String = "1"):
 	
 	rng.seed = int(data["seed"])
 	rng.state = int(data["rng_state"])
-	level = int(data["level"])
 	board_size = int(data["board_size"])
 	rolls_per_level = int(data["rolls_per_level"])
 	swaps_per_level = int(data["swaps_per_level"])
 	plays_per_level = int(data["plays_per_level"])
 	draws_per_roll = int(data["draws_per_roll"])
-	coins = int(data["coins"])
 	rolls = int(data["rolls"])
 	swaps = int (data["swaps"])
 	plays = int(data["plays"])
+	level = int(data["level"])
 	score = int(data["score"])
 	target_score = int(data["target_score"])
 	combos = int(data["combos"])
 	score_mult = data["score_mult"]
+	update_level_text(level, target_score)
 	var game_buffs = data["buffs"]
 	for buff in game_buffs:
 		var b = load_buff.call(buff, Game)
@@ -1231,6 +1265,7 @@ func load_from_file(name : String = "1"):
 	var saved_modifiers = SUtils.read_dictionary(data["modifiers"])
 	for k in saved_modifiers:
 		Game.set_modifier(k, saved_modifiers[k])
+	coins = int(data["coins"])
 	
 	Board.cx = int(data["cx"])
 	Board.cy = int(data["cy"])

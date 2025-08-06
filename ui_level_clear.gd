@@ -26,13 +26,14 @@ func enter():
 	title.text = "[popup span=12.0 dura=1.2]%s[/popup]" % tr("ui_level_clear_title")
 	particles.emitting = true
 	
+	var reward = Game.get_level_reward(Game.level)
 	tween.tween_callback(func():
 		var ui_s = settlement_ui.instantiate()
 		ui_s.name_str = tr("ui_level_clear_level_rewards")
-		ui_s.value_str = "5[img]res://images/coin.png[/img]"
+		ui_s.value_str = "%d[img]res://images/coin.png[/img]" % reward
 		settlement_list.add_child(ui_s)
 	)
-	coins += 5
+	coins += reward
 	if Game.swaps > 0:
 		tween.tween_interval(0.1)
 		tween.tween_callback(func():
