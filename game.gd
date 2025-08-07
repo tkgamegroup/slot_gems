@@ -313,8 +313,8 @@ func on_modifier_changed(name):
 		status_bar_ui.green_bouns_text.set_value(modifiers["green_bouns_i"])
 	elif name == "blue_bouns_i":
 		status_bar_ui.blue_bouns_text.set_value(modifiers["blue_bouns_i"])
-	elif name == "pink_bouns_i":
-		status_bar_ui.pink_bouns_text.set_value(modifiers["pink_bouns_i"])
+	elif name == "purple_bouns_i":
+		status_bar_ui.purple_bouns_text.set_value(modifiers["purple_bouns_i"])
 	for h in event_listeners:
 		if h.event == Event.ModifierChanged:
 			h.host.on_event.call(Event.ModifierChanged, null, {"name":name,"value":modifiers[name]})
@@ -648,7 +648,7 @@ func start_game(saving : String = ""):
 	modifiers["orange_bouns_i"] = 0
 	modifiers["green_bouns_i"] = 0
 	modifiers["blue_bouns_i"] = 0
-	modifiers["pink_bouns_i"] = 0
+	modifiers["purple_bouns_i"] = 0
 	modifiers["first_roll_i"] = 0
 	modifiers["first_match_i"] = 0
 	modifiers["base_combo_i"] = 0
@@ -701,9 +701,9 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 0:
+		for i in 1:
 			var r = Relic.new()
-			r.setup("Taurus")
+			r.setup("PurpleStone")
 			add_relic(r)
 		
 		for i in 16:
@@ -711,6 +711,11 @@ func start_game(saving : String = ""):
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
+			var item = Item.new()
+			item.setup("Bomb")
+			add_item(item)
+			g.rune = Gem.Rune.None
+			g.bound_item = item
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
@@ -768,17 +773,17 @@ func start_game(saving : String = ""):
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.Type.Pink
+			g.type = Gem.Type.Purple
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.Type.Pink
+			g.type = Gem.Type.Purple
 			g.rune = Gem.Rune.Wisdom
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.Type.Pink
+			g.type = Gem.Type.Purple
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		
@@ -800,7 +805,7 @@ func start_game(saving : String = ""):
 			add_item(item)
 		for i in 0:
 			var item = Item.new()
-			item.setup("DyePink")
+			item.setup("DyePurple")
 			add_item(item)
 		'''
 		for i in 1:
@@ -1460,7 +1465,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				control_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
 				var g = Board.get_gem_at(c)
 				if g:
-					var arr = g.get_tooltip()
+					var arr = g.get_tooltip(false)
 					var i = Board.get_item_at(c)
 					if i:
 						arr.append_array(i.get_tooltip())

@@ -121,19 +121,19 @@ static func weld_lines(src : Array, dist : float = 5.0):
 		var sp = ret.front()
 		var ep = ret.back()
 		for i in range(src.size() - 2, -2, -2):
-			if src[i + 1].distance_to(sp) < 5.0:
+			if src[i + 1].distance_to(sp) < dist:
 				ret.push_front(src[i])
 				src.remove_at(i)
 				src.remove_at(i)
-			elif src[i].distance_to(sp) < 5.0:
+			elif src[i].distance_to(sp) < dist:
 				ret.push_front(src[i + 1])
 				src.remove_at(i)
 				src.remove_at(i)
-			elif src[i].distance_to(ep) < 5.0:
+			elif src[i].distance_to(ep) < dist:
 				ret.append(src[i + 1])
 				src.remove_at(i)
 				src.remove_at(i)
-			elif src[i + 1].distance_to(ep) < 5.0:
+			elif src[i + 1].distance_to(ep) < dist:
 				ret.append(src[i])
 				src.remove_at(i)
 				src.remove_at(i)

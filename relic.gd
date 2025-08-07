@@ -138,15 +138,23 @@ func setup(n : String):
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
 			elif event == Event.Eliminated:
-				var coords = data["coords"]
-				var check_coords = []
-				for c in coords:
-					check_coords.append_array(Board.offset_neighbors(c))
-					check_coords.append(c)
-				for c in check_coords:
-					var i = Board.get_item_at(c)
-					if i && i.category == "Bomb":
-						Board.activate(i, HostType.Item, 0, c, Board.ActiveReason.Relic, self)
+				var reason = data["reason"]
+				var source = data["source"]
+				if reason == Board.ActiveReason.Item:
+					if source.category == "Bomb":
+						var coords = data["coords"]
+						var check_coords = []
+						for c in coords:
+							for cc in Board.offset_neighbors(c):
+								if !check_coords.has(cc):
+									check_coords.append(cc)
+							if !check_coords.has(c):
+								check_coords.append(c)
+						for c in check_coords:
+							var i = Board.get_item_at(c)
+							if i && i.category == "Bomb":
+								Board.activate(i, HostType.Item, 0, c, Board.ActiveReason.Relic, self)
+								Board.set_item_at(c, null)
 	elif name == "BlockedLever":
 		image_id = 5
 		extra["enable"] = true
@@ -232,14 +240,14 @@ func setup(n : String):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("blue_bouns_i", extra["value"])
-	elif name == "PinkStone":
+	elif name == "PurpleStone":
 		image_id = 13
 		extra["value"] = 20
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.change_modifier("pink_bouns_i", extra["value"])
+					Game.change_modifier("purple_bouns_i", extra["value"])
 	elif name == "RockBottom":
 		image_id = 14
 		on_event = func(event : int, tween : Tween, data):

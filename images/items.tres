@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bu6fdn3g206ne" path="res://images/items/dye_blue.png" id="5_3c8e7"]
 [ext_resource type="Texture2D" uid="uid://bdrka1bbrx4tx" path="res://images/items/color_palette.png" id="5_bithh"]
 [ext_resource type="Texture2D" uid="uid://djiwq88rqxx33" path="res://images/items/fire.png" id="6_fqqmy"]
-[ext_resource type="Texture2D" uid="uid://dqkai8831jyx4" path="res://images/items/dye_pink.png" id="6_lffdu"]
+[ext_resource type="Texture2D" uid="uid://dqkai8831jyx4" path="res://images/items/dye_purple.png" id="6_lffdu"]
 [ext_resource type="Texture2D" uid="uid://bfdx2qnxrun23" path="res://images/items/flag.png" id="7_5rbky"]
 [ext_resource type="Texture2D" uid="uid://b7l4i2yq2fbq4" path="res://images/items/black_hole.png" id="7_f8hsl"]
 [ext_resource type="Texture2D" uid="uid://djb5uvo3rgm82" path="res://images/pin.png" id="7_vgtho"]

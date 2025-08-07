@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://dk7f3sdm4ehuo" path="res://images/relics/orange_stone.png" id="11_fsuej"]
 [ext_resource type="Texture2D" uid="uid://chbr6sjhiqdpx" path="res://images/relics/green_stone.png" id="12_aniqy"]
 [ext_resource type="Texture2D" uid="uid://c6l8s5agpf32k" path="res://images/relics/blue_stone.png" id="13_ok8o2"]
-[ext_resource type="Texture2D" uid="uid://be7eka2nod1st" path="res://images/relics/pink_stone.png" id="14_oersu"]
+[ext_resource type="Texture2D" uid="uid://be7eka2nod1st" path="res://images/relics/purple_stone.png" id="14_oersu"]
 [ext_resource type="Texture2D" uid="uid://cnkpgautfb5sr" path="res://images/relics/aries.png" id="16_ok8o2"]
 [ext_resource type="Texture2D" uid="uid://borj6rnx66exj" path="res://images/relics/taurus.png" id="17_oersu"]
 [ext_resource type="Texture2D" uid="uid://1ugk4ccoksu1" path="res://images/relics/gemini.png" id="18_m1dnc"]

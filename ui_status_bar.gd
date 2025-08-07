@@ -12,8 +12,8 @@ const NumberText = preload("res://number_text.gd")
 @onready var green_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText
 @onready var blue_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer
 @onready var blue_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText
-@onready var pink_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
-@onready var pink_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
+@onready var purple_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
+@onready var purple_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
 @onready var level_container : Control = $HBoxContainer/VBoxContainer4
 @onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
@@ -60,10 +60,10 @@ func _ready() -> void:
 	blue_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	pink_bouns_container.mouse_entered.connect(func():
-		STooltip.show([Pair.new(tr("tt_pink_base_score"), "%d" % Game.modifiers["pink_bouns_i"])])
+	purple_bouns_container.mouse_entered.connect(func():
+		STooltip.show([Pair.new(tr("tt_purple_base_score"), "%d" % Game.modifiers["purple_bouns_i"])])
 	)
-	pink_bouns_container.mouse_exited.connect(func():
+	purple_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	score_container.mouse_entered.connect(func():

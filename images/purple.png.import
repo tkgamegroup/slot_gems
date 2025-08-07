@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://be7eka2nod1st"
-path="res://.godot/imported/pink_stone.png-30b72d1f8ddcf04ffa3de40b12f24c57.ctex"
+uid="uid://d2tmb13dkcpb8"
+path="res://.godot/imported/purple.png-4428b75a8f6f81fc5c83ebd32a1b704e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/pink_stone.png"
-dest_files=["res://.godot/imported/pink_stone.png-30b72d1f8ddcf04ffa3de40b12f24c57.ctex"]
+source_file="res://images/purple.png"
+dest_files=["res://.godot/imported/purple.png-4428b75a8f6f81fc5c83ebd32a1b704e.ctex"]
 
 [params]
 

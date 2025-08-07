@@ -31,7 +31,7 @@ func enter():
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
-	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyePink", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
+	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyePurple", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
 	for n in items:
 		var i = Item.new()
 		i.setup(n)
@@ -45,7 +45,7 @@ func enter():
 		var ui = pattern_ui.instantiate()
 		ui.setup(p, true)
 		pattern_list.add_child(ui)
-	var relics = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PinkStone"]
+	var relics = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PurpleStone"]
 	for n in relics:
 		var r = Relic.new()
 		r.setup(n)

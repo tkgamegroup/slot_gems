@@ -49,6 +49,7 @@ func swap(coord : Vector2i, gem : Gem, remove_ui : bool = true, immediately : bo
 				erase(i)
 				break
 	var og = Board.set_gem_at(coord, gem)
+	Board.set_item_at(coord, null)
 	if gem.bound_item:
 		Board.set_item_at(coord, gem.bound_item)
 	if immediately:

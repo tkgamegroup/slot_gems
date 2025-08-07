@@ -65,7 +65,7 @@ tt_red_base_score,Red gems' base score,红色宝石基础分数
 tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
-tt_pink_base_score,Pink gems' base score,粉色宝石基础分数
+tt_purple_base_score,Purple gems' base score,紫色宝石基础分数
 ui_game_level,Level %d,关卡 %d
 ui_game_target_score,Score at lease %d (Reward: %d%s),最少达到 %d 分 （奖励：%d%s）
 ui_game_board_size,BS,棋盘
@@ -99,7 +99,7 @@ ui_bag_viewer_on_board,On Board,棋盘上
 ui_bag_viewer_in_hand,In Hand,手中
 ui_tutorial_how_to_play_title,How To Play,玩法
 ui_tutorial_how_to_play_text," - Drag a gem from Hand to Board to swap them. (You start with 5 Swaps per level)\n - Click the start button to match patterns and score.\n - Only the colors of the gems are used for matching.\n - You pass the level when you reach the target score. When you use up all the Swaps but don’t reach the target score, you lose the game.", - 从手上拖拽一个宝石到棋盘上来交换。（一开始你每关有5次交换）\n - 点击开始按钮来开始匹配图案并得分。\n - 只有宝石的颜色参与匹配。\n - 当你达到目标分数时，你过关。当你用完所有的交换次数却没有达到目标分数，你游戏失败。
-ui_tutorial_gem_text," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_pink][img]res://images/pink.png[/img][/url], also [url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n - Runes do not participate in pattern matching. Specific combinations of runes can be used to activate zodiac signs, such as [url=relic_Leo][img]res://images/relics/leo.png[/img][/url].", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_pink][img]res://images/pink.png[/img][/url]，还有[url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url]。\n - 宝石可以有3种符文[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n - 符文不参与图案的匹配。特定组合的符文可以用于激活星座，例如：[url=relic_Leo][img]res://images/relics/leo.png[/img][/url]。
+ui_tutorial_gem_text," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_purple][img]res://images/purple.png[/img][/url], also [url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n - Runes do not participate in pattern matching. Specific combinations of runes can be used to activate zodiac signs, such as [url=relic_Leo][img]res://images/relics/leo.png[/img][/url].", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_purple][img]res://images/purple.png[/img][/url]，还有[url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url]。\n - 宝石可以有3种符文[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n - 符文不参与图案的匹配。特定组合的符文可以用于激活星座，例如：[url=relic_Leo][img]res://images/relics/leo.png[/img][/url]。
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
@@ -137,7 +137,7 @@ gem_red,Red,红
 gem_orange,Orange,橙
 gem_green,Green,绿
 gem_blue,Blue,蓝
-gem_pink,Pink,粉
+gem_purple,Purple ,紫
 gem_colorless,Colorless,无色
 gem_wild,Wild,狂野
 rune_none,None,无
@@ -183,8 +183,8 @@ item_name_DyeGreen,Dye: Green,染色剂：绿
 item_desc_DyeGreen,w_quick: Change gem to green color temporarily.,w_quick：临时改变宝石颜色为绿。
 item_name_DyeBlue,Dye: Blue,染色剂：蓝
 item_desc_DyeBlue,w_quick: Change gem to blue color temporarily.,w_quick：临时改变宝石颜色为蓝。
-item_name_DyePink,Dye: Pink,染色剂：粉
-item_desc_DyePink,w_quick: Change gem to pink color temporarily.,w_quick：临时改变宝石颜色为粉。
+item_name_DyePurple,Dye: Purple,染色剂：紫
+item_desc_DyePurple,w_quick: Change gem to purple color temporarily.,w_quick：临时改变宝石颜色为紫。
 item_name_Pin,Pin,大头针
 item_desc_Pin,"w_quick: Pin the cell and if it is on one or more patterns, pin those cells as well.",w_quick：固定格子并且如果在一个或多个图案中，把那些格子也固定。
 item_name_Flag,Flag,旗帜
@@ -257,8 +257,8 @@ item_name_Emerald,Emerald,绿宝石
 item_desc_Emerald,w_eliminate: Green gems' base score +1.,w_eliminate：绿色宝石的基础分数+1。
 item_name_Sapphire,Sapphire,蓝宝石
 item_desc_Sapphire,w_eliminate: Blue gems' base score +1.,w_eliminate：蓝色宝石的基础分数+1。
-item_name_Tourmaline,Tourmaline,粉宝石
-item_desc_Tourmaline,w_eliminate: Pink gems' base score +1.,w_eliminate：粉色宝石的基础分数+1。
+item_name_Tourmaline,Amethyst,紫水晶
+item_desc_Tourmaline,w_eliminate: Purple gems' base score +1.,w_eliminate：紫色宝石的基础分数+1。
 item_name_StrengthPotion,Strength Potion,力量药水
 item_desc_StrengthPotion,w_quick: Target Item +10 w_power until the end of level.,w_quick：使目标道具直到关卡结束前获得+10w_power。
 item_name_EchoTotem,Echo Totem,回音图腾
@@ -289,8 +289,8 @@ relic_name_GreenStone,Green Stone,绿石
 relic_desc_GreenStone,Green gems' base score +{value}.,绿色宝石的基础分数+{value}。
 relic_name_BlueStone,Blue Stone,蓝石
 relic_desc_BlueStone,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
-relic_name_PinkStone,Pink Stone,粉石
-relic_desc_PinkStone,Pink gems' base score +{value}.,粉色宝石的基础分数+{value}。
+relic_name_PurpleStone,Purple Stone,紫石
+relic_desc_PurpleStone,Purple gems' base score +{value}.,紫色宝石的基础分数+{value}。
 relic_name_RockBottom,Rock Bottom,谷底石
 relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座

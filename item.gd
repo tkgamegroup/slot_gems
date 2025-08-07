@@ -66,13 +66,13 @@ func setup(n : String):
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Blue}, Buff.Duration.ThisLevel)
 				return true
 			return false
-	elif name == "DyePink":
+	elif name == "DyePurple":
 		image_id = 5
 		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Pink}, Buff.Duration.OnBoard)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Purple}, Buff.Duration.OnBoard)
 				return true
 			return false
 	elif name == "Pin":
@@ -881,8 +881,8 @@ func setup(n : String):
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("pink_bouns_i", 1)
-				Game.float_text("Pink +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Pink))
+				Game.change_modifier("purple_bouns_i", 1)
+				Game.float_text("Purple +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Purple))
 			)
 	elif name == "StrengthPotion":
 		image_id = 40

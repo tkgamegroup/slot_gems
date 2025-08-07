@@ -74,7 +74,7 @@
 [ext_resource type="Texture2D" uid="uid://26k8l8d1s2il" path="res://images/upgrade.png" id="62_1yv1y"]
 [ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/orange.png" id="63_f1p13"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
-[ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/pink.png" id="64_4obbf"]
+[ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/purple.png" id="64_4obbf"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="SpriteFrames" uid="uid://ce4mcwrcnqlca" path="res://images/dot.tres" id="64_ovcoh"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]

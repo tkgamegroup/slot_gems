@@ -351,7 +351,7 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			return false
 		)
 	if !event_listeners.is_empty():
-		var d = {"reason":reason,"coords":coords}
+		var d = {"reason":reason,"source":source,"coords":coords}
 		for h in event_listeners:
 			if h.event == Event.Eliminated:
 				h.host.on_event.call(Event.Eliminated, tween, d)
@@ -373,7 +373,8 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		sp.sprite_frames = Item.item_frames
 		sp.frame = item.image_id
 		sp.position = get_pos(c)
-		sp.z_index = 4
+		sp.z_index = 6
+		sp.get_child(1).text = "%d" % active_serial
 		Game.board_ui.cells_root.add_child(sp)
 	elif type == HostType.Relic:
 		var relic : Relic = host
@@ -381,7 +382,8 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 			return
 		sp = active_effect_pb.instantiate()
 		sp.global_position = relic.ui.get_global_rect().get_center()
-		sp.z_index = 4
+		sp.z_index = 6
+		sp.get_child(1).text = "%d" % active_serial
 		Game.game_ui.add_child(sp)
 	var ae = ActiveEffect.new()
 	ae.host = host
@@ -492,7 +494,10 @@ func skip_above_unmovables(c : Vector2i) -> Vector2i:
 func step_down_cell(c : Vector2i):
 	var cc = skip_above_unmovables(c)
 	if cc.y < 0:
-		set_gem_at(c, Game.get_gem())
+		var g : Gem = Game.get_gem()
+		set_gem_at(c, g)
+		if g.bound_item:
+			set_item_at(c, g.bound_item)
 	else:
 		var og = set_gem_at(cc, null)
 		if og:
@@ -730,7 +735,7 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		for c in coords:
 			Game.add_score(gem_score_at(c) + p, get_pos(c))
 	)
-	eliminate(coords, tween, ActiveReason.Item, self)
+	eliminate(coords, tween, ActiveReason.Item, source)
 	if !outer_tween:
 		tween.tween_callback(Game.end_busy)
 	return coords

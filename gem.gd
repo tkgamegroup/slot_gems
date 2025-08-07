@@ -9,7 +9,7 @@ enum Type
 	Orange,
 	Green,
 	Blue,
-	Pink,
+	Purple,
 	Colorless,
 	Wild,
 	Count = 5
@@ -45,7 +45,7 @@ static func type_name(t : int):
 		Type.Orange: return "Orange"
 		Type.Green: return "Green"
 		Type.Blue: return "Blue"
-		Type.Pink: return "Pink"
+		Type.Purple: return "Purple"
 		Type.Colorless: return "Colorless"
 		Type.Wild: return "Wild"
 	return ""
@@ -57,7 +57,7 @@ static func type_display_name(t : int):
 		Type.Orange: return Game.tr("gem_orange")
 		Type.Green: return Game.tr("gem_green")
 		Type.Blue: return Game.tr("gem_blue")
-		Type.Pink: return Game.tr("gem_pink")
+		Type.Purple: return Game.tr("gem_purple")
 		Type.Colorless: return "w_colorless"
 		Type.Wild: return "w_wild"
 	return ""
@@ -69,7 +69,7 @@ static func name_to_type(s : String):
 		"Orange": return Type.Orange
 		"Green": return Type.Green
 		"Blue": return Type.Blue
-		"Pink": return Type.Pink
+		"Purple": return Type.Purple
 		"Colorless": return Type.Colorless
 		"Wild": return Type.Wild
 
@@ -80,7 +80,7 @@ static func type_color(t : int) -> Color:
 		Type.Orange: return Color(255.0 / 255.0, 186.0 / 255.0, 7.0 / 255.0)
 		Type.Green: return Color(157.0 / 255.0, 192.0 / 255.0, 64.0 / 255.0)
 		Type.Blue: return Color(143.0 / 255.0, 223.0 / 255.0, 246.0 / 255.0)
-		Type.Pink: return Color(226.0 / 255.0, 53.0 / 255.0, 206.0 / 255.0)
+		Type.Purple: return Color(226.0 / 255.0, 53.0 / 255.0, 206.0 / 255.0)
 	return Color.WHITE
 
 static func type_img(t : int):
@@ -89,7 +89,7 @@ static func type_img(t : int):
 		Type.Orange: return "res://images/orange.png"
 		Type.Green: return "res://images/green.png"
 		Type.Blue: return "res://images/blue.png"
-		Type.Pink: return "res://images/pink.png"
+		Type.Purple: return "res://images/purple.png"
 		Type.Colorless: return "res://images/colorless.png"
 	return ""
 
@@ -124,8 +124,8 @@ func get_base_score():
 		Type.Orange: ret += Game.modifiers["orange_bouns_i"]
 		Type.Green: ret += Game.modifiers["green_bouns_i"]
 		Type.Blue: ret += Game.modifiers["blue_bouns_i"]
-		Type.Pink: ret += Game.modifiers["pink_bouns_i"]
-		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["pink_bouns_i"]
+		Type.Purple: ret += Game.modifiers["purple_bouns_i"]
+		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["purple_bouns_i"]
 	return ret
 
 func get_tt_name():
@@ -147,9 +147,9 @@ func get_description():
 		ret += "\n[color=GREEN]%s[/color]" % (tr("gem_enchant") % tr(enchant.data["type"]))
 	return ret
 
-func get_tooltip():
+func get_tooltip(with_bound : bool = true):
 	var ret : Array[Pair] = []
 	ret.append(Pair.new(get_tt_name(), get_description()))
-	if bound_item:
+	if with_bound && bound_item:
 		ret.append_array(bound_item.get_tooltip())
 	return ret
