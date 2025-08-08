@@ -28,6 +28,11 @@ var on_eliminate : Callable
 var on_mount : Callable
 var on_event : Callable
 
+static func get_image_path(name : String):
+	var temp = Item.new()
+	temp.setup(name)
+	return item_frames.get_frame_texture("default", temp.image_id).resource_path
+
 func setup(n : String):
 	name = n
 	if name == "DyeRed":

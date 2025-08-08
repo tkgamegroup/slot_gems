@@ -68,29 +68,46 @@ func _ready() -> void:
 						var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 						if !res.is_empty():
 							preview_matchings.append(res)
-							var pts = SMath.weld_lines(SUtils.get_cells_border(res), 5.0)
-							var c = Vector2(0.0, 0.0)
-							for pt in pts:
-								c += pt
-							c /= pts.size()
-							for i in pts.size():
-								pts[i] = pts[i] - c
-							var l = Line2D.new()
-							l.default_color = Color(0.0, 0.0, 0.0, 1.0)
-							l.width = 3
-							l.points = pts
-							l.modulate.a = 0.0
-							l.scale = Vector2(2.0, 2.0)
-							l.position = c
-							var subtween = get_tree().create_tween()
-							subtween.tween_interval(0.05 * idx)
-							subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
-							subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
-							if idx > 0:
+							var gs = []
+							for c in res:
+								var ok = false
+								for g in gs:
+									if g.is_empty():
+										g.append(c)
+										ok = true
+										break
+									for cc in g:
+										if Board.offset_neighbors(cc, false).has(c):
+											g.append(c)
+											ok = true
+											break
+								if !ok:
+									var g : Array[Vector2i] = []
+									g.append(c)
+									gs.append(g)
+							for g in gs:
+								var pts = SMath.weld_lines(SUtils.get_cells_border(g), 5.0)
+								var c = Vector2(0.0, 0.0)
+								for pt in pts:
+									c += pt
+								c /= pts.size()
+								for i in pts.size():
+									pts[i] = pts[i] - c
+								var l = Line2D.new()
+								l.default_color = Color(0.0, 0.0, 0.0, 1.0)
+								l.width = 3
+								l.points = pts
+								l.modulate.a = 0.0
+								l.scale = Vector2(2.0, 2.0)
+								l.position = c
+								var subtween = get_tree().create_tween()
+								subtween.tween_interval(0.05 * idx)
+								subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
+								subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
 								preview_tween.parallel()
-							preview_tween.tween_subtween(subtween)
-							preview_lines.append(l)
-							Game.board_ui.overlay.add_child(l)
+								preview_tween.tween_subtween(subtween)
+								preview_lines.append(l)
+								Game.board_ui.overlay.add_child(l)
 							idx += 1
 			preview_tween.tween_callback(func():
 				preview_tween = null

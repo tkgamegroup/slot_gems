@@ -343,7 +343,7 @@ func setup(n : String):
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Virgo":
 		image_id = 20
-		extra["value"] = 0.2
+		extra["value"] = 1.2
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -397,7 +397,7 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					if idx < Hand.grabs.size():
-						Game.delete_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
+						Game.delete_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx).gem_ui)
 				)
 	elif name == "Sagittarius":
 		image_id = 23
@@ -424,6 +424,10 @@ func setup(n : String):
 					SEffect.add_leading_line(ui_pos, Board.get_pos(target))
 				)
 				tween.tween_interval(0.3)
+				tween.tween_callback(func():
+					Game.add_combo()
+					Game.add_score(Board.gem_score_at(target), Board.get_pos(target))
+				)
 				Board.eliminate([target], tween, Board.ActiveReason.Relic, self)
 	elif name == "Capricorn":
 		image_id = 24
@@ -508,7 +512,7 @@ func setup(n : String):
 					for c in targets:
 						var g = Board.get_gem_at(c)
 						if g && g.type != Gem.Type.Wild:
-							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
+							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.OnBoard)
 							ok = true
 					if ok:
 						SSound.se_vibra.play()

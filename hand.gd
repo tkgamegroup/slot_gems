@@ -27,6 +27,9 @@ func draw():
 	ui.position.y = 50
 	return ui
 
+func find(g : Gem):
+	return grabs.find(g)
+
 func erase(idx : int):
 	var g = grabs[idx]
 	Game.release_gem(g)

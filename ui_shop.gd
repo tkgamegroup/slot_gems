@@ -154,9 +154,7 @@ func refresh(tween : Tween = null):
 					else:
 						ui.setup("w_enchant", "w_enchant_sharp", 1)
 				else:
-					var item = Item.new()
-					item.setup(SMath.pick_random(items_pool, Game.rng))
-					ui.setup("w_socket", item, 3)
+					ui.setup("w_socket", SMath.pick_random(items_pool, Game.rng), 3)
 			else:
 				if Game.rng.randf() >= 0.25:
 					if Game.rng.randf() >= 0.5:

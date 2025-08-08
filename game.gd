@@ -184,14 +184,16 @@ var combos : int = 0:
 			combos = v
 			if combos_tween:
 				combos_tween.custom_step(1000.0)
-			calculator_bar_ui.combos_text.position.y = 0
-			combos_tween = get_tree().create_tween()
-			SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * Game.speed, func():
-				calculator_bar_ui.combos_text.text = "%dX" % v
-			)
-			combos_tween.tween_callback(func():
 				combos_tween = null
-			)
+			if calculator_bar_ui.visible:
+				calculator_bar_ui.combos_text.position.y = 0
+				combos_tween = get_tree().create_tween()
+				SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * Game.speed, func():
+					calculator_bar_ui.combos_text.text = "%dX" % v
+				)
+				combos_tween.tween_callback(func():
+					combos_tween = null
+				)
 		else:
 			if combos_tween:
 				combos_tween.kill()
@@ -443,7 +445,7 @@ func add_score(value : int, pos : Vector2):
 
 var add_mult_dir : int = 1
 func add_mult(value : float, pos : Vector2):
-	value = int(value * gain_mult)
+	value = value * gain_mult
 	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
@@ -484,14 +486,13 @@ func add_status(s : String, col : Color):
 	)
 
 func delete_gem(g : Gem, ui, from : String = "hand"):
-	var idx = g.coord.x
 	SSound.se_trash.play()
 	ui.dissolve(0.5)
 	var tween = get_tree().create_tween()
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		if from == "hand":
-			Hand.erase(idx)
+			Hand.erase(Hand.find(g))
 		remove_gem(g)
 		if from == "hand" || from == "craft_slot":
 			Hand.draw()
@@ -548,6 +549,13 @@ func enchant_gem(g : Gem, type : String):
 	elif type == "w_enchant_sharp":
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"mult","add":0.4}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
+
+func socket_gem(g : Gem, item_name : String):
+	var i = Item.new()
+	i.setup(item_name)
+	add_item(i)
+	g.rune = Gem.Rune.None
+	g.bound_item = i
 
 func get_level_score(lv : int):
 	if lv <= 10:
@@ -703,7 +711,7 @@ func start_game(saving : String = ""):
 		
 		for i in 1:
 			var r = Relic.new()
-			r.setup("PurpleStone")
+			r.setup("Pisces")
 			add_relic(r)
 		
 		for i in 16:
@@ -711,11 +719,7 @@ func start_game(saving : String = ""):
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-			var item = Item.new()
-			item.setup("Bomb")
-			add_item(item)
-			g.rune = Gem.Rune.None
-			g.bound_item = item
+			#socket_gem(g, "Bomb")
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
@@ -1209,11 +1213,7 @@ func save_to_file(name : String = "1"):
 			var ui = n as CraftSlot
 			var slot = {}
 			slot["type"] = ui.type
-			if ui.thing is String:
-				slot["thing"] = ui.thing
-			else:
-				var i = ui.thing as Item
-				slot["thing"] = i.name
+			slot["thing"] = ui.thing
 			slot["price"] = ui.price
 			list2.append(slot)
 		data["shop_list2"] = list2
@@ -1406,13 +1406,7 @@ func load_from_file(name : String = "1"):
 		var list2 = data["shop_list2"]
 		for slot in list2:
 			var ui = craft_slot_pb.instantiate()
-			var type = slot["type"]
-			if type == "w_socket":
-				var i = Item.new()
-				i.setup(slot["thing"])
-				ui.setup(type, i, slot["price"])
-			else:
-				ui.setup(type, slot["thing"], slot["price"])
+			ui.setup(slot["type"], slot["thing"], slot["price"])
 			shop_ui.list2.add_child(ui)
 		shop_ui.enter(null, false)
 	else:

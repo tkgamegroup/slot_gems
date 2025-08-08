@@ -97,10 +97,13 @@ func cube_neighbors(c : Vector3i) -> Array[Vector3i]:
 		ret.append(c + d)
 	return ret
 
-func offset_neighbors(c : Vector2i) -> Array[Vector2i]:
+func offset_neighbors(c : Vector2i, do_format : bool = true) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
 	for cc in cube_neighbors(offset_to_cube(c)):
-		ret.append(format_coord(cube_to_offset(cc)))
+		var oc = cube_to_offset(cc)
+		if do_format:
+			oc = format_coord(oc)
+		ret.append(oc)
 	return ret
 
 func cube_ring(c : Vector3i, r : int) -> Array[Vector3i]:
