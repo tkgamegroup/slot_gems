@@ -709,7 +709,7 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Pisces")
 			add_relic(r)
@@ -719,7 +719,7 @@ func start_game(saving : String = ""):
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Destroy
 			add_gem(g)
-			#socket_gem(g, "Bomb")
+			socket_gem(g, "Flag")
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red

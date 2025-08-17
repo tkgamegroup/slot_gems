@@ -32,7 +32,10 @@ var type : int = Type.None
 var rune : int = Rune.None
 
 var base_score : int = 4
-var bonus_score : int = 0
+var bonus_score : int = 0:
+	set(v):
+		bonus_score = v
+		var a = 1
 var mult : float = 0.0
 var coord : Vector2i = Vector2i(-1, -1)
 var buffs : Array[Buff]

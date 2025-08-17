@@ -33,6 +33,7 @@ const trail_pb = preload("res://trail.tscn")
 var num_tasks : int
 var show_coords : bool = false
 
+var auras : Array[Item] = []
 var active_effects : Array[ActiveEffect] = []
 var active_serial : int = 0
 var event_listeners : Array[Hook]
@@ -44,30 +45,30 @@ signal matching_finished
 # odd-q vertical layout shoves odd columns down
 # even-q vertical layout shoves even columns down
 
-static func cube_to_oddq(c : Vector3i):
+func cube_to_oddq(c : Vector3i):
 	var col = c.x
 	var row = c.y + (c.x - (c.x & 1)) / 2
 	return Vector2i(col, row)
 
-static func oddq_to_cube(hex : Vector2i):
+func oddq_to_cube(hex : Vector2i):
 	var q = hex.x
 	var r = hex.y - (hex.x - (hex.x & 1)) / 2
 	return Vector3i(q, r, -q-r)
 
-static func cube_to_evenq(c : Vector3i):
+func cube_to_evenq(c : Vector3i):
 	var col = c.x
 	var row = c.y + (c.x + (c.x & 1)) / 2
 	return Vector2i(col, row)
 
-static func evenq_to_cube(hex : Vector2i):
+func evenq_to_cube(hex : Vector2i):
 	var q = hex.x
 	var r = hex.y - (hex.x + (hex.x & 1)) / 2
 	return Vector3i(q, r, -q-r)
 
-static func offset_to_cube(c : Vector2i):
+func offset_to_cube(c : Vector2i):
 	return oddq_to_cube(c) if (Game.board_size % 2 == 0) else evenq_to_cube(c)
 
-static func cube_to_offset(c : Vector3i):
+func cube_to_offset(c : Vector3i):
 	return cube_to_oddq(c) if (Game.board_size % 2 == 0) else cube_to_evenq(c)
 	
 func cube_distance(a : Vector3i, b : Vector3i):
@@ -165,6 +166,9 @@ func set_gem_at(c : Vector2i, g : Gem):
 	cell.gem = g
 	if g:
 		g.coord = c
+		for a in auras:
+			if a.on_aura.is_valid():
+				a.on_aura.call(g)
 		for h in event_listeners:
 			h.host.on_event.call(Event.GemEntered, null, g)
 	else:
@@ -194,6 +198,7 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 		Game.release_item(oi)
 	if i:
 		i.coord = c
+		i.eliminated = false
 		if i.on_place.is_valid():
 			i.on_place.call(c, r)
 		if i.on_event.is_valid():
@@ -335,18 +340,43 @@ func unfreeze(c : Vector2i):
 	cells[idx].frozen = false
 	Game.board_ui.update_cell(c)
 
+func add_aura(i : Item):
+	if auras.find(i) == -1:
+		auras.append(i)
+	for y in cy:
+		for x in cx:
+			var c = Vector2i(x, y)
+			var g = get_gem_at(c)
+			if g:
+				Buff.remove_by_caster(g, i)
+				if i.on_aura.is_valid():
+					i.on_aura.call(g)
+
+func remove_aura(i : Item):
+	if auras.find(i) != -1:
+		auras.erase(i)
+		for y in cy:
+			for x in cx:
+				var c = Vector2i(x, y)
+				var g = get_gem_at(c)
+				if g:
+					Buff.remove_by_caster(g, i)
+
 func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, source = null):
 	var coords = []
-	var ptcs = []
 	for c in _coords:
 		if is_valid(c) && !get_cell(c).frozen:
 			coords.append(c)
 	for c in coords:
 		var i = get_item_at(c)
 		if i:
-			if i.on_eliminate.is_valid():
-				i.on_eliminate.call(c, reason, source, tween)
-			set_item_at(c, null)
+			if !i.eliminated:
+				if i.on_eliminate.is_valid():
+					i.on_eliminate.call(c, reason, source, tween)
+				i.eliminated = true
+			tween.tween_callback(func():
+				set_item_at(c, null)
+			)
 		SMath.remove_if(get_cell(c).event_listeners, func(h : Hook):
 			if h.event == Event.Eliminated:
 				h.host.on_event.call(Event.Eliminated, tween, c)
@@ -367,16 +397,20 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 	)
 
 func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
+	if type == HostType.Item:
+		var item = host as Item
 	var sp : AnimatedSprite2D = null
 	if type == HostType.Item:
 		var item : Item = host
 		if !(item.on_active.is_valid() || (item.mounted && item.mounted.on_active.is_valid())):
 			return
+		print("item %d activated, serial: %d, active count: %d" % [item.id, active_serial, active_effects.size() + 1])
 		sp = active_effect_pb.instantiate()
 		sp.sprite_frames = Item.item_frames
 		sp.frame = item.image_id
 		sp.position = get_pos(c)
 		sp.z_index = 6
+		sp.self_modulate.a = 0.5
 		sp.get_child(1).text = "%d" % active_serial
 		Game.board_ui.cells_root.add_child(sp)
 	elif type == HostType.Relic:

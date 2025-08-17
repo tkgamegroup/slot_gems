@@ -257,8 +257,8 @@ item_name_Emerald,Emerald,绿宝石
 item_desc_Emerald,w_eliminate: Green gems' base score +1.,w_eliminate：绿色宝石的基础分数+1。
 item_name_Sapphire,Sapphire,蓝宝石
 item_desc_Sapphire,w_eliminate: Blue gems' base score +1.,w_eliminate：蓝色宝石的基础分数+1。
-item_name_Tourmaline,Amethyst,紫水晶
-item_desc_Tourmaline,w_eliminate: Purple gems' base score +1.,w_eliminate：紫色宝石的基础分数+1。
+item_name_Amethyst,Amethyst,紫水晶
+item_desc_Amethyst,w_eliminate: Purple gems' base score +1.,w_eliminate：紫色宝石的基础分数+1。
 item_name_StrengthPotion,Strength Potion,力量药水
 item_desc_StrengthPotion,w_quick: Target Item +10 w_power until the end of level.,w_quick：使目标道具直到关卡结束前获得+10w_power。
 item_name_EchoTotem,Echo Totem,回音图腾

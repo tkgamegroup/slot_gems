@@ -36,7 +36,7 @@ func add_ui(gem : Gem):
 					Drag.start("gem", ui.gem, ui, func(target):
 						SSound.se_drop_item.play()
 						if target:
-							Hand.erase(ui.get_index())
+							Hand.erase(ui.get_index(), false)
 					)
 	)
 	return ui

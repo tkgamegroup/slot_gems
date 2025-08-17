@@ -23,6 +23,7 @@ enum Duration
 var uid : int
 var type : int
 var host = null
+var caster = null
 var duration : int
 var data : Dictionary
 
@@ -42,7 +43,7 @@ func die():
 			type = Type.None
 			SUtils.calc_value_with_modifiers(host, data["target"], data["sub_attr"])
 
-static func create(host, type : int, parms : Dictionary, duration : int = Duration.ThisMatching):
+static func create(host, type : int, parms : Dictionary, duration : int = Duration.ThisMatching) -> Buff:
 	var b = Buff.new()
 	b.uid = s_uid
 	s_uid += 1
@@ -96,7 +97,7 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 	host.buffs.append(b)
 	if type == Type.ValueModifier:
 		SUtils.calc_value_with_modifiers(host, b.data["target"], b.data["sub_attr"])
-	return b.uid
+	return b
 
 static func find_typed(host, type : int) -> Buff:
 	for b in host.buffs:
@@ -138,6 +139,14 @@ static func remove_by_id(host, id : int):
 static func remove_by_id_list(host, ids : Array):
 	SMath.remove_if(host.buffs, func(b : Buff):
 		if ids.has(b.uid):
+			b.die()
+			return true
+		return false
+	)
+
+static func remove_by_caster(host, caster):
+	SMath.remove_if(host.buffs, func(b : Buff):
+		if b.caster == caster:
 			b.die()
 			return true
 		return false

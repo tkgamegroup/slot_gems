@@ -30,9 +30,10 @@ func draw():
 func find(g : Gem):
 	return grabs.find(g)
 
-func erase(idx : int):
+func erase(idx : int, release_gem : bool = true):
 	var g = grabs[idx]
-	Game.release_gem(g)
+	if release_gem:
+		Game.release_gem(g)
 	grabs.erase(g)
 	
 	Game.hand_ui.remove_ui(idx)
@@ -45,14 +46,9 @@ func clear():
 	
 	Game.hand_ui.clear()
 
-func swap(coord : Vector2i, gem : Gem, remove_ui : bool = true, immediately : bool = false):
-	if remove_ui:
-		for i in grabs.size():
-			if grabs[i] == gem:
-				erase(i)
-				break
-	var og = Board.set_gem_at(coord, gem)
+func swap(coord : Vector2i, gem : Gem, immediately : bool = false):
 	Board.set_item_at(coord, null)
+	var og = Board.set_gem_at(coord, gem)
 	if gem.bound_item:
 		Board.set_item_at(coord, gem.bound_item)
 	if immediately:

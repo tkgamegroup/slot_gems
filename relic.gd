@@ -442,7 +442,7 @@ func setup(n : String):
 						tween.tween_callback(func():
 							var amount = extra["amount"]
 							SSound.se_coin.play()
-							Game.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(0.8, 0.8, 0.0), 22)
+							Game.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 0.84, 0.0), 22)
 							Game.coins += amount
 						)
 						tween.tween_interval(0.5 * Game.speed)

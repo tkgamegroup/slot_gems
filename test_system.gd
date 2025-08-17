@@ -315,35 +315,40 @@ func auto_swap_gems():
 				if !arr.is_empty():
 					if Game.swaps > 0:
 						Game.swaps -= 1
-						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						Hand.erase(Hand.find(g))
+						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.Type.Orange:
 				var arr = missing_one_places[Gem.Type.Orange - 1]
 				if !arr.is_empty():
 					if Game.swaps > 0:
 						Game.swaps -= 1
-						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						Hand.erase(Hand.find(g))
+						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.Type.Green:
 				var arr = missing_one_places[Gem.Type.Green - 1]
 				if !arr.is_empty():
 					if Game.swaps > 0:
 						Game.swaps -= 1
-						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						Hand.erase(Hand.find(g))
+						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.Type.Blue:
 				var arr = missing_one_places[Gem.Type.Blue - 1]
 				if !arr.is_empty():
 					if Game.swaps > 0:
 						Game.swaps -= 1
-						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						Hand.erase(Hand.find(g))
+						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.Type.Purple:
 				var arr = missing_one_places[Gem.Type.Purple - 1]
 				if !arr.is_empty():
 					if Game.swaps > 0:
 						Game.swaps -= 1
-						Hand.swap(SMath.pick_and_remove(arr), g, true, true)
+						Hand.erase(Hand.find(g))
+						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 
 func auto_place_items():

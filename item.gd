@@ -5,12 +5,14 @@ class_name Item
 const item_frames : SpriteFrames = preload("res://images/items.tres")
 const infected_pb = preload("res://infected.tscn")
 
+var id : int
 var name : String
 var image_id : int
 var description : String
 var category : String
 var price : int = 5
 var power : int = 0
+var eliminated : bool = false
 var consumed : bool = false
 var duplicant : bool = false
 var tradeable : bool = false
@@ -27,13 +29,18 @@ var on_quick : Callable
 var on_eliminate : Callable
 var on_mount : Callable
 var on_event : Callable
+var on_aura : Callable
 
 static func get_image_path(name : String):
 	var temp = Item.new()
 	temp.setup(name)
 	return item_frames.get_frame_texture("default", temp.image_id).resource_path
 
+static var s_id : int = 0
+
 func setup(n : String):
+	id = s_id
+	s_id += 1
 	name = n
 	if name == "DyeRed":
 		image_id = 1
@@ -99,27 +106,17 @@ func setup(n : String):
 		image_id = 7
 		price = 2
 		extra["value"] = 4
-		extra["buff_ids"] = []
 		on_event = func(event : int, tween : Tween, data):
-			var value = extra["value"]
 			match event: 
-				Event.GemEntered:
-					Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard)
 				Event.ItemEntered:
-					extra["buff_ids"].clear()
 					if data == self:
-						for y in Board.cy:
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
-								if g:
-									extra["buff_ids"].append(Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
+						Board.add_aura(self)
 				Event.ItemLeft:
 					if data == self:
-						for y in Board.cy:
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
-								if g:
-									Buff.remove_by_id_list(g, extra["buff_ids"])
+						Board.remove_aura(self)
+		on_aura = func(g : Gem):
+			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value"]}, Buff.Duration.OnBoard)
+			b.caster = self
 	elif name == "Bomb":
 		image_id = 8
 		category = "Bomb"
@@ -738,7 +735,7 @@ func setup(n : String):
 			var value = extra["value"]
 			match event: 
 				Event.GemEntered:
-					Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard)
+					extra["buff_ids"].append(Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
 				Event.ItemEntered:
 					extra["buff_ids"].clear()
 					if data == self:
@@ -790,7 +787,9 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					for c in targets:
-						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
+						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.OnBoard)
+					if !targets.is_empty():
+						SSound.se_vibra.play()
 				)
 	elif name == "Merchant":
 		image_id = 33
@@ -802,7 +801,7 @@ func setup(n : String):
 			var value = extra["value"]
 			match event: 
 				Event.GemEntered:
-					Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard)
+					extra["buff_ids"].append(Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
 				Event.ItemEntered:
 					extra["buff_ids"].clear()
 					if data == self:
@@ -851,7 +850,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("red_bouns_i", 1)
-				Game.float_text("Red +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Red))
+				Game.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Citrine":
 		image_id = 36
@@ -860,7 +859,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("orange_bouns_i", 1)
-				Game.float_text("Orange +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Orange))
+				Game.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Emerald":
 		image_id = 37
@@ -869,7 +868,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("green_bouns_i", 1)
-				Game.float_text("Green +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Green))
+				Game.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Sapphire":
 		image_id = 38
@@ -878,16 +877,16 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("blue_bouns_i", 1)
-				Game.float_text("Blue +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Blue))
+				Game.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
-	elif name == "Tourmaline":
+	elif name == "Amethyst":
 		image_id = 39
 		category = "Normal"
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("purple_bouns_i", 1)
-				Game.float_text("Purple +1", Board.get_pos(coord), Gem.type_color(Gem.Type.Purple))
+				Game.float_text("%s +1" % tr("gem_purple"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "StrengthPotion":
 		image_id = 40
@@ -955,6 +954,8 @@ func get_tooltip():
 		content = "w_tradable\n" + content
 	if mountable != "":
 		content = ("w_mount for [color=gray][b]%s[/b][/color]\n" % mountable) + content
+	if extra.has("buff_ids"):
+		content += "\n%d" % extra["buff_ids"].size()
 	ret.append(Pair.new(tr("item_name_" + name), content))
 	if mounted:
 		ret.append_array(mounted.get_tooltip())
