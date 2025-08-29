@@ -57,6 +57,10 @@ func buy_expand_board():
 	
 	return true
 
+func refresh_prices():
+	for n in list1.get_children():
+		n.refresh_price()
+
 func buy_randomly():
 	buy_expand_board()
 	if randi() % 2 < 1:
@@ -68,9 +72,9 @@ func buy_randomly():
 		if item:
 			return item.buy()
 	return false
-	
+
 const items_pool = ["Flag", "Bomb", "C4", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Amethyst"]
-const relics_pool = ["ExplosionScience", "HighExplosives", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PurpleStone", "Aries", "Taurus", "Gemini", "Leo", "Virgo", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+const relics_pool = ["ExplosionScience", "HighExplosives", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "TyphonSBrokenTalon", "SyrinxOfPan", "OwlSEyeOfAthena", "Aries", "Taurus", "Gemini", "Leo", "Virgo", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "HalfPriceCoupon"]
 const patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 
 func refresh(tween : Tween = null):
@@ -134,12 +138,12 @@ func refresh(tween : Tween = null):
 				break
 		if !has:
 			not_owned_relics.append(n)
-	for i in 2:
+	for i in min(2, not_owned_relics.size()):
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = shop_item_pb.instantiate()
 			var relic = Relic.new()
-			relic.setup(SMath.pick_random(not_owned_relics, Game.rng))
+			relic.setup(SMath.pick_and_remove(not_owned_relics, Game.rng))
 			ui.setup("relic", relic, relic.price)
 			list1.add_child(ui)
 		)

@@ -52,6 +52,10 @@ func _ready() -> void:
 			STooltip.show([Pair.new(tr("w_socket"), tr("w_socket_desc"))])
 		elif s == "w_delete":
 			STooltip.show([Pair.new(tr("w_delete"), tr("w_delete_desc"))])
+		elif s == "w_wild":
+			STooltip.show([Pair.new(tr("w_wild"), tr("w_wild_desc"))])
+		elif s == "w_omni":
+			STooltip.show([Pair.new(tr("w_omni"), tr("w_omni_desc"))])
 		elif s == "w_duplicate":
 			STooltip.show([Pair.new(tr("w_duplicate"), tr("w_duplicate_desc"))])
 		elif s == "w_enchant_charming":

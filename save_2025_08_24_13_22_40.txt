@@ -1,0 +1,3575 @@
+{
+	"seed": 2562,
+	"rng_state": 8231979813325784971,
+	"level": 1,
+	"board_size": 3,
+	"rolls_per_level": 0,
+	"swaps_per_level": 5,
+	"plays_per_level": 0,
+	"draws_per_roll": 5,
+	"coins": 10,
+	"rolls": 0,
+	"swaps": 5,
+	"plays": 0,
+	"score": 0,
+	"target_score": 300,
+	"combos": 0,
+	"score_mult": 1.0,
+	"buffs": [],
+	"event_listeners": [],
+	"modifiers": {
+		"red_bouns_i": 0,
+		"orange_bouns_i": 0,
+		"green_bouns_i": 0,
+		"blue_bouns_i": 0,
+		"purple_bouns_i": 0,
+		"first_roll_i": 1,
+		"first_match_i": 1,
+		"base_combo_i": 0,
+		"board_upper_lower_connected_i": 0,
+		"explode_range_i": 0,
+		"explode_power_i": 0
+	},
+	"cx": 18,
+	"cy": 6,
+	"board_event_listeners": [],
+	"gems": [
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(11, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(8, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(9, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(10, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(12, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(6, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(7, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(16, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(17, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(10, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(12, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(13, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(15, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(7, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(8, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(15, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(17, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 1,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(12, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(9, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(9, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(12, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(8, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(5, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(13, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(7, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(16, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(17, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(13, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(5, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(13, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(15, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(12, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(16, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(7, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 2,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(6, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(10, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(16, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(5, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(9, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(11, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(14, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(10, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(14, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(16, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(11, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(14, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(5, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(11, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(7, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(13, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(6, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(6, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(9, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(17, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(10, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 3,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(6, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(12, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(16, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(8, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(11, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(6, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(5, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(9, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(15, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(7, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(17, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(14, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 4,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(8, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(10, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(13, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(15, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(17, 3)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 1,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(4, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(1, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(5, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(0, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 2,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(8, 1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(3, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(14, 2)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(2, 5)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(15, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(11, 4)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(14, 0)",
+			"buffs": [],
+			"bound_item": -1
+		},
+		{
+			"type": 5,
+			"rune": 3,
+			"base_score": 4,
+			"bonus_score": 0,
+			"mult": 0.0,
+			"coord": "(-1, -1)",
+			"buffs": [],
+			"bound_item": -1
+		}
+	],
+	"bag_gems": [
+		0,
+		1,
+		2,
+		6,
+		8,
+		10,
+		14,
+		16,
+		18,
+		19,
+		21,
+		22,
+		24,
+		26,
+		27,
+		28,
+		29,
+		31,
+		33,
+		34,
+		36,
+		38,
+		39,
+		40,
+		42,
+		45,
+		50,
+		54,
+		56,
+		57,
+		58,
+		60,
+		64,
+		65,
+		66,
+		67,
+		71,
+		72,
+		76,
+		77,
+		79,
+		81,
+		82,
+		85,
+		86,
+		88,
+		89,
+		90,
+		91,
+		93,
+		94,
+		97,
+		99,
+		100,
+		103,
+		104,
+		108,
+		109,
+		110,
+		111,
+		114,
+		118,
+		119,
+		120,
+		125,
+		126,
+		127,
+		134,
+		135,
+		138,
+		144,
+		149,
+		150,
+		152,
+		153,
+		155,
+		156,
+		157,
+		158,
+		159,
+		160,
+		161,
+		163,
+		164,
+		165,
+		167,
+		168,
+		169,
+		170,
+		173,
+		175,
+		178,
+		180,
+		183,
+		184,
+		187,
+		188,
+		189,
+		191,
+		193,
+		194,
+		195,
+		199,
+		200,
+		201,
+		205,
+		207,
+		208,
+		209,
+		212,
+		214,
+		215,
+		217,
+		218,
+		219,
+		221,
+		222,
+		223,
+		224,
+		225,
+		228,
+		230,
+		231,
+		232,
+		235,
+		236,
+		239
+	],
+	"items": [],
+	"bag_items": [],
+	"patterns": [
+		{
+			"name": "\\",
+			"mult": 1,
+			"lv": 1,
+			"exp": 0,
+			"max_exp": 50000
+		},
+		{
+			"name": "I",
+			"mult": 1,
+			"lv": 1,
+			"exp": 0,
+			"max_exp": 50000
+		},
+		{
+			"name": "/",
+			"mult": 1,
+			"lv": 1,
+			"exp": 0,
+			"max_exp": 50000
+		}
+	],
+	"relics": [],
+	"hand": [
+		192,
+		53,
+		9,
+		4,
+		206
+	],
+	"cells": [
+		{
+			"coord": "(0, 0)",
+			"gem": 131,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(1, 0)",
+			"gem": 59,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(2, 0)",
+			"gem": 123,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(3, 0)",
+			"gem": 227,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(4, 0)",
+			"gem": 211,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(5, 0)",
+			"gem": 102,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(6, 0)",
+			"gem": 17,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(7, 0)",
+			"gem": 92,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(8, 0)",
+			"gem": 196,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(9, 0)",
+			"gem": 176,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(10, 0)",
+			"gem": 30,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(11, 0)",
+			"gem": 117,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(12, 0)",
+			"gem": 48,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(13, 0)",
+			"gem": 202,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(14, 0)",
+			"gem": 238,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(15, 0)",
+			"gem": 234,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(16, 0)",
+			"gem": 116,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(17, 0)",
+			"gem": 46,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(0, 1)",
+			"gem": 220,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(1, 1)",
+			"gem": 174,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(2, 1)",
+			"gem": 73,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(3, 1)",
+			"gem": 179,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(4, 1)",
+			"gem": 124,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(5, 1)",
+			"gem": 216,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(6, 1)",
+			"gem": 137,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(7, 1)",
+			"gem": 20,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(8, 1)",
+			"gem": 226,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(9, 1)",
+			"gem": 49,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(10, 1)",
+			"gem": 98,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(11, 1)",
+			"gem": 128,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(12, 1)",
+			"gem": 84,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(13, 1)",
+			"gem": 75,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(14, 1)",
+			"gem": 186,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(15, 1)",
+			"gem": 37,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(16, 1)",
+			"gem": 148,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(17, 1)",
+			"gem": 141,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(0, 2)",
+			"gem": 210,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(1, 2)",
+			"gem": 143,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(2, 2)",
+			"gem": 95,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(3, 2)",
+			"gem": 171,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(4, 2)",
+			"gem": 12,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(5, 2)",
+			"gem": 78,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(6, 2)",
+			"gem": 96,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(7, 2)",
+			"gem": 130,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(8, 2)",
+			"gem": 151,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(9, 2)",
+			"gem": 51,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(10, 2)",
+			"gem": 142,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(11, 2)",
+			"gem": 106,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(12, 2)",
+			"gem": 15,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(13, 2)",
+			"gem": 132,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(14, 2)",
+			"gem": 229,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(15, 2)",
+			"gem": 177,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(16, 2)",
+			"gem": 101,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(17, 2)",
+			"gem": 74,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(0, 3)",
+			"gem": 47,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(1, 3)",
+			"gem": 146,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(2, 3)",
+			"gem": 52,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(3, 3)",
+			"gem": 70,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(4, 3)",
+			"gem": 140,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(5, 3)",
+			"gem": 172,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(6, 3)",
+			"gem": 166,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(7, 3)",
+			"gem": 182,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(8, 3)",
+			"gem": 43,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(9, 3)",
+			"gem": 105,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(10, 3)",
+			"gem": 197,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(11, 3)",
+			"gem": 154,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(12, 3)",
+			"gem": 32,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(13, 3)",
+			"gem": 35,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(14, 3)",
+			"gem": 121,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(15, 3)",
+			"gem": 83,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(16, 3)",
+			"gem": 87,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(17, 3)",
+			"gem": 204,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(0, 4)",
+			"gem": 190,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(1, 4)",
+			"gem": 213,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(2, 4)",
+			"gem": 7,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(3, 4)",
+			"gem": 181,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(4, 4)",
+			"gem": 136,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(5, 4)",
+			"gem": 122,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(6, 4)",
+			"gem": 133,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(7, 4)",
+			"gem": 68,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(8, 4)",
+			"gem": 61,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(9, 4)",
+			"gem": 11,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(10, 4)",
+			"gem": 13,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(11, 4)",
+			"gem": 237,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(12, 4)",
+			"gem": 55,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(13, 4)",
+			"gem": 63,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(14, 4)",
+			"gem": 112,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(15, 4)",
+			"gem": 203,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(16, 4)",
+			"gem": 23,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(17, 4)",
+			"gem": 185,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(0, 5)",
+			"gem": 107,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(1, 5)",
+			"gem": 198,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(2, 5)",
+			"gem": 233,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(3, 5)",
+			"gem": 162,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(4, 5)",
+			"gem": 129,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(5, 5)",
+			"gem": 62,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(6, 5)",
+			"gem": 145,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(7, 5)",
+			"gem": 41,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(8, 5)",
+			"gem": 5,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(9, 5)",
+			"gem": 139,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(10, 5)",
+			"gem": 113,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(11, 5)",
+			"gem": 3,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(12, 5)",
+			"gem": 147,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(13, 5)",
+			"gem": 80,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(14, 5)",
+			"gem": 115,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(15, 5)",
+			"gem": 44,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(16, 5)",
+			"gem": 69,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		},
+		{
+			"coord": "(17, 5)",
+			"gem": 25,
+			"item": -1,
+			"state": 0,
+			"pinned": false,
+			"frozen": false,
+			"event_listeners": []
+		}
+	],
+	"shopping": false
+}

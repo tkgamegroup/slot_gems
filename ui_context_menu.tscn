@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://ub8hhpka51da"]
+
+[ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="1_o32kr"]
+[ext_resource type="Script" uid="uid://bdrxuwxelck6q" path="res://ui_context_menu.gd" id="1_twh2u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_twh2u"]
+
+[node name="UiContextMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_twh2u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Sell" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_twh2u")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Sell"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.5
+offset_top = -11.5
+offset_right = 30.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/Sell/HBoxContainer"]
+layout_mode = 2
+text = "Sell 5"
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Sell/HBoxContainer"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_o32kr")
+expand_mode = 1

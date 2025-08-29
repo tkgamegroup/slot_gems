@@ -2,6 +2,13 @@ extends Object
 
 class_name SUtils
 
+static func get_formated_datetime() -> String:
+	var datetime = Time.get_datetime_string_from_system(false, true)
+	datetime = datetime.replace("-", "_")
+	datetime = datetime.replace(":", "_")
+	datetime = datetime.replace(" ", "_")
+	return datetime
+
 static func read_dictionary(d : Dictionary):
 	var ret = {}
 	for k in d:

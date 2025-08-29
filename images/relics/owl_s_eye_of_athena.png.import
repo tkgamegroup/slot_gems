@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://be7eka2nod1st"
-path="res://.godot/imported/purple_stone.png-e1f491d5d6ebf7416cfcbfb4d2488a17.ctex"
+uid="uid://bdctr7g0l2dq1"
+path="res://.godot/imported/owl_s_eye_of_athena.png-d7edbedcd7327c9c1d6ed0995aa66ff3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/purple_stone.png"
-dest_files=["res://.godot/imported/purple_stone.png-e1f491d5d6ebf7416cfcbfb4d2488a17.ctex"]
+source_file="res://images/relics/owl_s_eye_of_athena.png"
+dest_files=["res://.godot/imported/owl_s_eye_of_athena.png-d7edbedcd7327c9c1d6ed0995aa66ff3.ctex"]
 
 [params]
 

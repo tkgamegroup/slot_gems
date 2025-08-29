@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cpv0mxnsh1ct3"]
+[gd_scene load_steps=8 format=3 uid="uid://cpv0mxnsh1ct3"]
 
 [ext_resource type="Script" uid="uid://bwcptmt32c0ay" path="res://ui_cell.gd" id="1_c8dfl"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_sxxmi"]
@@ -6,6 +6,7 @@
 [ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="3_cy07b"]
 [ext_resource type="Texture2D" uid="uid://bhcfbybb53f87" path="res://images/pined.png" id="5_qcpuj"]
 [ext_resource type="Texture2D" uid="uid://csgetbs60orud" path="res://images/frozen.png" id="5_v5bqx"]
+[ext_resource type="SpriteFrames" uid="uid://bybc42chjmbrn" path="res://images/nullify.tres" id="7_gl3ak"]
 
 [node name="UiCell" type="Node2D"]
 script = ExtResource("1_c8dfl")
@@ -31,3 +32,16 @@ texture = ExtResource("5_qcpuj")
 [node name="Frozen" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("5_v5bqx")
+
+[node name="Nullified" type="Node2D" parent="."]
+visible = false
+
+[node name="sp1" type="AnimatedSprite2D" parent="Nullified"]
+modulate = Color(0.360621, 0.526466, 0.622788, 1)
+sprite_frames = ExtResource("7_gl3ak")
+speed_scale = 0.5
+
+[node name="sp2" type="AnimatedSprite2D" parent="Nullified"]
+modulate = Color(0.360621, 0.526466, 0.622788, 1)
+sprite_frames = ExtResource("7_gl3ak")
+speed_scale = 0.5

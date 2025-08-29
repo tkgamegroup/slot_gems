@@ -45,7 +45,7 @@ func enter():
 		var ui = pattern_ui.instantiate()
 		ui.setup(p, true)
 		pattern_list.add_child(ui)
-	var relics = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedStone", "OrangeStone", "GreenStone", "BlueStone", "PurpleStone"]
+	var relics = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon"]
 	for n in relics:
 		var r = Relic.new()
 		r.setup(n)

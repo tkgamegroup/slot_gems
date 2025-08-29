@@ -62,11 +62,11 @@ func _process(delta: float) -> void:
 			var h = item_h * n + (n - 1) * gap
 			var oidx = dragging.get_index()
 			var nidx = -1
-			var y = clamp(get_local_mouse_position().y - drag_pos.y, -20, h - item_h + 20) 
+			var y = clamp(list.get_local_mouse_position().y - drag_pos.y, -20, h - item_h + 20) 
 			dragging.position.y = y
 			for i in n:
 				var c = item_h * i + ((i - 1) * gap if i > 0 else 0) + item_h * 0.5
-				if y >= c - 20.0 && y < c + 20.0:
+				if y >= c - item_h * 0.5 && y < c + item_h * 0.5:
 					nidx = i
 					break
 			if nidx != -1 && nidx != oidx:

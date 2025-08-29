@@ -9,9 +9,9 @@ w_omni_desc,Can use as any rune.,可以代替任何符文。
 w_enchant,Enchant,附魔
 w_enchant_desc,Buff the gem.,增益宝石。
 w_enchant_charming,Charming,迷人的
-w_enchant_charming_desc,+40 Base Score.,+40 基础分数。
+w_enchant_charming_desc,+200 Base Score.,+200 基础分数。
 w_enchant_sharp,Sharp,锐利的
-w_enchant_sharp_desc,+1.0 Mult.,+1.0 倍率。
+w_enchant_sharp_desc,+1.5 Mult.,+1.5 倍率。
 w_socket,Socket,镶嵌
 w_socket_desc,Embed an item into the gem. It will remove the rune of the gem.,把道具镶嵌到宝石中。会移除宝石上的符文。
 w_delete,Delete,删除
@@ -33,11 +33,17 @@ w_aura_desc,Effect all gems while this Item is on board,当此道具在棋盘上
 w_range,Range,范围
 w_range_desc,The cells within the distance of n. 0 means the cell itself.,距离在n之内的格子。0表示格子本身。
 w_power,Power,力量
-w_power_desc,Add addition score to each gem that this Item eliminated.,使此道具消除的宝石增加额外的分数。
+w_power_desc,Addition score to each eliminated gem.,增加额外的分数给消除的宝石。
 w_tradable,Tradable,可交易
 w_tradable_desc,You can drag this Item to Bag in order to exchange another item.,你可以将此道具拖拽到包来交换一个新的道具。
 w_mount,Mount,坐骑
 w_mount_desc,Place a satisfied Item to this Item in order to form a combine Item. Basiclly new Item have the effects of both.,将一个满足条件的道具放到此道具上来组合一个新道具。通常新道具拥有两个道具的效果。
+curse_nullify_cell,%d random cells are nullified.,%d个随机的格子被无效化。
+curse_nullify_Red,Red gems are nullified.,红色宝石被无效化。
+curse_nullify_Orange,Orange gems are nullified.,橙色宝石被无效化。
+curse_nullify_Green,Green gems are nullified.,绿色宝石被无效化。
+curse_nullify_Blue,Blue gems are nullified.,蓝色宝石被无效化。
+curse_nullify_Purple,Purple gems are nullified.,紫色宝石被无效化。
 ui_close,Close,关闭
 ui_titile_continue,Continue,继续游戏
 ui_titile_new_game,New Game,新游戏
@@ -66,8 +72,8 @@ tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
 tt_purple_base_score,Purple gems' base score,紫色宝石基础分数
-ui_game_level,Level %d,关卡 %d
-ui_game_target_score,Score at lease %d (Reward: %d%s),最少达到 %d 分 （奖励：%d%s）
+ui_game_level,Level %d (Reward: %d%s),关卡 %d（奖励：%d%s）
+ui_game_target_score,Score at lease %d.,最少达到 %d 分。
 ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
 tt_game_board_size_content,"The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2.",横向的格子数将会是 棋盘大小 x6，纵向的格子数将会是 棋盘大小 x2。
@@ -92,6 +98,8 @@ tt_game_roll_title,Roll,滚动
 tt_game_roll_content,"Roll the board, unpinned and unfrozen gems will be replaced to new ones, then draw new items.",滚动棋盘，未固定跟未冰冻的宝石会被替换成新的，然后抽取新的道具。
 tt_game_match_title,Match,匹配
 tt_game_match_content,Start matching patterns and get score.,开始匹配图案并得分。
+tt_game_filling_times_title,Filling Times,填充次数
+tt_game_filling_times_content,How many fillings were performed during this matching stage.\nWin this level when reaching 60.,在这次匹配阶段进行过多少次填充。达到60时获得关卡胜利。
 tt_at_least_score,At Least Score: %d,最少得分：%d
 ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
@@ -108,6 +116,7 @@ ui_shop_upgrade_insufficient_quantity_title,Not Enough Gems,宝石数量不足
 ui_shop_upgrade_insufficient_quantity_content,Requires at least %d gems,需要至少%d个宝石
 ui_shop_exit,Exit,退出
 ui_buy,Buy,购买
+ui_sell,Sell %d,出售 %d
 ui_enchant_quantity_limit,Gem can have up to 2 enchantments,宝石最多拥有2个附魔
 ui_delete_gem_count_limit,You can’t have less than %d gems,你不能拥有低于%d个宝石
 ui_relics_count_limit,You can have up to %d relics,您最多拥有%d个遗物
@@ -244,7 +253,7 @@ item_desc_Rainbow,w_eliminate: +{value} score mult this matching.,w_eliminate：
 item_name_Idol,Idol,偶像
 item_desc_Idol,w_aura: All gems +{value} score.\nw_eliminate: (w_active) Gems in 1 w_range -1 base score.,w_aura：宝石+{value}分数。\nw_eliminate：(w_active)1w_range内的宝石基础分数-1。
 item_name_Magician,Magician,魔术师
-item_desc_Magician,w_eliminate: (w_active) Turn 5 random gems to w_wild until the end of level.,w_eliminate：(w_active) 使5个随机的宝石直到关卡结束前变为w_wild。
+item_desc_Magician,w_eliminate: (w_active) Turn {number} random gems to w_wild temporarily.,w_eliminate：(w_active) 使{number}个随机的宝石临时地变为w_wild。
 item_name_Princess,Princess,公主
 item_desc_Princess,w_aura: All gems +7 score.\nw_eliminate: (w_active) Gems in 1 w_range get +1 score permanently.,
 item_name_Mage,Mage,大法师
@@ -266,7 +275,7 @@ item_desc_EchoTotem,w_aura: All Item's repeat number +1.,
 item_name_Volcano,Volcano,火山
 item_desc_Volcano,w_eliminate: (w_active) Eliminate 2 random cells in 2 w_range. Repeat 2 times.,w_eliminate：(w_active)消除2w_range内的2个随机格子。重复2次。
 relic_name_ExplosionScience,Explosion Science,爆炸科学
-relic_desc_ExplosionScience,Explosion w_range +1 but w_power -3.,爆炸w_range+1但是w_power-3。
+relic_desc_ExplosionScience,Explosion w_range +{range_increase} but w_power -{power_decrease}.,爆炸w_range+{range_increase}但是w_power-{power_decrease}。
 relic_name_HighExplosives,High Explosives,高爆炸药
 relic_desc_HighExplosives,Explosion w_power +{value}.,爆炸w_power+{value}。
 relic_name_UniformBlasting,Uniform Blasting,均匀爆破
@@ -278,27 +287,33 @@ relic_desc_BlockedLever,"Once per level, before the matching ends, perform anoth
 relic_name_MobiusStrip,Mobius Strip,莫比乌斯环
 relic_desc_MobiusStrip,The upper and lower parts of the Board are connected.,棋盘的上下部分相互链接。
 relic_name_Premeditation,Premeditation,预谋
-relic_desc_Premeditation,Combo starts from 3.,连击从3开始。
+relic_desc_Premeditation,Combo starts from {value}.,连击从{value}开始。
 relic_name_PentagramPower,Pentagram Power,五角之力
-relic_desc_PentagramPower,"Every 5 Combos, get 5 times Score and Mult in that combo.",每5个连击，那次连击获得5被分数与倍率。
-relic_name_RedStone,Red Stone,红石
-relic_desc_RedStone,Red gems' base score +{value}.,红色宝石的基础分数+{value}。
-relic_name_OrangeStone,Orange Stone,橙石
-relic_desc_OrangeStone,Orange gems' base score +{value}.,橙色宝石的基础分数+{value}。
-relic_name_GreenStone,Green Stone,绿石
-relic_desc_GreenStone,Green gems' base score +{value}.,绿色宝石的基础分数+{value}。
-relic_name_BlueStone,Blue Stone,蓝石
-relic_desc_BlueStone,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
-relic_name_PurpleStone,Purple Stone,紫石
-relic_desc_PurpleStone,Purple gems' base score +{value}.,紫色宝石的基础分数+{value}。
+relic_desc_PentagramPower,"Every 5 Combos, get 5 times Score and Mult in that combo.",每5个连击，那次连击获得5倍分数与倍率。
+relic_name_RedComposition,"Composition with Red, Blue and Yellow",红、蓝、黄构图
+relic_desc_RedComposition,Red gems' base score +{value}.,红色宝石的基础分数+{value}。
+relic_name_Sunflowers,Sunflowers,向日葵
+relic_desc_Sunflowers,Orange gems' base score +{value}.,橙色宝石的基础分数+{value}。
+relic_name_WaterLilies,Water Lilies,睡莲
+relic_desc_WaterLilies,Green gems' base score +{value}.,绿色宝石的基础分数+{value}。
+relic_name_BlueNude,Blue Nude,蓝色裸体
+relic_desc_BlueNude,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
+relic_name_LesDemoisellesDAvignon,Les Demoiselles d'Avignon,阿维尼翁的少女
+relic_desc_LesDemoisellesDAvignon,Purple gems' base score +{value}.,紫色宝石的基础分数+{value}。
+relic_name_TyphonSBrokenTalon,Typhon’s Broken Talon,提丰的断爪
+relic_desc_TyphonSBrokenTalon,+{value} mult when eliminate a gem with Destroy rune.,消除破坏符文的宝石时+{value} 倍率。
+relic_name_SyrinxOfPan,Syrinx Of Pan,潘的笛子
+relic_desc_SyrinxOfPan,+{value} mult when eliminate a gem with Grow rune.,消除生长符文的宝石时+{value} 倍率。
+relic_name_OwlSEyeOfAthena,Owl’s Eye Of Athena,雅典娜的猫头鹰之眼
+relic_desc_OwlSEyeOfAthena,+{value} mult when eliminate a gem with Wisom rune.,消除智慧符文的宝石时+{value} 倍率。
 relic_name_RockBottom,Rock Bottom,谷底石
 relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座
-relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells in {range_i} w_range at random location.,当匹配到至少3个破坏符文时：(w_active) 在随机的位置爆炸并消除{range_i}w_range内的格子。
+relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells in {range_i} w_range at {times} random locations.,当匹配到至少3个破坏符文时：(w_active) 在随机的{times}个位置爆炸并消除{range_i}w_range内的格子。
 relic_name_Taurus,Taurus,金牛座
 relic_desc_Taurus,When matching at least 3 Grow runes: +{value} Score.,当匹配到至少3个生长符文时：+{value}分数。
 relic_name_Gemini,Gemini,双子座
-relic_desc_Gemini,When matching at least 3 Wisdom runes: (w_active) Duplicate 1 random gem from Hand.,当匹配到至少3个灵智符文时：(w_active) 复制手中的1个随机宝石。
+relic_desc_Gemini,When matching at least 3 Wisdom runes: (w_active) Duplicate the left most gem from Hand.,当匹配到至少3个灵智符文时：(w_active) 复制手中最左边的宝石。
 relic_name_Cancer,Cancer,巨蟹座
 relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes:",当匹配到至少1个灵智、和2个生长符文时：
 relic_name_Leo,Leo,狮子座
@@ -308,12 +323,14 @@ relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes: +{value} Mu
 relic_name_Libra,Libra,天秤座
 relic_desc_Libra,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
 relic_name_Scorpio,Scorpio,天蝎座
-relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Delete 1 random gem from Hand.,当匹配到至少2个破坏、和1个灵智符文时：(w_active) 从手中删除1个随机的宝石。
+relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Delete the right most gem from Hand.,当匹配到至少2个破坏、和1个灵智符文时：(w_active) 删除手中最右边的宝石。
 relic_name_Sagittarius,Sagittarius,射手座
 relic_desc_Sagittarius,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Eliminate 1 most valuable gem.,当匹配到至少2个破坏、和1个灵智符文时： (w_active) 消除1个最有价值的宝石。
 relic_name_Capricorn,Capricorn,摩羯座
 relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes: Coins +{amount}.",当匹配到至少1个破坏、和2个生长符文时：金币+{amount}。
 relic_name_Aquarius,Aquarius,水瓶座
 relic_desc_Aquarius,"When matching at least 3 Wisdom runes: (w_active) Select 1 random gem, its Base Score +{value}.",当匹配到至少3个灵智符文时：(w_active) 选择1个随机宝石，它的基础分数+{value}。
-relic_name_Pisces,Pisces ,双鱼座
-relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes: (w_active) Turn 2 random gems into w_wild in this Level.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 使2个随机宝石变为w_wild，直到关卡结束。
+relic_name_Pisces,Pisces,双鱼座
+relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes: (w_active) Turn 2 random gems into w_wild temporarily.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 使2个随机宝石临时地变为w_wild。
+relic_name_HalfPriceCoupon,Half-Price Coupon,半价券
+relic_desc_HalfPriceCoupon,The price of purchasing gems and relics is halved.,购买宝石与遗物的价格减半。

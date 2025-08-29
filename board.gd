@@ -141,6 +141,12 @@ func format_coord(c : Vector2i):
 			c.y = c.y - Board.cy
 	return c
 
+func get_all_offset_coords() -> Array[Vector2i]:
+	var ret : Array[Vector2i] = []
+	for c in cells:
+		ret.append(c.coord)
+	return ret
+
 func get_cell(c : Vector2i):
 	c = format_coord(c)
 	if !is_valid(c):
@@ -292,11 +298,17 @@ func get_active_effects_at(c : Vector2i):
 			ret.append(ae)
 	return ret
 
-func gem_score_at(c : Vector2i):
-	var g = get_gem_at(c)
+func score_at(c : Vector2i, additional_score : int = 0, score_mult : float = 1.0, additional_mult : float = 0.0, mult_mult : float = 1.0):
+	var cell = get_cell(c)
+	if cell.nullified:
+		return
+	var g = cell.gem
 	if !g:
-		return 0
-	return g.get_base_score() + g.bonus_score
+		return
+	var pos = get_pos(c)
+	Game.add_score((g.get_base_score() + g.bonus_score + additional_score) * score_mult, pos)
+	if g.mult != 0.0:
+		Game.add_mult((g.mult + additional_mult) * mult_mult, pos)
 
 func pin(c : Vector2i):
 	c = format_coord(c)
@@ -337,7 +349,28 @@ func unfreeze(c : Vector2i):
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
+	var cell = cells[idx]
 	cells[idx].frozen = false
+	Game.board_ui.update_cell(c)
+
+func nullify(c : Vector2i):
+	c = format_coord(c)
+	if !is_valid(c):
+		return false
+	var idx = c.y * cx + c.x
+	var cell = cells[idx]
+	if cell.nullified:
+		return false
+	cell.nullified = true
+	Game.board_ui.update_cell(c)
+	return true
+
+func unnullify(c : Vector2i):
+	c = format_coord(c)
+	if !is_valid(c):
+		return
+	var idx = c.y * cx + c.x
+	cells[idx].nullified = false
 	Game.board_ui.update_cell(c)
 
 func add_aura(i : Item):
@@ -404,7 +437,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		var item : Item = host
 		if !(item.on_active.is_valid() || (item.mounted && item.mounted.on_active.is_valid())):
 			return
-		print("item %d activated, serial: %d, active count: %d" % [item.id, active_serial, active_effects.size() + 1])
+		#print("item %d activated, serial: %d, active count: %d" % [item.id, active_serial, active_effects.size() + 1])
 		sp = active_effect_pb.instantiate()
 		sp.sprite_frames = Item.item_frames
 		sp.frame = item.image_id
@@ -432,6 +465,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	active_serial += 1
 	for h in event_listeners:
 		h.host.on_event.call(Event.ItemActivated, null, ae)
+	Game.history.actives += 1
 
 func process_active_effect(ae : ActiveEffect):
 	var tween = Game.get_tree().create_tween()
@@ -458,6 +492,11 @@ func process_active_effect(ae : ActiveEffect):
 func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
 	for h in event_listeners:
 		h.host.on_event.call(Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
+
+func clear_active_effects():
+	for ae in active_effects:
+		ae.sp.queue_free()
+	active_effects.clear()
 
 func clear():
 	for y in cy:
@@ -591,7 +630,7 @@ func clear_consumed():
 				burning_cells.append(c)
 	if burning_cells.size() > 0:
 		for c in burning_cells:
-			Game.add_score(gem_score_at(c), get_pos(c))
+			score_at(c)
 			set_gem_at(c, null)
 			set_state_at(c, Cell.State.Normal)
 		SSound.se_end_buring.play()
@@ -646,7 +685,7 @@ func fill_blanks():
 			staging_idx += 1
 		Game.staging_scores.clear()
 		Game.staging_mults.clear()
-		tween.tween_interval(0.3)
+		tween.tween_interval(0.3 * Game.speed)
 	
 	tween.tween_callback(func():
 		var filled = false
@@ -670,7 +709,7 @@ func on_combo():
 func matching():
 	var matched_num = 0
 	var tween = Game.get_tree().create_tween()
-	tween.tween_interval(0.4)
+	tween.tween_interval(0.4 * Game.speed)
 	
 	for y in cy:
 		for x in cx:
@@ -702,9 +741,7 @@ func matching():
 						for c in res:
 							var g = get_gem_at(c)
 							var pos = get_pos(c)
-							Game.add_score(gem_score_at(c) * p.mult, pos)
-							if g.mult != 0.0:
-								Game.add_mult(g.mult, pos)
+							score_at(c, 0, p.mult, 0.0, p.mult)
 					)
 					matched_num += 1
 					
@@ -717,7 +754,7 @@ func matching():
 					Game.speed *= 0.98
 					Game.speed = max(0.05, Game.speed)
 	if matched_num == 0:
-		tween.tween_interval(0.7 * Game.speed)
+		tween.tween_interval(0.55 * Game.speed)
 		tween.tween_callback(func():
 			if active_effects.is_empty():
 				matching_finished.emit()
@@ -770,7 +807,7 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		
 		Game.add_combo()
 		for c in coords:
-			Game.add_score(gem_score_at(c) + p, get_pos(c))
+			score_at(c, p)
 	)
 	eliminate(coords, tween, ActiveReason.Item, source)
 	if !outer_tween:

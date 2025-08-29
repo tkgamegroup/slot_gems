@@ -131,6 +131,9 @@ func get_base_score():
 		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["purple_bouns_i"]
 	return ret
 
+func get_rank():
+	return type * 0xffff + rune * 0xff + (100.0 / max(base_score + bonus_score + mult, 0.1))
+
 func get_tt_name():
 	var ret = ""
 	var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)

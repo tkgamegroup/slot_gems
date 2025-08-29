@@ -1,7 +1,7 @@
 extends Control
 
 @onready var bg : Control = $TextureRect
-@onready var text1 : Label = $VBoxContainer/Label
+@onready var text1 : RichTextLabel = $VBoxContainer/Label
 @onready var text2 : RichTextLabel = $VBoxContainer/Label2
 
 var show_tip_tween : Tween = null

@@ -15,7 +15,7 @@ const NumberText = preload("res://number_text.gd")
 @onready var purple_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
 @onready var purple_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
 @onready var level_container : Control = $HBoxContainer/VBoxContainer4
-@onready var level_text : Label = $HBoxContainer/VBoxContainer4/Level
+@onready var level_text : RichTextLabel = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var cluster_level1_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control
 @onready var cluster_level1_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control/AnimatedSprite2D
@@ -23,6 +23,8 @@ const NumberText = preload("res://number_text.gd")
 @onready var cluster_level2_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control2/AnimatedSprite2D
 @onready var cluster_level3_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control3
 @onready var cluster_level3_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control3/AnimatedSprite2D
+@onready var cluster_level_ctrls = [cluster_level1_ctrl, cluster_level2_ctrl, cluster_level3_ctrl] 
+@onready var cluster_level_sps = [cluster_level1_sp, cluster_level2_sp, cluster_level3_sp] 
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
 @onready var board_size_text : NumberText = $HBoxContainer/HBoxContainer/BoardSize
 @onready var hand_container : Control = $HBoxContainer/HBoxContainer4
@@ -77,7 +79,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 1
-		STooltip.show([Pair.new(tr("ui_game_level") % lv, Game.get_level_desc(Game.get_level_score(lv), Game.get_level_reward(lv)))])
+		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1]))])
 	)
 	cluster_level1_ctrl.mouse_exited.connect(func():
 		STooltip.close()
@@ -87,7 +89,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 2
-		STooltip.show([Pair.new(tr("ui_game_level") % lv, Game.get_level_desc(Game.get_level_score(lv), Game.get_level_reward(lv)))])
+		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1]))])
 	)
 	cluster_level2_ctrl.mouse_exited.connect(func():
 		STooltip.close()
@@ -97,7 +99,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 3
-		STooltip.show([Pair.new(tr("ui_game_level") % lv, Game.get_level_desc(Game.get_level_score(lv), Game.get_level_reward(lv)))])
+		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1]))])
 	)
 	cluster_level3_ctrl.mouse_exited.connect(func():
 		STooltip.close()

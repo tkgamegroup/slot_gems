@@ -105,7 +105,7 @@ func setup(n : String):
 	elif name == "Flag":
 		image_id = 7
 		price = 2
-		extra["value"] = 4
+		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
 			match event: 
 				Event.ItemEntered:
@@ -120,8 +120,8 @@ func setup(n : String):
 	elif name == "Bomb":
 		image_id = 8
 		category = "Bomb"
-		price = 3
-		power = 3
+		price = 2
+		power = 8
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -133,7 +133,7 @@ func setup(n : String):
 		image_id = 9
 		category = "Bomb"
 		price = 3
-		power = 5
+		power = 50
 		extra["range"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if reason == Board.ActiveReason.Item && source.category == "Bomb":
@@ -145,7 +145,6 @@ func setup(n : String):
 	elif name == "ChainBomb":
 		image_id = 10
 		category = "Bomb"
-		price = 3
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if !Board.active_effects.is_empty():
@@ -161,7 +160,6 @@ func setup(n : String):
 	elif name == "GoldenBomb":
 		image_id = 42
 		category = "Bomb"
-		price = 5
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -215,7 +213,7 @@ func setup(n : String):
 						places.append(c)
 				tween.tween_callback(func():
 					Game.add_combo()
-					Game.add_score(Board.gem_score_at(SMath.pick_random(places, Game.rng)), Board.get_pos(coord))
+					Board.score_at(SMath.pick_random(places, Game.rng))
 				)
 				Board.eliminate([coord], tween, Board.ActiveReason.Item, self)
 			elif effect_index == 1:
@@ -271,7 +269,7 @@ func setup(n : String):
 				
 				Game.add_combo()
 				for c in coords:
-					Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
+					Board.score_at(c)
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Lightning":
@@ -311,7 +309,7 @@ func setup(n : String):
 						Game.add_combo()
 						for c in coords:
 							if Board.is_valid(c):
-								Game.add_score(Board.gem_score_at(c) + power, Board.get_pos(c))
+								Board.score_at(c, power)
 				)
 				Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "ColorPalette":
@@ -380,7 +378,7 @@ func setup(n : String):
 						Game.add_combo()
 						for c in coords:
 							if Board.is_valid(c):
-								Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
+								Board.score_at(c)
 				)
 				Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "WhiteHole":
@@ -412,7 +410,7 @@ func setup(n : String):
 					Game.add_combo()
 					for c in coords:
 						if Board.is_valid(c):
-							Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
+							Board.score_at(c)
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Chloroplast":
@@ -470,7 +468,7 @@ func setup(n : String):
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
-						Game.add_score(Board.gem_score_at(c), pos)
+						Board.score_at(c)
 					)
 					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
 					bc = c
@@ -526,7 +524,7 @@ func setup(n : String):
 					coords.append(c)
 					tween.tween_callback(func():
 						Game.add_combo()
-						Game.add_score(Board.gem_score_at(c), pos)
+						Board.score_at(c)
 						
 						var item = Board.get_item_at(c)
 						if !item:
@@ -648,7 +646,7 @@ func setup(n : String):
 						Game.add_combo()
 						for c in coords:
 							if Board.is_valid(c):
-								Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
+								Board.score_at(c)
 					)
 					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "HotDog":
@@ -706,7 +704,7 @@ func setup(n : String):
 				Game.add_combo()
 				for c in coords:
 					if Board.is_valid(c):
-						Game.add_score(Board.gem_score_at(c), Board.get_pos(c))
+						Board.score_at(c)
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Magnet":
@@ -720,7 +718,8 @@ func setup(n : String):
 	elif name == "Rainbow":
 		image_id = 30
 		category = "Normal"
-		extra["value"] = 1.3
+		price = 2
+		extra["value"] = 8.0
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				var v = extra["value"]
@@ -766,7 +765,9 @@ func setup(n : String):
 			)
 	elif name == "Magician":
 		image_id = 32
+		price = 1
 		category = "Character"
+		extra["number"] = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Item, 0, coord, reason, source)
@@ -779,7 +780,7 @@ func setup(n : String):
 			)
 			if !cands.is_empty():
 				var pos = Board.get_pos(coord)
-				var targets = SMath.pick_n_random(cands, 5, Game.rng) 
+				var targets = SMath.pick_n_random(cands, extra["number"], Game.rng) 
 				tween.tween_callback(func():
 					for c in targets:
 						SEffect.add_leading_line(pos, Board.get_pos(c))
@@ -846,7 +847,7 @@ func setup(n : String):
 	elif name == "Ruby":
 		image_id = 35
 		category = "Normal"
-		price = 5
+		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("red_bouns_i", 1)
@@ -855,7 +856,7 @@ func setup(n : String):
 	elif name == "Citrine":
 		image_id = 36
 		category = "Normal"
-		price = 5
+		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("orange_bouns_i", 1)
@@ -864,7 +865,7 @@ func setup(n : String):
 	elif name == "Emerald":
 		image_id = 37
 		category = "Normal"
-		price = 5
+		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("green_bouns_i", 1)
@@ -873,7 +874,7 @@ func setup(n : String):
 	elif name == "Sapphire":
 		image_id = 38
 		category = "Normal"
-		price = 5
+		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("blue_bouns_i", 1)
@@ -882,7 +883,7 @@ func setup(n : String):
 	elif name == "Amethyst":
 		image_id = 39
 		category = "Normal"
-		price = 5
+		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.change_modifier("purple_bouns_i", 1)
@@ -940,7 +941,7 @@ func setup(n : String):
 					tween.tween_callback(func():
 						Game.add_combo()
 						for t in arr:
-							Game.add_score(Board.gem_score_at(t.first), t.second)
+							Board.score_at(t.first)
 							t.third.queue_free()
 					)
 					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)

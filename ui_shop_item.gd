@@ -14,14 +14,22 @@ const relic_ui = preload("res://ui_relic.tscn")
 
 var cate : String
 var object
+var original_price : int
 var price : int
 var quantity : int
 
 func setup(_cate : String, _object, _price : int, _quantity : int = 1):
 	cate = _cate
 	object = _object
-	price = _price
+	original_price = _price
 	quantity = _quantity
+
+func refresh_price():
+	if Game.modifiers["half_price_i"] > 0:
+		price = int(original_price * 0.5)
+	else:
+		price = original_price
+	button.price.text = "%d" % price
 
 func buy():
 	if Game.coins < price:
@@ -125,7 +133,7 @@ func _ready() -> void:
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
 			ui.position = Vector2(16, 16)
-	button.price.text = "%d" % price
 	button.button.pressed.connect(func():
 		buy()
 	)
+	refresh_price()

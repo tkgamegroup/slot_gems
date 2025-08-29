@@ -8,14 +8,14 @@ extends Control
 @export var font_size : int = 22
 
 var value : int
-var enable_change : bool = true
+var show_change : bool = true
 
 var tween : Tween = null
 
 func set_value(v : int):
 	if v == value:
 		return
-	if !enable_change:
+	if !show_change:
 		value = v
 		text.text = "%d" % value
 		return

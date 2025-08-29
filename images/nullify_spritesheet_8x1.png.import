@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chbr6sjhiqdpx"
-path="res://.godot/imported/green_stone.png-36f90bf13cdbb65226805f259ae919db.ctex"
+uid="uid://c4dc2xiqbx3m6"
+path="res://.godot/imported/nullify_spritesheet_8x1.png-3c7ec6a181d93b0fd6807a9b03a6daa6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/green_stone.png"
-dest_files=["res://.godot/imported/green_stone.png-36f90bf13cdbb65226805f259ae919db.ctex"]
+source_file="res://images/nullify_spritesheet_8x1.png"
+dest_files=["res://.godot/imported/nullify_spritesheet_8x1.png-3c7ec6a181d93b0fd6807a9b03a6daa6.ctex"]
 
 [params]
 

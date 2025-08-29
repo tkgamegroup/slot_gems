@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=28 format=3 uid="uid://40bpuolcf1pa"]
+[gd_resource type="SpriteFrames" load_steps=32 format=3 uid="uid://40bpuolcf1pa"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_jhdk4"]
 [ext_resource type="Texture2D" uid="uid://b53u6jlu530x8" path="res://images/smile.png" id="2_01ho6"]
@@ -10,13 +10,16 @@
 [ext_resource type="Texture2D" uid="uid://cr1og4a4kppcc" path="res://images/relics/mobius_strip.png" id="7_bb6f7"]
 [ext_resource type="Texture2D" uid="uid://csv7kbxrs00mq" path="res://images/relics/premeditation.png" id="8_xkito"]
 [ext_resource type="Texture2D" uid="uid://duhj0c6528olb" path="res://images/relics/pentagram_power.png" id="9_ixxou"]
-[ext_resource type="Texture2D" uid="uid://tydvi3q28atq" path="res://images/relics/red_stone.png" id="10_1ogc0"]
-[ext_resource type="Texture2D" uid="uid://dk7f3sdm4ehuo" path="res://images/relics/orange_stone.png" id="11_fsuej"]
-[ext_resource type="Texture2D" uid="uid://chbr6sjhiqdpx" path="res://images/relics/green_stone.png" id="12_aniqy"]
-[ext_resource type="Texture2D" uid="uid://c6l8s5agpf32k" path="res://images/relics/blue_stone.png" id="13_ok8o2"]
-[ext_resource type="Texture2D" uid="uid://be7eka2nod1st" path="res://images/relics/purple_stone.png" id="14_oersu"]
+[ext_resource type="Texture2D" uid="uid://bip8y8ndhbfdi" path="res://images/relics/red_composition.png" id="10_oersu"]
+[ext_resource type="Texture2D" uid="uid://c5qaj628s6tst" path="res://images/relics/sunflowers.png" id="11_m1dnc"]
+[ext_resource type="Texture2D" uid="uid://jbln1lqtce7i" path="res://images/relics/water_lilies.png" id="12_2ve00"]
+[ext_resource type="Texture2D" uid="uid://b1x450f7i3nmg" path="res://images/relics/blue_nude.png" id="13_a5srb"]
+[ext_resource type="Texture2D" uid="uid://crvat663k6w1u" path="res://images/relics/les_demoiselles_d_avignon.png" id="14_t2nwl"]
+[ext_resource type="Texture2D" uid="uid://c800jg8l1c7vj" path="res://images/relics/typhon_s_broken_talon.png" id="15_a5srb"]
 [ext_resource type="Texture2D" uid="uid://cnkpgautfb5sr" path="res://images/relics/aries.png" id="16_ok8o2"]
+[ext_resource type="Texture2D" uid="uid://du07sspefr6yv" path="res://images/relics/syrinx_of_pan.png" id="16_t2nwl"]
 [ext_resource type="Texture2D" uid="uid://borj6rnx66exj" path="res://images/relics/taurus.png" id="17_oersu"]
+[ext_resource type="Texture2D" uid="uid://bdctr7g0l2dq1" path="res://images/relics/owl_s_eye_of_athena.png" id="17_qsaxu"]
 [ext_resource type="Texture2D" uid="uid://1ugk4ccoksu1" path="res://images/relics/gemini.png" id="18_m1dnc"]
 [ext_resource type="Texture2D" uid="uid://cgy0ti0nysy5h" path="res://images/relics/cancer.png" id="19_2ve00"]
 [ext_resource type="Texture2D" uid="uid://b0pn2b24mqkfr" path="res://images/relics/leo.png" id="20_a5srb"]
@@ -27,6 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://c6c3gq4mfiexj" path="res://images/relics/sagittarius.png" id="24_oersu"]
 [ext_resource type="Texture2D" uid="uid://cvemrk8tu6qct" path="res://images/relics/aquarius.png" id="25_i2pox"]
 [ext_resource type="Texture2D" uid="uid://cslmd2bn43hp4" path="res://images/relics/pisces.png" id="26_bby5i"]
+[ext_resource type="Texture2D" uid="uid://d3ey1fvatsamn" path="res://images/relics/half_price_coupon.png" id="31_t2nwl"]
 
 [resource]
 animations = [{
@@ -59,19 +63,28 @@ animations = [{
 "texture": ExtResource("9_ixxou")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_1ogc0")
+"texture": ExtResource("10_oersu")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_fsuej")
+"texture": ExtResource("11_m1dnc")
 }, {
 "duration": 1.0,
-"texture": ExtResource("12_aniqy")
+"texture": ExtResource("12_2ve00")
 }, {
 "duration": 1.0,
-"texture": ExtResource("13_ok8o2")
+"texture": ExtResource("13_a5srb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("14_oersu")
+"texture": ExtResource("14_t2nwl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_a5srb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_t2nwl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_qsaxu")
 }, {
 "duration": 1.0,
 "texture": ExtResource("2_01ho6")
@@ -111,6 +124,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("26_bby5i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_t2nwl")
 }],
 "loop": true,
 "name": &"default",

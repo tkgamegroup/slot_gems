@@ -57,6 +57,7 @@ func update_cell(c : Vector2i):
 	ui.burn.visible = cell.state == Cell.State.Burning
 	ui.pinned.visible = cell.pinned
 	ui.frozen.visible = cell.frozen
+	ui.set_nullified(cell.nullified)
 
 func clear():
 	for n in outlines_root.get_children():
@@ -138,6 +139,7 @@ func _ready() -> void:
 				Hand.swap(coord, g1)
 				Game.action_stack.append(Pair.new(coord, g2))
 				Game.control_ui.undo_button.show()
+				Game.control_ui.update_preview()
 				return true
 			else:
 				Game.control_ui.swaps_text.hint()

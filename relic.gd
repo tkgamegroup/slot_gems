@@ -16,6 +16,8 @@ var on_active : Callable
 
 var ui : UiRelic = null
 
+static var relic_names : Array[String] = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "RockBottom", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+
 func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int, coords : Array, tween : Tween, do_active : bool = true):
 	var runes = []
 	for c in coords:
@@ -49,7 +51,7 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 			var sp = AnimatedSprite2D.new()
 			sp.sprite_frames = Gem.rune_frames
 			sp.frame = p.second
-			sp.modulate = Color("#5b6ee1", 1.0)
+			sp.modulate = Color("#5b6ee1", 0.0)
 			sp.position = Board.get_pos(p.first)
 			Game.board_ui.overlay.add_child(sp)
 			sps.append(sp)
@@ -59,10 +61,12 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 		for sp in sps:
 			var subtween = Game.get_tree().create_tween()
 			subtween.tween_interval(idx * 0.1 * Game.speed)
-			subtween.tween_property(sp, "scale", Vector2(1.5, 1.5), 0.2 * Game.speed).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-			subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * Game.speed)
+			subtween.tween_property(sp, "modulate:a", 1.0, 0.05 * Game.speed)
+			subtween.tween_property(sp, "scale", Vector2(2.5, 2.5), 1.0 * Game.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			subtween.parallel().tween_property(sp, "modulate:a", 0.0, 1.0 * Game.speed)
+			#subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * Game.speed)
 			#subtween.tween_property(sp, "position", c, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-			subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * Game.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+			#subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * Game.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 			subtween.tween_callback(func():
 				sp.queue_free()
 			)
@@ -73,12 +77,13 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 		if do_active:
 			tween.tween_callback(func():
 				SSound.se_skill.play()
-				SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3 * Game.speed, 2.0)
+				#SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3 * Game.speed, 2.0)
 			)
-			tween.tween_interval(0.3 * Game.speed)
+			#tween.tween_interval(0.3 * Game.speed)
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
 			)
+		Game.history.relic_effects += 1
 		return true
 	return false
 
@@ -86,19 +91,28 @@ func setup(n : String):
 	name = n
 	if name == "ExplosionScience":
 		image_id = 1
+		extra["range_increase"] = 1
+		extra["power_decrease"] = 8
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.change_modifier("explode_range_i", 1)
-					Game.change_modifier("explode_power_i", -3)
+					Game.change_modifier("explode_range_i", extra["range_increase"])
+					Game.change_modifier("explode_power_i", -extra["power_decrease"])
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("explode_range_i", -extra["range_increase"])
+					Game.change_modifier("explode_power_i", extra["power_decrease"])
 	elif name == "HighExplosives":
 		image_id = 2
-		price = 5
-		extra["value"] = 6
+		price = 4
+		extra["value"] = 329
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("explode_power_i", extra["value"])
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("explode_power_i", -extra["value"])
 	elif name == "UniformBlasting":
 		image_id = 3
 		price = 5
@@ -106,6 +120,12 @@ func setup(n : String):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Exploded, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Exploded:
 				var source = data["source"]
 				var coord = data["coord"]
@@ -137,6 +157,12 @@ func setup(n : String):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				var reason = data["reason"]
 				var source = data["source"]
@@ -165,6 +191,14 @@ func setup(n : String):
 					Game.event_listeners.append(Hook.new(Event.LevelBegan, self, HostType.Relic, false))
 					Game.event_listeners.append(Hook.new(Event.RollingFinished, self, HostType.Relic, false))
 					Game.event_listeners.append(Hook.new(Event.MatchingFinished, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					var ls = []
+					for l in Board.event_listeners:
+						if l.host == self:
+							ls.append(l)
+					for l in ls:
+							Board.event_listeners.erase(l)
 			elif event == Event.LevelBegan:
 				extra["enable"] = true
 			elif event == Event.RollingFinished:
@@ -189,100 +223,213 @@ func setup(n : String):
 				return false
 	elif name == "MobiusStrip":
 		image_id = 6
+		price = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.set_modifier("board_upper_lower_connected_i", 1)
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.set_modifier("board_upper_lower_connected_i", 0)
 	elif name == "Premeditation":
 		image_id = 7
+		price = 3
+		extra["value"] = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.set_modifier("base_combo_i", 3)
+					Game.set_modifier("base_combo_i", extra["value"])
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.set_modifier("base_combo_i", 0)
 	elif name == "PentagramPower":
 		image_id = 8
+		price = 9
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Combo, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Combo:
 				if Game.combos > 0 && Game.combos % 5 == 0:
 					Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_mult","set":5.0}, Buff.Duration.ThisCombo)
-	elif name == "RedStone":
+	elif name == "RedComposition":
 		image_id = 9
-		extra["value"] = 20
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("red_bouns_i", extra["value"])
-	elif name == "OrangeStone":
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("red_bouns_i", -extra["value"])
+	elif name == "Sunflowers":
 		image_id = 10
-		extra["value"] = 20
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("orange_bouns_i", extra["value"])
-	elif name == "GreenStone":
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("orange_bouns_i", -extra["value"])
+	elif name == "WaterLilies":
 		image_id = 11
-		extra["value"] = 20
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("green_bouns_i", extra["value"])
-	elif name == "BlueStone":
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("green_bouns_i", -extra["value"])
+	elif name == "BlueNude":
 		image_id = 12
-		extra["value"] = 20
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("blue_bouns_i", extra["value"])
-	elif name == "PurpleStone":
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("blue_bouns_i", -extra["value"])
+	elif name == "LesDemoisellesDAvignon":
 		image_id = 13
-		extra["value"] = 20
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Game.change_modifier("purple_bouns_i", extra["value"])
-	elif name == "RockBottom":
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.change_modifier("purple_bouns_i", -extra["value"])
+	elif name == "TyphonSBrokenTalon":
 		image_id = 14
+		extra["value"] = 0.21
+		price = 5
+		on_event = func(event : int, tween : Tween, data):
+			if event == Event.GainRelic:
+				if data == self:
+					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
+			elif event == Event.Eliminated:
+				for c in data["coords"]:
+					var g = Board.get_gem_at(c)
+					if g && g.rune == Gem.Rune.Destroy:
+						Game.add_mult(extra["value"], Board.get_pos(c))
+	elif name == "SyrinxOfPan":
+		image_id = 15
+		extra["value"] = 0.21
+		price = 5
+		on_event = func(event : int, tween : Tween, data):
+			if event == Event.GainRelic:
+				if data == self:
+					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
+			elif event == Event.Eliminated:
+				for c in data["coords"]:
+					var g = Board.get_gem_at(c)
+					if g && g.rune == Gem.Rune.Grow:
+						Game.add_mult(extra["value"], Board.get_pos(c))
+	elif name == "OwlSEyeOfAthena":
+		image_id = 16
+		extra["value"] = 0.21
+		price = 5
+		on_event = func(event : int, tween : Tween, data):
+			if event == Event.GainRelic:
+				if data == self:
+					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
+			elif event == Event.Eliminated:
+				for c in data["coords"]:
+					var g = Board.get_gem_at(c)
+					if g && g.rune == Gem.Rune.Wisdom:
+						Game.add_mult(extra["value"], Board.get_pos(c))
+	elif name == "RockBottom":
+		image_id = 17
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.GemBaseScoreChanged, self, HostType.Relic, false))
 					Board.event_listeners.append(Hook.new(Event.GemBonusScoreChanged, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					var ls = []
+					for l in Board.event_listeners:
+						if l.host == self:
+							ls.append(l)
+					for l in ls:
+							Board.event_listeners.erase(l)
 			elif event == Event.GemBaseScoreChanged || event == Event.GemBonusScoreChanged:
 				if data["value"] < 0:
 					data["value"] = 0
 	elif name == "Aries":
-		image_id = 15
+		image_id = 18
+		price = 4
 		extra["range_i"] = 0
+		extra["times"] = 3
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(3, 0, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			for i in 1:
+			var times = extra["times"]
+			for i in times:
 				var subtween = Game.get_tree().create_tween()
+				subtween.tween_interval(i * 0.1 * Game.speed)
 				var target = Vector2i(Game.rng.randi_range(0, Board.cx - 1), Game.rng.randi_range(0, Board.cy - 1))
 				Board.effect_explode(ui.get_global_rect().get_center(), target, extra["range_i"], 0, subtween)
 				if i > 0:
 					tween.parallel()
 				tween.tween_subtween(subtween)
 	elif name == "Taurus":
-		image_id = 16
+		image_id = 19
+		price = 4
 		extra["value"] = 500
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					if active_constellation(0, 0, 3, data["coords"], tween, false):
@@ -291,43 +438,62 @@ func setup(n : String):
 						)
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Gemini":
-		image_id = 17
+		image_id = 20
+		price = 4
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 3, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			var idx = Game.rng.randi() % Hand.grabs.size()
-			if idx != -1:
+			if !Hand.grabs.is_empty():
+				var idx = 0
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
 					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx))
 				)
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
-					if idx < Hand.grabs.size():
-						Game.duplicate_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
+					Game.duplicate_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
 				)
 	elif name == "Cancer":
-		image_id = 18
+		image_id = 21
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 1, 2, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			pass
 	elif name == "Leo":
-		image_id = 19
+		image_id = 22
+		price = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					if active_constellation(2, 1, 1, data["coords"], tween, false):
@@ -342,12 +508,19 @@ func setup(n : String):
 						)
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Virgo":
-		image_id = 20
-		extra["value"] = 1.2
+		image_id = 23
+		price = 4
+		extra["value"] = 1.8
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					if active_constellation(0, 2, 1, data["coords"], tween, false):
@@ -358,11 +531,17 @@ func setup(n : String):
 						)
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Libra":
-		image_id = 21
+		image_id = 24
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 2, 1, data["coords"], tween)
@@ -379,32 +558,45 @@ func setup(n : String):
 				
 			)
 	elif name == "Scorpio":
-		image_id = 22
+		image_id = 25
+		price = 4
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(2, 1, 0, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			var idx = randi() % Hand.grabs.size()
-			if idx != -1 && Game.gems.size() - 1 >= Board.curr_min_gem_num:
+			if !Hand.grabs.is_empty() && Game.gems.size() - 1 >= Board.curr_min_gem_num:
+				var idx = Hand.grabs.size() - 1
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
 					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx))
 				)
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
-					if idx < Hand.grabs.size():
-						Game.delete_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx).gem_ui)
+					Game.delete_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx).gem_ui)
 				)
 	elif name == "Sagittarius":
-		image_id = 23
+		image_id = 26
+		price = 4
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(2, 1, 0, data["coords"], tween)
@@ -426,16 +618,23 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					Game.add_combo()
-					Game.add_score(Board.gem_score_at(target), Board.get_pos(target))
+					Board.score_at(target)
 				)
 				Board.eliminate([target], tween, Board.ActiveReason.Relic, self)
 	elif name == "Capricorn":
-		image_id = 24
-		extra["amount"] = 2
+		image_id = 27
+		price = 4
+		extra["amount"] = 1
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					if active_constellation(1, 0, 2, data["coords"], tween, false):
@@ -447,12 +646,19 @@ func setup(n : String):
 						)
 						tween.tween_interval(0.5 * Game.speed)
 	elif name == "Aquarius":
-		image_id = 25
+		image_id = 28
+		price = 4
 		extra["value"] = 1
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 3, 0, data["coords"], tween)
@@ -483,11 +689,18 @@ func setup(n : String):
 						SSound.se_vibra.play()
 				)
 	elif name == "Pisces":
-		image_id = 26
+		image_id = 29
+		price = 4
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
 					Board.event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Relic, false))
+			elif event == Event.LostRelic:
+				if data == self:
+					for l in Board.event_listeners:
+						if l.host == self:
+							Board.event_listeners.erase(l)
+							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 1, 2, data["coords"], tween)
@@ -517,6 +730,20 @@ func setup(n : String):
 					if ok:
 						SSound.se_vibra.play()
 				)
+	elif name == "HalfPriceCoupon":
+		image_id = 30
+		price = 5
+		on_event = func(event : int, tween : Tween, data):
+			if event == Event.GainRelic:
+				if data == self:
+					Game.set_modifier("half_price_i", 1)
+					if Game.shop_ui.visible:
+						Game.shop_ui.refresh_prices()
+			elif event == Event.LostRelic:
+				if data == self:
+					Game.set_modifier("half_price_i", 0)
+					if Game.shop_ui.visible:
+						Game.shop_ui.refresh_prices()
 
 func get_tooltip():
 	var ret : Array[Pair] = []

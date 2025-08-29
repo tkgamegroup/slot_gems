@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6l8s5agpf32k"
-path="res://.godot/imported/blue_stone.png-662970c3ec57bb4dad7cc6714e405eda.ctex"
+uid="uid://c5qaj628s6tst"
+path="res://.godot/imported/sunflowers.png-24ab7a9d03da741fbf2e81e4cc5432d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/blue_stone.png"
-dest_files=["res://.godot/imported/blue_stone.png-662970c3ec57bb4dad7cc6714e405eda.ctex"]
+source_file="res://images/relics/sunflowers.png"
+dest_files=["res://.godot/imported/sunflowers.png-24ab7a9d03da741fbf2e81e4cc5432d5.ctex"]
 
 [params]
 

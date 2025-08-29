@@ -23,10 +23,13 @@ func get_ui(idx : int) -> UiSlot:
 		return list.get_child(idx)
 	return null
 
-func add_ui(gem : Gem):
+func add_ui(gem : Gem, idx : int = -1):
+	if idx == -1:
+		idx = list.get_child_count()
 	var ui = slot_ui.instantiate()
 	ui.gem = gem
 	list.add_child(ui)
+	list.move_child(ui, idx)
 	ui.gui_input.connect(func(event : InputEvent):
 		if event is InputEventMouseButton:
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
@@ -92,11 +95,38 @@ func _process(delta: float) -> void:
 		return
 	var w = item_w * n + gap * (n - 1)
 	var x_off = 0
+	var drag_idx = -1
+	var drag_on_hand = false
+	if Drag.ui && Drag.ui.get_parent() == list:
+		drag_idx = Drag.ui.get_index()
+	var rect : Rect2 = list.get_global_rect()
+	var mpos = get_global_mouse_position()
+	if drag_idx != -1:
+		if rect.has_point(mpos):
+			drag_on_hand = true
 	for i in n:
 		var ui = get_ui(i)
 		if ui != Drag.ui:
-			var y = 0
-			if ui.selected:
-				y = -5
-			ui.position = lerp(ui.position, Vector2(x_off, y), 0.2)
+			ui.position = lerp(ui.position, Vector2(x_off, 0), 0.2)
+		if !(i == drag_idx && !drag_on_hand):
 			x_off += item_w + gap
+	if drag_on_hand:
+		var x = Drag.ui.get_rect().get_center().x
+		var nidx = -1
+		for i in n:
+			var c = item_w * i + ((i - 1) * gap if i > 0 else 0) + item_w * 0.5
+			if x >= c - item_w * 0.5 && x < c + item_w * 0.5:
+				nidx = i
+				break
+		if nidx != -1 && nidx != drag_idx:
+			var g1 = Hand.grabs[drag_idx]
+			var g2 = Hand.grabs[nidx]
+			Hand.grabs[drag_idx] = g2
+			Hand.grabs[nidx] = g1
+			g1.coord.x = nidx
+			if g1.bound_item:
+				g1.bound_item.coord.x = nidx
+			g2.coord.x = drag_idx
+			if g2.bound_item:
+				g2.bound_item.coord.x = drag_idx
+			list.move_child(Drag.ui, nidx)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=160 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=162 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -265,6 +265,25 @@ expand_margin_top = 4.0
 expand_margin_right = 5.0
 shadow_size = 1
 shadow_offset = Vector2(3, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjja3"]
+bg_color = Color(0.0788083, 0.171172, 0.310766, 0.92549)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vieuh"]
+bg_color = Color(0.398622, 0.150025, 0.502998, 0.643137)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppx11"]
 bg_color = Color(0.449009, 0.658872, 0.502028, 1)
@@ -1103,6 +1122,32 @@ text = " "
 icon = ExtResource("54_eldhe")
 icon_alignment = 1
 
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Play"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Play/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_yjja3")
+
+[node name="ExpectedScore" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Play/Control/PanelContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.432531, 0.638456, 0.943238, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 15
+text = "9999"
+horizontal_alignment = 1
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
@@ -1166,6 +1211,30 @@ layout_mode = 2
 
 [node name="Button" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp3" index="0"]
 icon = ExtResource("35_m1l3k")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 200.0
+offset_top = -80.0
+offset_right = 246.0
+offset_bottom = -25.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vieuh")
+
+[node name="FillingTimes" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/PanelContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.279486, 0.137234, 0.547911, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 40
+text = "10"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="DebugText" type="Label" parent="SubViewportContainer/SubViewport/UI/Control"]
 layout_mode = 1
@@ -1469,12 +1538,14 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Level" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
+[node name="Level" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_offset_x = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 
 [node name="Target" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
@@ -1497,24 +1568,24 @@ custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control"]
+position = Vector2(8, 8)
 sprite_frames = ExtResource("64_ovcoh")
-centered = false
 
 [node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control2"]
+position = Vector2(8, 8)
 sprite_frames = ExtResource("64_ovcoh")
-centered = false
 
 [node name="Control3" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control3"]
+position = Vector2(8, 8)
 sprite_frames = ExtResource("64_ovcoh")
-centered = false
 
 [node name="VSeparator3" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
@@ -1789,6 +1860,7 @@ offset_left = -640.0
 offset_right = 640.0
 offset_bottom = 160.0
 grow_horizontal = 2
+mouse_filter = 2
 script = ExtResource("71_f1p13")
 
 [node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/CalculateBar"]
@@ -1952,10 +2024,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Banner/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Banner/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+bbcode_enabled = true
 text = "AAA"
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -2781,6 +2855,16 @@ theme_override_constants/separation = 12
 [node name="Timer" type="Timer" parent="SubViewportContainer/SubViewport/UI/Tooltips"]
 wait_time = 0.2
 autostart = true
+
+[node name="CommandLine" type="LineEdit" parent="SubViewportContainer/SubViewport/UI"]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="Blocker" type="Control" parent="SubViewportContainer/SubViewport/UI"]
 visible = false

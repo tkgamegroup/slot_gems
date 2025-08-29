@@ -35,13 +35,6 @@ var enable_shopping : bool = false
 var records : Array[TaskRecord]
 var testing : bool = false
 
-func get_formated_datetime():
-	var datetime = Time.get_datetime_string_from_system(false, true)
-	datetime = datetime.replace("-", "_")
-	datetime = datetime.replace(":", "_")
-	datetime = datetime.replace(" ", "_")
-	return datetime
-
 static var file : FileAccess = null
 func begin_write():
 	if !filename.is_empty():
@@ -59,30 +52,11 @@ func write(s : String):
 	else:
 		print(s)
 
-func has_matched_pattern():
-	for y in Board.cy:
-		for x in Board.cx:
-			for p in Game.patterns:
-				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
-				if !res.is_empty():
-					return true
-	return false
+func write_level(l : LevelRecord):
+	write("Level Score: %d, Level Combos: %d, Level Relic Effects: %d" % [l.score, l.combos, l.relic_effects])
 
-func start_game():
-	Game.start_game(saving)
-	for n in additional_items:
-		var i = Item.new()
-		i.setup(n)
-		Game.add_item(i)
-		Game.bag_items.append(i)
-	for n in additional_patterns:
-		var p = Pattern.new()
-		p.setup(n)
-		Game.add_pattern(p)
-	for n in additional_relics:
-		var r = Relic.new()
-		r.setup(n)
-		Game.add_relic(r)
+func write_matching(idx : int, m : MatchingRecord):
+	write("Matching %d: %d Score, %d Combos, %d Relic Effects" % [idx, m.score, m.combos, m.relic_effects])
 
 func write_game_status():
 	var cx = Board.cx
@@ -127,6 +101,31 @@ func write_game_status():
 	write("Matches: %d" % Game.plays_per_level)
 	end_write()
 
+func has_matched_pattern():
+	for y in Board.cy:
+		for x in Board.cx:
+			for p in Game.patterns:
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
+				if !res.is_empty():
+					return true
+	return false
+
+func start_game():
+	Game.start_game(saving)
+	for n in additional_items:
+		var i = Item.new()
+		i.setup(n)
+		Game.add_item(i)
+		Game.bag_items.append(i)
+	for n in additional_patterns:
+		var p = Pattern.new()
+		p.setup(n)
+		Game.add_pattern(p)
+	for n in additional_relics:
+		var r = Relic.new()
+		r.setup(n)
+		Game.add_relic(r)
+
 func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], _additional_enchants : Array = [], invincible : bool = true, _enable_shopping : bool = false):
 	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
 	Game.performance_mode = true
@@ -142,7 +141,7 @@ func start_test(_mode : int, _level_count : int, _task_count : int, fn : String 
 	records.append(TaskRecord.new())
 	
 	if fn.is_empty():
-		filename = "res://test_%s.txt" % get_formated_datetime()
+		filename = "res://test_%s.txt" % SUtils.get_formated_datetime()
 		FileAccess.open(filename, FileAccess.WRITE)
 	elif fn == "console":
 		fn = ""
@@ -181,10 +180,9 @@ func time_out():
 						for i in curr_task.levels.size():
 							var curr_level = curr_task.levels[i]
 							write("====Level %d====" % (i + 1))
-							write("Level Score: %d, Level Combos: %d" % [curr_level.score, curr_level.combos])
+							write_level(curr_level)
 							for j in curr_level.matchings.size():
-								var curr_matching = curr_level.matchings[j]
-								write("Matching %d: %d score, %d combos" % [j, curr_matching.score, curr_matching.combos])
+								write_matching(j, curr_level.matchings[j])
 						write("======Statics For %d Task(s)======" % (task_index + 1))
 						var head_str = ""
 						for i in task_level_count:
@@ -195,19 +193,21 @@ func time_out():
 						for i in task_level_count:
 							var score = 0
 							var combos = 0
+							var relic_effects = 0
 							for r in records:
 								var l = r.levels[i]
 								max_matching_num = max(max_matching_num, l.matchings.size())
-								for m in l.matchings:
-									score += m.score
-									combos += m.combos
-							avg_line += "%.1f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size()]
+								score += l.score
+								combos += l.combos
+								relic_effects += l.relic_effects
+							avg_line += "%.1f,%.2f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size(), float(relic_effects) / records.size()]
 						write(avg_line)
 						for j in max_matching_num:
 							var line = "Matching %d\t" % j
 							for i in task_level_count:
 								var score = 0
 								var combos = 0
+								var relic_effects = 0
 								for r in records:
 									if r.levels.size() <= i:
 										continue
@@ -217,7 +217,8 @@ func time_out():
 									var m = l.matchings[j]
 									score += m.score
 									combos += m.combos
-								line += "%.1f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size()]
+									relic_effects += m.relic_effects
+								line += "%.1f,%.2f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size(), float(relic_effects) / records.size()]
 							write(line)
 						end_write()
 					
@@ -234,10 +235,9 @@ func time_out():
 						begin_write()
 						write("======Level %d======" % curr_task.levels.size())
 						var curr_level = curr_task.levels.back()
-						write("Level Score: %d, Level Combos: %d" % [curr_level.score, curr_level.combos])
+						write_level(curr_level)
 						for j in curr_level.matchings.size():
-							var curr_matching = curr_level.matchings[j]
-							write("Matching %d: %d score, %d combos" % [j, curr_matching.score, curr_matching.combos])
+							write_matching(j, curr_level.matchings[j])
 						end_write()
 					
 					curr_task.levels.append(LevelRecord.new())
@@ -272,15 +272,19 @@ func time_out():
 					Game.play()
 		elif step == TaskSteps.GetResult:
 			var his = Game.history
-			var curr_level = records.back().levels.back()
-			var curr_record = curr_level.matchings.back()
+			var curr_level : LevelRecord = records.back().levels.back()
+			var curr_record : MatchingRecord = curr_level.matchings.back()
 			curr_record.score = his.last_matching_score
 			curr_record.combos = his.last_matching_combos
+			curr_record.relic_effects = his.relic_effects
+			curr_record.actives = his.last_matching_actives
 			curr_level.score += his.last_matching_score
 			curr_level.combos += his.last_matching_combos
+			curr_level.relic_effects += his.relic_effects
+			curr_level.actives += his.last_matching_actives
 			curr_level.matchings.append(MatchingRecord.new())
 			step = TaskSteps.ToRoll
-			if his.last_matching_score == 0:
+			if his.last_matching_score == 0 && !Game.level_clear_ui.visible:
 				Game.lose()
 		elif step == TaskSteps.ToShop:
 			if Game.shop_ui.visible:
@@ -309,7 +313,13 @@ func auto_swap_gems():
 	while changed:
 		changed = false
 		var missing_one_places : Array[Array] = get_missing_one_places()
+		var grabs = []
 		for g in Hand.grabs:
+			grabs.append(g)
+		grabs.sort_custom(func(a : Gem, b : Gem):
+			return a.get_base_score() + a.bonus_score > b.get_base_score() + b.bonus_score
+		)
+		for g in grabs:
 			if g.type == Gem.Type.Red:
 				var arr = missing_one_places[Gem.Type.Red - 1]
 				if !arr.is_empty():
