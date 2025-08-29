@@ -315,7 +315,7 @@ relic_desc_Taurus,When matching at least 3 Grow runes: +{value} Score.,当匹配
 relic_name_Gemini,Gemini,双子座
 relic_desc_Gemini,When matching at least 3 Wisdom runes: (w_active) Duplicate the left most gem from Hand.,当匹配到至少3个灵智符文时：(w_active) 复制手中最左边的宝石。
 relic_name_Cancer,Cancer,巨蟹座
-relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes:",当匹配到至少1个灵智、和2个生长符文时：
+relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes: (w_active) Remove 1 curse.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 移除1个诅咒。
 relic_name_Leo,Leo,狮子座
 relic_desc_Leo,"When matching at least 2 Destroy, 1 Wisdom, and 1 Grow runes: +1 Swaps.",当匹配到至少2个破坏、1个灵智、和1个生长符文时：+1 交换次数。
 relic_name_Virgo,Virgo,处女座

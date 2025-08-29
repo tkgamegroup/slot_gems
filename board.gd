@@ -298,17 +298,17 @@ func get_active_effects_at(c : Vector2i):
 			ret.append(ae)
 	return ret
 
-func score_at(c : Vector2i, additional_score : int = 0, score_mult : float = 1.0, additional_mult : float = 0.0, mult_mult : float = 1.0):
+func score_at(c : Vector2i, additional_score : int = 0, additional_mult : float = 0.0, mult : float = 1.0):
 	var cell = get_cell(c)
 	if cell.nullified:
-		return
+		mult = 0.0
 	var g = cell.gem
 	if !g:
 		return
 	var pos = get_pos(c)
-	Game.add_score((g.get_base_score() + g.bonus_score + additional_score) * score_mult, pos)
+	Game.add_score((g.get_base_score() + g.bonus_score + additional_score) * mult, pos)
 	if g.mult != 0.0:
-		Game.add_mult((g.mult + additional_mult) * mult_mult, pos)
+		Game.add_mult((g.mult + additional_mult) * mult, pos)
 
 func pin(c : Vector2i):
 	c = format_coord(c)
@@ -741,7 +741,7 @@ func matching():
 						for c in res:
 							var g = get_gem_at(c)
 							var pos = get_pos(c)
-							score_at(c, 0, p.mult, 0.0, p.mult)
+							score_at(c, 0, 0.0, p.mult)
 					)
 					matched_num += 1
 					

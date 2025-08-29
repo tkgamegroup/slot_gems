@@ -480,7 +480,11 @@ func setup(n : String):
 				if data["reason"] == Board.ActiveReason.Pattern:
 					active_constellation(0, 1, 2, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			pass
+			if !Game.current_curses.is_empty():
+				tween.tween_callback(func():
+					var c = Game.current_curses[Game.rng.randi_range(0, Game.current_curses.size() - 1)]
+					Game.remove_curse(c)
+				)
 	elif name == "Leo":
 		image_id = 22
 		price = 10

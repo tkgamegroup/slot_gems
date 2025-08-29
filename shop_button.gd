@@ -1,4 +1,4 @@
 extends VBoxContainer
 
-@onready var button = $Button
-@onready var price = $Price/MarginContainer/HBoxContainer/Label
+@onready var button : Button = $Button
+@onready var price : Label = $Price/MarginContainer/HBoxContainer/Label

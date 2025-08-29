@@ -39,6 +39,7 @@ func add_ui(r : Relic):
 					menu.open(event.global_position, int(r.price / 2))
 					Game.root_ui.add_child(menu)
 					menu.on_sell.connect(func():
+						SSound.se_coin.play()
 						Game.coins += menu.sell_price
 						Game.remove_relic(r)
 					)

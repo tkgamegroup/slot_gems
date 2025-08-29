@@ -30,6 +30,12 @@ func refresh_price():
 	else:
 		price = original_price
 	button.price.text = "%d" % price
+	if price > original_price:
+		button.price.add_theme_color_override("font_color", Color.ORANGE_RED)
+	elif price < original_price:
+		button.price.add_theme_color_override("font_color", Color.LAWN_GREEN)
+	else:
+		button.price.add_theme_color_override("font_color", Color.WHITE)
 
 func buy():
 	if Game.coins < price:

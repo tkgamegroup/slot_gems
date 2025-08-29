@@ -1117,10 +1117,14 @@ func build_level_curses():
 					curses.append(c)
 				level_curses.append(curses)
 
-func apply_curses():
-	for c in current_curses:
-		if c.type == "curse_nullify_cell":
-			Board.nullify(c.coord)
+func apply_curse(c : Curse):
+	if c.type == "curse_nullify_cell":
+		Board.nullify(c.coord)
+
+func remove_curse(c : Curse):
+	if c.type == "curse_nullify_cell":
+		Board.unnullify(c.coord)
+	current_curses.erase(c)
 
 func new_level(tween : Tween = null):
 	build_level_curses()
@@ -1177,7 +1181,8 @@ func new_level(tween : Tween = null):
 			)
 			tween.tween_interval(0.3)
 			tween.tween_callback(func():
-				apply_curses()
+				for c in current_curses:
+					apply_curse(c)
 			)
 		tween.tween_callback(func():
 			banner_ui.disappear(null, true)
@@ -1197,7 +1202,8 @@ func new_level(tween : Tween = null):
 			)
 	else:
 		if !level_curses[level].is_empty():
-			apply_curses()
+			for c in current_curses:
+				apply_curse(c)
 	tween.tween_callback(func():
 		status_bar_ui.level_text.modulate.a = 1.0
 		status_bar_ui.level_target.modulate.a = 1.0
@@ -1423,6 +1429,7 @@ func save_to_file(name : String = "1"):
 		cell["state"] = c.state
 		cell["pinned"] = c.pinned
 		cell["frozen"] = c.frozen
+		cell["nullified"] = c.nullified
 		var event_listeners = []
 		for h in c.event_listeners:
 			var hook = {}
@@ -1644,6 +1651,8 @@ func load_from_file(name : String = "1"):
 			Board.pin(coord)
 		if cell["frozen"]:
 			Board.freeze(coord)
+		if cell["nullified"]:
+			Board.nullify(coord)
 	
 	control_ui.enter()
 	
@@ -1759,11 +1768,7 @@ func _ready() -> void:
 				if processed:
 					break
 		if !processed:
-			stage = Stage.Deploy
-			save_to_file()
-			#end_busy()
-			control_ui.update_preview()
-			control_ui.expected_score_panel.show()
+			pass
 	)
 	Board.filling_finished.connect(func():
 		var processed = false
