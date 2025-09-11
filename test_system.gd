@@ -317,7 +317,7 @@ func auto_swap_gems():
 		for g in Hand.grabs:
 			grabs.append(g)
 		grabs.sort_custom(func(a : Gem, b : Gem):
-			return a.get_base_score() + a.bonus_score > b.get_base_score() + b.bonus_score
+			return a.get_score() + a.get_mult() > b.get_score() + b.get_mult()
 		)
 		for g in grabs:
 			if g.type == Gem.Type.Red:

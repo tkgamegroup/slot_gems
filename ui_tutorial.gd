@@ -40,7 +40,9 @@ func exit():
 func _ready() -> void:
 	text.meta_hover_started.connect(func(meta):
 		var s = str(meta)
-		if s.begins_with("gem_"):
+		if s.begins_with("w_"):
+			STooltip.show([Pair.new(tr(s), tr(s + "_desc"))])
+		elif s.begins_with("gem_"):
 			STooltip.show([Pair.new(tr(s), "")])
 		elif s.begins_with("rune_"):
 			STooltip.show([Pair.new(tr(s), "")])
@@ -48,12 +50,6 @@ func _ready() -> void:
 			var r = Relic.new()
 			r.setup(s.substr(6))
 			STooltip.show(r.get_tooltip())
-		elif s == "w_colorless":
-			STooltip.show([Pair.new(tr("w_colorless"), tr("w_colorless_desc"))])
-		elif s == "w_wild":
-			STooltip.show([Pair.new(tr("w_wild"), tr("w_wild_desc"))])
-		elif s == "w_omni":
-			STooltip.show([Pair.new(tr("w_omni"), tr("w_omni_desc"))])
 	)
 	text.meta_hover_ended.connect(func(meta):
 		STooltip.close()

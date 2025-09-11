@@ -16,6 +16,7 @@ var state : int = 0
 var pinned : bool = false
 var frozen : bool = false
 var nullified : bool = false
+var in_mist : bool = false
 var event_listeners : Array[Hook]
 
 func is_unmovable():

@@ -74,12 +74,23 @@ func _ready() -> void:
 	level_container.mouse_entered.connect(func():
 		STooltip.close()
 	)
+	level_target.meta_hover_started.connect(func(meta):
+		var s = str(meta)
+		if s.begins_with("w_"):
+			STooltip.show([Pair.new(tr(s), tr(s + "_desc"))])
+		elif s.begins_with("item_"):
+			var item_name = s.substr(5)
+			STooltip.show([Pair.new(tr("item_name_" + item_name), tr("item_desc_" + item_name))])
+	)
+	level_target.meta_hover_ended.connect(func():
+		STooltip.close()
+	)
 	cluster_level1_ctrl.mouse_entered.connect(func():
 		var lv = Game.level
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 1
-		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1]))])
+		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
 	)
 	cluster_level1_ctrl.mouse_exited.connect(func():
 		STooltip.close()
@@ -89,7 +100,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 2
-		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1]))])
+		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
 	)
 	cluster_level2_ctrl.mouse_exited.connect(func():
 		STooltip.close()
@@ -99,7 +110,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 3
-		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1]))])
+		STooltip.show([Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
 	)
 	cluster_level3_ctrl.mouse_exited.connect(func():
 		STooltip.close()

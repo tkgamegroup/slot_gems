@@ -257,7 +257,7 @@ func setup(n : String):
 							break
 			elif event == Event.Combo:
 				if Game.combos > 0 && Game.combos % 5 == 0:
-					Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_mult","set":5.0}, Buff.Duration.ThisCombo)
+					Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_scaler","set":5.0}, Buff.Duration.ThisCombo)
 	elif name == "RedComposition":
 		image_id = 9
 		extra["value"] = 40
@@ -458,9 +458,9 @@ func setup(n : String):
 				var idx = 0
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
-					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx))
+					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx), 0.3 * Game.speed)
 				)
-				tween.tween_interval(0.3)
+				tween.tween_interval(0.3 * Game.speed)
 				tween.tween_callback(func():
 					Game.duplicate_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
 				)
@@ -481,9 +481,15 @@ func setup(n : String):
 					active_constellation(0, 1, 2, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !Game.current_curses.is_empty():
+				var ui_pos = ui.get_global_rect().get_center()
+				var curse = Game.current_curses[Game.rng.randi_range(0, Game.current_curses.size() - 1)]
+				if curse.coord.x != -1 && curse.coord.y != -1:
+					tween.tween_callback(func():
+						SEffect.add_leading_line(ui_pos, Board.get_pos(curse.coord), 0.3 * Game.speed)
+					)
+					tween.tween_interval(0.3 * Game.speed)
 				tween.tween_callback(func():
-					var c = Game.current_curses[Game.rng.randi_range(0, Game.current_curses.size() - 1)]
-					Game.remove_curse(c)
+					Game.remove_curse(curse)
 				)
 	elif name == "Leo":
 		image_id = 22

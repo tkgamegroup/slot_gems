@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=44 format=3 uid="uid://c18w0067lhwqr"]
+[gd_resource type="SpriteFrames" load_steps=48 format=3 uid="uid://c18w0067lhwqr"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_khjgj"]
 [ext_resource type="Texture2D" uid="uid://bpbwgcoq21dfi" path="res://images/items/bomb.png" id="1_qe4ah"]
@@ -43,6 +43,10 @@
 [ext_resource type="Texture2D" uid="uid://naobauw4jh51" path="res://images/items/tourmaline.png" id="34_gwhe3"]
 [ext_resource type="Texture2D" uid="uid://cvkqw81u8fcfj" path="res://images/items/strength_potion.png" id="40_0cwwo"]
 [ext_resource type="Texture2D" uid="uid://b53u6jlu530x8" path="res://images/smile.png" id="42_54ngg"]
+[ext_resource type="Texture2D" uid="uid://b702qk4s3dfmh" path="res://images/items/sin_lust.png" id="43_1exa0"]
+[ext_resource type="Texture2D" uid="uid://bxhjn2hyb3cdc" path="res://images/items/sin_gluttony.png" id="44_kxtci"]
+[ext_resource type="Texture2D" uid="uid://lga5pqhxp0xi" path="res://images/items/sin_greed.png" id="45_6l003"]
+[ext_resource type="Texture2D" uid="uid://dkmg24jd7sryw" path="res://images/items/sin_envy.png" id="46_7lkba"]
 
 [resource]
 animations = [{
@@ -172,6 +176,18 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("30_7yekr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_1exa0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_kxtci")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_6l003")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_7lkba")
 }, {
 "duration": 1.0,
 "texture": ExtResource("42_54ngg")

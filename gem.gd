@@ -12,6 +12,7 @@ enum Type
 	Purple,
 	Colorless,
 	Wild,
+	Unknow,
 	Count = 5
 }
 
@@ -22,6 +23,7 @@ enum Rune
 	Wisdom,
 	Grow,
 	Omni,
+	Unknow,
 	Count = 3
 }
 
@@ -36,7 +38,9 @@ var bonus_score : int = 0:
 	set(v):
 		bonus_score = v
 		var a = 1
-var mult : float = 0.0
+var base_mult : float = 0.0
+var bonus_mult : float = 0.0
+var gain_scaler : float = 1.0
 var coord : Vector2i = Vector2i(-1, -1)
 var buffs : Array[Buff]
 var bound_item : Item = null
@@ -131,11 +135,22 @@ func get_base_score():
 		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["purple_bouns_i"]
 	return ret
 
+func get_score():
+	return int(get_base_score() * gain_scaler) + int(bonus_score * gain_scaler)
+
+func get_mult():
+	return (base_mult * gain_scaler) + (bonus_mult * gain_scaler)
+
 func get_rank():
-	return type * 0xffff + rune * 0xff + (100.0 / max(base_score + bonus_score + mult, 0.1))
+	return type * 0xffff + rune * 0xff + (100.0 / max(base_score + bonus_score + base_mult, 0.1))
 
 func get_tt_name():
 	var ret = ""
+	if coord.x != -1 && coord.y != -1:
+		var cell = Board.get_cell(coord)
+		if cell.in_mist:
+			ret = "%s (%s)" % [tr("gem_unknown"), tr("rune_unknown")]
+			return ret
 	var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
 	if color_change && color_change.duration != Buff.Duration.Eternal:
 		ret = "[color=GRAY][s]%s[/s][/color] %s" % [type_display_name(color_change.data["original_color_i"]), type_display_name(type)]
@@ -146,9 +161,19 @@ func get_tt_name():
 	return ret
 
 func get_description():
-	var ret = tr("gem_desc") % [get_base_score(), ("+%d" % bonus_score) if bonus_score > 0 else ""]
-	if mult != 0.0:
-		ret += "\n" + tr("gem_mult") % mult
+	var ret = tr("gem_score")
+	ret += "%d" % int(get_base_score() * gain_scaler)
+	if bonus_score > 0:
+		ret += "+%d" % int(bonus_score * gain_scaler)
+	elif bonus_score < 0:
+		ret += "%d" % bonus_score
+	if base_mult != 0.0 || bonus_mult != 0.0:
+		ret += "\n" + tr("gem_mult")
+		ret += "%.2f" % (base_mult * gain_scaler)
+		if bonus_mult > 0:
+			ret += "+%.2f" % (bonus_mult * gain_scaler)
+		elif bonus_mult < 0:
+			ret += "%.2f" % (bonus_mult * gain_scaler)
 	for enchant in Buff.find_all_typed(self, Buff.Type.Enchant):
 		ret += "\n[color=GREEN]%s[/color]" % (tr("gem_enchant") % tr(enchant.data["type"]))
 	return ret

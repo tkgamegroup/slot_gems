@@ -266,11 +266,16 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 
 func filter(cb : Callable) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
-	for y in cy:
-		for x in cx:
-			var c = Vector2i(x, y)
-			if cb.call(get_gem_at(c), get_item_at(c)):
-				ret.append(c)
+	for cell in cells:
+		if cb.call(cell.gem, cell.item):
+			ret.append(cell.coord)
+	return ret
+
+func filter2(cb : Callable) -> Array[Vector2i]:
+	var ret : Array[Vector2i] = []
+	for cell in cells:
+		if cb.call(cell):
+			ret.append(cell.coord)
 	return ret
 
 func find_item(name : String):
@@ -306,9 +311,10 @@ func score_at(c : Vector2i, additional_score : int = 0, additional_mult : float 
 	if !g:
 		return
 	var pos = get_pos(c)
-	Game.add_score((g.get_base_score() + g.bonus_score + additional_score) * mult, pos)
-	if g.mult != 0.0:
-		Game.add_mult((g.mult + additional_mult) * mult, pos)
+	Game.add_score((g.get_score() + additional_score) * mult, pos)
+	var gem_mult = g.get_mult()
+	if gem_mult != 0.0:
+		Game.add_mult((gem_mult + additional_mult) * mult, pos)
 
 func pin(c : Vector2i):
 	c = format_coord(c)
@@ -353,25 +359,29 @@ func unfreeze(c : Vector2i):
 	cells[idx].frozen = false
 	Game.board_ui.update_cell(c)
 
-func nullify(c : Vector2i):
+func set_nullified(c : Vector2i, v : bool):
 	c = format_coord(c)
 	if !is_valid(c):
 		return false
 	var idx = c.y * cx + c.x
 	var cell = cells[idx]
-	if cell.nullified:
+	if cell.nullified == v:
 		return false
-	cell.nullified = true
+	cell.nullified = v
 	Game.board_ui.update_cell(c)
 	return true
 
-func unnullify(c : Vector2i):
+func set_in_mist(c : Vector2i, v : bool):
 	c = format_coord(c)
 	if !is_valid(c):
-		return
+		return false
 	var idx = c.y * cx + c.x
-	cells[idx].nullified = false
+	var cell = cells[idx]
+	if cell.in_mist == v:
+		return false
+	cell.in_mist = v
 	Game.board_ui.update_cell(c)
+	return true
 
 func add_aura(i : Item):
 	if auras.find(i) == -1:
@@ -635,9 +645,12 @@ func clear_consumed():
 			set_state_at(c, Cell.State.Normal)
 		SSound.se_end_buring.play()
 
+var filling_tween : Tween = null
 func fill_blanks():
-	var tween = Game.get_tree().create_tween()
-	tween.tween_interval(max(0.1 * Game.speed, 0.05))
+	if filling_tween:
+		return
+	filling_tween = Game.get_tree().create_tween()
+	filling_tween.tween_interval(max(0.1 * Game.speed, 0.05))
 	
 	var staging_idx = 0
 	if !Game.staging_scores.is_empty() || !Game.staging_mults.is_empty():
@@ -660,8 +673,8 @@ func fill_blanks():
 			)
 			subtween.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
-				tween.parallel()
-			tween.tween_subtween(subtween)
+				filling_tween.parallel()
+			filling_tween.tween_subtween(subtween)
 			staging_idx += 1
 		for s in Game.staging_mults:
 			var subtween = get_tree().create_tween()
@@ -680,14 +693,14 @@ func fill_blanks():
 			)
 			subtween.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
-				tween.parallel()
-			tween.tween_subtween(subtween)
+				filling_tween.parallel()
+			filling_tween.tween_subtween(subtween)
 			staging_idx += 1
 		Game.staging_scores.clear()
 		Game.staging_mults.clear()
-		tween.tween_interval(0.3 * Game.speed)
+		filling_tween.tween_interval(0.3 * Game.speed)
 	
-	tween.tween_callback(func():
+	filling_tween.tween_callback(func():
 		var filled = false
 		for x in cx:
 			for y in cy:
@@ -695,11 +708,13 @@ func fill_blanks():
 				if !get_gem_at(c):
 					step_down_cell(c)
 					filled = true
-		if filled:
-			SSound.se_zap.play()
-			fill_blanks()
-		else:
-			filling_finished.emit()
+		filling_tween = null
+		if Game.game_over_mark == "":
+			if filled:
+				SSound.se_zap.play()
+				fill_blanks()
+			else:
+				filling_finished.emit()
 	)
 
 func on_combo():
@@ -753,21 +768,22 @@ func matching():
 					
 					Game.speed *= 0.98
 					Game.speed = max(0.05, Game.speed)
-	if matched_num == 0:
-		tween.tween_interval(0.55 * Game.speed)
-		tween.tween_callback(func():
-			if active_effects.is_empty():
-				matching_finished.emit()
-				active_serial = 0
-			else:
-				process_active_effect(active_effects[0])
-		)
-	else:
-		tween.tween_callback(clear_consumed)
-		tween.tween_interval(0.4 * Game.speed)
-		tween.tween_callback(fill_blanks)
-	Game.speed *= 0.98
-	Game.speed = max(0.05, Game.speed)
+	if Game.game_over_mark == "":
+		if matched_num == 0:
+			tween.tween_interval(0.55 * Game.speed)
+			tween.tween_callback(func():
+				if active_effects.is_empty():
+					matching_finished.emit()
+					active_serial = 0
+				else:
+					process_active_effect(active_effects[0])
+			)
+		else:
+			tween.tween_callback(clear_consumed)
+			tween.tween_interval(0.4 * Game.speed)
+			tween.tween_callback(fill_blanks)
+		Game.speed *= 0.98
+		Game.speed = max(0.05, Game.speed)
 
 func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null, source = null):
 	var outer_tween = (tween != null)

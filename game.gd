@@ -210,11 +210,12 @@ const one_over_log1_5 = 1.0 / log(1.5)
 func mult_from_combos(combos : int):
 	return log((combos + 1) * 1.0) * one_over_log1_5
 
-var gain_mult : float = 1.0
+var gain_scaler : float = 1.0
 var score_mult : float = 1.0:
 	set(v):
 		score_mult = v
 		calculator_bar_ui.mult_text.text = "%.1f" % score_mult
+var game_over_mark : String = ""
 var coins : int = 10:
 	set(v):
 		coins = v
@@ -383,7 +384,10 @@ func add_item(i : Item, boardcast : bool = true):
 	bag_items.append(i)
 
 func remove_item(i : Item, boardcast : bool = true):
-	bag_items.erase(i)
+	if bag_items.has(i):
+		bag_items.erase(i)
+	if !items.has(i):
+		assert("item is not in the list!")
 	items.erase(i)
 	
 	if boardcast:
@@ -399,14 +403,15 @@ func get_item(i : Item = null):
 
 func release_item(i : Item):
 	if i.duplicant:
-		items.erase(i)
+		remove_item(i)
 		return
 	if i.mounted:
 		release_item(i.mounted)
 		i.mounted = null
 	i.coord = Vector2i(-1, -1)
 	Buff.clear_if_not(i, Buff.Duration.Eternal)
-	bag_items.append(i)
+	if items.has(i):
+		bag_items.append(i)
 
 func add_pattern(p : Pattern, boardcast : bool = true):
 	if boardcast:
@@ -464,7 +469,7 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 
 var add_score_dir : int = 1
 func add_score(value : int, pos : Vector2):
-	value = int(value * gain_mult)
+	value = int(value * gain_scaler)
 	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
@@ -485,7 +490,7 @@ func add_score(value : int, pos : Vector2):
 
 var add_mult_dir : int = 1
 func add_mult(value : float, pos : Vector2):
-	value = value * gain_mult
+	value = value * gain_scaler
 	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
@@ -526,6 +531,7 @@ func add_status(s : String, col : Color):
 	)
 
 func delete_gem(g : Gem, ui, from : String = "hand"):
+	var old_coord = g.coord
 	SSound.se_trash.play()
 	ui.dissolve(0.5)
 	var tween = get_tree().create_tween()
@@ -534,8 +540,15 @@ func delete_gem(g : Gem, ui, from : String = "hand"):
 		if from == "hand":
 			Hand.erase(Hand.find(g))
 		remove_gem(g)
-		if from == "hand" || from == "craft_slot":
-			Hand.draw(false)
+		if Game.gems.size() < Board.curr_min_gem_num:
+			Game.game_over_mark = "not_enough_gems"
+			Game.lose()
+		else:
+			if from == "hand" || from == "craft_slot":
+				Hand.draw(false)
+			elif from == "board":
+				Board.set_gem_at(old_coord, null)
+				Board.fill_blanks()
 	)
 
 func copy_gem(src : Gem, dst : Gem):
@@ -543,7 +556,8 @@ func copy_gem(src : Gem, dst : Gem):
 	dst.rune = src.rune
 	dst.base_score = src.base_score
 	dst.bonus_score = src.bonus_score
-	dst.mult = src.mult
+	dst.base_mult = src.base_mult
+	dst.bonus_mult = src.bonus_mult
 	for b in src.buffs:
 		var new_b = Buff.new()
 		new_b.uid = Buff.s_uid
@@ -587,7 +601,7 @@ func enchant_gem(g : Gem, type : String):
 	if type == "w_enchant_charming":
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_score","add":200}, Buff.Duration.Eternal)
 	elif type == "w_enchant_sharp":
-		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"mult","add":1.5}, Buff.Duration.Eternal)
+		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_mult","add":1.5}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
 
 func socket_gem(g : Gem, item_name : String):
@@ -631,6 +645,8 @@ func process_command_line(cl : String):
 			Game.lose()
 		elif cmd == "shop":
 			Game.shop_ui.enter()
+		elif cmd == "swap":
+			Game.swaps += int(tokens[1])
 		elif cmd == "gold":
 			Game.coins += int(tokens[1])
 		elif cmd == "ai":
@@ -816,8 +832,7 @@ func start_game(saving : String = ""):
 	modifiers["green_bouns_i"] = 0
 	modifiers["blue_bouns_i"] = 0
 	modifiers["purple_bouns_i"] = 0
-	modifiers["first_roll_i"] = 0
-	modifiers["first_match_i"] = 0
+	modifiers["played_i"] = 0
 	modifiers["base_combo_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
 	modifiers["explode_range_i"] = 0
@@ -838,7 +853,7 @@ func start_game(saving : String = ""):
 		current_curses.clear()
 		level_curses.clear()
 		score_mult = 1.0
-		gain_mult = 1.0
+		gain_scaler = 1.0
 		combos = 0
 		level = 0
 		board_size = 3
@@ -1016,36 +1031,31 @@ func start_game(saving : String = ""):
 	status_bar_ui.coins_text.show_change = true
 	game_ui.show()
 
-func get_level_title(lv : int, reward : int, ):
-	return tr("ui_game_level") % [lv, reward, "[img width=16]res://images/coin.png[/img]"]
+func get_level_title(lv : int, reward : int):
+	return tr("ui_game_level") % [lv, reward]
 
 func get_level_desc(target : int, curses : Array[Curse] = []):
 	var ret = tr("ui_game_target_score") % target
 	if !curses.is_empty():
-		var text = ""
-		var nullified_cells = 0
+		var cates = {}
 		for c in curses:
-			if c.type == "curse_nullify_cell":
-				nullified_cells += 1
+			if cates.has(c.type):
+				cates[c.type] += 1
 			else:
-				if !text.is_empty():
-					text += " "
-				text += tr(c.type)
-		if nullified_cells > 0:
-			if !text.is_empty():
-				text = " " + text
-			text = tr("curse_nullify_cell") % nullified_cells + text
-		ret += " "
-		ret += text
+				cates[c.type] = 1
+		var text = ""
+		for k in cates.keys():
+			text = (tr(k) % cates[k]) + text
+		ret += " [color=brown]%s[/color]" % text
 	return ret
 
 func update_level_text(lv : int, target : int = -1, reward : int = -1, curses : Array[Curse] = []):
-	status_bar_ui.level_text.text = tr("ui_game_level") % [lv, reward, "[img width=16]res://images/coin.png[/img]"]
+	status_bar_ui.level_text.text = tr("ui_game_level") % [lv, reward]
 	if target == -1:
 		target = get_level_score(lv)
 	if reward == -1:
 		reward = get_level_reward(lv)
-	status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % get_level_desc(target, curses)
+	status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % SUtils.format_text(get_level_desc(target, curses), true, true)
 
 var cluster_level_tween : Tween = null
 
@@ -1094,37 +1104,49 @@ func refresh_cluster_levels():
 			else:
 				change_cluster_level_frame(i, 0)
 
+const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
 func build_level_curses():
 	for i in level + 3 - level_curses.size():
+		var curses : Array[Curse] = []
+		var type = SMath.pick_random(curse_types)
+		type = "wrath"
+		var num = 0
 		match (level + i) % 3:
-			0:
-				var curses : Array[Curse] = []
-				level_curses.append(curses)
 			1:
-				var curses : Array[Curse] = []
-				var coords = SMath.pick_n_random(Board.get_all_offset_coords(), 3, Game.rng)
-				for j in 3:
-					var c = Curse.new()
-					c.type = "curse_nullify_cell"
-					c.coord = coords[j]
-					curses.append(c)
-				level_curses.append(curses)
+				match type:
+					"lust": num = 2
+					"gluttony": num = 2
+					"greed": num = 3
+					"sloth": num = 10
+					"wrath": num = 3
+					"envy": num = 1
+					"pride": num = 5
 			2:
-				var curses : Array[Curse] = []
-				for j in 1:
-					var c = Curse.new()
-					c.type = "curse_nullify_" + Gem.type_name(Game.rng.randi_range(Gem.Type.Red, Gem.Type.Purple))
-					curses.append(c)
-				level_curses.append(curses)
-
-func apply_curse(c : Curse):
-	if c.type == "curse_nullify_cell":
-		Board.nullify(c.coord)
+				match type:
+					"lust": num = 4
+					"gluttony": num = 5
+					"greed": num = 5
+					"sloth": num = 30
+					"wrath": num = 8
+					"envy": num = 3
+					"pride": num = 20
+		for j in num:
+			var c = Curse.new()
+			c.type = "curse_" + type
+			curses.append(c)
+		level_curses.append(curses)
 
 func remove_curse(c : Curse):
 	if c.type == "curse_nullify_cell":
-		Board.unnullify(c.coord)
+		c.remove()
 	current_curses.erase(c)
+
+func clear_curses():
+	var cs = []
+	for c in current_curses:
+		cs.append(c)
+	for c in cs:
+		remove_curse(c)
 
 func new_level(tween : Tween = null):
 	build_level_curses()
@@ -1137,12 +1159,12 @@ func new_level(tween : Tween = null):
 		level += 1
 		target_score = get_level_score(level) * 1
 		reward = get_level_reward(level)
+		game_over_mark = ""
 		history.level_reset()
 		current_curses.clear()
 		for c in level_curses[level - 1]:
 			var cc = Curse.new()
 			cc.type = c.type
-			cc.coord = c.coord
 			current_curses.append(cc)
 		update_level_text(level, target_score, reward, current_curses)
 		refresh_cluster_levels()
@@ -1151,8 +1173,7 @@ func new_level(tween : Tween = null):
 		rolls = rolls_per_level
 		swaps = swaps_per_level
 		plays = plays_per_level
-		modifiers["first_roll_i"] = 1
-		modifiers["first_match_i"] = 1
+		modifiers["played_i"] = 0
 		
 		if level_clear_ui.visible:
 			level_clear_ui.exit()
@@ -1167,24 +1188,23 @@ func new_level(tween : Tween = null):
 	)
 	if !STest.testing:
 		tween.tween_interval(1.0)
-		banner_ui.appear(get_level_title(level + 1, get_level_reward(level + 1)), get_level_desc(get_level_score(level + 1), Game.level_curses[level]), tween)
+		banner_ui.appear(get_level_title(level + 1, get_level_reward(level + 1)), SUtils.format_text(get_level_desc(get_level_score(level + 1), Game.level_curses[level] if !Game.level_curses.is_empty() else ([] as Array[Curse])), true, false), tween)
 		var temp_text1 = banner_ui.text1.duplicate()
 		var temp_text2 = banner_ui.text2.duplicate()
 		temp_text1.size = status_bar_ui.level_text.size
 		temp_text2.size = status_bar_ui.level_target.size
 		tween.tween_interval(0.5)
-		if !level_curses[level].is_empty():
-			tween.tween_callback(func():
-				for c in current_curses:
-					if c.type == "curse_nullify_cell":
-						SEffect.add_leading_line(Vector2(640.0, 224.0), Board.get_pos(c.coord), 0.3)
-			)
-			tween.tween_interval(0.3)
-			tween.tween_callback(func():
-				for c in current_curses:
-					apply_curse(c)
-			)
 		tween.tween_callback(func():
+			Curse.pick_targets()
+			for c in current_curses:
+				var coord = c.coord
+				if c.afflicted_gem:
+					coord = c.afflicted_gem.coord
+				SEffect.add_leading_line(Vector2(640.0, 224.0), Board.get_pos(coord))
+		)
+		tween.tween_interval(0.3)
+		tween.tween_callback(func():
+			Curse.apply_curses()
 			banner_ui.disappear(null, true)
 			banner_ui.add_child(temp_text1)
 			banner_ui.add_child(temp_text2)
@@ -1201,9 +1221,8 @@ func new_level(tween : Tween = null):
 				tutorial_ui.enter()
 			)
 	else:
-		if !level_curses[level].is_empty():
-			for c in current_curses:
-				apply_curse(c)
+		Curse.pick_targets()
+		Curse.apply_curses()
 	tween.tween_callback(func():
 		status_bar_ui.level_text.modulate.a = 1.0
 		status_bar_ui.level_target.modulate.a = 1.0
@@ -1225,6 +1244,7 @@ func level_end():
 	control_ui.undo_button.hide()
 	control_ui.expected_score_panel.hide()
 	set_props(Props.None)
+	clear_curses()
 	Buff.clear(self, [Buff.Duration.ThisLevel])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisLevel])
@@ -1247,7 +1267,6 @@ func roll():
 		draw_num = min(draw_num, bag_gems.size())
 		for i in draw_num:
 			Hand.draw()
-		modifiers["first_roll_i"] = 0
 		begin_busy()
 		history.rolls += 1
 
@@ -1255,16 +1274,15 @@ func play():
 	#if plays > 0:
 		stage = Stage.Matching
 		#plays -= 1
-		modifiers["first_match_i"] = 0
+		modifiers["played_i"] = 1
 	
 		combos = modifiers["base_combo_i"]
 		score_mult = 1.0
-		gain_mult = 1.0
+		gain_scaler = 1.0
 		speed = 1.0 / base_speed
 		
 		action_stack.clear()
 		control_ui.undo_button.hide()
-		control_ui.update_preview()
 		control_ui.expected_score_panel.hide()
 		
 		calculator_bar_ui.appear()
@@ -1361,7 +1379,8 @@ func save_to_file(name : String = "1"):
 		gem["rune"] = g.rune
 		gem["base_score"] = g.base_score
 		gem["bonus_score"] = g.bonus_score
-		gem["mult"] = g.mult
+		gem["base_mult"] = g.base_mult
+		gem["bonus_mult"] = g.bonus_mult
 		gem["coord"] = g.coord
 		var buffs = []
 		for b in g.buffs:
@@ -1529,7 +1548,7 @@ func load_from_file(name : String = "1"):
 	for curse in current_curses:
 		var c = Curse.new()
 		c.type = curse["type"]
-		c.coord = curse["coord"]
+		c.coord = str_to_var("Vector2i" + curse["coord"])
 		Game.current_curses.append(c)
 	Game.level_curses.clear()
 	var level_curses = data["level_curses"]
@@ -1538,12 +1557,12 @@ func load_from_file(name : String = "1"):
 		for curse in level_data:
 			var c = Curse.new()
 			c.type = curse["type"]
-			c.coord = curse["coord"]
+			c.coord = str_to_var("Vector2i" + curse["coord"])
 			lc.append(c)
 		Game.level_curses.append(lc)
 	Game.combos = int(data["combos"])
 	Game.score_mult = data["score_mult"]
-	update_level_text(level, target_score, reward, current_curses)
+	update_level_text(level, target_score, reward, Game.current_curses)
 	var game_buffs = data["buffs"]
 	for buff in game_buffs:
 		load_buff.call(buff, Game)
@@ -1563,7 +1582,8 @@ func load_from_file(name : String = "1"):
 		g.rune = int(gem["rune"])
 		g.base_score = int(gem["base_score"])
 		g.bonus_score = int(gem["bonus_score"])
-		g.mult = gem["mult"]
+		g.base_mult = gem["base_mult"]
+		g.bonus_mult = gem["bonus_mult"]
 		g.coord = str_to_var("Vector2i" + gem["coord"])
 		var buffs = gem["buffs"]
 		for buff in buffs:
@@ -1744,13 +1764,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			if Board.is_valid(c):
 				var cc = Board.offset_to_cube(c)
 				control_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
+				var contents : Array[Pair] = []
+				var cell = Board.get_cell(c)
+				if cell.nullified:
+					contents.append(Pair.new(tr("tt_cell_nullified"), tr("tt_cell_nullified_content")))
+				if cell.in_mist:
+					contents.append(Pair.new(tr("tt_cell_in_mist"), tr("tt_cell_in_mist_content")))
 				var g = Board.get_gem_at(c)
 				if g:
-					var arr = g.get_tooltip(false)
+					contents.append_array(g.get_tooltip(false))
 					var i = Board.get_item_at(c)
 					if i:
-						arr.append_array(i.get_tooltip())
-					STooltip.show(arr, 0.5)
+						contents.append_array(i.get_tooltip())
+					STooltip.show(contents, 0.3)
 			else:
 				control_ui.debug_text.text = ""
 				STooltip.close()
@@ -1778,11 +1804,14 @@ func _ready() -> void:
 				if processed:
 					break
 		if !processed:
-			filling_times += 1
-			if filling_times >= FillingTimesToWin:
-				win()
+			if modifiers["played_i"] > 0:
+				filling_times += 1
+				if filling_times >= FillingTimesToWin:
+					win()
+				else:
+					Board.matching()
 			else:
-				Board.matching()
+				control_ui.update_preview()
 	)
 	Board.matching_finished.connect(func():
 		var processed = false
@@ -1812,17 +1841,21 @@ func _ready() -> void:
 				if i:
 					Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 		
-		if swaps == 0 && score < target_score:
-			if invincible:
+		if game_over_mark != "":
+			lose()
+		else:
+			if swaps == 0 && score < target_score:
+				if invincible:
+					win()
+				else:
+					game_over_mark = "not_reach_score"
+					lose()
+			elif score >= target_score:
 				win()
 			else:
-				lose()
-		elif score >= target_score:
-			win()
-		else:
-			control_ui.update_preview()
-			control_ui.expected_score_panel.show()
-			end_busy()
+				control_ui.update_preview()
+				control_ui.expected_score_panel.show()
+				end_busy()
 	)
 	command_line_edit.text_submitted.connect(func(cl : String):
 		Game.process_command_line(cl)

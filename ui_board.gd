@@ -36,9 +36,13 @@ func update_cell(c : Vector2i):
 	var cell = Board.get_cell(c)
 	var ui = get_cell(c)
 	ui.set_duplicant(false)
+	ui.gem_ui.reset()
 	var g = Board.get_gem_at(c)
 	if g:
-		ui.set_gem_image(g.type, g.rune)
+		if cell.in_mist:
+			ui.set_gem_image(Gem.Type.Unknow, Gem.Rune.None)
+		else:
+			ui.set_gem_image(g.type, g.rune)
 		var i = Board.get_item_at(c)
 		if i:
 			ui.set_item_image(i.image_id, i.mounted.image_id if i.mounted else 0)
@@ -134,8 +138,17 @@ func _ready() -> void:
 			var coord = extra["coord"]
 			var g1 = payload as Gem
 			if Game.swaps > 0:
-				Game.swaps -= 1
 				var g2 = Board.get_gem_at(coord)
+				if Board.get_cell(coord).in_mist:
+					SSound.se_error.play()
+					Game.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
+					return false
+				var i = Board.get_item_at(coord)
+				if i && (i.name == "SinLust" || i.name == "SinGluttony" || i.name == "SinGreed" || i.name == "SinWrath" || i.name == "SinEnvy"):
+					SSound.se_error.play()
+					Game.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
+					return false
+				Game.swaps -= 1
 				Hand.swap(coord, g1)
 				Game.action_stack.append(Pair.new(coord, g2))
 				Game.control_ui.undo_button.show()

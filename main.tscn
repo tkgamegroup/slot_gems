@@ -1556,6 +1556,7 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 justification_flags = 0
+meta_underlined = false
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
@@ -2032,6 +2033,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
+meta_underlined = false
 
 [node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Banner/VBoxContainer"]
 layout_mode = 2
@@ -2041,6 +2043,7 @@ fit_content = true
 scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
+meta_underlined = false
 
 [node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
 visible = false
@@ -2559,7 +2562,6 @@ text = "ui_game_over_title"
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_font_sizes/font_size = 24
-text = "ui_game_over_desc"
 
 [node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2

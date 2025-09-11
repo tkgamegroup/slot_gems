@@ -233,6 +233,7 @@ func setup(n : String):
 						var new_item = Item.new()
 						new_item.setup("Virus")
 						new_item.duplicant = true
+						Game.items.append(new_item)
 						Board.set_item_at(c, new_item)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -617,6 +618,7 @@ func setup(n : String):
 				var new_item = Item.new()
 				new_item.setup("Princess")
 				new_item.duplicant = true
+				Game.items.append(new_item)
 				Board.set_item_at(c, new_item)
 				return false
 			elif mounted.name == "Magician":
@@ -626,6 +628,7 @@ func setup(n : String):
 				var new_item = Item.new()
 				new_item.setup("Mage")
 				new_item.duplicant = true
+				Game.items.append(new_item)
 				Board.set_item_at(c, new_item)
 				return false
 			return true
@@ -945,6 +948,83 @@ func setup(n : String):
 							t.third.queue_free()
 					)
 					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+	elif name == "SinLust":
+		image_id = 42
+		price = 0
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			match Curse.lust_triggered:
+				0:
+					tween.tween_callback(func():
+						var generated_score = 0
+						var generated_mult = 0.0
+						for p in Game.staging_scores:
+							generated_score += p.second
+						for p in Game.staging_mults:
+							generated_mult += p.second
+						var pos = Board.get_pos(coord)
+						Game.add_score(generated_score, pos)
+						Game.add_mult(generated_mult, pos)
+					)
+				1:
+					tween.tween_callback(func():
+						Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_scaler","set":0.0}, Buff.Duration.ThisLevel)
+					)
+				2:
+					tween.tween_callback(func():
+						Game.game_over_mark = "lust_dead"
+					)
+			Curse.lust_triggered += 1
+	elif name == "SinGluttony":
+		image_id = 43
+		price = 0
+		on_event = func(event : int, tween : Tween, data):
+			match event: 
+				Event.ItemEntered:
+					if data == self:
+						Game.event_listeners.append(Hook.new(Event.MatchingFinished, self, HostType.Item, false))
+				Event.ItemLeft:
+					if data == self:
+						for l in Game.event_listeners:
+							if l.host == self:
+								Game.event_listeners.erase(l)
+								break
+				Event.MatchingFinished:
+					var num_greed = Board.filter(func(g : Gem, i : Item):
+						return i && i.name == "SinGluttony"
+					).size()
+					if Game.combos < num_greed:
+						Game.game_over_mark = "sin_gluttony"
+						Game.lose()
+						return true
+	elif name == "SinGreed":
+		image_id = 44
+		price = 0
+		extra["value"] = "?"
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				SSound.se_coin.play()
+				Game.coins += extra["value"]
+				
+				var num_greed = Board.filter(func(g : Gem, i : Item):
+					return i && i.name == "SinGreed"
+				).size()
+				if num_greed == 1:
+					Game.coins = 0
+			)
+	elif name == "SinEnvy":
+		image_id = 45
+		price = 0
+		on_event = func(event : int, tween : Tween, data):
+			match event: 
+				Event.ItemEntered:
+					if data == self:
+						Board.add_aura(self)
+				Event.ItemLeft:
+					if data == self:
+						Board.remove_aura(self)
+		on_aura = func(g : Gem):
+			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"gain_scaler","add":-1.0}, Buff.Duration.OnBoard)
+			b.caster = self
 
 func get_tooltip():
 	var ret : Array[Pair] = []

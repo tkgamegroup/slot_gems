@@ -11,6 +11,12 @@ var type : int
 var rune : int
 var item : int
 
+func reset():
+	bg_sp.material = null
+	rune_sp.material = null
+	item_sp.material = null
+	self.show()
+
 func set_image(_type : int, _rune : int, _item : int = 0):
 	type = _type
 	rune = _rune

@@ -46,22 +46,8 @@ func _ready() -> void:
 		title_txt.text = "[url=%s]%s[/url] [url=%s][img]%s[/img][/url]" % [type, tr(type), thing, Item.get_image_path(thing)]
 	title_txt.meta_hover_started.connect(func(meta):
 		var s = str(meta)
-		if s == "w_enchant":
-			STooltip.show([Pair.new(tr("w_enchant"), tr("w_enchant_desc"))])
-		elif s == "w_socket":
-			STooltip.show([Pair.new(tr("w_socket"), tr("w_socket_desc"))])
-		elif s == "w_delete":
-			STooltip.show([Pair.new(tr("w_delete"), tr("w_delete_desc"))])
-		elif s == "w_wild":
-			STooltip.show([Pair.new(tr("w_wild"), tr("w_wild_desc"))])
-		elif s == "w_omni":
-			STooltip.show([Pair.new(tr("w_omni"), tr("w_omni_desc"))])
-		elif s == "w_duplicate":
-			STooltip.show([Pair.new(tr("w_duplicate"), tr("w_duplicate_desc"))])
-		elif s == "w_enchant_charming":
-			STooltip.show([Pair.new(tr("w_enchant_charming"), tr("w_enchant_charming_desc"))])
-		elif s == "w_enchant_sharp":
-			STooltip.show([Pair.new(tr("w_enchant_sharp"), tr("w_enchant_sharp_desc"))])
+		if s.begins_with("w_"):
+			STooltip.show([Pair.new(tr(s), tr(s + "_desc"))])
 		else:
 			var item = Item.new()
 			item.setup(thing)
@@ -109,12 +95,12 @@ func _ready() -> void:
 			var es = Buff.find_all_typed(gem, Buff.Type.Enchant)
 			if es.size() >= 2:
 				SSound.se_error.play()
-				Game.banner_ui.show_tip(tr("ui_enchant_quantity_limit"), "", 1.0)
+				Game.banner_ui.show_tip(tr("wr_enchant_quantity_limit"), "", 1.0)
 				return
 		if type == "w_delete":
 			if Game.gems.size() - 1 < Board.curr_min_gem_num:
 				SSound.se_error.play()
-				Game.banner_ui.show_tip(tr("ui_delete_gem_count_limit") % Board.curr_min_gem_num, "", 1.0)
+				Game.banner_ui.show_tip(tr("wr_delete_gem_count_limit") % Board.curr_min_gem_num, "", 1.0)
 				return
 		
 		button.button.disabled = true

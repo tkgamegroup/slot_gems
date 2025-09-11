@@ -1,4 +1,4 @@
-id,en,zh
+ ,en,zh
 game_title,Slot Gems,摇宝石
 w_colorless,Colorless,无光
 w_colorless_desc,Can not match with any color.,不可以与任何颜色匹配。
@@ -38,12 +38,30 @@ w_tradable,Tradable,可交易
 w_tradable_desc,You can drag this Item to Bag in order to exchange another item.,你可以将此道具拖拽到包来交换一个新的道具。
 w_mount,Mount,坐骑
 w_mount_desc,Place a satisfied Item to this Item in order to form a combine Item. Basiclly new Item have the effects of both.,将一个满足条件的道具放到此道具上来组合一个新道具。通常新道具拥有两个道具的效果。
-curse_nullify_cell,%d random cells are nullified.,%d个随机的格子被无效化。
-curse_nullify_Red,Red gems are nullified.,红色宝石被无效化。
-curse_nullify_Orange,Orange gems are nullified.,橙色宝石被无效化。
-curse_nullify_Green,Green gems are nullified.,绿色宝石被无效化。
-curse_nullify_Blue,Blue gems are nullified.,蓝色宝石被无效化。
-curse_nullify_Purple,Purple gems are nullified.,紫色宝石被无效化。
+w_nullified,Nullified,无效化
+w_nullified_desc,Score and Mult getting from nullified will become 0.,从无效化中获取的分数跟倍率会变成0。
+w_in_mist,Shrouded In Mist,迷雾笼罩
+w_in_mist_desc,Color and rune unknown.,无法获知颜色与符文。
+curse_lust,Afflict %d random gems with [item_SinLust].,使%d个随机的宝石获得[item_SinLust]。
+curse_gluttony,Afflict %d random gems with [item_SinGluttony].,使%d个随机的宝石获得[item_SinGluttony]。
+curse_greed,Split your coins into %d [item_SinGreed].,把你的金币分散到%d个[item_SinGreed]。
+curse_sloth,%d random cells are w_in_mist.,%d个随机的格子被w_in_mist。
+curse_wrath,Delete %d random gems on Board.,随机删除%d个棋盘上的宝石。
+curse_envy,Afflict %d random gems with [item_SinEnvy].,使%d个随机的宝石获得[item_SinEnvy]。
+curse_pride,%d random cells are w_nullified.,%d个随机的格子被w_nullified。
+game_over_not_reach_score,Out Of Swaps And Not Reach Target Score,没有交换次数且没有达到目标分数
+game_over_not_enough_gems,Not Enough Gems,宝石数量不足
+game_over_sin_lust,Effect Of Sin Lust,罪·色欲的效果
+game_over_sin_gluttony,Effect Of Sin Gluttony,罪·暴食的效果
+tt_cell_nullified,Nullified,无效化
+tt_cell_nullified_content,This cell is w_nullified.,这个格子被w_nullified。
+tt_cell_in_mist,In Mist,迷雾笼罩
+tt_cell_in_mist_content,This cell is w_in_mist.,这个格子被w_in_mist。
+wr_enchant_quantity_limit,Gem can have up to 2 enchantments,宝石最多拥有2个附魔
+wr_delete_gem_count_limit,You can’t have less than %d gems,你不能拥有低于%d个宝石
+wr_relics_count_limit,You can have up to %d relics,您最多拥有%d个遗物
+wr_ban_swapping_in_mist,You can’t swap gems in the mist,你不能交换迷雾中的宝石
+wr_ban_swapping_sin,You can’t swap gems that have a Sin,你不能交换拥有罪的宝石
 ui_close,Close,关闭
 ui_titile_continue,Continue,继续游戏
 ui_titile_new_game,New Game,新游戏
@@ -72,7 +90,7 @@ tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
 tt_purple_base_score,Purple gems' base score,紫色宝石基础分数
-ui_game_level,Level %d (Reward: %d%s),关卡 %d（奖励：%d%s）
+ui_game_level,Level %d (Reward: %d[img width=16]res://images/coin.png[/img]),关卡 %d（奖励：%d[img width=16]res://images/coin.png[/img]）
 ui_game_target_score,Score at lease %d.,最少达到 %d 分。
 ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
@@ -117,9 +135,6 @@ ui_shop_upgrade_insufficient_quantity_content,Requires at least %d gems,需要�
 ui_shop_exit,Exit,退出
 ui_buy,Buy,购买
 ui_sell,Sell %d,出售 %d
-ui_enchant_quantity_limit,Gem can have up to 2 enchantments,宝石最多拥有2个附魔
-ui_delete_gem_count_limit,You can’t have less than %d gems,你不能拥有低于%d个宝石
-ui_relics_count_limit,You can have up to %d relics,您最多拥有%d个遗物
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
@@ -134,7 +149,6 @@ ui_level_clear_swap_rewards,Swaps,交换次数
 ui_level_clear_interest,Interest,利息
 ui_level_clear_button_text,Take %d,拿走 %d
 ui_game_over_title,Game Over,游戏结束
-ui_game_over_desc,You have used up swaps but didn't reach the target score.,你已经用完交换次数却没有达到目标分数。
 ui_game_over_max_match,Max Match Score,最高匹配分数
 ui_game_over_swaps,Swaps,交换次数
 ui_game_over_level,Level,关卡
@@ -149,39 +163,16 @@ gem_blue,Blue,蓝
 gem_purple,Purple ,紫
 gem_colorless,Colorless,无色
 gem_wild,Wild,狂野
+gem_unknown,Unknown,未知
 rune_none,None,无
 rune_destroy,Destroy,破坏
 rune_wisdom,Wisdom,灵智
 rune_grow,Grow,生长
 rune_omni,Omni,全能
-gem_desc,Score: %d%s,分数: %d%s
-gem_mult,Mult: %.1f,倍率: %.1f
+rune_unknown,Unknown,未知
+gem_score,Score: ,分数: 
+gem_mult,Mult: ,倍率: 
 gem_enchant,Enchant: %s,附魔: %s
-skill_name_Xiao,Xiao,消
-skill_desc_Xiao,Eliminate one random rune after next roll.,在下次滚动之后消除一种随机的符文。
-skill_name_Roll,RoLL,RoLL
-skill_desc_Roll,+1 Rolls.,+1 滚动次数
-skill_name_Match,Mat.,Mat.
-skill_desc_Match,+1 Matches.,+1 匹配次数
-skill_name_Qiang,Qiang,强
-skill_desc_Qiang,+1 base score to 1 random gem.,1个随机的宝石 基础分数 +1。
-skill_name_Se,Se,色
-skill_desc_Se,Turn 2 random gems to Wild until the end of level.,使2个随机的宝石变为 w_wild直到关卡结束。
-skill_name_Huan,Huan,唤
-skill_desc_Huan,Place 3 random Items from Bag to Board.,从包中放置3个随机道具到棋盘上。
-skill_name_Chou,Chou,抽
-skill_desc_Chou,Draw 1 Item.,抽1个道具。
-skill_name_Jin,Jin,金
-skill_desc_Jin,Get 1 Coin.,获取1个金币。
-skill_name_Bao,Bao,爆
-skill_desc_Bao,Explode and eliminate cells in {range_i} w_range at 2 random locations.,在2个随机的位置爆炸并消除{range_i}w_range内的格子。
-skill_name_Fang,Fang,仿
-skill_desc_Fang,Duplicate 1 random Item on Board to a random location.,复制1个棋盘上的随机的道具并放到随机的位置。
-skill_name_Fen,Fen,分
-skill_desc_Fen,+{percentage}% of the target score and +{basic_value} score. (Not affected by combos),+{percentage}%的目标分数并+{basic_value}分数。（不会受连击影响）
-skill_name_Xing,Xing,幸
-skill_desc_Xing,+0.5 Score Mult.,+0.5的分数倍率。
-skill_requirements,Requirements: ,需求：
 pattern_name_prefix,Pattern: ,图案：
 pattern_desc,LV: %d\nExp: %d/%d\nMult: %d,等级：%d\n经验：%d/%d\n倍率：%d
 item_name_DyeRed,Dye: Red,染色剂：红
@@ -274,6 +265,14 @@ item_name_EchoTotem,Echo Totem,回音图腾
 item_desc_EchoTotem,w_aura: All Item's repeat number +1.,
 item_name_Volcano,Volcano,火山
 item_desc_Volcano,w_eliminate: (w_active) Eliminate 2 random cells in 2 w_range. Repeat 2 times.,w_eliminate：(w_active)消除2w_range内的2个随机格子。重复2次。
+item_name_SinLust,Sin Lust,罪·色欲
+item_desc_SinLust,"w_eliminate: (w_active) Has different effects depending on how many times [b]Sin Lust[/b] is triggered. 0: Get Score and Mult equal to the Score and Mult already generated. 1: Until the end of this level, the Score and Mult you get become zero. 2: Game over.",w_eliminate：(w_active)根据[b]罪·色欲[/b]的触发次数有不同的效果。1：获得分数与倍率，数值分别等于已经产生的分数与倍率。2：本关结束前获得的分数与倍率为零。3：游戏结束。
+item_name_SinGluttony,Sin Gluttony,罪·暴食
+item_desc_SinGluttony,"When matching finished, if Combos is less than the number of [b]Sin Gluttony[/b], game over.",匹配完成时若连击数小于[b]罪·暴食[/b]的数量则游戏结束。
+item_name_SinGreed,Jar Of Greed,贪欲钱罐
+item_desc_SinGreed,"w_eliminate: Coins +{value}. If this is the last [b]Jar Of Greed[/b], set the coins to 0.",w_eliminate：金币+{value}，如果这是最后一个[b]贪欲钱罐[/b]，把金币变为0。
+item_name_SinEnvy,Sin Envy,罪·嫉妒
+item_desc_SinEnvy,w_aura: Score and Mult getting from Gems decrease by 100%.,w_aura：获取自宝石的分数跟倍率减少100%。
 relic_name_ExplosionScience,Explosion Science,爆炸科学
 relic_desc_ExplosionScience,Explosion w_range +{range_increase} but w_power -{power_decrease}.,爆炸w_range+{range_increase}但是w_power-{power_decrease}。
 relic_name_HighExplosives,High Explosives,高爆炸药
