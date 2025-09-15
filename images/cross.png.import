@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c800jg8l1c7vj"
-path="res://.godot/imported/typhon_s_broken_talon.png-a862b982b7d8528dc874dd9a3f08aa6a.ctex"
+uid="uid://blhe7af87r2m4"
+path="res://.godot/imported/cross.png-5165124802ec699caf6c7f7692f4d1e7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/typhon_s_broken_talon.png"
-dest_files=["res://.godot/imported/typhon_s_broken_talon.png-a862b982b7d8528dc874dd9a3f08aa6a.ctex"]
+source_file="res://images/cross.png"
+dest_files=["res://.godot/imported/cross.png-5165124802ec699caf6c7f7692f4d1e7.ctex"]
 
 [params]
 

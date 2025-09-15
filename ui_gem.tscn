@@ -1,9 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://s5ehr1388thk"]
+[gd_scene load_steps=10 format=3 uid="uid://s5ehr1388thk"]
 
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="1_qae8s"]
 [ext_resource type="Script" uid="uid://t4phq6vbt25s" path="res://ui_gem.gd" id="2_pbann"]
 [ext_resource type="SpriteFrames" uid="uid://bgpse251ihp38" path="res://images/runes.tres" id="3_3slly"]
 [ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="4_jtep7"]
+[ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="5_ahfnj"]
+[ext_resource type="Texture2D" uid="uid://cp7ifhua174gi" path="res://images/spark.png" id="6_4lclw"]
+
+[sub_resource type="Curve" id="Curve_4lclw"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.495283, 0.617978), 0.0, 0.0, 0, 0, Vector2(0.981132, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_kq7wp"]
+offsets = PackedFloat32Array(0, 0.155914, 0.322581, 0.489247, 0.672043, 0.849462, 1)
+colors = PackedColorArray(0.75, 0.195, 0.195, 1, 0.7, 0.637467, 0.231, 1, 0.224967, 0.68, 0.1836, 1, 0.196, 0.6748, 0.7, 1, 0.182, 0.216533, 0.7, 1, 0.5285, 0.21, 0.7, 1, 0.7, 0.182, 0.484167, 1)
+
+[sub_resource type="Curve" id="Curve_ahfnj"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.132075, 0.191011), 0.0, 0.0, 0, 0, Vector2(0.698113, 0.191011), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
 
 [node name="UiGem" type="Node2D"]
 script = ExtResource("2_pbann")
@@ -16,3 +30,29 @@ sprite_frames = ExtResource("3_3slly")
 
 [node name="Item" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("4_jtep7")
+
+[node name="Charming" type="CPUParticles2D" parent="."]
+visible = false
+texture = ExtResource("5_ahfnj")
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 14.0
+gravity = Vector2(0, 0)
+orbit_velocity_min = 0.1
+orbit_velocity_max = 0.1
+scale_amount_curve = SubResource("Curve_4lclw")
+color_initial_ramp = SubResource("Gradient_kq7wp")
+
+[node name="Sharp" type="CPUParticles2D" parent="."]
+visible = false
+amount = 1
+texture = ExtResource("6_4lclw")
+lifetime = 2.5
+explosiveness = 0.5
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 12.0
+gravity = Vector2(0, 0)
+angular_velocity_min = 150.0
+angular_velocity_max = 150.0
+scale_amount_curve = SubResource("Curve_ahfnj")

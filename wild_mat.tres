@@ -13,4 +13,3 @@ gradient = SubResource("Gradient_w4hyo")
 [resource]
 shader = ExtResource("1_qupmt")
 shader_parameter/ramp_texture = SubResource("GradientTexture1D_aa3ec")
-shader_parameter/offset = 1000.0

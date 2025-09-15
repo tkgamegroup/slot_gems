@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://du07sspefr6yv"
-path="res://.godot/imported/syrinx_of_pan.png-32879e528c7281d2a05a3ce57af472a4.ctex"
+uid="uid://ckgpel2kqhlog"
+path="res://.godot/imported/the_school_of_athens.png-68da08ecc105f4cf517cc72330c1db7b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/syrinx_of_pan.png"
-dest_files=["res://.godot/imported/syrinx_of_pan.png-32879e528c7281d2a05a3ce57af472a4.ctex"]
+source_file="res://images/relics/the_school_of_athens.png"
+dest_files=["res://.godot/imported/the_school_of_athens.png-68da08ecc105f4cf517cc72330c1db7b.ctex"]
 
 [params]
 

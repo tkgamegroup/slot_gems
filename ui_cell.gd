@@ -10,9 +10,6 @@ extends Node2D
 @onready var nullified_sp1 : AnimatedSprite2D = $Nullified/sp1
 @onready var nullified_sp2 : AnimatedSprite2D = $Nullified/sp2
 
-func set_gem_image(type : int, rune : int):
-	gem_ui.set_image(type, rune)
-
 func set_item_image(item : int, item2 : int = 0):
 	item_sp.frame = item
 	item2_2p.frame = item2

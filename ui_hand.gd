@@ -51,7 +51,7 @@ func remove_ui(idx : int):
 
 func fly_gem_from(gem : Gem, pos):
 	var ui = gem_ui.instantiate()
-	ui.set_image(gem.type, gem.rune, gem.bound_item.image_id if gem.bound_item else 0)
+	ui.update(gem)
 	ui.global_position = pos
 	var trail = trail_pb.instantiate()
 	trail.setup(10.0, Gem.type_color(gem.type))

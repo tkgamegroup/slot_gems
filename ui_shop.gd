@@ -74,7 +74,7 @@ func buy_randomly():
 	return false
 
 const items_pool = ["Flag", "Bomb", "C4", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Amethyst"]
-const relics_pool = ["ExplosionScience", "HighExplosives", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "TyphonSBrokenTalon", "SyrinxOfPan", "OwlSEyeOfAthena", "Aries", "Taurus", "Gemini", "Leo", "Virgo", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "HalfPriceCoupon"]
+const relics_pool = ["ExplosionScience", "HighExplosives", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "DestructionOfPompeiiAndHerculaneum", "TheOldOak", "TheSchoolOfAthens", "Aries", "Taurus", "Gemini", "Leo", "Virgo", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "HalfPriceCoupon"]
 const patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 
 func refresh(tween : Tween = null):

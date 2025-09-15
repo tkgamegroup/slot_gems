@@ -40,9 +40,9 @@ func update_cell(c : Vector2i):
 	var g = Board.get_gem_at(c)
 	if g:
 		if cell.in_mist:
-			ui.set_gem_image(Gem.Type.Unknow, Gem.Rune.None)
+			ui.gem_ui.reset(Gem.Type.Unknow, Gem.Rune.None)
 		else:
-			ui.set_gem_image(g.type, g.rune)
+			ui.gem_ui.update(g)
 		var i = Board.get_item_at(c)
 		if i:
 			ui.set_item_image(i.image_id, i.mounted.image_id if i.mounted else 0)
@@ -50,7 +50,7 @@ func update_cell(c : Vector2i):
 		else:
 			ui.set_item_image(0, 0)
 	else:
-		ui.set_gem_image(0, 0)
+		ui.gem_ui.reset()
 		ui.set_item_image(0, 0)
 	if cell.state == Cell.State.Normal:
 		ui.gem_ui.position = Vector2(0, 0)

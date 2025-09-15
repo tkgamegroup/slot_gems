@@ -299,12 +299,12 @@ relic_name_BlueNude,Blue Nude,蓝色裸体
 relic_desc_BlueNude,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
 relic_name_LesDemoisellesDAvignon,Les Demoiselles d'Avignon,阿维尼翁的少女
 relic_desc_LesDemoisellesDAvignon,Purple gems' base score +{value}.,紫色宝石的基础分数+{value}。
-relic_name_TyphonSBrokenTalon,Typhon’s Broken Talon,提丰的断爪
-relic_desc_TyphonSBrokenTalon,+{value} mult when eliminate a gem with Destroy rune.,消除破坏符文的宝石时+{value} 倍率。
-relic_name_SyrinxOfPan,Syrinx Of Pan,潘的笛子
-relic_desc_SyrinxOfPan,+{value} mult when eliminate a gem with Grow rune.,消除生长符文的宝石时+{value} 倍率。
-relic_name_OwlSEyeOfAthena,Owl’s Eye Of Athena,雅典娜的猫头鹰之眼
-relic_desc_OwlSEyeOfAthena,+{value} mult when eliminate a gem with Wisom rune.,消除智慧符文的宝石时+{value} 倍率。
+relic_name_DestructionOfPompeiiAndHerculaneum,Destruction Of Pompeii And Herculaneum,庞贝与赫库兰尼姆的毁灭
+relic_desc_DestructionOfPompeiiAndHerculaneum,+{value} mult when eliminate a gem with Destroy rune.,消除破坏符文的宝石时+{value} 倍率。
+relic_name_TheOldOak,The Old Oak,老橡树
+relic_desc_TheOldOak,+{value} mult when eliminate a gem with Grow rune.,消除生长符文的宝石时+{value} 倍率。
+relic_name_TheSchoolOfAthens,The School Of Athens,雅典学院
+relic_desc_TheSchoolOfAthens,+{value} mult when eliminate a gem with Wisom rune.,消除智慧符文的宝石时+{value} 倍率。
 relic_name_RockBottom,Rock Bottom,谷底石
 relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座

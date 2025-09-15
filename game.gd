@@ -576,7 +576,7 @@ func copy_gem(src : Gem, dst : Gem):
 func duplicate_gem(g : Gem, ui, from : String = "hand"):
 	SSound.se_enchant.play()
 	var new_ui = gem_ui.instantiate()
-	new_ui.set_image(g.type, g.rune, g.bound_item.image_id if g.bound_item else 0)
+	new_ui.update(g)
 	new_ui.position = ui.global_position
 	if from == "hand":
 		new_ui.position += Vector2(16.0, 16.0)

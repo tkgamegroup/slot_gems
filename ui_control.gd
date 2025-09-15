@@ -22,9 +22,7 @@ const UiProp = preload("res://ui_prop.gd")
 var filling_times_tween : Tween = null
 @onready var debug_text : Label = $DebugText
 
-var preview_matchings : Array[Array]
-var preview_lines : Array[Node2D]
-var preview_tween : Tween = null
+var preview = MatchPreview.new()
 
 func enter():
 	self.show()
@@ -35,18 +33,12 @@ func exit():
 	self.hide()
 
 func update_preview():
-	preview_matchings.clear()
-	for y in Board.cy:
-		for x in Board.cx:
-			for p in Game.patterns:
-				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
-				if !res.is_empty():
-					preview_matchings.append(res)
+	preview.find_all_matchings()
 	
 	var base = 0
 	var combos = 0
 	var mult = 1.0
-	for m in preview_matchings:
+	for m in preview.matchings:
 		combos += 1
 		for c in m:
 			var g = Board.get_gem_at(c)
@@ -78,72 +70,13 @@ func _ready() -> void:
 	)
 	play_button.mouse_entered.connect(func():
 		if !play_button.disabled:
-			for n in preview_lines:
-				n.queue_free()
-				Game.board_ui.overlay.remove_child(n)
-			preview_lines.clear()
-			if preview_tween:
-				preview_tween.kill()
-				preview_tween = null
-			preview_tween = get_tree().create_tween()
-			var idx = 0
-			for res in preview_matchings:
-				var gs = []
-				for c in res:
-					var ok = false
-					for g in gs:
-						if g.is_empty():
-							g.append(c)
-							ok = true
-							break
-						for cc in g:
-							if Board.offset_neighbors(cc, false).has(c):
-								g.append(c)
-								ok = true
-								break
-					if !ok:
-						var g : Array[Vector2i] = []
-						g.append(c)
-						gs.append(g)
-				for g in gs:
-					var pts = SMath.weld_lines(SUtils.get_cells_border(g), 5.0)
-					var c = Vector2(0.0, 0.0)
-					for pt in pts:
-						c += pt
-					c /= pts.size()
-					for i in pts.size():
-						pts[i] = pts[i] - c
-					var l = Line2D.new()
-					l.default_color = Color(0.0, 0.0, 0.0, 1.0)
-					l.width = 3
-					l.points = pts
-					l.modulate.a = 0.0
-					l.scale = Vector2(2.0, 2.0)
-					l.position = c
-					var subtween = get_tree().create_tween()
-					subtween.tween_interval(0.05 * idx)
-					subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
-					subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
-					preview_tween.parallel()
-					preview_tween.tween_subtween(subtween)
-					preview_lines.append(l)
-					Game.board_ui.overlay.add_child(l)
-				idx += 1
-			preview_tween.tween_callback(func():
-				preview_tween = null
-			)
+			preview.show()
 		
 		STooltip.show([Pair.new(tr("tt_game_match_title"), tr("tt_game_match_content"))])
 	)
 	play_button.mouse_exited.connect(func():
 		STooltip.close()
-		for n in preview_lines:
-			n.queue_free()
-			Game.board_ui.overlay.remove_child(n)
-		if preview_tween:
-			preview_tween.kill()
-			preview_tween = null
-		preview_lines.clear()
+		preview.clear()
 	)
 	pin_ui.button.pressed.connect(func():
 		SSound.se_click.play()

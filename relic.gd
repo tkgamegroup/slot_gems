@@ -313,7 +313,7 @@ func setup(n : String):
 			elif event == Event.LostRelic:
 				if data == self:
 					Game.change_modifier("purple_bouns_i", -extra["value"])
-	elif name == "TyphonSBrokenTalon":
+	elif name == "DestructionOfPompeiiAndHerculaneum":
 		image_id = 14
 		extra["value"] = 0.21
 		price = 5
@@ -332,7 +332,7 @@ func setup(n : String):
 					var g = Board.get_gem_at(c)
 					if g && g.rune == Gem.Rune.Destroy:
 						Game.add_mult(extra["value"], Board.get_pos(c))
-	elif name == "SyrinxOfPan":
+	elif name == "TheOldOak":
 		image_id = 15
 		extra["value"] = 0.21
 		price = 5
@@ -351,7 +351,7 @@ func setup(n : String):
 					var g = Board.get_gem_at(c)
 					if g && g.rune == Gem.Rune.Grow:
 						Game.add_mult(extra["value"], Board.get_pos(c))
-	elif name == "OwlSEyeOfAthena":
+	elif name == "TheSchoolOfAthens":
 		image_id = 16
 		extra["value"] = 0.21
 		price = 5

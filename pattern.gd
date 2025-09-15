@@ -108,8 +108,7 @@ func get_ui_coords():
 			ret[i].z += y_min
 	return ret
 
-func differ(off : Vector2i, type : int, differences : int = 1) -> Array[Vector2i]:
-	var ocoords : Array[Vector2i] = []
+func differ(off : Vector2i, type : int, differences : int = 1, ocoords : Array[Vector2i] = []) -> Array[Vector2i]:
 	if coords.size() < 2:
 		return [] as Array[Vector2i]
 	var base_c = Board.offset_to_cube(off)

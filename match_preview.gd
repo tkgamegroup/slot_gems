@@ -1,0 +1,98 @@
+extends Object
+
+class_name MatchPreview
+
+var matchings : Array[Array]
+var rune_matchings : Array[int]
+var lines : Array[Node2D]
+var tween : Tween = null
+
+func find_all_matchings():
+	matchings.clear()
+	for y in Board.cy:
+		for x in Board.cx:
+			for p in Game.patterns:
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
+				if !res.is_empty():
+					matchings.append(res)
+
+func find_missing_ones(type : int):
+	matchings.clear()
+	for y in Board.cy:
+		for x in Board.cx:
+			for p in Game.patterns:
+				var coords : Array[Vector2i]
+				var res : Array[Vector2i] = p.differ(Vector2i(x, y), type, 1, coords)
+				if !res.is_empty():
+					var found = false
+					for m in matchings:
+						if m[0] == res[0]:
+							found = true
+							break
+					if !found:
+						matchings.append(res)
+
+func show():
+	for n in lines:
+		n.queue_free()
+		Game.board_ui.overlay.remove_child(n)
+	lines.clear()
+	if tween:
+		tween.kill()
+		tween = null
+	tween = Game.get_tree().create_tween()
+	var idx = 0
+	for res in matchings:
+		var gs = []
+		for c in res:
+			var ok = false
+			for g in gs:
+				if g.is_empty():
+					g.append(c)
+					ok = true
+					break
+				for cc in g:
+					if Board.offset_neighbors(cc, false).has(c):
+						g.append(c)
+						ok = true
+						break
+			if !ok:
+				var g : Array[Vector2i] = []
+				g.append(c)
+				gs.append(g)
+		for g in gs:
+			var pts = SMath.weld_lines(SUtils.get_cells_border(g), 5.0)
+			var c = Vector2(0.0, 0.0)
+			for pt in pts:
+				c += pt
+			c /= pts.size()
+			for i in pts.size():
+				pts[i] = pts[i] - c
+			var l = Line2D.new()
+			l.default_color = Color(0.0, 0.0, 0.0, 1.0)
+			l.width = 3
+			l.points = pts
+			l.modulate.a = 0.0
+			l.scale = Vector2(2.0, 2.0)
+			l.position = c
+			var subtween = Game.get_tree().create_tween()
+			subtween.tween_interval(0.05 * idx)
+			subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
+			subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
+			tween.parallel()
+			tween.tween_subtween(subtween)
+			lines.append(l)
+			Game.board_ui.overlay.add_child(l)
+		idx += 1
+	tween.tween_callback(func():
+		tween = null
+	)
+
+func clear():
+	for n in lines:
+		n.queue_free()
+		Game.board_ui.overlay.remove_child(n)
+	if tween:
+		tween.kill()
+		tween = null
+	lines.clear()

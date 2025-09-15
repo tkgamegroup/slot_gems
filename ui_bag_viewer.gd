@@ -64,7 +64,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		)
 		var ui = gem_ui.instantiate()
 		ui.position = Vector2(16, 16)
-		ui.set_image(g.type, g.rune, g.bound_item.image_id if g.bound_item else 0)
+		ui.update(g)
 		ctrl.add_child(ui)
 		var bar = create_bar()
 		ctrl.add_child(bar)

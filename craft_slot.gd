@@ -22,7 +22,7 @@ func load_gem(_gem : Gem):
 		gem = _gem
 		img_open.hide()
 		img_close.show()
-		gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id if gem.bound_item else 0)
+		gem_ui.update(gem)
 		button.button.disabled = false
 
 func unload_gem():
@@ -30,7 +30,7 @@ func unload_gem():
 		Hand.get_gem_from(gem, slot.get_global_rect().get_center())
 		img_open.show()
 		img_close.hide()
-		gem_ui.set_image(0, 0, 0)
+		gem_ui.reset()
 		button.button.disabled = true
 		gem = null
 
@@ -150,7 +150,7 @@ func _ready() -> void:
 		elif type == "w_socket":
 			tween.tween_callback(func():
 				sp.queue_free()
-				gem_ui.set_image(gem.type, gem.rune, gem.bound_item.image_id)
+				gem_ui.update(gem)
 				particles1.emitting = true
 			)
 			tween.tween_interval(0.7)

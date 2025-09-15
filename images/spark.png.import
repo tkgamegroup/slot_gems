@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdctr7g0l2dq1"
-path="res://.godot/imported/owl_s_eye_of_athena.png-d7edbedcd7327c9c1d6ed0995aa66ff3.ctex"
+uid="uid://cp7ifhua174gi"
+path="res://.godot/imported/spark.png-354611c44bb3eb72c00ae3769ac8c365.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/owl_s_eye_of_athena.png"
-dest_files=["res://.godot/imported/owl_s_eye_of_athena.png-d7edbedcd7327c9c1d6ed0995aa66ff3.ctex"]
+source_file="res://images/spark.png"
+dest_files=["res://.godot/imported/spark.png-354611c44bb3eb72c00ae3769ac8c365.ctex"]
 
 [params]
 
