@@ -557,15 +557,11 @@ func setup(n : String):
 					active_constellation(0, 2, 1, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			tween.tween_callback(func():
-				var ui_pos = ui.get_global_rect().get_center()
-				SEffect.add_leading_line(ui_pos, Game.hand_ui.global_position)
-			)
-			tween.tween_interval(0.3)
-			tween.tween_callback(func():
-				var colors = [0, 0, 0, 0, 0]
-				for g in Hand.grabs:
-					colors[g.type - 1] = 1
-				
+				Game.float_text(tr("t_Libra_effect"), ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 1.0, 1.0, 1.0), 22)
+				var v = Game.base_score + Game.score_mult
+				v = ceil(v / 2.0)
+				Game.base_score = int(v)
+				Game.score_mult = v
 			)
 	elif name == "Scorpio":
 		image_id = 25
@@ -692,7 +688,7 @@ func setup(n : String):
 					for c in targets:
 						var g = Board.get_gem_at(c)
 						if g:
-							Game.float_text("+%d" % value, Board.get_pos(c), Color(0.7, 0.3, 0.9), 22)
+							Game.float_text("+%d" % value, Board.get_pos(c), Color(0.7, 0.3, 0.9, 1.0), 22)
 							g.base_score += value
 							ok = true
 					if ok:

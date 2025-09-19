@@ -652,6 +652,11 @@ func fill_blanks():
 	filling_tween = Game.get_tree().create_tween()
 	filling_tween.tween_interval(max(0.1 * Game.speed, 0.05))
 	
+	if Game.gems.size() < Board.curr_min_gem_num:
+		Game.game_over_mark = "not_enough_gems"
+		Game.lose()
+		return
+	
 	var staging_idx = 0
 	if !Game.staging_scores.is_empty() || !Game.staging_mults.is_empty():
 		Game.staging_scores.shuffle()

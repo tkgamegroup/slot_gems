@@ -21,6 +21,8 @@ func update_view():
 	next_button.disabled = view_idx == 1
 
 func enter():
+	STooltip.close()
+	
 	view_idx = 0
 	update_view()
 	

@@ -160,7 +160,7 @@ var target_score : int
 var reward : int
 var current_curses : Array[Curse]
 var level_curses : Array[Array]
-var base_score_tween : Tween
+var base_score_tween : Tween = null
 var base_score : int:
 	set(v):
 		if v > base_score:
@@ -170,7 +170,7 @@ var base_score : int:
 			calculator_bar_ui.base_score_text.position.y = 4
 			calculator_bar_ui.base_score_text.text = "%d" % v
 			base_score_tween = get_tree().create_tween()
-			base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2)
+			base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2 * Game.speed)
 			base_score_tween.tween_callback(func():
 				base_score_tween = null
 			)
@@ -205,16 +205,30 @@ var combos : int = 0:
 				combos_tween = null
 			combos = v
 			calculator_bar_ui.combos_text.text = "%dX" % combos
-
 const one_over_log1_5 = 1.0 / log(1.5)
 func mult_from_combos(combos : int):
 	return log((combos + 1) * 1.0) * one_over_log1_5
-
 var gain_scaler : float = 1.0
+var score_mult_tween : Tween = null
 var score_mult : float = 1.0:
 	set(v):
-		score_mult = v
-		calculator_bar_ui.mult_text.text = "%.1f" % score_mult
+		if v > score_mult:
+			score_mult = v
+			if score_mult_tween:
+				score_mult_tween.custom_step(100.0)
+			calculator_bar_ui.mult_text.position.y = 4
+			calculator_bar_ui.mult_text.text = "%.1f" % v
+			score_mult_tween = get_tree().create_tween()
+			score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * Game.speed)
+			score_mult_tween.tween_callback(func():
+				score_mult_tween = null
+			)
+		else:
+			if score_mult_tween:
+				score_mult_tween.kill()
+				score_mult_tween = null
+			score_mult = v
+			calculator_bar_ui.mult_text.text = "%.1f" % score_mult
 var game_over_mark : String = ""
 var coins : int = 10:
 	set(v):
@@ -889,7 +903,7 @@ func start_game(saving : String = ""):
 		
 		for i in 0:
 			var r = Relic.new()
-			r.setup("Pisces")
+			r.setup("Libra")
 			add_relic(r)
 		
 		for i in 16:
@@ -1109,7 +1123,7 @@ func build_level_curses():
 	for i in level + 3 - level_curses.size():
 		var curses : Array[Curse] = []
 		var type = SMath.pick_random(curse_types)
-		type = "wrath"
+		type = "lust"
 		var num = 0
 		match (level + i) % 3:
 			1:
@@ -1137,16 +1151,8 @@ func build_level_curses():
 		level_curses.append(curses)
 
 func remove_curse(c : Curse):
-	if c.type == "curse_nullify_cell":
-		c.remove()
+	c.remove()
 	current_curses.erase(c)
-
-func clear_curses():
-	var cs = []
-	for c in current_curses:
-		cs.append(c)
-	for c in cs:
-		remove_curse(c)
 
 func new_level(tween : Tween = null):
 	build_level_curses()
@@ -1236,6 +1242,7 @@ func new_level(tween : Tween = null):
 
 func level_end():
 	Board.clear_active_effects()
+	calculator_bar_ui.disappear()
 	stage = Stage.LevelOver
 	control_ui.swaps_text.show_change = false
 	swaps = 0
@@ -1244,7 +1251,9 @@ func level_end():
 	control_ui.undo_button.hide()
 	control_ui.expected_score_panel.hide()
 	set_props(Props.None)
-	clear_curses()
+	for c in current_curses:
+		c.remove()
+	current_curses.clear()
 	Buff.clear(self, [Buff.Duration.ThisLevel])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisLevel])
@@ -1276,9 +1285,9 @@ func play():
 		#plays -= 1
 		modifiers["played_i"] = 1
 	
+		base_score = 0
 		combos = modifiers["base_combo_i"]
 		score_mult = 1.0
-		gain_scaler = 1.0
 		speed = 1.0 / base_speed
 		
 		action_stack.clear()
@@ -1658,7 +1667,7 @@ func load_from_file(name : String = "1"):
 		if gem_idx != -1:
 			var g = Game.gems[gem_idx]
 			c.gem = g
-			ui.set_gem_image(g.type, g.rune)
+			ui.gem_ui.reset(g.type, g.rune)
 		if item_idx != -1:
 			var i = Game.items[item_idx]
 			c.item = i

@@ -962,15 +962,18 @@ func setup(n : String):
 						for p in Game.staging_mults:
 							generated_mult += p.second
 						var pos = Board.get_pos(coord)
+						Game.float_text(tr("t_Lust_effect1"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 						Game.add_score(generated_score, pos)
 						Game.add_mult(generated_mult, pos)
 					)
 				1:
 					tween.tween_callback(func():
+						Game.float_text(tr("t_Lust_effect2"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 						Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_scaler","set":0.0}, Buff.Duration.ThisLevel)
 					)
 				2:
 					tween.tween_callback(func():
+						Game.float_text(tr("t_Lust_effect3"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 						Game.game_over_mark = "lust_dead"
 					)
 			Curse.lust_triggered += 1
@@ -989,10 +992,10 @@ func setup(n : String):
 								Game.event_listeners.erase(l)
 								break
 				Event.MatchingFinished:
-					var num_greed = Board.filter(func(g : Gem, i : Item):
+					var num_gluttony = Board.filter(func(g : Gem, i : Item):
 						return i && i.name == "SinGluttony"
 					).size()
-					if Game.combos < num_greed:
+					if Game.combos < num_gluttony:
 						Game.game_over_mark = "sin_gluttony"
 						Game.lose()
 						return true
@@ -1009,6 +1012,7 @@ func setup(n : String):
 					return i && i.name == "SinGreed"
 				).size()
 				if num_greed == 1:
+					Game.float_text(tr("t_Greed_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 					Game.coins = 0
 			)
 	elif name == "SinEnvy":
@@ -1022,8 +1026,16 @@ func setup(n : String):
 				Event.ItemLeft:
 					if data == self:
 						Board.remove_aura(self)
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				var num_envy = Board.filter(func(g : Gem, i : Item):
+					return i && i.name == "SinEnvy"
+				).size()
+				if num_envy == 1:
+					Game.float_text(tr("t_Envy_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+			)
 		on_aura = func(g : Gem):
-			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"gain_scaler","add":-1.0}, Buff.Duration.OnBoard)
+			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"gain_scaler","add":-0.25}, Buff.Duration.OnBoard)
 			b.caster = self
 
 func get_tooltip():

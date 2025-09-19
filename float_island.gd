@@ -20,7 +20,7 @@ func setup(_target, _move_strength : float, _rotate_strength : float, freq : flo
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
 	noise.frequency = freq
-	noise.seed = Time.get_ticks_msec()
+	noise.seed = randi()
 	
 	target.visibility_changed.connect(func():
 		if target.is_visible_in_tree():

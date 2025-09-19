@@ -164,15 +164,15 @@ gem_purple,Purple ,紫
 gem_colorless,Colorless,无色
 gem_wild,Wild,狂野
 gem_unknown,Unknown,未知
+gem_score,Score: ,分数: 
+gem_mult,Mult: ,倍率: 
+gem_enchant,Enchant: %s,附魔: %s
 rune_none,None,无
 rune_destroy,Destroy,破坏
 rune_wisdom,Wisdom,灵智
 rune_grow,Grow,生长
 rune_omni,Omni,全能
 rune_unknown,Unknown,未知
-gem_score,Score: ,分数: 
-gem_mult,Mult: ,倍率: 
-gem_enchant,Enchant: %s,附魔: %s
 pattern_name_prefix,Pattern: ,图案：
 pattern_desc,LV: %d\nExp: %d/%d\nMult: %d,等级：%d\n经验：%d/%d\n倍率：%d
 item_name_DyeRed,Dye: Red,染色剂：红
@@ -267,12 +267,17 @@ item_name_Volcano,Volcano,火山
 item_desc_Volcano,w_eliminate: (w_active) Eliminate 2 random cells in 2 w_range. Repeat 2 times.,w_eliminate：(w_active)消除2w_range内的2个随机格子。重复2次。
 item_name_SinLust,Sin Lust,罪·色欲
 item_desc_SinLust,"w_eliminate: (w_active) Has different effects depending on how many times [b]Sin Lust[/b] is triggered. 0: Get Score and Mult equal to the Score and Mult already generated. 1: Until the end of this level, the Score and Mult you get become zero. 2: Game over.",w_eliminate：(w_active)根据[b]罪·色欲[/b]的触发次数有不同的效果。1：获得分数与倍率，数值分别等于已经产生的分数与倍率。2：本关结束前获得的分数与倍率为零。3：游戏结束。
+t_Lust_effect1,Sated,满足
+t_Lust_effect2,Jaded,疲惫
+t_Lust_effect3,Drowned In Pleasure,欢愉中溺亡
 item_name_SinGluttony,Sin Gluttony,罪·暴食
 item_desc_SinGluttony,"When matching finished, if Combos is less than the number of [b]Sin Gluttony[/b], game over.",匹配完成时若连击数小于[b]罪·暴食[/b]的数量则游戏结束。
 item_name_SinGreed,Jar Of Greed,贪欲钱罐
 item_desc_SinGreed,"w_eliminate: Coins +{value}. If this is the last [b]Jar Of Greed[/b], set the coins to 0.",w_eliminate：金币+{value}，如果这是最后一个[b]贪欲钱罐[/b]，把金币变为0。
+t_Greed_effect,Penniless,身无分文
 item_name_SinEnvy,Sin Envy,罪·嫉妒
-item_desc_SinEnvy,w_aura: Score and Mult getting from Gems decrease by 100%.,w_aura：获取自宝石的分数跟倍率减少100%。
+item_desc_SinEnvy,w_aura: Score and Mult getting from Gems decrease by 25%.,w_aura：获取自宝石的分数跟倍率减少25%。
+t_Envy_effect,Dispel,消除
 relic_name_ExplosionScience,Explosion Science,爆炸科学
 relic_desc_ExplosionScience,Explosion w_range +{range_increase} but w_power -{power_decrease}.,爆炸w_range+{range_increase}但是w_power-{power_decrease}。
 relic_name_HighExplosives,High Explosives,高爆炸药
@@ -321,6 +326,7 @@ relic_name_Virgo,Virgo,处女座
 relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes: +{value} Mult.",当匹配到至少2个灵智、和1个生长符文时：+{value}倍率。
 relic_name_Libra,Libra,天秤座
 relic_desc_Libra,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
+t_Libra_effect,Balanced,平衡
 relic_name_Scorpio,Scorpio,天蝎座
 relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Delete the right most gem from Hand.,当匹配到至少2个破坏、和1个灵智符文时：(w_active) 删除手中最右边的宝石。
 relic_name_Sagittarius,Sagittarius,射手座
