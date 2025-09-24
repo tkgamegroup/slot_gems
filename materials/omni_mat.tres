@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cii0dq0jiy2oq"]
 
-[ext_resource type="Shader" uid="uid://bb1v56wdsdwmp" path="res://omni.gdshader" id="1_i2ovt"]
+[ext_resource type="Shader" uid="uid://bb1v56wdsdwmp" path="res://materials/omni.gdshader" id="1_i2ovt"]
 
 [resource]
 shader = ExtResource("1_i2ovt")

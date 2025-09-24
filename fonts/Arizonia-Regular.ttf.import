@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://ykm5yfdgrdp0"
-path="res://.godot/imported/Minecraft.ttf-b4cc597ac42d1410cc55dc192f0c0e34.fontdata"
+uid="uid://b0maexk5weyes"
+path="res://.godot/imported/Arizonia-Regular.ttf-52e74e863c9deb04d67f7fcb20d200cd.fontdata"
 
 [deps]
 
-source_file="res://Minecraft.ttf"
-dest_files=["res://.godot/imported/Minecraft.ttf-b4cc597ac42d1410cc55dc192f0c0e34.fontdata"]
+source_file="res://fonts/Arizonia-Regular.ttf"
+dest_files=["res://.godot/imported/Arizonia-Regular.ttf-52e74e863c9deb04d67f7fcb20d200cd.fontdata"]
 
 [params]
 
@@ -21,6 +21,7 @@ msdf_pixel_range=8
 msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
+modulate_color_glyphs=false
 hinting=1
 subpixel_positioning=4
 keep_rounding_remainders=true

@@ -1028,11 +1028,7 @@ func setup(n : String):
 						Board.remove_aura(self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				var num_envy = Board.filter(func(g : Gem, i : Item):
-					return i && i.name == "SinEnvy"
-				).size()
-				if num_envy == 1:
-					Game.float_text(tr("t_Envy_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+				Game.float_text(tr("t_Envy_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 			)
 		on_aura = func(g : Gem):
 			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"gain_scaler","add":-0.25}, Buff.Duration.OnBoard)

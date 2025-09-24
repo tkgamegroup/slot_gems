@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://1fpgu7gmgi00"]
 
-[ext_resource type="Shader" path="res://distortion.gdshader" id="1_tr25d"]
+[ext_resource type="Shader" uid="uid://dhwhq0pds6w2b" path="res://materials/distortion.gdshader" id="1_tr25d"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_ubycw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wd6ch"]

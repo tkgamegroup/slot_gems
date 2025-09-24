@@ -5,7 +5,7 @@ extends Control
 @onready var change_bg : ColorRect = $Panel/ChangeBG
 @onready var change_panel : Control = $Panel
 
-@export var font_size : int = 22
+@export var font_size : int = 8
 
 var value : int
 var show_change : bool = true

@@ -34,10 +34,7 @@ var type : int = Type.None
 var rune : int = Rune.None
 
 var base_score : int = 4
-var bonus_score : int = 0:
-	set(v):
-		bonus_score = v
-		var a = 1
+var bonus_score : int = 0
 var base_mult : float = 0.0
 var bonus_mult : float = 0.0
 var gain_scaler : float = 1.0

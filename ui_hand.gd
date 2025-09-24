@@ -8,7 +8,7 @@ const trail_pb = preload("res://trail.tscn")
 @onready var list = $Control
 const item_w = 32
 const item_h = 32
-const gap = 8
+const gap = 4
 
 var disabled : bool = false:
 	set(v):

@@ -61,7 +61,7 @@ func show():
 				g.append(c)
 				gs.append(g)
 		for g in gs:
-			var pts = SMath.weld_lines(SUtils.get_cells_border(g), 5.0)
+			var pts = SMath.weld_lines(SUtils.get_cells_border(g), 2.0)
 			var c = Vector2(0.0, 0.0)
 			for pt in pts:
 				c += pt

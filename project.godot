@@ -33,11 +33,17 @@ STest="*res://test_system.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=640
+window/size/viewport_height=360
 window/stretch/mode="viewport"
+window/stretch/scale_mode="integer"
 mouse_cursor/custom_image="res://images/pointer.png"
 mouse_cursor/custom_image_hotspot=Vector2(15, 4)
+
+[gui]
+
+fonts/dynamic_fonts/use_oversampling=false
+theme/custom="uid://lm57pm3v4aq7"
 
 [internationalization]
 
@@ -46,8 +52,10 @@ locale/translation_remaps={
 }
 locale/translations=PackedStringArray("res://language/language.en.translation", "res://language/language.zh.translation")
 locale/locale_filter_mode=0
+locale/language_filter=[]
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

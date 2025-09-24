@@ -59,9 +59,8 @@ func exit():
 func _ready() -> void:
 	language_select.item_selected.connect(func(idx):
 		match idx:
-			0: TranslationServer.set_locale("en")
-			1: TranslationServer.set_locale("zh")
-		Game.update_level_text(Game.level)
+			0: Game.set_lang("en")
+			1: Game.set_lang("zh")
 	)
 	se_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(v))
@@ -72,7 +71,7 @@ func _ready() -> void:
 	fullscreen_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
 		if v:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 		else:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	)

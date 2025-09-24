@@ -51,7 +51,7 @@ const popup_txt_pb = preload("res://popup_txt.tscn")
 const trail_pb = preload("res://trail.tscn")
 const craft_slot_pb = preload("res://craft_slot.tscn")
 const shop_item_pb = preload("res://ui_shop_item.tscn")
-const mask_shader = preload("res://mask.gdshader")
+const mask_shader = preload("res://materials/mask.gdshader")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
 const activate_cursor = preload("res://images/magic_stick.png")
@@ -1789,6 +1789,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				control_ui.debug_text.text = ""
 				STooltip.close()
+
+func set_lang(lang : String):
+	if lang.begins_with("en"):
+		TranslationServer.set_locale("en")
+	elif lang.begins_with("zh"):
+		TranslationServer.set_locale("zh")
+	if level > 0:
+		update_level_text(level)
 
 func _ready() -> void:
 	randomize()

@@ -1,5 +1,5 @@
  ,en,zh
-game_title,Slot Gems,摇宝石
+game_title,Place & Play,放与播放
 w_colorless,Colorless,无光
 w_colorless_desc,Can not match with any color.,不可以与任何颜色匹配。
 w_wild,Wild,狂野
@@ -240,7 +240,7 @@ item_desc_IaiCut,"w_eliminate: (w_active) Eliminate a row on a random direction.
 item_name_Magnet,Magnet,磁铁
 item_desc_Magnet,"When an item is activated, move it to the closest 'Magnet'.",
 item_name_Rainbow,Rainbow,彩虹
-item_desc_Rainbow,w_eliminate: +{value} score mult this matching.,w_eliminate：+{value}分数倍率直到这次匹配结束。
+item_desc_Rainbow,w_eliminate: +{value} Mult.,w_eliminate：+{value}倍率。
 item_name_Idol,Idol,偶像
 item_desc_Idol,w_aura: All gems +{value} score.\nw_eliminate: (w_active) Gems in 1 w_range -1 base score.,w_aura：宝石+{value}分数。\nw_eliminate：(w_active)1w_range内的宝石基础分数-1。
 item_name_Magician,Magician,魔术师

@@ -6,9 +6,9 @@ extends Node2D
 @onready var charming_fx : CPUParticles2D = $Charming
 @onready var sharp_fx : CPUParticles2D = $Sharp
 
-const dissolve_mat : ShaderMaterial = preload("res://dissolve_mat.tres")
-const wild_mat : ShaderMaterial = preload("res://wild_mat.tres")
-const omni_mat : ShaderMaterial = preload("res://omni_mat.tres")
+const dissolve_mat : ShaderMaterial = preload("res://materials/dissolve_mat.tres")
+const wild_mat : ShaderMaterial = preload("res://materials/wild_mat.tres")
+const omni_mat : ShaderMaterial = preload("res://materials/omni_mat.tres")
 
 var type : int
 var rune : int

@@ -5,9 +5,9 @@ const pattern_pb = preload("res://ui_pattern.tscn")
 @onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
 @onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
 
-const item_w = 52
-const item_h = 72
-const gap = 16
+const item_w = 26
+const item_h = 36
+const gap = 4
 
 var dragging : Control = null
 var drag_pos : Vector2

@@ -1,8 +1,8 @@
-[gd_scene load_steps=162 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=164 format=3 uid="uid://c7yh3twd5o1w4"]
 
-[ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://background.gdshader" id="1_gsejj"]
+[ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
-[ext_resource type="Shader" uid="uid://bmnxc3eesmaag" path="res://crt.gdshader" id="4_8t4hj"]
+[ext_resource type="Shader" uid="uid://bmnxc3eesmaag" path="res://materials/crt.gdshader" id="4_8t4hj"]
 [ext_resource type="AudioStream" uid="uid://vjqrtptu17gb" path="res://sounds/select.wav" id="4_fvcw6"]
 [ext_resource type="AudioStream" uid="uid://b2o1cfcq5mnt6" path="res://sounds/click.wav" id="4_j3q78"]
 [ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/red.png" id="4_mieac"]
@@ -63,6 +63,9 @@
 [ext_resource type="Script" uid="uid://cl7s82k7ftloq" path="res://ui_choose_reward.gd" id="36_c2aw5"]
 [ext_resource type="AudioStream" uid="uid://c3nq5i3wax3bd" path="res://sounds/error.wav" id="37_birbe"]
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
+[ext_resource type="FontFile" uid="uid://b0maexk5weyes" path="res://fonts/Arizonia-Regular.ttf" id="42_23xmf"]
+[ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="42_swlj1"]
+[ext_resource type="Shader" uid="uid://b17rpch1hfeio" path="res://materials/dissolve.gdshader" id="43_yysqy"]
 [ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
 [ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://ui_hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
@@ -106,27 +109,43 @@ stream_0/stream = ExtResource("15_iwwqi")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
-shader_parameter/bottom_color = Color(0.0453899, 0.612571, 0.781905, 1)
-shader_parameter/top_color = Color(0.284213, 0.437073, 0.397122, 1)
-shader_parameter/wave_amp = 0.05
-shader_parameter/wave_size = 1.2
-shader_parameter/wave_time_mul = 1.0
-shader_parameter/total_phases = 5
+shader_parameter/scale = 8.0
+shader_parameter/speed = 0.5000000074506
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/brightness = 1.0
+shader_parameter/contrast = 3.0
+shader_parameter/multiply = 0.2
+shader_parameter/ray_color = Color(1, 0.964, 0.69, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wc4l1"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_swlj1"]
+noise_type = 0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5dbih"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yysqy"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_swlj1")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ku11j"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n5t1e"]
+shader = ExtResource("43_yysqy")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_yysqy")
+shader_parameter/dissolve = 1.0
+shader_parameter/burn_size = 0.02000000095
+shader_parameter/burn_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wy5fy"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_n5t1e"]
+noise_type = 0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3qyrb"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h6isl"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_n5t1e")
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gx4rg"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_53bls"]
+shader = ExtResource("43_yysqy")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_h6isl")
+shader_parameter/dissolve = 1.0
+shader_parameter/burn_size = 0.02000000095
+shader_parameter/burn_color = Color(0.58431375, 0.77254903, 0.7137255, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
 bg_color = Color(0.1, 0.1, 0.1, 1)
@@ -145,7 +164,6 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_m0hyf"]
 tile_shape = 3
 tile_offset_axis = 1
-tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_34ol3")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
@@ -268,12 +286,12 @@ shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjja3"]
 bg_color = Color(0.0788083, 0.171172, 0.310766, 0.92549)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 6.0
-expand_margin_right = 6.0
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 3.0
+expand_margin_right = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vieuh"]
 bg_color = Color(0.398622, 0.150025, 0.502998, 0.643137)
@@ -359,30 +377,30 @@ shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yh34"]
 bg_color = Color(0.15, 0.15, 0.15, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 shadow_size = 2
 shadow_offset = Vector2(2, 2)
+anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pjuso"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_wy5fy"]
 vertical = true
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ejirs"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtaia"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylmsd"]
 bg_color = Color(0.12, 0.12, 0.12, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 shadow_size = 2
 shadow_offset = Vector2(2, 2)
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pjuso"]
 bg_color = Color(0, 0, 0, 0)
@@ -397,25 +415,14 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pnuwf"]
-bg_color = Color(0.12, 0.12, 0.12, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_size = 2
-shadow_offset = Vector2(2, 2)
+bg_color = Color(0, 0, 0, 0.28235295)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_23xmf"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_swlj1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_53bls"]
 bg_color = Color(0, 0, 0, 0.862745)
@@ -567,17 +574,17 @@ bg_color = Color(0, 0, 0, 0.54902)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_axmio"]
 shader = ExtResource("4_8t4hj")
-shader_parameter/resolution = Vector2(1280, 720)
+shader_parameter/resolution = Vector2(640, 360)
 shader_parameter/scan_line_amount = 0.1
-shader_parameter/warp_amount = 0.05
+shader_parameter/warp_amount = 0.10000000475
 shader_parameter/noise_amount = 0.03
 shader_parameter/interference_amount = 0.0
-shader_parameter/grille_amount = 0.085
-shader_parameter/grille_size = 1.595
+shader_parameter/grille_amount = 0.06000000285
+shader_parameter/grille_size = 3.234000106115
 shader_parameter/vignette_amount = 0.4
-shader_parameter/vignette_intensity = 0.2
+shader_parameter/vignette_intensity = 0.30000001425
 shader_parameter/aberation_amount = 0.5
-shader_parameter/roll_line_amount = 0.05
+shader_parameter/roll_line_amount = 0.0
 shader_parameter/roll_speed = -0.5
 shader_parameter/scan_line_strength = -4.6
 shader_parameter/pixel_strength = -2.0
@@ -585,9 +592,9 @@ shader_parameter/pixel_strength = -2.0
 [node name="Main" type="Node2D"]
 
 [node name="TransBG" type="ColorRect" parent="."]
-offset_right = 1280.0
-offset_bottom = 720.0
-color = Color(0.12, 0.552, 0.6, 1)
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0, 0.30588236, 0.5529412, 1)
 
 [node name="Control" type="Control" parent="TransBG"]
 layout_mode = 1
@@ -783,18 +790,18 @@ autoplay = true
 bus = &"Music"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 640.0
+offset_bottom = 360.0
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1280, 720)
+size = Vector2i(640, 360)
 render_target_update_mode = 4
 
 [node name="Background" type="Sprite2D" parent="SubViewportContainer/SubViewport"]
 material = SubResource("ShaderMaterial_33ybg")
-scale = Vector2(1280, 720)
+scale = Vector2(640, 360)
 texture = ExtResource("2_tqnxt")
 centered = false
 
@@ -811,135 +818,114 @@ mouse_filter = 2
 script = ExtResource("9_te575")
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
-custom_minimum_size = Vector2(1280, 0)
+visible = false
+material = SubResource("ShaderMaterial_n5t1e")
 layout_mode = 1
-offset_right = 550.0
-offset_bottom = 148.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 16
-theme_override_font_sizes/font_size = 108
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 100.0
+offset_right = 225.0
+offset_bottom = 194.0
+grow_horizontal = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/shadow_outline_size = 2
+theme_override_font_sizes/font_size = 72
 text = "game_title"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Button1" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
+[node name="Node2D" type="Node2D" parent="SubViewportContainer/SubViewport/UI/Title"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
+position = Vector2(80, 119)
+scale = Vector2(1.5218354, 1.5218354)
+sprite_frames = ExtResource("42_swlj1")
+frame = 1
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
+position = Vector2(143, 155)
+scale = Vector2(0.96292186, 0.96292186)
+sprite_frames = ExtResource("42_swlj1")
+frame = 2
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
+position = Vector2(197.00002, 159.00002)
+scale = Vector2(0.99999994, 0.99999994)
+sprite_frames = ExtResource("42_swlj1")
+frame = 3
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
+position = Vector2(470, 121)
+scale = Vector2(1.4855703, 1.4855703)
+sprite_frames = ExtResource("42_swlj1")
+frame = 4
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
+position = Vector2(534.00006, 156.00002)
+scale = Vector2(0.89301383, 0.89301383)
+sprite_frames = ExtResource("42_swlj1")
+frame = 5
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
+material = SubResource("ShaderMaterial_53bls")
+layout_mode = 0
+offset_left = 21.0
+offset_top = 67.0
+offset_right = 623.0
+offset_bottom = 217.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.30980393)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/shadow_outline_size = 3
+theme_override_fonts/font = ExtResource("42_23xmf")
+theme_override_font_sizes/font_size = 120
+text = "Place & Play"
+
+[node name="VBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Title"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.500781
-anchor_top = 0.485417
-anchor_right = 0.500781
-anchor_bottom = 0.485417
-offset_left = -126.5
-offset_top = -33.5
-offset_right = 126.5
-offset_bottom = 33.5
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+offset_bottom = -28.0
 grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_wy5fy")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_3qyrb")
+grow_vertical = 0
+theme_override_constants/separation = 7
+alignment = 1
+
+[node name="Button1" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "ui_titile_continue"
 metadata/_edit_use_anchors_ = true
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.437891
-anchor_top = 0.568056
-anchor_right = 0.562891
-anchor_bottom = 0.618056
-offset_left = -46.5
-offset_top = -15.5
-offset_right = 46.5
-offset_bottom = 15.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_3qyrb")
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "ui_titile_new_game"
 metadata/_edit_use_anchors_ = true
 
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.476172
-anchor_top = 0.531945
-anchor_right = 0.524609
-anchor_bottom = 0.531945
-offset_left = -95.0003
-offset_top = 92.0
-offset_right = 95.9997
-offset_bottom = 167.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_3qyrb")
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 disabled = true
 text = "ui_titile_collections"
 metadata/_edit_use_anchors_ = true
 
-[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.500391
-anchor_top = 0.651389
-anchor_right = 0.500391
-anchor_bottom = 0.651389
-offset_left = -95.0
-offset_top = 92.0
-offset_right = 96.0
-offset_bottom = 167.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_3qyrb")
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "ui_titile_options"
 metadata/_edit_use_anchors_ = true
 
-[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/Title"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.500391
-anchor_top = 0.593056
-anchor_right = 0.500391
-anchor_bottom = 0.593056
-offset_left = -54.0
-offset_top = 216.0
-offset_right = 55.0
-offset_bottom = 291.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxEmpty_wc4l1")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_5dbih")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ku11j")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_gx4rg")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_3qyrb")
+[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "ui_titile_quit"
 metadata/_edit_use_anchors_ = true
 
@@ -954,8 +940,7 @@ offset_left = -40.0
 offset_top = -23.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 14
 text = "v0.00.000"
 
 [node name="Board" type="Control" parent="SubViewportContainer/SubViewport/UI"]
@@ -1029,16 +1014,16 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -64.5
-offset_top = -63.0
-offset_right = 64.5
+offset_left = -67.5
+offset_top = -53.0
+offset_right = 67.5
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_fepj7")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
 visible = false
@@ -1144,7 +1129,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_yjja3")
 layout_mode = 2
 theme_override_colors/font_color = Color(0.432531, 0.638456, 0.943238, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 text = "9999"
 horizontal_alignment = 1
 
@@ -1383,10 +1368,10 @@ script = ExtResource("59_nqrtl")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer"]
@@ -1394,7 +1379,7 @@ layout_mode = 2
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 6
 text = "ui_game_score"
 horizontal_alignment = 1
 
@@ -1406,7 +1391,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 16
 text = "0"
 horizontal_alignment = 1
 
@@ -1427,18 +1412,17 @@ layout_mode = 2
 mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Control"]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("4_mieac")
 centered = false
 
 [node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
-font_size = 16
 
 [node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText" index="0"]
 text = "0"
@@ -1448,18 +1432,17 @@ layout_mode = 2
 mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Control"]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("63_f1p13")
 centered = false
 
 [node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
-font_size = 16
 
 [node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText" index="0"]
 text = "0"
@@ -1469,18 +1452,17 @@ layout_mode = 2
 mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Control"]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("6_1pecc")
 centered = false
 
 [node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3" instance=ExtResource("31_uatky")]
 layout_mode = 2
-font_size = 16
 
 [node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText" index="0"]
 text = "0"
@@ -1493,18 +1475,17 @@ layout_mode = 2
 mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Control"]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("7_lex75")
 centered = false
 
 [node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
-font_size = 16
 
 [node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText" index="0"]
 text = "0"
@@ -1514,18 +1495,17 @@ layout_mode = 2
 mouse_filter = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Control"]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("64_4obbf")
 centered = false
 
 [node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
-font_size = 16
 
 [node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText" index="0"]
 text = "0"
@@ -1565,27 +1545,30 @@ size_flags_vertical = 4
 theme_override_constants/separation = 0
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control"]
 position = Vector2(8, 8)
+scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("64_ovcoh")
 
 [node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control2"]
 position = Vector2(8, 8)
+scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("64_ovcoh")
 
 [node name="Control3" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control3"]
 position = Vector2(8, 8)
+scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("64_ovcoh")
 
 [node name="VSeparator3" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
@@ -1598,7 +1581,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 11
 text = "ui_game_board_size"
 
 [node name="BoardSize" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
@@ -1616,11 +1599,12 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 11
 text = "ui_game_hand"
 
 [node name="Hand" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
@@ -1641,7 +1625,7 @@ layout_mode = 2
 mouse_filter = 0
 
 [node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("63_yshj5")
@@ -1676,16 +1660,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -8.0
+offset_top = -8.5
+offset_right = 8.0
+offset_bottom = 8.5
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/align_to_largest_stylebox = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_ejirs")
+theme_override_font_sizes/font_size = 11
 icon = ExtResource("30_fg5n8")
 icon_alignment = 1
 
@@ -1697,7 +1681,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
 layout_mode = 2
@@ -1802,6 +1786,7 @@ anchor_bottom = 1.0
 offset_left = -115.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_constants/margin_left = 64
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 96
 
@@ -1812,18 +1797,18 @@ script = ExtResource("64_x2fcq")
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer"]
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
@@ -1836,15 +1821,13 @@ text = "(3/4)"
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_23xmf")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_swlj1")
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 8
 
 [node name="List" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
@@ -2264,14 +2247,17 @@ script = ExtResource("80_f1p13")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 8
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
-offset_left = -400.0
-offset_top = 100.0
-offset_right = 400.0
-offset_bottom = 250.0
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -75.0
+offset_right = 200.0
+offset_bottom = 75.0
 grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer"]
@@ -2280,7 +2266,7 @@ layout_mode = 2
 [node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 meta_underlined = false
 
@@ -2888,7 +2874,6 @@ grow_horizontal = 2
 grow_vertical = 2
 rotation = -5.39886e-05
 mouse_filter = 2
-metadata/_edit_use_anchors_ = true
 
 [node name="TestTimer" type="Timer" parent="."]
 

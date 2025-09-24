@@ -78,7 +78,7 @@ static func get_cells_border(coords : Array[Vector2i]):
 	var ccords = []
 	for c in coords:
 		ccords.append(Board.offset_to_cube(c))
-	const size = 16.0
+	const size = 8.0
 	var w = size * 2.0
 	var h = size * sqrt(3.0)
 	for i in coords.size():
