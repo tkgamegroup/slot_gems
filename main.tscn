@@ -1,4 +1,4 @@
-[gd_scene load_steps=164 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=180 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -13,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://vtgmwfo14dwb" path="res://images/blue.png" id="7_lex75"]
 [ext_resource type="AudioStream" uid="uid://dlhp0bbwk311u" path="res://sounds/tom.wav" id="8_30oiv"]
 [ext_resource type="AudioStream" uid="uid://b00rjgk5valep" path="res://sounds/coins.wav" id="9_6w1lu"]
-[ext_resource type="PackedScene" uid="uid://d38gxj61sfsdt" path="res://advanced_label.tscn" id="9_c5vd3"]
 [ext_resource type="AudioStream" uid="uid://cmj7s22kwg5l4" path="res://sounds/zap.wav" id="9_di110"]
 [ext_resource type="Script" uid="uid://di8ymjsldc2u" path="res://ui_title.gd" id="9_te575"]
 [ext_resource type="Script" uid="uid://d00blbhwfg7fg" path="res://ui_control.gd" id="10_4wyqg"]
@@ -50,23 +49,27 @@
 [ext_resource type="AudioStream" uid="uid://dclq4u83610do" path="res://sounds/calc2.wav" id="21_phcyf"]
 [ext_resource type="AudioStream" uid="uid://2khtvdvdvbr0" path="res://sounds/enchant.wav" id="23_birbe"]
 [ext_resource type="AudioStream" uid="uid://3wg5uqxalyav" path="res://sounds/trash.wav" id="24_f1p13"]
-[ext_resource type="Texture2D" uid="uid://b1t2da5qbvmv8" path="res://images/hover.png" id="25_2un53"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://c7txrafqs3mca" path="res://images/bag.png" id="30_fg5n8"]
 [ext_resource type="AudioStream" uid="uid://6ke0esdwk034" path="res://sounds/well_done.wav" id="31_c2n8d"]
 [ext_resource type="Texture2D" uid="uid://djb5uvo3rgm82" path="res://images/pin.png" id="31_kgos7"]
 [ext_resource type="PackedScene" uid="uid://cju4gysu404r0" path="res://number_text.tscn" id="31_uatky"]
 [ext_resource type="Texture2D" uid="uid://hutjhat8drg6" path="res://images/magic_stick.png" id="32_e8bxs"]
-[ext_resource type="Script" uid="uid://uoom8njvb1lu" path="res://text_fx_popup.gd" id="33_s1bup"]
+[ext_resource type="Script" uid="uid://uoom8njvb1lu" path="res://rich_text_popup.gd" id="33_s1bup"]
 [ext_resource type="Script" uid="uid://bgmiggfcw8k2p" path="res://ui_bag_viewer.gd" id="34_rwa0e"]
 [ext_resource type="Texture2D" uid="uid://muiuehpjgwbw" path="res://images/grab.png" id="35_m1l3k"]
 [ext_resource type="Script" uid="uid://cl7s82k7ftloq" path="res://ui_choose_reward.gd" id="36_c2aw5"]
 [ext_resource type="AudioStream" uid="uid://c3nq5i3wax3bd" path="res://sounds/error.wav" id="37_birbe"]
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
+[ext_resource type="Shader" uid="uid://53fbdjte0jam" path="res://materials/mask.gdshader" id="38_yysqy"]
 [ext_resource type="FontFile" uid="uid://b0maexk5weyes" path="res://fonts/Arizonia-Regular.ttf" id="42_23xmf"]
+[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem.gdshader" id="42_h6isl"]
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="42_swlj1"]
+[ext_resource type="Material" uid="uid://ch6a3tq6qlyfq" path="res://materials/gem.tres" id="42_yysqy"]
 [ext_resource type="Shader" uid="uid://b17rpch1hfeio" path="res://materials/dissolve.gdshader" id="43_yysqy"]
 [ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
+[ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/outline-o.png" id="45_53bls"]
+[ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="48_yysqy"]
 [ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://ui_hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
@@ -107,9 +110,13 @@ random_volume_offset_db = 0.1
 streams_count = 1
 stream_0/stream = ExtResource("15_iwwqi")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h6isl"]
+shader = ExtResource("38_yysqy")
+shader_parameter/radius = 0.0
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
-shader_parameter/scale = 8.0
+shader_parameter/scale = 16.0000002384192
 shader_parameter/speed = 0.5000000074506
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/brightness = 1.0
@@ -117,20 +124,25 @@ shader_parameter/contrast = 3.0
 shader_parameter/multiply = 0.2
 shader_parameter/ray_color = Color(1, 0.964, 0.69, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_swlj1"]
-noise_type = 0
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_41lik"]
+shader = ExtResource("42_h6isl")
+shader_parameter/type_color = Color(0.83, 0.07, 0.09, 1)
+shader_parameter/u_seed = 0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yysqy"]
-width = 256
-height = 256
-noise = SubResource("FastNoiseLite_swlj1")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jbvwl"]
+shader = ExtResource("42_h6isl")
+shader_parameter/type_color = Color(1, 0.71, 0.16, 1)
+shader_parameter/u_seed = 1
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_n5t1e"]
-shader = ExtResource("43_yysqy")
-shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_yysqy")
-shader_parameter/dissolve = 1.0
-shader_parameter/burn_size = 0.02000000095
-shader_parameter/burn_color = Color(0, 0, 0, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sn1fb"]
+shader = ExtResource("42_h6isl")
+shader_parameter/type_color = Color(0.61, 0.75, 0.25, 1)
+shader_parameter/u_seed = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yvsr8"]
+shader = ExtResource("42_h6isl")
+shader_parameter/type_color = Color(0.56, 0.87, 0.96, 1)
+shader_parameter/u_seed = 3
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_n5t1e"]
 noise_type = 0
@@ -147,14 +159,38 @@ shader_parameter/dissolve = 1.0
 shader_parameter/burn_size = 0.02000000095
 shader_parameter/burn_color = Color(0.58431375, 0.77254903, 0.7137255, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
-bg_color = Color(0.1, 0.1, 0.1, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lwnsi"]
+shader = ExtResource("43_yysqy")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_h6isl")
+shader_parameter/dissolve = 1.0
+shader_parameter/burn_size = 0.02000000095
+shader_parameter/burn_color = Color(0.58431375, 0.77254903, 0.7137255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_htgcl"]
+bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
+border_width_bottom = 12
+border_color = Color(0.2775277, 0.27752778, 0.27752754, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-shadow_size = 3
-shadow_offset = Vector2(3, 3)
+expand_margin_left = 50.0
+expand_margin_top = 20.0
+expand_margin_right = 50.0
+expand_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
+bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34ol3"]
 texture = ExtResource("28_1savb")
@@ -164,28 +200,30 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_m0hyf"]
 tile_shape = 3
 tile_offset_axis = 1
+tile_size = Vector2i(48, 48)
 sources/1 = SubResource("TileSetAtlasSource_34ol3")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h6isl"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_23xmf"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_53bls"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lwnsi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_41lik"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fepj7"]
-bg_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
+bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wy5fy"]
 bg_color = Color(0.823529, 0.364706, 0.509804, 1)
@@ -305,6 +343,8 @@ expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppx11"]
 bg_color = Color(0.449009, 0.658872, 0.502028, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -313,8 +353,6 @@ expand_margin_left = 16.0
 expand_margin_top = 16.0
 expand_margin_right = 16.0
 expand_margin_bottom = 16.0
-shadow_size = 3
-shadow_offset = Vector2(4, 4)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_phcyf"]
 
@@ -376,13 +414,13 @@ shadow_offset = Vector2(3, 2)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_deavr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yh34"]
-bg_color = Color(0.15, 0.15, 0.15, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-shadow_size = 2
-shadow_offset = Vector2(2, 2)
+bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pjuso"]
@@ -393,33 +431,27 @@ vertical = true
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtaia"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylmsd"]
-bg_color = Color(0.12, 0.12, 0.12, 1)
+bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
+border_width_right = 6
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-shadow_size = 2
-shadow_offset = Vector2(2, 2)
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pjuso"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yysqy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pnuwf"]
-bg_color = Color(0, 0, 0, 0.28235295)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
+border_width_left = 6
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_swlj1"]
@@ -469,13 +501,17 @@ colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0.550523, 0, 0, 0, 0)
 gradient = SubResource("Gradient_5dllo")
 fill_to = Vector2(0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inymm"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rycwm"]
 bg_color = Color(0.239266, 0.485527, 0.455179, 1)
-border_width_left = 16
-border_width_top = 16
-border_width_right = 16
-border_width_bottom = 16
-border_color = Color(1, 1, 1, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -487,8 +523,27 @@ expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m0hxn"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0gw7"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
+bg_color = Color(0, 0, 0, 0.19607843)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcxqu"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swlj1"]
 bg_color = Color(0.48332, 0.653856, 0.462999, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -496,9 +551,7 @@ corner_radius_bottom_left = 16
 expand_margin_left = 16.0
 expand_margin_top = 16.0
 expand_margin_right = 16.0
-expand_margin_bottom = 8.0
-shadow_size = 3
-shadow_offset = Vector2(4, 4)
+expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ppx11"]
 
@@ -506,12 +559,25 @@ shadow_offset = Vector2(4, 4)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1yv1y"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0arob"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5t1e"]
-bg_color = Color(0.713726, 0.333333, 0.145098, 1)
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
+bg_color = Color(0.5156732, 0.60584235, 0.6115604, 1)
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4kjxl"]
 
@@ -519,33 +585,69 @@ expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_av48c"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dij0e"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gosjg"]
 bg_color = Color(0.0941176, 0.203922, 0.4, 1)
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ahpju"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6isl"]
 bg_color = Color(0.59, 0.0708, 0.0708, 0.588235)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2sare"]
 bg_color = Color(0.59, 0.0708, 0.0708, 1)
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fdcf1"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1udn"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dybqb"]
 bg_color = Color(0.261538, 0.422184, 0.743876, 1)
-expand_margin_left = 8.0
-expand_margin_top = 8.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
+border_width_bottom = 12
+border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_s1npm"]
 script = ExtResource("33_s1bup")
@@ -580,10 +682,10 @@ shader_parameter/warp_amount = 0.10000000475
 shader_parameter/noise_amount = 0.03
 shader_parameter/interference_amount = 0.0
 shader_parameter/grille_amount = 0.06000000285
-shader_parameter/grille_size = 3.234000106115
-shader_parameter/vignette_amount = 0.4
-shader_parameter/vignette_intensity = 0.30000001425
-shader_parameter/aberation_amount = 0.5
+shader_parameter/grille_size = 3.000000095
+shader_parameter/vignette_amount = 0.30000001425
+shader_parameter/vignette_intensity = 0.2000000095
+shader_parameter/aberation_amount = 0.0
 shader_parameter/roll_line_amount = 0.0
 shader_parameter/roll_speed = -0.5
 shader_parameter/scan_line_strength = -4.6
@@ -592,9 +694,7 @@ shader_parameter/pixel_strength = -2.0
 [node name="Main" type="Node2D"]
 
 [node name="TransBG" type="ColorRect" parent="."]
-offset_right = 640.0
-offset_bottom = 360.0
-color = Color(0, 0.30588236, 0.5529412, 1)
+color = Color(0.6888, 0.84, 0.72911996, 1)
 
 [node name="Control" type="Control" parent="TransBG"]
 layout_mode = 1
@@ -790,24 +890,26 @@ autoplay = true
 bus = &"Music"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 640.0
-offset_bottom = 360.0
+material = SubResource("ShaderMaterial_h6isl")
+offset_right = 100.0
+offset_bottom = 512.0
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+disable_3d = true
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(640, 360)
+size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
 [node name="Background" type="Sprite2D" parent="SubViewportContainer/SubViewport"]
 material = SubResource("ShaderMaterial_33ybg")
-scale = Vector2(640, 360)
+scale = Vector2(1920, 1080)
 texture = ExtResource("2_tqnxt")
 centered = false
 
-[node name="UI" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
+[node name="Canvas" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
 
-[node name="Title" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Title" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -817,140 +919,193 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("9_te575")
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
-visible = false
-material = SubResource("ShaderMaterial_n5t1e")
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Title"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 100.0
-offset_right = 225.0
-offset_bottom = 194.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 3
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/shadow_outline_size = 2
-theme_override_font_sizes/font_size = 72
-text = "game_title"
-horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
+grow_vertical = 2
 
-[node name="Node2D" type="Node2D" parent="SubViewportContainer/SubViewport/UI/Title"]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
-position = Vector2(80, 119)
-scale = Vector2(1.5218354, 1.5218354)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control"]
+material = SubResource("ShaderMaterial_41lik")
+position = Vector2(345.99997, 396.99997)
+scale = Vector2(1.8590281, 1.8590281)
 sprite_frames = ExtResource("42_swlj1")
 frame = 1
 
-[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
-position = Vector2(143, 155)
-scale = Vector2(0.96292186, 0.96292186)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control/AnimatedSprite2D"]
+modulate = Color(0.6789437, 0.6789437, 0.6789437, 1)
+show_behind_parent = true
+position = Vector2(4, 4)
+texture = ExtResource("45_53bls")
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control"]
+material = SubResource("ShaderMaterial_jbvwl")
+position = Vector2(522, 470)
+scale = Vector2(1.1842054, 1.1842054)
 sprite_frames = ExtResource("42_swlj1")
 frame = 2
 
-[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
-position = Vector2(197.00002, 159.00002)
-scale = Vector2(0.99999994, 0.99999994)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control/AnimatedSprite2D2"]
+modulate = Color(0.6789437, 0.6789437, 0.6789437, 1)
+show_behind_parent = true
+position = Vector2(4, 4)
+texture = ExtResource("45_53bls")
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control"]
+material = SubResource("ShaderMaterial_sn1fb")
+position = Vector2(664.00006, 489)
+scale = Vector2(1.3366436, 1.3366436)
 sprite_frames = ExtResource("42_swlj1")
 frame = 3
 
-[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
-position = Vector2(470, 121)
-scale = Vector2(1.4855703, 1.4855703)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control/AnimatedSprite2D3"]
+modulate = Color(0.6789437, 0.6789437, 0.6789437, 1)
+show_behind_parent = true
+position = Vector2(4, 4)
+texture = ExtResource("45_53bls")
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control"]
+material = SubResource("ShaderMaterial_yvsr8")
+position = Vector2(1320, 405)
+scale = Vector2(2.0577335, 2.0294542)
 sprite_frames = ExtResource("42_swlj1")
 frame = 4
 
-[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Title/Node2D"]
-position = Vector2(534.00006, 156.00002)
-scale = Vector2(0.89301383, 0.89301383)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control/AnimatedSprite2D4"]
+modulate = Color(0.6789437, 0.6789437, 0.6789437, 1)
+show_behind_parent = true
+position = Vector2(4, 4)
+texture = ExtResource("45_53bls")
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control"]
+material = ExtResource("42_yysqy")
+position = Vector2(1495.0001, 481)
+scale = Vector2(0.89427084, 0.89427084)
 sprite_frames = ExtResource("42_swlj1")
 frame = 5
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control/AnimatedSprite2D5"]
+modulate = Color(0.6789437, 0.6789437, 0.6789437, 1)
+show_behind_parent = true
+position = Vector2(4, 4)
+texture = ExtResource("45_53bls")
+
+[node name="MarginContainer2" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Title"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -752.5
+offset_top = -187.5
+offset_right = 752.5
+offset_bottom = 187.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 200
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer2"]
 material = SubResource("ShaderMaterial_53bls")
-layout_mode = 0
-offset_left = 21.0
-offset_top = 67.0
-offset_right = 623.0
-offset_bottom = 217.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.30980393)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/shadow_outline_size = 3
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0)
+theme_override_colors/font_shadow_color = Color(0.2, 0.2, 0.2, 0.5882353)
+theme_override_constants/shadow_offset_y = 40
 theme_override_fonts/font = ExtResource("42_23xmf")
-theme_override_font_sizes/font_size = 120
+theme_override_font_sizes/font_size = 300
 text = "Place & Play"
 
-[node name="VBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Title"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -60.0
-offset_bottom = -28.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_constants/separation = 7
-alignment = 1
-
-[node name="Button1" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer2"]
+material = SubResource("ShaderMaterial_lwnsi")
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "ui_titile_continue"
-metadata/_edit_use_anchors_ = true
+theme_override_fonts/normal_font = ExtResource("42_23xmf")
+theme_override_font_sizes/normal_font_size = 300
+bbcode_enabled = true
+text = "[wave]Place & Play[/wave]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "ui_titile_new_game"
-metadata/_edit_use_anchors_ = true
-
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-disabled = true
-text = "ui_titile_collections"
-metadata/_edit_use_anchors_ = true
-
-[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "ui_titile_options"
-metadata/_edit_use_anchors_ = true
-
-[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/Title/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "ui_titile_quit"
-metadata/_edit_use_anchors_ = true
-
-[node name="Version" type="Label" parent="SubViewportContainer/SubViewport/UI/Title"]
+[node name="Version" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Title"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -40.0
+offset_left = -62.0
 offset_top = -23.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 32
 text = "v0.00.000"
 
-[node name="Board" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Title"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 200
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_htgcl")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Button1" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ui_titile_continue"
+metadata/_edit_use_anchors_ = true
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ui_titile_new_game"
+metadata/_edit_use_anchors_ = true
+
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+disabled = true
+text = "ui_titile_collections"
+metadata/_edit_use_anchors_ = true
+
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ui_titile_options"
+metadata/_edit_use_anchors_ = true
+
+[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ui_titile_quit"
+metadata/_edit_use_anchors_ = true
+
+[node name="Board" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 layout_mode = 3
 anchors_preset = 0
+scale = Vector2(2, 2)
 mouse_filter = 2
 script = ExtResource("21_34ol3")
 
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/UI/Board"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -966,23 +1121,21 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yysqy")
 
-[node name="TileMapLayer" type="TileMapLayer" parent="SubViewportContainer/SubViewport/UI/Board"]
+[node name="TileMapLayer" type="TileMapLayer" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 tile_set = SubResource("TileSet_m0hyf")
 
-[node name="Outlines" type="Node2D" parent="SubViewportContainer/SubViewport/UI/Board"]
+[node name="Outlines" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 
-[node name="Underlay" type="Node2D" parent="SubViewportContainer/SubViewport/UI/Board"]
+[node name="Underlay" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 
-[node name="Cells" type="Node2D" parent="SubViewportContainer/SubViewport/UI/Board"]
+[node name="Cells" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 
-[node name="Overlay" type="Node2D" parent="SubViewportContainer/SubViewport/UI/Board"]
+[node name="Overlay" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 
-[node name="Hover" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Board"]
-visible = false
-modulate = Color(0.274773, 0.28, 0.2576, 1)
-texture = ExtResource("25_2un53")
+[node name="Hover" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
+texture = ExtResource("48_yysqy")
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -993,82 +1146,89 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_4wyqg")
 
-[node name="Undo" type="Button" parent="SubViewportContainer/SubViewport/UI/Control"]
-visible = false
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 420.0
-offset_top = -40.0
-offset_right = 460.0
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_yvsr8")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_23xmf")
-icon = ExtResource("45_5yh34")
-
-[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Control"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -67.5
-offset_top = -53.0
-offset_right = 67.5
+offset_left = -120.0
+offset_top = -60.0
+offset_right = 120.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/separation = 16
+
+[node name="Undo" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2"]
+layout_mode = 2
+theme_override_colors/icon_normal_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/icon_focus_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/icon_pressed_color = Color(0.67481464, 0.6748146, 0.6748148, 1)
+theme_override_colors/icon_hover_color = Color(0.67481464, 0.6748146, 0.6748148, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0.67481464, 0.6748146, 0.6748148, 1)
+theme_override_colors/icon_disabled_color = Color(0.47788024, 0.47788012, 0.47788036, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_h6isl")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_53bls")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_lwnsi")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_41lik")
+disabled = true
+icon = ExtResource("45_5yh34")
+
+[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2"]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fepj7")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = -8
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
 text = "ui_game_rolls"
 
-[node name="Rolls" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer"]
+[node name="Rolls" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0, 0.505917, 0.560746, 1)
 theme_override_font_sizes/font_size = 32
 text = "9"
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = 0
+theme_override_constants/separation = -4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/shadow_outline_size = 0
+theme_override_font_sizes/font_size = 16
 text = "ui_game_swaps"
 
-[node name="Swaps" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3" instance=ExtResource("31_uatky")]
+[node name="Swaps" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3" instance=ExtResource("31_uatky")]
 layout_mode = 2
 font_size = 32
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3/Swaps" index="0"]
-theme_override_colors/font_color = Color(0, 0.505917, 0.560746, 1)
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps" index="0"]
+theme_override_colors/font_color = Color(1.6364455e-06, 0.7386233, 0.810353, 1)
 text = "0"
 
-[node name="Change" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3/Swaps/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Panel/ChangeBG" index="0"]
 text = "0"
 
-[node name="Roll" type="Button" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="Roll" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1080,7 +1240,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_phcyf")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_nldc7")
 text = "ui_game_roll"
 
-[node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -1088,13 +1248,13 @@ mouse_filter = 2
 theme_override_constants/separation = 8
 script = ExtResource("53_mnqjw")
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Hand"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/Hand"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 6
 mouse_filter = 2
 
-[node name="Play" type="Button" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="Play" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
@@ -1107,13 +1267,13 @@ text = " "
 icon = ExtResource("54_eldhe")
 icon_alignment = 1
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Play"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/Play"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Play/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/Play/Control"]
 visible = false
 layout_mode = 1
 anchors_preset = 12
@@ -1125,7 +1285,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_yjja3")
 
-[node name="ExpectedScore" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Play/Control/PanelContainer"]
+[node name="ExpectedScore" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.432531, 0.638456, 0.943238, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1133,38 +1293,27 @@ theme_override_font_sizes/font_size = 14
 text = "9999"
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = -8
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
 text = "ui_game_matches"
 
-[node name="Plays" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer2"]
+[node name="Plays" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.709994, 0.313104, 0, 1)
 theme_override_font_sizes/font_size = 32
 text = "9"
 
-[node name="ActionTip" parent="SubViewportContainer/SubViewport/UI/Control" instance=ExtResource("9_c5vd3")]
-layout_mode = 1
-offset_left = 722.0
-offset_top = 675.0
-offset_right = -45.0
-offset_bottom = -11.0
-mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 24
-bbcode_enabled = true
-fit_content = true
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Control"]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -1179,25 +1328,25 @@ offset_bottom = -68.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="UiProp" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer" instance=ExtResource("55_0a5p1")]
+[node name="UiProp" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer" instance=ExtResource("55_0a5p1")]
 layout_mode = 2
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer/UiProp" index="0"]
 icon = ExtResource("31_kgos7")
 
-[node name="UiProp2" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer" instance=ExtResource("55_0a5p1")]
+[node name="UiProp2" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer" instance=ExtResource("55_0a5p1")]
 layout_mode = 2
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp2" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer/UiProp2" index="0"]
 icon = ExtResource("32_e8bxs")
 
-[node name="UiProp3" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer" instance=ExtResource("55_0a5p1")]
+[node name="UiProp3" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer" instance=ExtResource("55_0a5p1")]
 layout_mode = 2
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp3" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer/UiProp3" index="0"]
 icon = ExtResource("35_m1l3k")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Control"]
 visible = false
 layout_mode = 1
 anchors_preset = 2
@@ -1210,7 +1359,7 @@ offset_bottom = -25.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vieuh")
 
-[node name="FillingTimes" type="Label" parent="SubViewportContainer/SubViewport/UI/Control/PanelContainer"]
+[node name="FillingTimes" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control/PanelContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.279486, 0.137234, 0.547911, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1221,7 +1370,7 @@ text = "10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DebugText" type="Label" parent="SubViewportContainer/SubViewport/UI/Control"]
+[node name="DebugText" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Control"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -1233,7 +1382,7 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
 
-[node name="Shop" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Shop" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 custom_minimum_size = Vector2(425, 328)
 anchors_preset = 8
@@ -1252,16 +1401,16 @@ size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ppx11")
 script = ExtResource("12_uajbh")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer"]
 custom_minimum_size = Vector2(304, 0)
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(384, 118)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1269,11 +1418,11 @@ size_flags_vertical = 0
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_phcyf")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(356, 142)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1281,33 +1430,33 @@ size_flags_vertical = 0
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_birbe")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 12
 
-[node name="ShopButton" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
+[node name="ShopButton" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2/ShopButton" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton" index="0"]
 text = "ui_shop_refresh"
 icon = ExtResource("61_ppx11")
 
-[node name="ShopButton2" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
+[node name="ShopButton2" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2" instance=ExtResource("57_kkkcx")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2/ShopButton2" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton2" index="0"]
 text = "ui_shop_upgrade"
 icon = ExtResource("62_1yv1y")
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 24
@@ -1318,7 +1467,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_sn1fb")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_deavr")
 text = "ui_shop_exit"
 
-[node name="Game" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Game" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -1328,7 +1477,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1338,197 +1487,188 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 96
 
-[node name="TopBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer"]
+[node name="TopBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5yh34")
 script = ExtResource("57_c2n8d")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 2
 
-[node name="StatusBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer"]
+[node name="StatusBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_pjuso")
 script = ExtResource("59_nqrtl")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 6
 text = "ui_game_score"
 horizontal_alignment = 1
 
-[node name="Score" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer"]
+[node name="Score" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 16
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Control"]
-scale = Vector2(0.25, 0.25)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Control"]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_mieac")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Control"]
-scale = Vector2(0.25, 0.25)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Control"]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("63_f1p13")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Control"]
-scale = Vector2(0.25, 0.25)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Control"]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("6_1pecc")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3" instance=ExtResource("31_uatky")]
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Control"]
-scale = Vector2(0.25, 0.25)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Control"]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("7_lex75")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer" instance=ExtResource("31_uatky")]
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2"]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Control"]
-scale = Vector2(0.25, 0.25)
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Control"]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("64_4obbf")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2" instance=ExtResource("31_uatky")]
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText" index="0"]
 text = "0"
 
-[node name="VSeparator4" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator4" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Level" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
+[node name="Level" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 horizontal_alignment = 1
 
-[node name="Target" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
+[node name="Target" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
@@ -1538,122 +1678,118 @@ horizontal_alignment = 1
 justification_flags = 0
 meta_underlined = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(8, 8)
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control"]
 position = Vector2(8, 8)
-scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("64_ovcoh")
 
-[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(8, 8)
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control2"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control2"]
 position = Vector2(8, 8)
-scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("64_ovcoh")
 
-[node name="Control3" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(8, 8)
+[node name="Control3" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control3"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control3"]
 position = Vector2(8, 8)
-scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("64_ovcoh")
 
-[node name="VSeparator3" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 11
 text = "ui_game_board_size"
 
-[node name="BoardSize" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
+[node name="BoardSize" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize" index="0"]
 text = "0"
 
-[node name="Change" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize/Panel/ChangeBG" index="0"]
 text = "0"
 
-[node name="VSeparator5" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator5" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 11
 text = "ui_game_hand"
 
-[node name="Hand" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
+[node name="Hand" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand" index="0"]
 text = "0"
 
-[node name="Change" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand/Panel/ChangeBG" index="0"]
 text = "0"
 
-[node name="VSeparator7" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator7" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
 
-[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
+[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("63_yshj5")
 expand_mode = 1
 
-[node name="Coins" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
+[node name="Coins" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
 
-[node name="Text" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins" index="0"]
 text = "0"
 
-[node name="Change" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins/Panel/ChangeBG" index="0"]
 text = "0"
 
-[node name="VSeparator6" type="VSeparator" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="VSeparator6" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="Bag" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
+[node name="Bag" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1673,7 +1809,7 @@ theme_override_font_sizes/font_size = 11
 icon = ExtResource("30_fg5n8")
 icon_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1681,9 +1817,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 48
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 0
@@ -1693,7 +1829,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 12
 text = "0"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 0
@@ -1703,7 +1839,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 12
 text = "0/0"
 
-[node name="Gear" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+[node name="Gear" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -1711,7 +1847,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
 icon = ExtResource("38_us2c3")
 icon_alignment = 1
 
-[node name="Tutorial" type="Button" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+[node name="Tutorial" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -1719,65 +1855,68 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
 icon = ExtResource("68_1yv1y")
 icon_alignment = 1
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 153.0
+offset_top = -78.0
+offset_right = 74.0
+offset_bottom = 78.0
 grow_vertical = 2
-theme_override_constants/margin_left = 16
+theme_override_constants/margin_left = 30
 theme_override_constants/margin_bottom = 96
 
-[node name="RelicsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer"]
+[node name="RelicsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ylmsd")
 script = ExtResource("64_c2n8d")
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
 text = "ui_game_relics"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "(0/5)"
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_pjuso")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yysqy")
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="List" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+[node name="List" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer2" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control"]
+[node name="MarginContainer2" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
@@ -1790,50 +1929,50 @@ theme_override_constants/margin_left = 64
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 96
 
-[node name="PatternsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2"]
+[node name="PatternsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pnuwf")
 script = ExtResource("64_x2fcq")
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar"]
 layout_mode = 2
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
 text = "ui_game_patterns"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "(3/4)"
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_swlj1")
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_right = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
 
-[node name="List" type="Control" parent="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+[node name="List" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 custom_minimum_size = Vector2(1280, 140)
 layout_mode = 3
@@ -1847,7 +1986,7 @@ grow_horizontal = 2
 mouse_filter = 2
 script = ExtResource("71_f1p13")
 
-[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/CalculateBar"]
+[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -1861,16 +2000,16 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_53bls")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lwnsi")
 
-[node name="BaseScore" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Panel"]
+[node name="BaseScore" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -1884,11 +2023,11 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Control"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1906,12 +2045,12 @@ pivot_offset = Vector2(4, 11)
 theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
 text = "x"
 
-[node name="Panel2" type="Panel" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+[node name="Panel2" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_41lik")
 
-[node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Panel2"]
+[node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel2"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -1926,11 +2065,11 @@ text = "0X"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Control2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Control2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1948,12 +2087,12 @@ pivot_offset = Vector2(4, 11)
 theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
 text = "x"
 
-[node name="Panel3" type="Panel" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer"]
+[node name="Panel3" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jbvwl")
 
-[node name="Mult" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar/Panel/HBoxContainer/Panel3"]
+[node name="Mult" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel3"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -1967,7 +2106,7 @@ text = "1.0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Calculated" type="Label" parent="SubViewportContainer/SubViewport/UI/CalculateBar"]
+[node name="Calculated" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar"]
 visible = false
 layout_mode = 0
 offset_right = 128.0
@@ -1983,7 +2122,7 @@ text = "8888888"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Banner" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Banner" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 layout_mode = 3
 anchors_preset = 0
@@ -1991,7 +2130,7 @@ offset_right = 500.0
 offset_bottom = 100.0
 script = ExtResource("69_phcyf")
 
-[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Banner"]
+[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/Canvas/Banner"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2000,7 +2139,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_phcyf")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Banner"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Banner"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2008,7 +2147,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Banner/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Banner/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "AAA"
@@ -2018,7 +2157,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 meta_underlined = false
 
-[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Banner/VBoxContainer"]
+[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Banner/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "BBB"
@@ -2028,16 +2167,17 @@ horizontal_alignment = 1
 vertical_alignment = 1
 meta_underlined = false
 
-[node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_inymm")
 script = ExtResource("73_4obbf")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Collections"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections"]
 custom_minimum_size = Vector2(904, 565)
 layout_mode = 1
 anchors_preset = 8
@@ -2053,175 +2193,178 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "ui_collections_title"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_items"
 
-[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_skills"
 
-[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_patterns"
 
-[node name="List3" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List3" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_collections_relics"
 
-[node name="List4" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List4" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 24
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Collections/PanelContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Collections/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="BagViewer" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="BagViewer" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l0gw7")
 script = ExtResource("34_rwa0e")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer"]
-custom_minimum_size = Vector2(904, 565)
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer"]
+custom_minimum_size = Vector2(844, 568)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -452.0
-offset_top = -282.5
-offset_right = 452.0
-offset_bottom = 282.5
+offset_left = -422.0
+offset_top = -284.0
+offset_right = 422.0
+offset_bottom = 284.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="ColorRect2" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="ColorRect2" type="ColorRect" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(16, 4)
 layout_mode = 2
 size_flags_vertical = 4
 color = Color(0.901961, 0.6, 0.301961, 1)
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 text = "ui_bag_viewer_on_board"
 
-[node name="ColorRect3" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="ColorRect3" type="ColorRect" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 custom_minimum_size = Vector2(16, 4)
 layout_mode = 2
 size_flags_vertical = 4
 color = Color(0.501961, 0.8, 0.6, 1)
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 text = "ui_bag_viewer_in_hand"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
 custom_minimum_size = Vector2(16, 4)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2"]
 layout_mode = 2
 text = "Selected"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_yvsr8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_bag_viewer_gems"
 
-[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-columns = 24
+columns = 16
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "Items"
 
-[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 columns = 24
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
@@ -2229,23 +2372,24 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_comfirm"
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="Tutorial" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Tutorial" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jcxqu")
 script = ExtResource("80_f1p13")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2253,27 +2397,28 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -200.0
-offset_top = -75.0
+offset_top = -150.0
 offset_right = 200.0
-offset_bottom = 75.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer"]
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
+[node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 meta_underlined = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
-[node name="Prev" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Prev" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -2282,14 +2427,14 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_ppx11")
 icon = ExtResource("75_ppx11")
 expand_icon = true
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ovcoh")
 text = "ui_close"
 
-[node name="Next" type="Button" parent="SubViewportContainer/SubViewport/UI/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Next" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -2298,55 +2443,57 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_1yv1y")
 icon = ExtResource("54_eldhe")
 expand_icon = true
 
-[node name="Elements" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/Tutorial"]
+[node name="Elements" type="TextureRect" parent="SubViewportContainer/SubViewport/Canvas/Tutorial"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource("74_4obbf")
 
-[node name="Options" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Options" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0arob")
 script = ExtResource("14_kw2dv")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Options"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Options"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -221.5
-offset_top = -144.0
-offset_right = 221.5
-offset_bottom = 144.0
+offset_left = -265.0
+offset_top = -228.0
+offset_right = 265.0
+offset_bottom = 228.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_n5t1e")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer"]
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "ui_options_title"
 
-[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_language"
 
-[node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 selected = 0
 item_count = 2
@@ -2355,40 +2502,40 @@ popup/item_0/id = 0
 popup/item_1/text = "中文"
 popup/item_1/id = 1
 
-[node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Labe2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_sfx_volume"
 
-[node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_music_volume"
 
-[node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_fullscreen"
 
-[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_game_speed"
 
-[node name="OptionButton2" type="OptionButton" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="OptionButton2" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 selected = 1
 item_count = 4
@@ -2401,56 +2548,57 @@ popup/item_2/id = 2
 popup/item_3/text = "4"
 popup/item_3/id = 3
 
-[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_crt"
 
-[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_performance_mode"
 
-[node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_invincible"
 
-[node name="CheckBox4" type="CheckBox" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="CheckBox4" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4kjxl")
 
-[node name="Label9" type="Label" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label9" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_options_command_line"
 
-[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer/GridContainer"]
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_hwh0u")
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Options/PanelContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_av48c")
 text = "ui_close"
 
-[node name="InGameMenu" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="InGameMenu" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dij0e")
 script = ExtResource("15_clbdl")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/InGameMenu"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2465,53 +2613,53 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gosjg")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "ui_in_game_menu_title"
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_resume"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_options"
 
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_main_menu"
 
-[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
-visible = false
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
-text = "ui_in_game_menu_tutorial"
+text = "ui_in_game_quit_to_desktop"
 
-[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_auto_place_items"
 
-[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_win"
 
-[node name="Button7" type="Button" parent="SubViewportContainer/SubViewport/UI/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button7" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_lose"
 
-[node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2521,7 +2669,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_h6isl")
 script = ExtResource("16_iphee")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/GameOver"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2536,74 +2684,75 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_2sare")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "ui_game_over_title"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_font_sizes/font_size = 24
 
-[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 16
 columns = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_game_over_max_match"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_game_over_swaps"
 
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_game_over_level"
 
-[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "ui_game_over_seed"
 
-[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer/GridContainer"]
+[node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "ui_game_over_new_run"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/GameOver/PanelContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "ui_game_over_main_menu"
 
-[node name="LevelClear" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="LevelClear" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_k1udn")
 script = ExtResource("17_ykjhx")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/LevelClear"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2618,11 +2767,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dybqb")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/LevelClear/PanelContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/LevelClear/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
@@ -2631,17 +2780,17 @@ horizontal_alignment = 1
 vertical_alignment = 1
 custom_effects = [SubResource("RichTextEffect_s1npm")]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/LevelClear/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/LevelClear/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_exsg7")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer/VBoxContainer/Button"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/LevelClear/PanelContainer/VBoxContainer/Button"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2655,7 +2804,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="SubViewportContainer/SubViewport/UI/LevelClear/PanelContainer"]
+[node name="CPUParticles2D" type="CPUParticles2D" parent="SubViewportContainer/SubViewport/Canvas/LevelClear/PanelContainer"]
 position = Vector2(152, -1.5)
 emitting = false
 amount = 32
@@ -2670,7 +2819,7 @@ scale_amount_min = 10.0
 scale_amount_max = 10.0
 color_initial_ramp = SubResource("Gradient_x84n0")
 
-[node name="ChooseReward" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="ChooseReward" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2679,7 +2828,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("36_c2aw5")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2694,43 +2843,43 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_5tghd")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer"]
 layout_mode = 2
 theme_override_constants/separation = 64
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 32
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Hide"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Reroll"
 
-[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/UI/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Skip"
 
-[node name="Drag" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Drag" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 modulate = Color(1, 1, 1, 0.501961)
 
-[node name="Dialog" type="Panel" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Dialog" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2739,7 +2888,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("64_wy5fy")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Dialog"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Dialog"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2757,35 +2906,35 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_c2n8d")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Dialog/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Dialog/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
 text = "Title"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Dialog/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.753984, 0.753984, 0.753984, 1)
 theme_override_font_sizes/font_size = 24
 text = "Content"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Dialog/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Dialog/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Yes"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/UI/Dialog/PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Dialog/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "No"
 
-[node name="TestingText" type="Label" parent="SubViewportContainer/SubViewport/UI"]
+[node name="TestingText" type="Label" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
@@ -2797,42 +2946,42 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 12
 text = "Testing 0/0"
 
-[node name="Tooltips" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Tooltips" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas"]
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_m50mc")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tooltips"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/HBoxContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_top = -6
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/HBoxContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f0uef")
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer/VBoxContainer/MarginContainer/PanelContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/HBoxContainer/VBoxContainer/MarginContainer/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 10
 text = "Alt To Show More"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/Tooltips/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
@@ -2840,11 +2989,11 @@ size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="Timer" type="Timer" parent="SubViewportContainer/SubViewport/UI/Tooltips"]
+[node name="Timer" type="Timer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips"]
 wait_time = 0.2
 autostart = true
 
-[node name="CommandLine" type="LineEdit" parent="SubViewportContainer/SubViewport/UI"]
+[node name="CommandLine" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 12
 anchor_top = 1.0
@@ -2854,7 +3003,7 @@ offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Blocker" type="Control" parent="SubViewportContainer/SubViewport/UI"]
+[node name="Blocker" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -2877,17 +3026,17 @@ mouse_filter = 2
 
 [node name="TestTimer" type="Timer" parent="."]
 
-[editable path="SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/VBoxContainer3/Swaps"]
-[editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp"]
-[editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp2"]
-[editable path="SubViewportContainer/SubViewport/UI/Control/HBoxContainer/UiProp3"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2/ShopButton"]
-[editable path="SubViewportContainer/SubViewport/UI/Shop/HBoxContainer/VBoxContainer2/ShopButton2"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand"]
-[editable path="SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer/UiProp"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer/UiProp2"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer/UiProp3"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton2"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand"]
+[editable path="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins"]

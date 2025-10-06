@@ -53,7 +53,7 @@ func buy_expand_board():
 				g = Game.get_gem()
 				Board.set_gem_at(c, g)
 			else:
-				Game.board_ui.update_cell(c)
+				Board.ui.update_cell(c)
 	
 	return true
 
@@ -82,7 +82,7 @@ func refresh(tween : Tween = null):
 		tween = get_tree().create_tween()
 	
 	Game.control_ui.play_button.disabled = true
-	Game.hand_ui.disabled = true
+	Hand.ui.disabled = true
 	refresh_button.button.disabled = true
 	
 	clear()
@@ -191,7 +191,7 @@ func refresh(tween : Tween = null):
 			list2.add_child(ui)
 		)
 	tween.tween_callback(func():
-		Game.hand_ui.disabled = false
+		Hand.ui.disabled = false
 		refresh_button.button.disabled = false
 		Game.save_to_file()
 	)
@@ -247,8 +247,8 @@ func exit(tween : Tween = null, trans : bool = true):
 				list2.remove_child(n)
 			self.hide()
 		)
-		if !Game.board_ui.visible:
-			Game.board_ui.enter(tween, true)
+		if !Board.ui.visible:
+			Board.ui.enter(tween, true)
 			Game.new_level(tween)
 	else:
 		self.hide()
@@ -259,6 +259,7 @@ func _ready() -> void:
 	
 	exit_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 	)
 	#exit_button.mouse_entered.connect(SSound.se_select.play)

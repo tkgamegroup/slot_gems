@@ -114,7 +114,7 @@ func exit():
 	tween.tween_callback(func():
 		self.hide()
 	)
-	Game.board_ui.exit(tween)
+	Board.ui.exit(tween)
 	Game.shop_ui.enter(tween)
 	return tween
 

@@ -1,11 +1,44 @@
-[gd_scene load_steps=10 format=3 uid="uid://s5ehr1388thk"]
+[gd_scene load_steps=20 format=3 uid="uid://s5ehr1388thk"]
 
-[ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="1_qae8s"]
 [ext_resource type="Script" uid="uid://t4phq6vbt25s" path="res://ui_gem.gd" id="2_pbann"]
-[ext_resource type="SpriteFrames" uid="uid://bgpse251ihp38" path="res://images/runes.tres" id="3_3slly"]
-[ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="4_jtep7"]
+[ext_resource type="Material" uid="uid://ch6a3tq6qlyfq" path="res://materials/gem.tres" id="2_yval8"]
 [ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="5_ahfnj"]
+[ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="5_xnwot"]
 [ext_resource type="Texture2D" uid="uid://cp7ifhua174gi" path="res://images/spark.png" id="6_4lclw"]
+[ext_resource type="Shader" uid="uid://w42xawe3frrc" path="res://materials/wild.gdshader" id="6_k4xum"]
+[ext_resource type="SpriteFrames" uid="uid://bgpse251ihp38" path="res://images/runes.tres" id="7_weldj"]
+[ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="8_foki2"]
+[ext_resource type="Shader" uid="uid://b17rpch1hfeio" path="res://materials/dissolve.gdshader" id="9_sjayb"]
+
+[sub_resource type="Gradient" id="Gradient_0lu4f"]
+offsets = PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1)
+colors = PackedColorArray(0.839216, 0.0745098, 0.0980392, 1, 1, 0.729412, 0.027451, 1, 0.615686, 0.752941, 0.25098, 1, 0.560784, 0.87451, 0.964706, 1, 0.901961, 0.207843, 0.423529, 1, 0.839216, 0.0745098, 0.0980392, 1)
+metadata/_snap_count = 5
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_sjayb"]
+gradient = SubResource("Gradient_0lu4f")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gsthc"]
+shader = ExtResource("6_k4xum")
+shader_parameter/ramp_texture = SubResource("GradientTexture1D_sjayb")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1al16"]
+noise_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sx5gx"]
+width = 32
+height = 32
+noise = SubResource("FastNoiseLite_1al16")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xnwot"]
+shader = ExtResource("9_sjayb")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_sx5gx")
+shader_parameter/dissolve = 1.0
+shader_parameter/burn_size = 0.10000000475
+shader_parameter/burn_color = Color(0.8904463, 0.2967777, 0.30641142, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_4lclw"]
+viewport_path = NodePath("SubViewport")
 
 [sub_resource type="Curve" id="Curve_4lclw"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.495283, 0.617978), 0.0, 0.0, 0, 0, Vector2(0.981132, 0), 0.0, 0.0, 0, 0]
@@ -22,14 +55,40 @@ point_count = 4
 [node name="UiGem" type="Node2D"]
 script = ExtResource("2_pbann")
 
-[node name="BG" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("1_qae8s")
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(48, 48)
 
-[node name="Rune" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("3_3slly")
+[node name="Type" type="AnimatedSprite2D" parent="SubViewport"]
+material = ExtResource("2_yval8")
+sprite_frames = ExtResource("5_xnwot")
+frame = 1
+centered = false
 
-[node name="Item" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("4_jtep7")
+[node name="Wild" type="AnimatedSprite2D" parent="SubViewport"]
+visible = false
+material = SubResource("ShaderMaterial_gsthc")
+sprite_frames = ExtResource("5_xnwot")
+frame = 7
+centered = false
+
+[node name="Rune" type="AnimatedSprite2D" parent="SubViewport"]
+modulate = Color(0, 0, 0, 1)
+sprite_frames = ExtResource("7_weldj")
+centered = false
+offset = Vector2(16, 16)
+
+[node name="Item" type="AnimatedSprite2D" parent="SubViewport"]
+sprite_frames = ExtResource("8_foki2")
+centered = false
+offset = Vector2(16, 16)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_xnwot")
+texture = SubResource("ViewportTexture_4lclw")
+centered = false
 
 [node name="Charming" type="CPUParticles2D" parent="."]
 visible = false

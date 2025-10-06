@@ -1,7 +1,7 @@
 extends Node
 
 @onready var timer : Timer = $/root/Main/TestTimer
-@onready var label : Label = $/root/Main/SubViewportContainer/SubViewport/UI/TestingText
+@onready var label : Label = $/root/Main/SubViewportContainer/SubViewport/Canvas/TestingText
 
 enum Mode
 {
@@ -368,7 +368,7 @@ func auto_place_items():
 		var center = Vector2i(cx / 2, cy / 2)
 		var item_uis = []
 		for i in Hand.grabs.size():
-			var ui = Game.hand_ui.get_ui(i)
+			var ui = Hand.ui.get_slot(i)
 			item_uis.append(ui)
 		var missing_one_places : Array[Array] = get_missing_one_places()
 		SMath.remove_if(item_uis, func(ui):
@@ -376,32 +376,32 @@ func auto_place_items():
 			if item.name.begins_with("DyeRed"):
 				var arr = missing_one_places[Gem.Type.Red - 1]
 				if !arr.is_empty():
-					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyeOrange"):
 				var arr = missing_one_places[Gem.Type.Orange - 1]
 				if !arr.is_empty():
-					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyeGreen"):
 				var arr = missing_one_places[Gem.Type.Green - 1]
 				if !arr.is_empty():
-					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyeBlue"):
 				var arr = missing_one_places[Gem.Type.Blue - 1]
 				if !arr.is_empty():
-					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name.begins_with("DyePurple"):
 				var arr = missing_one_places[Gem.Type.Purple - 1]
 				if !arr.is_empty():
-					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
 			elif item.name == "ColorPalette":
 				for arr in missing_one_places:
 					if !arr.is_empty():
-						if Game.hand_ui.place_item(ui, SMath.pick_and_remove(arr)):
+						if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 							return true
 			return false
 		)
@@ -431,7 +431,7 @@ func auto_place_items():
 					return false
 				if !central_activater_places.is_empty():
 					var c = central_activater_places.front()
-					if Game.hand_ui.place_item(ui, c):
+					if Hand.ui.place_item(ui, c):
 						central_activater_places.pop_front()
 						activater_places.erase(c)
 						return true
@@ -452,12 +452,12 @@ func auto_place_items():
 										bomb_places.append(cc)
 					if !bomb_places.is_empty():
 						var c = bomb_places[0]
-						if Game.hand_ui.place_item(ui, c):
+						if Hand.ui.place_item(ui, c):
 							return true
 					elif item.name == "ChainBomb":
 						if !central_activater_places.is_empty():
 							var c = central_activater_places.front()
-							if Game.hand_ui.place_item(ui, c):
+							if Hand.ui.place_item(ui, c):
 								central_activater_places.pop_front()
 								activater_places.erase(c)
 								return true
@@ -480,14 +480,14 @@ func auto_place_items():
 										dist = d
 						if coord.x != -1 && coord.y != -1:
 							if !Board.get_item_at(coord):
-								if Game.hand_ui.place_item(ui, coord):
+								if Hand.ui.place_item(ui, coord):
 									central_activater_places.erase(coord)
 									activater_places.erase(coord)
 									return true
 					else:
 						if !central_activater_places.is_empty():
 							var c = central_activater_places.back()
-							if Game.hand_ui.place_item(ui, c):
+							if Hand.ui.place_item(ui, c):
 								central_activater_places.pop_back()
 								activater_places.erase(c)
 								return true
@@ -497,7 +497,7 @@ func auto_place_items():
 			var item = ui.item
 			if item.description.find("[b]Aura[/b]") != -1:
 				if !aura_places.is_empty():
-					if Game.hand_ui.place_item(ui, SMath.pick_and_remove(aura_places)):
+					if Hand.ui.place_item(ui, SMath.pick_and_remove(aura_places)):
 						aura_places.pop_front()
 						return true
 			return false
@@ -507,14 +507,14 @@ func auto_place_items():
 			if item.on_eliminate.is_valid():
 				if item.name == "Rainbow" || item.name == "Fire":
 					var c = activater_places[0]
-					if Game.hand_ui.place_item(ui, c):
+					if Hand.ui.place_item(ui, c):
 						activater_places.pop_front()
 						central_activater_places.erase(c)
 						return true
 				else:
 					if !central_activater_places.is_empty():
 						var c = central_activater_places.front()
-						if Game.hand_ui.place_item(ui, c):
+						if Hand.ui.place_item(ui, c):
 							central_activater_places.pop_front()
 							activater_places.erase(c)
 							return true

@@ -37,6 +37,7 @@ func exit():
 func _ready() -> void:
 	new_run.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		for t in get_tree().get_processed_tweens():
 			t.custom_step(100.0)
 		exit()
@@ -45,14 +46,15 @@ func _ready() -> void:
 	#new_run.mouse_entered.connect(SSound.se_select.play)
 	main_menu_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		for t in get_tree().get_processed_tweens():
 			t.custom_step(100.0)
 		exit()
 		
 		var tween = get_tree().create_tween()
 		tween.tween_callback(func():
-			if Game.board_ui.visible:
-				Game.board_ui.exit(null, false)
+			if Board.ui.visible:
+				Board.ui.exit(null, false)
 			elif Game.shop_ui.visible:
 				Game.shop_ui.exit(null, false)
 			Game.control_ui.exit()

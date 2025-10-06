@@ -12,12 +12,13 @@ extends Control
 @onready var close_button : Button = $PanelContainer/VBoxContainer/Button
 @onready var command_line : LineEdit = $PanelContainer/VBoxContainer/GridContainer/LineEdit
 
-func enter(trans = true):
+func enter(second : bool = false):
 	STooltip.close()
-	if trans:
+	var tween = get_tree().create_tween()
+	tween.tween_property(panel, "position:y", panel.position.y, 0.5).from(panel.position.y + 100).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	if !second:
 		self.self_modulate.a = 0.0
-		var tween = get_tree().create_tween()
-		tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
+		tween.parallel().tween_property(self, "self_modulate:a", 1.0, 0.3)
 	else:
 		self.self_modulate.a = 1.0
 	
@@ -31,7 +32,7 @@ func enter(trans = true):
 	crt_checkbox.set_pressed_no_signal(Game.crt_mode)
 	performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
 	invincible_checkbox.set_pressed_no_signal(Game.invincible)
-	fullscreen_checkbox.set_pressed_no_signal(DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
+	fullscreen_checkbox.set_pressed_no_signal(DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED)
 	if Game.base_speed > 0.4 && Game.base_speed < 0.6:
 		game_speed_select.selected = 0
 	elif Game.base_speed > 0.9 && Game.base_speed < 1.1:
@@ -46,7 +47,7 @@ func enter(trans = true):
 
 func exit():
 	if Game.game_ui.visible:
-		SSound.music_clear()
+		SSound.music_more_clear()
 	
 	panel.hide()
 	self.self_modulate.a = 1.0
@@ -70,6 +71,7 @@ func _ready() -> void:
 	)
 	fullscreen_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		if v:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 		else:
@@ -85,18 +87,22 @@ func _ready() -> void:
 	)
 	crt_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.crt_mode = v
 	)
 	performance_mode_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.performance_mode = v
 	)
 	invincible_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.invincible = v
 	)
 	close_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 	)
 	#close_button.mouse_entered.connect(SSound.se_select.play)

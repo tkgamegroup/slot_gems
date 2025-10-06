@@ -78,7 +78,7 @@ static func get_cells_border(coords : Array[Vector2i]):
 	var ccords = []
 	for c in coords:
 		ccords.append(Board.offset_to_cube(c))
-	const size = 8.0
+	const size = 24.0
 	var w = size * 2.0
 	var h = size * sqrt(3.0)
 	for i in coords.size():
@@ -86,27 +86,26 @@ static func get_cells_border(coords : Array[Vector2i]):
 		var cc = ccords[i]
 		if !ccords.has(cc + Vector3i(0, -1, +1)):
 			# up
-			ret.append(p + Vector2(w * -0.25, h * -0.5))
-			ret.append(p + Vector2(w * +0.25, h * -0.5))
-			pass
+			ret.append(p + Vector2(w * -0.25, h * -0.5 - 2))
+			ret.append(p + Vector2(w * +0.25, h * -0.5 - 2))
 		if !ccords.has(cc + Vector3i(0, +1, -1)):
 			# down
-			ret.append(p + Vector2(w * -0.25, h * +0.5))
-			ret.append(p + Vector2(w * +0.25, h * +0.5))
+			ret.append(p + Vector2(w * -0.25, h * +0.5 + 2))
+			ret.append(p + Vector2(w * +0.25, h * +0.5 + 2))
 		if !ccords.has(cc + Vector3i(-1, 0, +1)):
 			# lt
 			ret.append(p + Vector2(w * -0.5, 0.0))
-			ret.append(p + Vector2(w * -0.25, h * -0.5))
+			ret.append(p + Vector2(w * -0.25, h * -0.5 - 2))
 		if !ccords.has(cc + Vector3i(+1, -1, 0)):
 			# rt
-			ret.append(p + Vector2(w * +0.25, h * -0.5))
+			ret.append(p + Vector2(w * +0.25, h * -0.5 - 2))
 			ret.append(p + Vector2(w * +0.5, 0.0))
 		if !ccords.has(cc + Vector3i(-1, +1, 0)):
 			# lb
-			ret.append(p + Vector2(w * -0.25, h * +0.5))
+			ret.append(p + Vector2(w * -0.25, h * +0.5 + 2))
 			ret.append(p + Vector2(w * -0.5, 0.0))
 		if !ccords.has(cc + Vector3i(+1, 0, -1)):
 			# rb
-			ret.append(p + Vector2(w * +0.25, h * +0.5))
+			ret.append(p + Vector2(w * +0.25, h * +0.5 + 2))
 			ret.append(p + Vector2(w * +0.5, 0.0))
 	return ret

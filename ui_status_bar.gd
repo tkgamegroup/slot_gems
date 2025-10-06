@@ -131,6 +131,7 @@ func _ready() -> void:
 		if !Game.bag_viewer_ui.visible:
 			STooltip.close()
 			SSound.se_open_bag.play()
+			Game.screen_shake_strength = 8.0
 			Game.bag_viewer_ui.enter()
 		else:
 			SSound.se_close_bag.play()
@@ -170,6 +171,7 @@ func _ready() -> void:
 	)
 	gear_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.toggle_in_game_menu()
 	)
 	gear_button.mouse_entered.connect(func():
@@ -180,6 +182,7 @@ func _ready() -> void:
 	)
 	tutorial_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.tutorial_ui.enter()
 	)
 	tutorial_button.mouse_entered.connect(func():

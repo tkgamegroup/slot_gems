@@ -27,7 +27,8 @@ func load_gem(_gem : Gem):
 
 func unload_gem():
 	if gem:
-		Hand.get_gem_from(gem, slot.get_global_rect().get_center())
+		var slot = Hand.add_gem(gem)
+		slot.global_position = slot.get_global_rect().get_center()
 		img_open.show()
 		img_close.hide()
 		gem_ui.reset()

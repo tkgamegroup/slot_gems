@@ -254,7 +254,7 @@ func setup(n : String):
 								var sp = infected_pb.instantiate()
 								sp.position = Board.get_pos(cc)
 								sp.emitting = false
-								Game.board_ui.cells_root.add_child(sp)
+								Board.ui.cells_root.add_child(sp)
 								tween.tween_callback(func():
 									sp.emitting = true
 								)
@@ -302,7 +302,7 @@ func setup(n : String):
 						coords.append(cc)
 					tween.tween_callback(func():
 						var fx = SEffect.add_lighning(Board.get_pos(p0), Board.get_pos(p1), 3, 0.5 * Game.speed)
-						Game.board_ui.cells_root.add_child(fx)
+						Board.ui.cells_root.add_child(fx)
 					)
 				coords.append(targets.back())
 				tween.tween_interval(0.5 * Game.speed)
@@ -358,10 +358,10 @@ func setup(n : String):
 				tween.tween_callback(func():
 					var pos : Vector2 = Board.get_pos(coord)
 					var fx = SEffect.add_black_hole_rotating(pos, Vector2(128.0, 128.0), 0, 3.0)
-					Game.board_ui.underlay.add_child(fx)
+					Board.ui.underlay.add_child(fx)
 					
 					for c in coords:
-						var ui = Game.board_ui.get_cell(c).gem
+						var ui = Board.ui.get_cell(c).gem
 						var data = {"ui":ui,"vel":SMath.tangent2(Board.get_pos(c) - pos).normalized() * 1.4}
 						var tween2 = Game.get_tree().create_tween()
 						tween2.tween_method(func(t):
@@ -399,11 +399,11 @@ func setup(n : String):
 			var pos : Vector2 = Board.get_pos(coord)
 			tween.tween_callback(func():
 				var fx = SEffect.add_white_hole_injection(pos, Vector2(128.0, 128.0), 0, 3.0)
-				Game.board_ui.underlay.add_child(fx)
+				Board.ui.underlay.add_child(fx)
 			)
 			tween.tween_method(func(r : float):
 				for c in coords:
-					var ui = Game.board_ui.get_cell(c).gem
+					var ui = Board.ui.get_cell(c).gem
 					if pos.distance_to(ui.global_position) < r:
 						ui.scale = Vector2(0.0, 0.0).max(ui.scale - Vector2(0.1, 0.1))
 			, 0.0, 1200.0, 3.0)
@@ -538,7 +538,7 @@ func setup(n : String):
 							sp.sprite_frames = Item.item_frames
 							sp.frame = image_id
 							sp.z_index = 3
-							Game.board_ui.cells_root.add_child(sp)
+							Board.ui.cells_root.add_child(sp)
 							var tween2 = Game.get_tree().create_tween()
 							SAnimation.cubic_curve_to(tween2, sp, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 							tween2.tween_callback(func():
@@ -699,7 +699,7 @@ func setup(n : String):
 				var p1 = Board.get_pos(sub_coords.back())
 				tween.tween_callback(func():
 					var sp = SEffect.add_slash(p0, p1, 3, 0.5 * Game.speed)
-					Game.board_ui.cells_root.add_child(sp)
+					Board.ui.cells_root.add_child(sp)
 				)
 				coords.append_array(sub_coords)
 			tween.tween_interval(0.5 * Game.speed)
@@ -937,7 +937,7 @@ func setup(n : String):
 						sp.texture = SEffect.fireball_image
 						sp.position = pos
 						sp.z_index = 3
-						Game.board_ui.cells_root.add_child(sp)
+						Board.ui.cells_root.add_child(sp)
 						t.third = sp
 						tween.parallel()
 						SAnimation.quadratic_curve_to(tween, sp, t.second, Vector2(0.5, 0.5), 0.4 * Game.speed)

@@ -35,7 +35,7 @@ func find_missing_ones(type : int):
 func show():
 	for n in lines:
 		n.queue_free()
-		Game.board_ui.overlay.remove_child(n)
+		Board.ui.overlay.remove_child(n)
 	lines.clear()
 	if tween:
 		tween.kill()
@@ -61,7 +61,7 @@ func show():
 				g.append(c)
 				gs.append(g)
 		for g in gs:
-			var pts = SMath.weld_lines(SUtils.get_cells_border(g), 2.0)
+			var pts = SMath.weld_lines(SUtils.get_cells_border(g), 8.0)
 			var c = Vector2(0.0, 0.0)
 			for pt in pts:
 				c += pt
@@ -82,7 +82,7 @@ func show():
 			tween.parallel()
 			tween.tween_subtween(subtween)
 			lines.append(l)
-			Game.board_ui.overlay.add_child(l)
+			Board.ui.overlay.add_child(l)
 		idx += 1
 	tween.tween_callback(func():
 		tween = null
@@ -91,7 +91,7 @@ func show():
 func clear():
 	for n in lines:
 		n.queue_free()
-		Game.board_ui.overlay.remove_child(n)
+		Board.ui.overlay.remove_child(n)
 	if tween:
 		tween.kill()
 		tween = null

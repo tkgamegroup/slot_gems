@@ -51,7 +51,7 @@ func music_less_clear():
 		music_eq_t = t
 	, music_eq_t, 1.0, (1.0 - music_eq_t) * 1.5)
 
-func music_clear():
+func music_more_clear():
 	if music_eq_tween:
 		music_eq_tween.kill()
 		music_eq_tween = null

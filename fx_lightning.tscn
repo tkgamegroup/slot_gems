@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://vkgjtghbb5eo"]
 
-[ext_resource type="Shader" path="res://arc.gdshader" id="1_jnpph"]
+[ext_resource type="Shader" uid="uid://c8i1wkus7uqrm" path="res://materials/arc.gdshader" id="1_jnpph"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_oskv0"]
 
 [sub_resource type="Gradient" id="Gradient_0ijmk"]

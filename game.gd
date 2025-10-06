@@ -8,14 +8,6 @@ enum Stage
 	LevelOver
 }
 
-enum Props
-{
-	None,
-	Pin,
-	Activate,
-	Grab
-}
-
 const version_major : int = 1
 const version_minor : int = 0
 const version_patch : int = 4
@@ -26,9 +18,7 @@ const MaxPatterns : int = 4
 const UiGem = preload("res://ui_gem.gd")
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
-const UiBoard = preload("res://ui_board.gd")
 const UiControl = preload("res://ui_control.gd")
-const UiHand = preload("res://ui_hand.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiShopItem = preload("res://ui_shop_item.gd")
 const CraftSlot = preload("res://craft_slot.gd")
@@ -58,34 +48,32 @@ const activate_cursor = preload("res://images/magic_stick.png")
 const grab_cursor = preload("res://images/grab.png")
 
 @onready var background : Node2D = $/root/Main/SubViewportContainer/SubViewport/Background
-@onready var bg_shader : ShaderMaterial = background.material
 @onready var crt : Control = $/root/Main/PostProcessing/ColorRect
+@onready var trans_bg : Control = $/root/Main/TransBG
 @onready var trans_sp : AnimatedSprite2D = $/root/Main/TransBG/Control/AnimatedSprite2D
-@onready var subviewport_container = $/root/Main/SubViewportContainer
-@onready var subviewport = $/root/Main/SubViewportContainer/SubViewport
-@onready var root_ui : CanvasLayer = $/root/Main/SubViewportContainer/SubViewport/UI
-@onready var board_ui : UiBoard = $/root/Main/SubViewportContainer/SubViewport/UI/Board
-@onready var title_ui : UiTitle = $/root/Main/SubViewportContainer/SubViewport/UI/Title
-@onready var control_ui : UiControl = $/root/Main/SubViewportContainer/SubViewport/UI/Control
-@onready var hand_ui : UiHand = $/root/Main/SubViewportContainer/SubViewport/UI/Control/Panel/HBoxContainer/Hand
-@onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/UI/Shop
-@onready var game_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Game
-@onready var status_bar_ui : UiStatusBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
-@onready var relics_bar_ui : UiRelicsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer/RelicsBar
-@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/UI/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
-@onready var calculator_bar_ui : UiCalculatorBar = $/root/Main/SubViewportContainer/SubViewport/UI/CalculateBar
-@onready var banner_ui : UiBanner = $/root/Main/SubViewportContainer/SubViewport/UI/Banner
-@onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/UI/Dialog
-@onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/UI/Options
-@onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/UI/Collections
-@onready var bag_viewer_ui : UiBagViewer = $/root/Main/SubViewportContainer/SubViewport/UI/BagViewer
-@onready var tutorial_ui : UiTutorial = $/root/Main/SubViewportContainer/SubViewport/UI/Tutorial
-@onready var in_game_menu_ui : UiInGameMenu = $/root/Main/SubViewportContainer/SubViewport/UI/InGameMenu
-@onready var game_over_ui : UiGameOver = $/root/Main/SubViewportContainer/SubViewport/UI/GameOver
-@onready var level_clear_ui : UiLevelClear = $/root/Main/SubViewportContainer/SubViewport/UI/LevelClear
-@onready var choose_reward_ui : UiChooseReward = $/root/Main/SubViewportContainer/SubViewport/UI/ChooseReward
-@onready var command_line_edit : LineEdit = $/root/Main/SubViewportContainer/SubViewport/UI/CommandLine
-@onready var blocker_ui : Control = $/root/Main/SubViewportContainer/SubViewport/UI/Blocker
+@onready var subviewport_container : SubViewportContainer = $/root/Main/SubViewportContainer
+@onready var subviewport : SubViewport = $/root/Main/SubViewportContainer/SubViewport
+@onready var canvas : CanvasLayer = $/root/Main/SubViewportContainer/SubViewport/Canvas
+@onready var title_ui : UiTitle = $/root/Main/SubViewportContainer/SubViewport/Canvas/Title
+@onready var control_ui : UiControl = $/root/Main/SubViewportContainer/SubViewport/Canvas/Control
+@onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/Canvas/Shop
+@onready var game_ui : Control = $/root/Main/SubViewportContainer/SubViewport/Canvas/Game
+@onready var status_bar_ui : UiStatusBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
+@onready var relics_bar_ui : UiRelicsBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer/RelicsBar
+@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/Control/MarginContainer2/PatternsBar
+@onready var calculator_bar_ui : UiCalculatorBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/CalculateBar
+@onready var banner_ui : UiBanner = $/root/Main/SubViewportContainer/SubViewport/Canvas/Banner
+@onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/Canvas/Dialog
+@onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/Canvas/Options
+@onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/Canvas/Collections
+@onready var bag_viewer_ui : UiBagViewer = $/root/Main/SubViewportContainer/SubViewport/Canvas/BagViewer
+@onready var tutorial_ui : UiTutorial = $/root/Main/SubViewportContainer/SubViewport/Canvas/Tutorial
+@onready var in_game_menu_ui : UiInGameMenu = $/root/Main/SubViewportContainer/SubViewport/Canvas/InGameMenu
+@onready var game_over_ui : UiGameOver = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameOver
+@onready var level_clear_ui : UiLevelClear = $/root/Main/SubViewportContainer/SubViewport/Canvas/LevelClear
+@onready var choose_reward_ui : UiChooseReward = $/root/Main/SubViewportContainer/SubViewport/Canvas/ChooseReward
+@onready var command_line_edit : LineEdit = $/root/Main/SubViewportContainer/SubViewport/Canvas/CommandLine
+@onready var blocker_ui : Control = $/root/Main/SubViewportContainer/SubViewport/Canvas/Blocker
 
 var stage : int = Stage.Deploy
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -109,9 +97,8 @@ var next_roll_extra_draws : int = 0
 var max_hand_grabs : int:
 	set(v):
 		max_hand_grabs = v
-		if hand_ui:
+		if Hand.ui:
 			status_bar_ui.hand_text.set_value(Game.max_hand_grabs)
-var props = Props.None
 var pins_num : int:
 	set(v):
 		pins_num = v
@@ -273,6 +260,11 @@ var crt_mode : bool = true:
 				crt.show()
 			else:
 				crt.hide()
+var screen_shake_strength : float = 0.0
+var screen_shake_noise : Noise
+var screen_shake_noise_coord : float
+var mouse_pos : Vector2
+var screen_offset : Vector2
 var performance_mode : bool = false:
 	set(v):
 		if performance_mode != v:
@@ -286,26 +278,6 @@ var performance_mode : bool = false:
 			else:
 				crt.hide()
 var invincible : bool = false
-
-func set_props(t : int):
-	props = t
-	for n in control_ui.props_bar.get_children():
-		n.select.hide()
-	if props == Props.None:
-		control_ui.action_tip_text.text = ""
-		Input.set_custom_mouse_cursor(pointer_cursor, Input.CURSOR_ARROW, Vector2(15, 4))
-	elif props == Props.Pin:
-		control_ui.pin_ui.select.show()
-		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Pin[img width=32]res://images/mouse_right_button.png[/img]Cancel"
-		Input.set_custom_mouse_cursor(pin_cursor, Input.CURSOR_ARROW, Vector2(7, 30))
-	elif props == Props.Activate:
-		control_ui.activate_ui.select.show()
-		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Activate[img width=32]res://images/mouse_right_button.png[/img]Cancel"
-		Input.set_custom_mouse_cursor(activate_cursor, Input.CURSOR_ARROW, Vector2(5, 5))
-	elif props == Props.Grab:
-		control_ui.grab_ui.select.show()
-		control_ui.action_tip_text.text = "[img width=32]res://images/mouse_left_button.png[/img]To Drag Around[img width=32]res://images/mouse_right_button.png[/img]Cancel"
-		Input.set_custom_mouse_cursor(grab_cursor, Input.CURSOR_ARROW, Vector2(5, 20))
 
 func add_gem(g : Gem, boardcast : bool = true):
 	if boardcast:
@@ -474,7 +446,7 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 	lb.add_theme_color_override("font_color", color)
 	lb.add_theme_font_size_override("font_size", font_size)
 	ui.z_index = 4
-	board_ui.overlay.add_child(ui)
+	Board.ui.overlay.add_child(ui)
 	var tween = get_tree().create_tween()
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
 	tween.tween_callback(func():
@@ -491,7 +463,7 @@ func add_score(value : int, pos : Vector2):
 	var lb : Label = ui.get_child(0)
 	lb.text = "%d" % value
 	ui.z_index = 8
-	board_ui.overlay.add_child(ui)
+	Board.ui.overlay.add_child(ui)
 	
 	staging_scores.append(Pair.new(ui, value))
 	
@@ -513,7 +485,7 @@ func add_mult(value : float, pos : Vector2):
 	lb.text = "%.2f" % value
 	lb.add_theme_color_override("font_color", Color(1.0, 0.8, 0.3))
 	ui.z_index = 6
-	board_ui.overlay.add_child(ui)
+	Board.ui.overlay.add_child(ui)
 	
 	staging_mults.append(Pair.new(ui, value))
 	
@@ -543,6 +515,17 @@ func add_status(s : String, col : Color):
 		control_ui.status_text.hide()
 		status_tween = null
 	)
+
+func create_gem_ui(g : Gem, pos : Vector2, need_trail : bool = false):
+	var ui = gem_ui.instantiate()
+	ui.update(g)
+	ui.global_position = pos
+	if need_trail:
+		var trail = trail_pb.instantiate()
+		trail.setup(10.0, Gem.type_color(g.type))
+		ui.add_child(trail)
+	Game.game_ui.add_child(ui)
+	return ui
 
 func delete_gem(g : Gem, ui, from : String = "hand"):
 	var old_coord = g.coord
@@ -589,12 +572,9 @@ func copy_gem(src : Gem, dst : Gem):
 
 func duplicate_gem(g : Gem, ui, from : String = "hand"):
 	SSound.se_enchant.play()
-	var new_ui = gem_ui.instantiate()
-	new_ui.update(g)
-	new_ui.position = ui.global_position
+	var new_ui = create_gem_ui(g, ui.global_position)
 	if from == "hand":
 		new_ui.position += Vector2(16.0, 16.0)
-	game_ui.add_child(new_ui)
 	var tween = get_tree().create_tween()
 	tween.tween_property(new_ui, "position", new_ui.position + Vector2(0.0, -40.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	tween.tween_callback(func():
@@ -624,6 +604,43 @@ func socket_gem(g : Gem, item_name : String):
 	add_item(i)
 	g.rune = Gem.Rune.None
 	g.bound_item = i
+
+func swap_hand_and_board(slot1 : Control, coord : Vector2i):
+	var tween = get_tree().create_tween()
+	var g1 = slot1.gem
+	var g2 = Board.get_gem_at(coord)
+	var pos = Board.get_pos(coord) - Vector2(Board.tile_sz, Board.tile_sz) * 0.5
+	Game.begin_busy()
+	slot1.elastic = -1.0
+	var slot2 = Hand.add_gem(g2)
+	slot2.global_position = pos
+	slot2.elastic = -1.0
+	tween.tween_callback(func():
+		slot1.z_index = 10
+	)
+	tween.tween_interval(0.1)
+	tween.tween_callback(func():
+		Board.set_gem_at(coord, null)
+		Board.set_item_at(coord, null)
+	)
+	var sub1 = get_tree().create_tween()
+	var sub2 = get_tree().create_tween()
+	sub1.tween_property(slot1, "global_position", pos + Vector2(0, Board.tile_sz * 0.75), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub1.tween_property(slot1, "global_position", pos, 0.3)
+	sub2.tween_interval(0.15)
+	sub2.tween_property(slot2, "global_position", pos + Vector2(0.0, -Board.tile_sz * 0.75), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub2.tween_property(slot2, "elastic", 1.0, 0.3).from(0.0)
+	tween.tween_subtween(sub1)
+	tween.parallel().tween_subtween(sub2)
+		
+	tween.tween_callback(func():
+		Board.set_gem_at(coord, g1)
+		if g1.bound_item:
+			Board.set_item_at(coord, g1.bound_item)
+		Hand.erase(slot1.get_index())
+		control_ui.update_preview()
+		Game.end_busy()
+	)
 
 func process_command_line(cl : String):
 	var tokens = []
@@ -679,7 +696,7 @@ func process_command_line(cl : String):
 			Game.add_relic(r)
 		elif cmd == "dhg":
 			var idx = int(tokens[1])
-			delete_gem(Hand.grabs[idx], hand_ui.get_ui(idx).gem_ui)
+			delete_gem(Hand.grabs[idx], Hand.ui.get_slot(idx).gem_ui)
 		elif cmd == "backup":
 			DirAccess.copy_absolute("user://save1.json", "res://save_%s.txt" % SUtils.get_formated_datetime())
 		elif cmd == "restore":
@@ -778,10 +795,21 @@ func get_level_reward(lv : int):
 		return 7
 	return 0
 
+func set_lang(lang : String):
+	if lang.begins_with("en"):
+		TranslationServer.set_locale("en")
+	elif lang.begins_with("zh"):
+		TranslationServer.set_locale("zh")
+	if level > 0:
+		update_level_text(level)
+
+func set_fullscreen(v : bool):
+	pass
+
 func begin_busy():
 	control_ui.roll_button.disabled = true
 	control_ui.play_button.disabled = true
-	hand_ui.disabled = true
+	Hand.ui.disabled = true
 	Drag.release()
 
 func end_busy():
@@ -789,22 +817,15 @@ func end_busy():
 		if rolls > 0:
 			control_ui.roll_button.disabled = false
 		control_ui.play_button.disabled = false
-	hand_ui.disabled = false
+	Hand.ui.disabled = false
 
 func begin_transition(tween : Tween):
 	blocker_ui.show()
-	
 	trans_sp.sprite_frames = null
 	trans_sp.frame = 0
-	var mat = ShaderMaterial.new()
-	mat.shader = mask_shader
-	Game.subviewport_container.material = mat
-	tween.tween_method(func(t):
-		mat.set_shader_parameter("radius", t)
-	, 0.0, 3.2, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(subviewport_container.material, "shader_parameter/radius", 3.2, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 
 func end_transition(tween : Tween):
-	var mat = Game.subviewport_container.material
 	tween.tween_callback(func():
 		match randi() % 2:
 			0: 
@@ -816,11 +837,8 @@ func end_transition(tween : Tween):
 		trans_sp.scale = Vector2(0.0, 0.0)
 	)
 	tween.tween_property(trans_sp, "scale", Vector2(3.0, 3.0), 0.4).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_method(func(t):
-		mat.set_shader_parameter("radius", t)
-	, 3.2, 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(subviewport_container.material, "shader_parameter/radius", 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
-		Game.subviewport_container.material = null
 		blocker_ui.hide()
 	)
 
@@ -1029,7 +1047,7 @@ func start_game(saving : String = ""):
 		var tween = get_tree().create_tween()
 		tween.tween_interval(1.1)
 		tween.tween_callback(func():
-			board_ui.enter(null, false)
+			Board.ui.enter(null, false)
 			Game.roll()
 			new_level(null)
 		)
@@ -1060,7 +1078,7 @@ func get_level_desc(target : int, curses : Array[Curse] = []):
 		var text = ""
 		for k in cates.keys():
 			text = (tr(k) % cates[k]) + text
-		ret += " [color=brown]%s[/color]" % text
+		ret += " [color=red]%s[/color]" % text
 	return ret
 
 func update_level_text(lv : int, target : int = -1, reward : int = -1, curses : Array[Curse] = []):
@@ -1175,7 +1193,6 @@ func new_level(tween : Tween = null):
 		update_level_text(level, target_score, reward, current_curses)
 		refresh_cluster_levels()
 		
-		set_props(Props.None)
 		rolls = rolls_per_level
 		swaps = swaps_per_level
 		plays = plays_per_level
@@ -1248,9 +1265,8 @@ func level_end():
 	swaps = 0
 	control_ui.swaps_text.show_change = true
 	action_stack.clear()
-	control_ui.undo_button.hide()
+	control_ui.undo_button.disabled = true
 	control_ui.expected_score_panel.hide()
-	set_props(Props.None)
 	for c in current_curses:
 		c.remove()
 	current_curses.clear()
@@ -1291,7 +1307,7 @@ func play():
 		speed = 1.0 / base_speed
 		
 		action_stack.clear()
-		control_ui.undo_button.hide()
+		control_ui.undo_button.disabled = true
 		control_ui.expected_score_panel.hide()
 		
 		calculator_bar_ui.appear()
@@ -1302,9 +1318,10 @@ func play():
 func toggle_in_game_menu():
 	if !in_game_menu_ui.visible:
 		STooltip.close()
+		Game.screen_shake_strength = 8.0
 		in_game_menu_ui.enter()
 	else:
-		SSound.music_clear()
+		SSound.music_more_clear()
 		in_game_menu_ui.exit()
 
 func save_to_file(name : String = "1"):
@@ -1656,12 +1673,12 @@ func load_from_file(name : String = "1"):
 	for idx in hand:
 		var g = Game.gems[int(idx)]
 		Hand.grabs.append(g)
-		Game.hand_ui.add_ui(g)
+		Hand.ui.add_slot(g)
 	var cells = data["cells"]
 	for cell in cells:
 		var coord = str_to_var("Vector2i" + cell["coord"])
 		var c = Board.add_cell(coord)
-		var ui = Game.board_ui.get_cell(coord)
+		var ui = Game.Board.ui.get_cell(coord)
 		var gem_idx = cell["gem"]
 		var item_idx = cell["item"]
 		if gem_idx != -1:
@@ -1718,7 +1735,7 @@ func load_from_file(name : String = "1"):
 			shop_ui.list2.add_child(ui)
 		shop_ui.enter(null, false)
 	else:
-		board_ui.enter(null, false)
+		Board.ui.enter(null, false)
 		control_ui.update_preview()
 		control_ui.expected_score_panel.show()
 
@@ -1726,13 +1743,16 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_RIGHT:
-				set_props(Props.None)
+				pass
+	elif event is InputEventMouseMotion:
+		mouse_pos = event.position
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.is_pressed():
 			if event.keycode == KEY_ESCAPE:
 				SSound.se_click.play()
+				Game.screen_shake_strength = 8.0
 				if options_ui.visible:
 					options_ui.exit()
 				elif bag_viewer_ui.visible:
@@ -1747,29 +1767,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					command_line_edit.grab_focus()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				var c = board_ui.hover_coord(true)
-				if Board.is_valid(c):
-					if !control_ui.action_tip_text.disabled:
-						if props == Props.Pin:
-							if pins_num > 0 && Board.freeze(c):
-								pins_num -= 1
-						elif props == Props.Activate:
-							if activates_num > 0:
-								var i = Board.get_item_at(c)
-								if i:
-									Board.activate(i, 0, 0, c, Board.ActiveReason.RcAction)
-									Board.set_item_at(c, null)
-									Board.matching()
-									activates_num -= 1
-						elif props == Props.Grab:
-							if grabs_num > 0:
-								var g = Board.get_gem_at(c)
-								if g:
-									board_ui.start_drag(c)
+			pass
 	elif event is InputEventMouseMotion:
-		if board_ui.visible:
-			var c = board_ui.hover_coord(true)
+		if Board.ui.visible:
+			var c = Board.ui.hover_coord(true)
 			if Board.is_valid(c):
 				var cc = Board.offset_to_cube(c)
 				control_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
@@ -1790,19 +1791,12 @@ func _unhandled_input(event: InputEvent) -> void:
 				control_ui.debug_text.text = ""
 				STooltip.close()
 
-func set_lang(lang : String):
-	if lang.begins_with("en"):
-		TranslationServer.set_locale("en")
-	elif lang.begins_with("zh"):
-		TranslationServer.set_locale("zh")
-	if level > 0:
-		update_level_text(level)
-
 func _ready() -> void:
 	randomize()
 	
 	subviewport.size = get_viewport().size
 	
+	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
 	Board.rolling_finished.connect(func():
 		var processed = false
 		for h in event_listeners:
@@ -1841,6 +1835,7 @@ func _ready() -> void:
 			control_ui.filling_times_text_container.hide()
 			calculator_bar_ui.calculate()
 	)
+	Hand.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Control/HBoxContainer2/Panel/HBoxContainer/Hand
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		stage = Stage.Deploy
@@ -1879,3 +1874,23 @@ func _ready() -> void:
 		command_line_edit.clear()
 		command_line_edit.hide()
 	)
+	
+	screen_shake_noise = FastNoiseLite.new()
+	screen_shake_noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	screen_shake_noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	screen_shake_noise.frequency = 0.2
+	screen_shake_noise.seed = randi()
+	
+	var window_size = Vector2(DisplayServer.window_get_size())
+	trans_bg.size = window_size
+	background.scale = window_size
+	subviewport.size = window_size
+	crt.material.set_shader_parameter("resolution", window_size)
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+
+func _process(delta: float) -> void:
+	if canvas:
+		screen_shake_strength = lerp(screen_shake_strength, 0.0, 5.0 * delta)
+		screen_shake_noise_coord += 30.0 * delta
+		screen_offset = lerp(screen_offset, (mouse_pos - subviewport.size * 0.5) * 0.007, 0.05)
+		canvas.offset = screen_offset + Vector2(screen_shake_noise.get_noise_2d(17.0, screen_shake_noise_coord), screen_shake_noise.get_noise_2d(93.0, screen_shake_noise_coord)) * screen_shake_strength

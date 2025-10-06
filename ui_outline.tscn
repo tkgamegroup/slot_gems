@@ -1,6 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://1uswtjs0af28"]
 
-[ext_resource type="Texture2D" uid="uid://c4qrv5stqpgim" path="res://images/outline.png" id="1_qasoe"]
+[ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/outline-o.png" id="1_qasoe"]
 
 [node name="Outline" type="Sprite2D"]
+modulate = Color(0.51718444, 0.5171845, 0.51718444, 1)
 texture = ExtResource("1_qasoe")
+centered = false

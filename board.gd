@@ -20,15 +20,19 @@ enum PlaceReason
 var cx : int
 var cy : int
 const cx_mult : int = 3
+const tile_sz : int = 48
 var cells : Array[Cell]
 var curr_min_gem_num : int
 var next_min_gem_num : int
 
+const UiBoard = preload("res://ui_board.gd")
 const roll_speed : Curve = preload("res://roll_speed.tres")
 const particles_pb = preload("res://particles.tscn")
 const active_effect_pb = preload("res://ui_active_effect.tscn")
 const black_bg = preload("res://images/black_bg.png")
 const trail_pb = preload("res://trail.tscn")
+
+var ui : UiBoard = null
 
 var num_tasks : int
 var show_coords : bool = false
@@ -126,7 +130,7 @@ func offset_ring(c : Vector2i, r : int) -> Array[Vector2i]:
 	return ret
 
 func get_pos(c : Vector2i):
-	return Game.board_ui.get_pos(Game.board_ui.ui_coord(c))
+	return ui.get_pos(ui.ui_coord(c))
 
 func is_valid(c : Vector2i):
 	return c.x >= 0 && c.x < cx && c.y >= 0 && c.y < cy
@@ -180,7 +184,7 @@ func set_gem_at(c : Vector2i, g : Gem):
 	else:
 		cell.pinned = false
 		cell.frozen = false
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 	return og
 
 func get_item_at(c : Vector2i):
@@ -213,7 +217,7 @@ func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
 		for h in event_listeners:
 			h.host.on_event.call(Event.ItemEntered, null, i)
 	cell.item = i
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 	return oi
 
 func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
@@ -233,7 +237,7 @@ func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
 			if !oi.on_mount.call(i):
 				return true
 		oi.mounted = i
-		Game.board_ui.update_cell(c)
+		ui.update_cell(c)
 		return true
 	else:
 		set_item_at(c, i, reason)
@@ -255,7 +259,7 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 	if cells[idx].state == s:
 		return false
 	cells[idx].state = s
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 	'''
 	if extra.has("pos"):
 		var tween = Game.get_tree().create_tween()
@@ -326,7 +330,7 @@ func pin(c : Vector2i):
 		return false
 	if get_gem_at(c):
 		cell.pinned = true
-		Game.board_ui.update_cell(c)
+		ui.update_cell(c)
 		return true
 
 func unpin(c : Vector2i):
@@ -335,7 +339,7 @@ func unpin(c : Vector2i):
 		return false
 	var idx = c.y * cx + c.x
 	cells[idx].pinned = false
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 
 func freeze(c : Vector2i):
 	c = format_coord(c)
@@ -347,7 +351,7 @@ func freeze(c : Vector2i):
 		return false
 	if get_gem_at(c):
 		cell.frozen = true
-		Game.board_ui.update_cell(c)
+		ui.update_cell(c)
 		return true
 
 func unfreeze(c : Vector2i):
@@ -357,7 +361,7 @@ func unfreeze(c : Vector2i):
 	var idx = c.y * cx + c.x
 	var cell = cells[idx]
 	cells[idx].frozen = false
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 
 func set_nullified(c : Vector2i, v : bool):
 	c = format_coord(c)
@@ -368,7 +372,7 @@ func set_nullified(c : Vector2i, v : bool):
 	if cell.nullified == v:
 		return false
 	cell.nullified = v
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 	return true
 
 func set_in_mist(c : Vector2i, v : bool):
@@ -380,7 +384,7 @@ func set_in_mist(c : Vector2i, v : bool):
 	if cell.in_mist == v:
 		return false
 	cell.in_mist = v
-	Game.board_ui.update_cell(c)
+	ui.update_cell(c)
 	return true
 
 func add_aura(i : Item):
@@ -455,7 +459,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		sp.z_index = 6
 		sp.self_modulate.a = 0.5
 		sp.get_child(1).text = "%d" % active_serial
-		Game.board_ui.cells_root.add_child(sp)
+		ui.cells_root.add_child(sp)
 	elif type == HostType.Relic:
 		var relic : Relic = host
 		if !relic.on_active.is_valid():
@@ -515,7 +519,7 @@ func clear():
 			set_item_at(c, null)
 			set_gem_at(c, null)
 	cells.clear()
-	Game.board_ui.clear()
+	ui.clear()
 	cx = 0
 	cy = 0
 
@@ -523,7 +527,7 @@ func add_cell(c : Vector2i):
 	var cell = Cell.new()
 	cell.coord = c
 	cells.append(cell)
-	Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
+	ui.add_cell(ui.ui_coord(c))
 	return cell
 
 func update_gem_quantity_limit():
@@ -551,7 +555,7 @@ func resize(_hf_cy : int):
 	for cell in old_cells:
 		cell.coord = cell.coord + offset
 	cells.clear()
-	Game.board_ui.clear()
+	ui.clear()
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
@@ -564,7 +568,7 @@ func resize(_hf_cy : int):
 			if !added:
 				add_cell(c)
 			else:
-				Game.board_ui.add_cell(Game.board_ui.ui_coord(c))
+				ui.add_cell(ui.ui_coord(c))
 	update_gem_quantity_limit()
 
 func skip_above_unmovables(c : Vector2i) -> Vector2i:
@@ -633,7 +637,7 @@ func clear_consumed():
 					var g = get_gem_at(c)
 					if g:
 						var tex = Gem.gem_frames.get_frame_texture("default", g.type)
-						SEffect.add_break_pieces(get_pos(c), Vector2(32, 32), tex, Game.board_ui.overlay)
+						SEffect.add_break_pieces(get_pos(c), Vector2(32, 32), tex, ui.overlay)
 				set_gem_at(c, null)
 				set_state_at(c, Cell.State.Normal)
 			elif s == Cell.State.Burning:
@@ -816,9 +820,9 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 	tween.tween_callback(func():
 		var pos = get_pos(target_coord)
 		var sp_expl = SEffect.add_explosion(pos, fx_sz, 3, 0.5 * Game.speed)
-		Game.board_ui.cells_root.add_child(sp_expl)
+		ui.cells_root.add_child(sp_expl)
 		var fx = SEffect.add_distortion(pos, fx_sz, 4, 0.5 * Game.speed)
-		Game.board_ui.cells_root.add_child(fx)
+		ui.cells_root.add_child(fx)
 	)
 	tween.tween_interval(0.5 * Game.speed)
 	tween.tween_callback(func():
@@ -868,7 +872,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 				sp.sprite_frames = Item.item_frames
 				sp.frame = items[i].image_id
 				sp.z_index = 4
-				Game.board_ui.cells_root.add_child(sp)
+				ui.cells_root.add_child(sp)
 				sps.append(sp)
 	)
 	tween.tween_callback(func():

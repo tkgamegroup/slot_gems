@@ -53,7 +53,7 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 			sp.frame = p.second
 			sp.modulate = Color("#5b6ee1", 0.0)
 			sp.position = Board.get_pos(p.first)
-			Game.board_ui.overlay.add_child(sp)
+			Board.ui.overlay.add_child(sp)
 			sps.append(sp)
 			c += sp.position
 		c /= runes.size()
@@ -458,11 +458,11 @@ func setup(n : String):
 				var idx = 0
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
-					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx), 0.3 * Game.speed)
+					SEffect.add_leading_line(ui_pos, Hand.ui.get_pos(idx), 0.3 * Game.speed)
 				)
 				tween.tween_interval(0.3 * Game.speed)
 				tween.tween_callback(func():
-					Game.duplicate_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx))
+					Game.duplicate_gem(Hand.grabs[idx], Hand.ui.get_slot(idx))
 				)
 	elif name == "Cancer":
 		image_id = 21
@@ -584,11 +584,11 @@ func setup(n : String):
 				var idx = Hand.grabs.size() - 1
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
-					SEffect.add_leading_line(ui_pos, Game.hand_ui.get_pos(idx))
+					SEffect.add_leading_line(ui_pos, Hand.ui.get_pos(idx))
 				)
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
-					Game.delete_gem(Hand.grabs[idx], Game.hand_ui.get_ui(idx).gem_ui)
+					Game.delete_gem(Hand.grabs[idx], Hand.ui.get_slot(idx).gem_ui)
 				)
 	elif name == "Sagittarius":
 		image_id = 26

@@ -101,7 +101,7 @@ static func apply_curses():
 					Board.set_in_mist(c.coord, true)
 			"curse_wrath":
 				for c in cs:
-					Game.delete_gem(Board.get_gem_at(c.coord), Game.board_ui.get_cell(c.coord).gem_ui, "board")
+					Game.delete_gem(Board.get_gem_at(c.coord), Board.ui.get_cell(c.coord).gem_ui, "board")
 			"curse_envy":
 				for c in cs:
 					c.add_sin("SinEnvy")

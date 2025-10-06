@@ -1,8 +1,9 @@
 extends Control
 
-const central_coord = Vector2i(26, 12)
+const central_coord = Vector2i(26, 11)
 
 const UiCell = preload("res://ui_cell.gd")
+const UiHandSlot = preload("res://ui_hand_slot.gd")
 const cell_pb = preload("res://ui_cell.tscn")
 const outline_pb = preload("res://ui_outline.tscn")
 
@@ -72,12 +73,14 @@ func clear():
 		cells_root.remove_child(n)
 
 func add_cell(c : Vector2i):
+	var pos = get_pos(c) - Vector2(Board.tile_sz, Board.tile_sz) * 0.5
+	
 	var outline = outline_pb.instantiate()
-	outline.position = get_pos(c)
+	outline.position = pos
 	outlines_root.add_child(outline)
 	
 	var cell = cell_pb.instantiate()
-	cell.position = get_pos(c)
+	cell.position = pos
 	cells_root.add_child(cell)
 
 func enter(tween : Tween = null, trans : bool = true):
@@ -86,10 +89,10 @@ func enter(tween : Tween = null, trans : bool = true):
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
 	var rect = tilemap.get_used_rect()
-	panel.position = tilemap.map_to_local(rect.position) - Vector2(16, 16) - Vector2(8, 32)
+	panel.position = tilemap.map_to_local(rect.position) - Vector2(Board.tile_sz * 0.75, Board.tile_sz * 1.5)
 	panel.size = tilemap.map_to_local(rect.end) - panel.position
 	if Game.board_size % 2 == 0:
-		panel.position.y += 16
+		panel.position.y += 24
 	
 	if trans:
 		if !tween:
@@ -135,9 +138,9 @@ func _ready() -> void:
 		elif ev == "peek_exited":
 			pass
 		else:
-			var coord = extra["coord"]
-			var g1 = payload as Gem
 			if Game.swaps > 0:
+				var slot1 = payload as UiHandSlot
+				var coord = extra["coord"]
 				var g2 = Board.get_gem_at(coord)
 				if Board.get_cell(coord).in_mist:
 					SSound.se_error.play()
@@ -149,10 +152,10 @@ func _ready() -> void:
 					Game.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
 					return false
 				Game.swaps -= 1
-				Hand.swap(coord, g1)
+				
+				Game.swap_hand_and_board(slot1, coord)
 				Game.action_stack.append(Pair.new(coord, g2))
-				Game.control_ui.undo_button.show()
-				Game.control_ui.update_preview()
+				Game.control_ui.undo_button.disabled = false
 				return true
 			else:
 				Game.control_ui.swaps_text.hint()

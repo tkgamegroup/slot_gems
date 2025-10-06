@@ -10,7 +10,7 @@ var processing : bool = false
 func add_target(_type : String, node, cb : Callable):
 	var t = Triple.new(_type, node, cb)
 	targets.append(t)
-	if node != Game.board_ui:
+	if node != Board.ui:
 		node.mouse_entered.connect(func():
 			if type == _type:
 				cb.call(payload, "peek", {})
@@ -37,24 +37,23 @@ func start(_type : String, _payload, _ui : Control, _release_cb : Callable):
 	release_cb = _release_cb
 
 func release(target = null, extra : Dictionary = {}):
-	if processing:
+	if processing || !ui:
 		return
+	processing = true
+	var ok = false
+	if target:
+		ok = target.third.call(payload, "dropped", extra)
+		if ok:
+			target.third.call(null, "peek_exited", {})
+	if release_cb.is_valid():
+		release_cb.call(target.second if ok else null, extra)
+	type = ""
+	payload = null
 	if ui:
-		processing = true
-		var ok = false
-		if target:
-			ok = target.third.call(payload, "dropped", extra)
-			if ok:
-				target.third.call(null, "peek_exited", {})
-		if release_cb.is_valid():
-			release_cb.call(target.second if ok && target else null)
-		type = ""
-		payload = null
-		if ui:
-			ui.z_index = 0
-			ui = null
-		release_cb = Callable()
-		processing = false
+		ui.z_index = 0
+		ui = null
+	release_cb = Callable()
+	processing = false
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -66,11 +65,10 @@ func _input(event: InputEvent) -> void:
 				if ui:
 					var target = null
 					var extra = {}
-					# drop on target
 					for t in targets:
 						if t.first == type:
-							if t.second == Game.board_ui && Game.board_ui.visible:
-								var c = Game.board_ui.hover_coord(true)
+							if t.second == Board.ui && Board.ui.visible:
+								var c = Board.ui.hover_coord(true)
 								if Board.is_valid(c):
 									target = t
 									extra["coord"] = c

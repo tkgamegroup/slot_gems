@@ -68,5 +68,6 @@ func exit():
 func _ready() -> void:
 	close_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 	)

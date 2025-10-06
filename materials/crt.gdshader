@@ -40,11 +40,13 @@ uniform float roll_speed :hint_range(-8.0, 8.0) = 1.0;
 uniform float scan_line_strength :hint_range(-12.0, -1.0) = -8.0;
 uniform float pixel_strength :hint_range(-4.0, 0.0) = -2.0;
 
-float random(vec2 uv){
+float random(vec2 uv)
+{
     return fract(cos(uv.x * 83.4827 + uv.y * 92.2842) * 43758.5453123);
 }
 
-vec3 fetch_pixel(vec2 uv, vec2 off){
+vec3 fetch_pixel(vec2 uv, vec2 off)
+{
 	vec2 pos = floor(uv * resolution + off) / resolution + vec2(0.5) / resolution;
 
 	float noise = 0.0;
@@ -61,7 +63,8 @@ vec3 fetch_pixel(vec2 uv, vec2 off){
 }
 
 // Distance in emulated pixels to nearest texel.
-vec2 Dist(vec2 pos){
+vec2 Dist(vec2 pos)
+{
 	pos = pos * resolution;
 	return - ((pos - floor(pos)) - vec2(0.5));
 }
@@ -70,7 +73,8 @@ vec2 Dist(vec2 pos){
 float Gaus(float pos, float scale){ return exp2(scale * pos * pos); }
 
 // 3-tap Gaussian filter along horz line.
-vec3 Horz3(vec2 pos, float off){
+vec3 Horz3(vec2 pos, float off)
+{
 	vec3 b = fetch_pixel(pos, vec2(-1.0, off));
 	vec3 c = fetch_pixel(pos, vec2( 0.0, off));
 	vec3 d = fetch_pixel(pos, vec2( 1.0, off));
@@ -87,14 +91,16 @@ vec3 Horz3(vec2 pos, float off){
 }
 
 // Return scanline weight.
-float Scan(vec2 pos, float off){
+float Scan(vec2 pos, float off)
+{
 	float dst = Dist(pos).y;
 
 	return Gaus(dst + off, scan_line_strength);
 }
 
 // Allow nearest three lines to effect pixel.
-vec3 Tri(vec2 pos){
+vec3 Tri(vec2 pos)
+{
 	vec3 clr = fetch_pixel(pos, vec2(0.0));
 	if(scan_line_amount > 0.0){
 		vec3 a = Horz3(pos,-1.0);
@@ -112,7 +118,8 @@ vec3 Tri(vec2 pos){
 }
 
 // Takes in the UV and warps the edges, creating the spherized effect
-vec2 warp(vec2 uv){
+vec2 warp(vec2 uv)
+{
 	vec2 delta = uv - 0.5;
 	float delta2 = dot(delta.xy, delta.xy);
 	float delta4 = delta2 * delta2;
@@ -122,33 +129,38 @@ vec2 warp(vec2 uv){
 	return (warped - 0.5) / mix(1.0,1.2,warp_amount/5.0) + 0.5;
 }
 
-float vignette(vec2 uv){
+float vignette(vec2 uv)
+{
 	uv *= 1.0 - uv.xy;
 	float vignette = uv.x * uv.y * 15.0;
 	return pow(vignette, vignette_intensity * vignette_amount);
 }
 
-float floating_mod(float a, float b){
+float floating_mod(float a, float b)
+{
 	return a - b * floor(a/b);
 }
 
-vec3 grille(vec2 uv){
+vec3 grille(vec2 uv)
+{
 	float unit = PI / 3.0;
 	float scale = 2.0*unit/grille_size;
-	float r = smoothstep(0.5, 0.8, cos(uv.x*scale - unit));
-	float g = smoothstep(0.5, 0.8, cos(uv.x*scale + unit));
-	float b = smoothstep(0.5, 0.8, cos(uv.x*scale + 3.0*unit));
+	float r = smoothstep(0.5, 0.8, cos(uv.y*scale - unit));
+	float g = smoothstep(0.5, 0.8, cos(uv.y*scale + unit));
+	float b = smoothstep(0.5, 0.8, cos(uv.y*scale + 3.0*unit));
 	return mix(vec3(1.0), vec3(r,g,b), grille_amount);
 }
 
-float roll_line(vec2 uv){
+float roll_line(vec2 uv)
+{
 	float x = uv.y * 3.0 - TIME * roll_speed;
 	float f = cos(x) * cos(x * 2.35 + 1.1) * cos(x * 4.45 + 2.3);
 	float roll_line = smoothstep(0.5, 0.9, f);
 	return roll_line * roll_line_amount;
 }
 
-void fragment(){
+void fragment()
+{
 	vec2 pix = FRAGCOORD.xy;
 	vec2 pos = warp(SCREEN_UV);
 

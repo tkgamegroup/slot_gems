@@ -37,7 +37,7 @@ func add_ui(r : Relic):
 				elif event.button_index == MOUSE_BUTTON_RIGHT:
 					var menu = ctx_menu_pb.instantiate()
 					menu.open(event.global_position, int(r.price / 2))
-					Game.root_ui.add_child(menu)
+					Game.canvas.add_child(menu)
 					menu.on_sell.connect(func():
 						SSound.se_coin.play()
 						Game.coins += menu.sell_price

@@ -4,10 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="4_tb125"]
 
 [node name="UiItem" type="Control"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 3
 anchors_preset = 0
+pivot_offset = Vector2(24, 24)
 script = ExtResource("1_xb2mb")
 
 [node name="Gem" parent="." instance=ExtResource("4_tb125")]
-position = Vector2(16, 16)

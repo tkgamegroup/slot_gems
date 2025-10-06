@@ -3,20 +3,19 @@ extends Control
 const NumberText = preload("res://number_text.gd")
 const UiProp = preload("res://ui_prop.gd")
 
-@onready var panel : Control = $Panel
-@onready var roll_button : Button = $Panel/HBoxContainer/Roll
-@onready var rolls_text : Label = $Panel/HBoxContainer/VBoxContainer/Rolls
-@onready var swaps_text : NumberText = $Panel/HBoxContainer/VBoxContainer3/Swaps
-@onready var play_button  : Button = $Panel/HBoxContainer/Play
-@onready var plays_text : Label = $Panel/HBoxContainer/VBoxContainer2/Plays
-@onready var expected_score_panel : Control = $Panel/HBoxContainer/Play/Control/PanelContainer
-@onready var expected_score_text : Label = $Panel/HBoxContainer/Play/Control/PanelContainer/ExpectedScore
-@onready var action_tip_text : AdvancedLabel = $ActionTip
+@onready var panel : Control = $HBoxContainer2/Panel
+@onready var roll_button : Button = $HBoxContainer2/Panel/HBoxContainer/Roll
+@onready var rolls_text : Label = $HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Rolls
+@onready var swaps_text : NumberText = $HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps
+@onready var play_button  : Button = $HBoxContainer2/Panel/HBoxContainer/Play
+@onready var plays_text : Label = $HBoxContainer2/Panel/HBoxContainer/VBoxContainer2/Plays
+@onready var expected_score_panel : Control = $HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer
+@onready var expected_score_text : Label = $HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer/ExpectedScore
 @onready var props_bar : Control = $HBoxContainer
 @onready var pin_ui : UiProp = $HBoxContainer/UiProp
 @onready var activate_ui : UiProp = $HBoxContainer/UiProp2
 @onready var grab_ui : UiProp = $HBoxContainer/UiProp3
-@onready var undo_button : Button = $Undo
+@onready var undo_button : Button = $HBoxContainer2/Undo
 @onready var filling_times_text_container : Control = $PanelContainer
 @onready var filling_times_text : Label = $PanelContainer/FillingTimes
 var filling_times_tween : Tween = null
@@ -50,6 +49,7 @@ func update_preview():
 func _ready() -> void:
 	roll_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		roll_button.disabled = true
 		Game.roll()
 	)
@@ -64,6 +64,7 @@ func _ready() -> void:
 	)
 	play_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		play_button.disabled = true
 		play_button.mouse_exited.emit()
 		Game.play()
@@ -80,27 +81,30 @@ func _ready() -> void:
 	)
 	pin_ui.button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.set_props(Game.Props.Pin)
 	)
 	activate_ui.button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.set_props(Game.Props.Activate)
 	)
 	grab_ui.button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		Game.set_props(Game.Props.Grab)
 	)
 	undo_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		if !Game.action_stack.is_empty():
-			var p = Game.action_stack.back()
-			Hand.erase(Hand.find(p.second))
-			Hand.swap(p.first, p.second)
 			Game.swaps += 1
+			
+			var p = Game.action_stack.back()
+			Game.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first)
 			Game.action_stack.pop_back()
 			if Game.action_stack.is_empty():
-				undo_button.hide()
-			update_preview()
+				undo_button.disabled = true
 	)
 	filling_times_text_container.mouse_entered.connect(func():
 		STooltip.show([Pair.new(tr("tt_game_filling_times_title"), tr("tt_game_filling_times_content"))])

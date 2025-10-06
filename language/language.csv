@@ -74,6 +74,7 @@ ui_options_sfx_volume,SFX Volume,音效音量
 ui_options_music_volume,Music Volume,音乐音量
 ui_options_fullscreen,Fullscreen,全屏
 ui_options_game_speed,Game Speed,游戏速度
+ui_options_crt,CRT,CRT
 ui_options_performance_mode,Performance Mode,性能模式
 ui_options_invincible,Invincible,无敌
 ui_options_command_line,Command Line,命令行
@@ -139,7 +140,7 @@ ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
 ui_in_game_menu_main_menu,Main Menu,主菜单
-ui_in_game_menu_tutorial,Tutorial,教程
+ui_in_game_quit_to_desktop,Quit To Desktop,退出到桌面
 ui_in_game_menu_auto_place_items,Auto Place Items,自动放道具
 ui_in_game_menu_win,Win,赢
 ui_in_game_menu_lose,Lose,输

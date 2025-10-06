@@ -14,7 +14,7 @@ func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width 
 	var l = SEffect.leading_line_pb.instantiate()
 	l.setup(p0, p1, 0.3, duration, width)
 	l.z_index = 3
-	Game.board_ui.cells_root.add_child(l)
+	Board.ui.cells_root.add_child(l)
 
 func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()
@@ -49,12 +49,9 @@ func add_distortion(pos : Vector2, size : Vector2, z_index : int, duration : flo
 	fx.position = pos
 	fx.scale = size * 2.0
 	fx.z_index = z_index
-	var mat : ShaderMaterial = fx.material
-	Game.board_ui.cells_root.add_child(fx)
+	Board.ui.cells_root.add_child(fx)
 	var tween = Game.get_tree().create_tween()
-	tween.tween_method(func(t):
-		mat.set_shader_parameter("radius", t)
-	, 0.0, 0.5, duration)
+	tween.tween_property(fx.material, "shader_parameter/radius", 0.5, duration).from(0.0).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(fx.queue_free)
 	return fx
 

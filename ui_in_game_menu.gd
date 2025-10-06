@@ -4,7 +4,7 @@ extends Control
 @onready var resume_button : Button = $PanelContainer/VBoxContainer/Button
 @onready var options_button : Button = $PanelContainer/VBoxContainer/Button2
 @onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
-@onready var tutorial_button : Button = $PanelContainer/VBoxContainer/Button4
+@onready var quit_to_desktop_button : Button = $PanelContainer/VBoxContainer/Button4
 @onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button5
 @onready var win_button : Button = $PanelContainer/VBoxContainer/Button6
 @onready var lose_button : Button = $PanelContainer/VBoxContainer/Button7
@@ -33,16 +33,20 @@ func exit(trans = true):
 	
 func _ready() -> void:
 	resume_button.pressed.connect(func():
-		SSound.music_clear()
+		SSound.music_more_clear()
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 	)
 	options_button.pressed.connect(func():
+		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit(false)
-		Game.options_ui.enter(false)
+		Game.options_ui.enter(true)
 	)
 	main_menu_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		for t in get_tree().get_processed_tweens():
 			t.custom_step(100.0)
 		exit()
@@ -50,8 +54,8 @@ func _ready() -> void:
 		var tween = Game.get_tree().create_tween()
 		Game.begin_transition(tween)
 		tween.tween_callback(func():
-			if Game.board_ui.visible:
-				Game.board_ui.exit(null, false)
+			if Board.ui.visible:
+				Board.ui.exit(null, false)
 			elif Game.shop_ui.visible:
 				Game.shop_ui.exit(null, false)
 			Game.control_ui.exit()
@@ -60,27 +64,27 @@ func _ready() -> void:
 		)
 		Game.end_transition(tween)
 	)
-	tutorial_button.pressed.connect(func():
-		SSound.music_clear()
-		SSound.se_click.play()
-		exit()
-		Game.tutorial_ui.enter()
+	quit_to_desktop_button.pressed.connect(func():
+		get_tree().quit()
 	)
 	auto_place_items_button.pressed.connect(func():
-		SSound.music_clear()
+		SSound.music_more_clear()
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 		STest.auto_place_items()
 	)
 	win_button.pressed.connect(func():
-		SSound.music_clear()
+		SSound.music_more_clear()
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 		Game.win()
 	)
 	lose_button.pressed.connect(func():
-		SSound.music_clear()
+		SSound.music_more_clear()
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 		Game.lose()
 	)

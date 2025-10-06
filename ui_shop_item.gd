@@ -101,7 +101,6 @@ func _ready() -> void:
 			ctrl.custom_minimum_size = Vector2(64, 64)
 			var ui = gem_ui.instantiate()
 			ui.update(object)
-			ui.scale = Vector2(2.0, 2.0)
 			ctrl.add_child(ui)
 			ctrl.mouse_entered.connect(func():
 				SSound.se_select.play()

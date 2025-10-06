@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://ch6a3tq6qlyfq"]
+
+[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem.gdshader" id="1_5b14o"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_5b14o")
+shader_parameter/type_color = Color(0.88, 0.2, 0.8, 1)
+shader_parameter/u_seed = 4

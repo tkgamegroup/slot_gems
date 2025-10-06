@@ -80,11 +80,11 @@ static func name_to_type(s : String):
 static func type_color(t : int) -> Color:
 	match t:
 		Type.None: return Color(0, 0, 0, 0)
-		Type.Red: return Color(214.0 / 255.0, 19.0 / 255.0, 25.0 / 255.0)
-		Type.Orange: return Color(255.0 / 255.0, 186.0 / 255.0, 7.0 / 255.0)
-		Type.Green: return Color(157.0 / 255.0, 192.0 / 255.0, 64.0 / 255.0)
-		Type.Blue: return Color(143.0 / 255.0, 223.0 / 255.0, 246.0 / 255.0)
-		Type.Purple: return Color(226.0 / 255.0, 53.0 / 255.0, 206.0 / 255.0)
+		Type.Red: return Color(0.83, 0.07, 0.09, 1.0)
+		Type.Orange: return Color(1.0, 0.71, 0.16)
+		Type.Green: return Color(0.61, 0.75, 0.25)
+		Type.Blue: return Color(0.56, 0.87, 0.96)
+		Type.Purple: return Color(0.88, 0.20, 0.80)
 	return Color.WHITE
 
 static func type_img(t : int):

@@ -1,5 +1,9 @@
 extends Node
 
+const UiHand = preload("res://ui_hand.gd")
+
+var ui : UiHand = null
+
 var grabs : Array[Gem]
 
 func add_gem(gem : Gem, pos : int = -1):
@@ -9,14 +13,7 @@ func add_gem(gem : Gem, pos : int = -1):
 	if gem.bound_item:
 		gem.bound_item.coord = Vector2i(pos, -1)
 	grabs.insert(pos, gem)
-
-func get_gem_from(gem : Gem, pos : Vector2):
-	Game.begin_busy()
-	var tween = Game.hand_ui.fly_gem_from(gem, pos)
-	tween.tween_callback(func():
-		add_gem(gem)
-		Game.end_busy()
-	)
+	return ui.add_slot(gem, pos)
 
 func draw(to_the_end : bool = true):
 	if Game.bag_gems.is_empty():
@@ -24,10 +21,9 @@ func draw(to_the_end : bool = true):
 	if grabs.size() >= Game.max_hand_grabs:
 		return null
 	var gem : Gem = Game.get_gem()
-	add_gem(gem, -1 if to_the_end else 0)
-	var ui = Game.hand_ui.add_ui(gem, -1 if to_the_end else 0)
-	ui.position.y = 50
-	return ui
+	var slot = add_gem(gem, -1 if to_the_end else 0)
+	slot.position.y = 50
+	return slot
 
 func find(g : Gem):
 	return grabs.find(g)
@@ -38,7 +34,7 @@ func erase(idx : int, release_gem : bool = true):
 		Game.release_gem(g)
 	grabs.erase(g)
 	
-	Game.hand_ui.remove_ui(idx)
+	ui.remove_slot(idx)
 	return g
 
 func clear():
@@ -46,15 +42,25 @@ func clear():
 		Game.release_gem(g)
 	grabs.clear()
 	
-	Game.hand_ui.clear()
+	ui.clear()
 
 func swap(coord : Vector2i, gem : Gem, immediately : bool = false):
+	var og = Board.set_gem_at(coord, null)
 	Board.set_item_at(coord, null)
-	var og = Board.set_gem_at(coord, gem)
-	if gem.bound_item:
-		Board.set_item_at(coord, gem.bound_item)
 	if immediately:
-		Game.hand_ui.add_ui(og)
+		Board.set_gem_at(coord, gem)
+		if gem.bound_item:
+			Board.set_item_at(coord, gem.bound_item)
 		add_gem(og)
 	else:
-		get_gem_from(og, Board.get_pos(coord))
+		var pos = Board.get_pos(coord) - Vector2(16, 24)
+		var slot = add_gem(og)
+		slot.elastic = -1.0
+		var tween = get_tree().create_tween()
+		tween.tween_property(slot, "global_position", pos + Vector2(0.0, -48.0), 0.5).from(pos)
+		tween.tween_property(slot, "elastic", 1.0, 0.5).from(0.0)
+		tween.tween_callback(func():
+			Board.set_gem_at(coord, gem)
+			if gem.bound_item:
+				Board.set_item_at(coord, gem.bound_item)
+		)

@@ -13,6 +13,7 @@ var callback : Callable
 
 func choose(idx : int):
 	SSound.se_click.play()
+	Game.screen_shake_strength = 8.0
 	buttons_list.hide()
 	var tween = Game.get_tree().create_tween()
 	var n = reward_list.get_child_count()
@@ -71,10 +72,13 @@ func exit():
 func _ready() -> void:
 	hide_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 	)
 	reroll_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 	)
 	skip_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 	)

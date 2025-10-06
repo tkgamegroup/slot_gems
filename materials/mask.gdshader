@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform float radius : hint_range(0.0, 2.0);
+uniform float radius : hint_range(0.0, 4.0);
 
 // https://www.shadertoy.com/view/7tSXzt
 const float an = 3.141593/6.;

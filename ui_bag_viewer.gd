@@ -26,7 +26,7 @@ func clear():
 
 func create_bar():
 	var bar = ColorRect.new()
-	bar.position = Vector2(8, 32)
+	bar.position = Vector2(16, 48)
 	bar.size = Vector2(16, 4)
 	bar.color = Color(0.7, 0.7, 0.7, 1.0)
 	bar.hide()
@@ -54,7 +54,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		select_callback = _select_callback
 	for g in Game.gems:
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(32, 36)
+		ctrl.custom_minimum_size = Vector2(48, 52)
 		ctrl.mouse_entered.connect(func():
 			SSound.se_select.play()
 			STooltip.show(g.get_tooltip())
@@ -63,7 +63,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 			STooltip.close()
 		)
 		var ui = gem_ui.instantiate()
-		ui.position = Vector2(16, 16)
+		ui.position = Vector2(24, 24)
 		ui.update(g)
 		ctrl.add_child(ui)
 		var bar = create_bar()
@@ -125,6 +125,7 @@ func _ready() -> void:
 	)
 	comfirm_button.pressed.connect(func():
 		SSound.se_click.play()
+		Game.screen_shake_strength = 8.0
 		exit()
 		select_callback.call(selecteds)
 	)
