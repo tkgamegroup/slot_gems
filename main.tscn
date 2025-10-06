@@ -1714,6 +1714,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1722,6 +1723,7 @@ text = "ui_game_board_size"
 
 [node name="BoardSize" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
+font_size = 28
 
 [node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/BoardSize" index="0"]
 text = "0"
@@ -1735,7 +1737,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
 layout_mode = 2
@@ -1744,6 +1746,7 @@ text = "ui_game_hand"
 
 [node name="Hand" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
 layout_mode = 2
+font_size = 28
 
 [node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/Hand" index="0"]
 text = "0"
@@ -1758,6 +1761,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
+theme_override_constants/separation = 0
 
 [node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(32, 32)
@@ -1768,6 +1772,7 @@ expand_mode = 1
 
 [node name="Coins" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
 layout_mode = 2
+font_size = 28
 
 [node name="Text" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins" index="0"]
 text = "0"
@@ -2018,13 +2023,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
-custom_minimum_size = Vector2(10, 0)
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Control"]
@@ -2043,6 +2048,7 @@ grow_vertical = 2
 scale = Vector2(1e-05, 1)
 pivot_offset = Vector2(4, 11)
 theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
+theme_override_font_sizes/font_size = 26
 text = "x"
 
 [node name="Panel2" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
@@ -2060,13 +2066,13 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "0X"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
-custom_minimum_size = Vector2(10, 0)
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Control2"]
@@ -2085,6 +2091,7 @@ grow_vertical = 2
 scale = Vector2(1e-05, 1)
 pivot_offset = Vector2(4, 11)
 theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
+theme_override_font_sizes/font_size = 26
 text = "x"
 
 [node name="Panel3" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
@@ -2101,7 +2108,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "1.0"
 horizontal_alignment = 1
 vertical_alignment = 1

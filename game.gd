@@ -634,6 +634,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i):
 	tween.parallel().tween_subtween(sub2)
 		
 	tween.tween_callback(func():
+		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, g1)
 		if g1.bound_item:
 			Board.set_item_at(coord, g1.bound_item)

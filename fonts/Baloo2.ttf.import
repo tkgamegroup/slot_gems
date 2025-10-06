@@ -2,7 +2,7 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cp78tjuwu7qrs"
+uid="uid://vm58fvt8waip"
 path="res://.godot/imported/Baloo2.ttf-e8f0ede197875fdde50d18303e3824f5.fontdata"
 
 [deps]
@@ -27,7 +27,7 @@ subpixel_positioning=0
 keep_rounding_remainders=true
 oversampling=0.0
 Fallbacks=null
-fallbacks=[Resource("uid://c8nrs3ji6smad", "res://fonts/NotoSansTC-Regular.ttf")]
+fallbacks=[Resource("uid://cgnj6jktft21d", "res://fonts/NotoSansSC.ttf")]
 Compress=null
 compress=true
 preload=[]

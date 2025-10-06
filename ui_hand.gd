@@ -36,7 +36,6 @@ func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
 					SSound.se_drag_item.play()
 					ui.rotation_degrees = 0.0
 					Drag.start("gem", ui, ui, func(target, extra):
-						SSound.se_drop_item.play()
 						if target && target != Board.ui:
 							Hand.erase(ui.get_index(), false)
 					)
@@ -85,7 +84,10 @@ func _process(delta: float) -> void:
 	for i in n:
 		var ui = get_slot(i)
 		if ui != Drag.ui && ui.elastic > 0.0:
-			ui.position = lerp(ui.position, Vector2(x_off, pow(sin(x_off * 0.03 + tt / 9.0), 2.0) * 3.0), 0.2 * ui.elastic)
+			var y = pow(sin(x_off * 0.03 + tt / 9.0), 2.0) * 3.0
+			if ui.get_global_rect().has_point(mpos):
+				y -= 5
+			ui.position = lerp(ui.position, Vector2(x_off, y), 0.2 * ui.elastic)
 			ui.rotation_degrees = (sin(x_off * 0.05 + tt / 20.0)) * 3.0
 		if !(i == drag_idx && !drag_on_hand):
 			x_off += item_w + gap

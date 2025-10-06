@@ -48,7 +48,6 @@ theme/custom="uid://lm57pm3v4aq7"
 [internationalization]
 
 locale/translation_remaps={
-"res://fonts/Baloo2.ttf": PackedStringArray("res://fonts/NotoSansTC-Regular.ttf:zh_CN"),
 "res://images/tutorial/elements_en.png": PackedStringArray("res://images/tutorial/elements_zh.png:zh_CN")
 }
 locale/translations=PackedStringArray("res://language/language.en.translation", "res://language/language.zh.translation")
