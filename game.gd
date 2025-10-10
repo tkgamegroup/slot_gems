@@ -303,7 +303,7 @@ func remove_gem(g : Gem, boardcast : bool = true):
 	
 	status_bar_ui.gem_count_text.text = "%d" % gems.size()
 
-func get_gem(g : Gem = null):
+func get_gem(g : Gem = null) -> Gem:
 	if g:
 		bag_gems.erase(g)
 		return g
@@ -1049,7 +1049,10 @@ func start_game(saving : String = ""):
 		tween.tween_interval(1.1)
 		tween.tween_callback(func():
 			Board.ui.enter(null, false)
-			Game.roll()
+			begin_busy()
+			Board.fill_blanks()
+			for i in min(draws_per_roll, bag_gems.size()):
+				Hand.draw()
 			new_level(null)
 		)
 	else:
@@ -1284,6 +1287,7 @@ func lose():
 	level_end()
 	game_over_ui.enter()
 
+# abandon
 func roll():
 	#if rolls > 0:
 		stage = Stage.Rolling

@@ -120,7 +120,7 @@ func _ready() -> void:
 				lb.add_theme_constant_override("shadow_offset_y", 2)
 				lb.add_theme_constant_override("outline_size", 1)
 				ctrl.add_child(lb)
-			ui.position = Vector2(32, 32)
+			ui.position = Vector2(8, 8)
 		elif cate == "item":
 			var ui = item_ui.instantiate()
 			ui.setup(object)

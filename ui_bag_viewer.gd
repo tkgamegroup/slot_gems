@@ -4,8 +4,8 @@ extends Control
 @onready var title = $PanelContainer/VBoxContainer/Label
 @onready var legend1 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer
 @onready var legend2 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2
-@onready var gem_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List
-@onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List2
+@onready var gem_list = $PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/List
+@onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/List2
 @onready var comfirm_button = $PanelContainer/VBoxContainer/HBoxContainer/Button2
 @onready var close_button = $PanelContainer/VBoxContainer/HBoxContainer/Button
 
@@ -63,7 +63,6 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 			STooltip.close()
 		)
 		var ui = gem_ui.instantiate()
-		ui.position = Vector2(24, 24)
 		ui.update(g)
 		ctrl.add_child(ui)
 		var bar = create_bar()

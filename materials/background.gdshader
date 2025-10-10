@@ -10,6 +10,7 @@ uniform vec2 offset = vec2(0.0, 0.0);
 uniform float brightness = 1.7;
 uniform float contrast = 2.0;
 uniform float multiply = 0.2;
+uniform vec3 color : source_color = vec3(0.917, 0.921, 0.650);
 uniform vec3 ray_color : source_color = vec3(1.0, 0.964, 0.69);
 
 vec4 mod289(vec4 x)
@@ -109,6 +110,6 @@ void fragment()
 	pos -= 0.07 * noise.xyz;
 	noise = snoise( pos );
 	float intensity = exp(noise.w * contrast - brightness);
-	vec4 c = vec4(234.0 / 255.0 - uv.y * 0.7, 235.0 / 255.0 - uv.y * 0.4, 166.0 / 255.0 - uv.y * 0.1, 1.0);
+	vec4 c = vec4(color.r - uv.y * 0.7, color.g - uv.y * 0.4, color.b - uv.y * 0.1, 1.0);
 	COLOR = c + vec4(ray_color * multiply * intensity, intensity);
 }

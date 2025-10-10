@@ -95,4 +95,3 @@ func _ready() -> void:
 		button_list.show()
 	)
 	tween.tween_property(button_list, "position:y", 0.0, 0.5).from(100.0).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-	

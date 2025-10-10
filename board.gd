@@ -151,13 +151,13 @@ func get_all_offset_coords() -> Array[Vector2i]:
 		ret.append(c.coord)
 	return ret
 
-func get_cell(c : Vector2i):
+func get_cell(c : Vector2i) -> Cell:
 	c = format_coord(c)
 	if !is_valid(c):
 		return null
 	return cells[c.y * cx + c.x]
 
-func get_gem_at(c : Vector2i):
+func get_gem_at(c : Vector2i) -> Gem:
 	c = format_coord(c)
 	if !is_valid(c):
 		return null
@@ -441,6 +441,12 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			var c = coords[i]
 			if get_state_at(c) != Cell.State.Burning:
 				set_state_at(c, Cell.State.Consumed)
+			var ui_cell = ui.get_cell(c)
+			var tween2 = get_tree().create_tween()
+			SAnimation.shake(tween2, ui_cell, 10.0, 0.3 * Game.speed)
+			tween2.parallel()
+			tween2.tween_property(ui_cell, "scale", Vector2(0.75, 0.75), 0.1 * Game.speed)
+			tween2.tween_property(ui_cell, "scale", Vector2(1.0, 1.0), 0.2 * Game.speed)
 	)
 
 func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
@@ -571,60 +577,8 @@ func resize(_hf_cy : int):
 				ui.add_cell(ui.ui_coord(c))
 	update_gem_quantity_limit()
 
-func skip_above_unmovables(c : Vector2i) -> Vector2i:
-	var cc = c - Vector2i(0, 1)
-	while true:
-		if cc.y < 0:
-			return cc
-		if !get_cell(cc).is_unmovable():
-			return cc
-		cc.y -= 1
-	return Vector2i(-1, -1)
-
-func step_down_cell(c : Vector2i):
-	var cc = skip_above_unmovables(c)
-	if cc.y < 0:
-		var g : Gem = Game.get_gem()
-		set_gem_at(c, g)
-		if g.bound_item:
-			set_item_at(c, g.bound_item)
-	else:
-		var og = set_gem_at(cc, null)
-		if og:
-			og = Game.get_gem(og)
-		var oi = set_item_at(cc, null)
-		if oi:
-			oi = Game.get_item(oi)
-		set_gem_at(c, og)
-		set_item_at(c, oi)
-
-func roll_step():
-	var tween = Game.get_tree().create_tween()
-	tween.tween_interval(0.03)
-	tween.tween_callback(func():
-		var filled = false
-		for x in cx:
-			for y in cy:
-				var c = Vector2i(x, cy - y - 1)
-				if !get_gem_at(c):
-					step_down_cell(c)
-					filled = true
-		if filled:
-			roll_step()
-		else:
-			rolling_finished.emit()
-	)
-
 func roll():
-	for yy in cy:
-		for xx in cx:
-			var c = Vector2i(xx, yy)
-			if !get_cell(c).is_unmovable():
-				set_item_at(c, null)
-				set_gem_at(c, null)
-				get_cell(c).event_listeners.clear()
-	
-	roll_step()
+	pass
 
 func clear_consumed():
 	var burning_cells = []
@@ -666,64 +620,115 @@ func fill_blanks():
 		Game.staging_scores.shuffle()
 		Game.staging_mults.shuffle()
 		for s in Game.staging_scores:
-			var subtween = get_tree().create_tween()
-			subtween.tween_interval(staging_idx * 0.02)
-			subtween.tween_callback(func():
+			var sub = get_tree().create_tween()
+			sub.tween_interval(staging_idx * 0.02)
+			sub.tween_callback(func():
 				var trail = trail_pb.instantiate()
 				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
 				s.first.add_child(trail)
 			)
-			subtween.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * Game.speed)
-			subtween.parallel()
-			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
-			subtween.tween_callback(func():
+			sub.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * Game.speed)
+			sub.parallel()
+			SAnimation.quadratic_curve_to(sub, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+			sub.tween_callback(func():
 				SSound.se_select.play()
 				Game.base_score += s.second
 			)
-			subtween.tween_callback(s.first.queue_free)
+			sub.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
 				filling_tween.parallel()
-			filling_tween.tween_subtween(subtween)
+			filling_tween.tween_subtween(sub)
 			staging_idx += 1
 		for s in Game.staging_mults:
-			var subtween = get_tree().create_tween()
-			subtween.tween_interval(staging_idx * 0.02)
-			subtween.tween_callback(func():
+			var sub = get_tree().create_tween()
+			sub.tween_interval(staging_idx * 0.02)
+			sub.tween_callback(func():
 				var trail = trail_pb.instantiate()
 				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
 				s.first.add_child(trail)
 			)
-			subtween.tween_property(s.first, "scale", Vector2(0.8, 0.8), 0.5 * Game.speed)
-			subtween.parallel()
-			SAnimation.quadratic_curve_to(subtween, s.first, Game.calculator_bar_ui.mult_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
-			subtween.tween_callback(func():
+			sub.tween_property(s.first, "scale", Vector2(0.8, 0.8), 0.5 * Game.speed)
+			sub.parallel()
+			SAnimation.quadratic_curve_to(sub, s.first, Game.calculator_bar_ui.mult_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+			sub.tween_callback(func():
 				SSound.se_select.play()
 				Game.score_mult += s.second
 			)
-			subtween.tween_callback(s.first.queue_free)
+			sub.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
 				filling_tween.parallel()
-			filling_tween.tween_subtween(subtween)
+			filling_tween.tween_subtween(sub)
 			staging_idx += 1
 		Game.staging_scores.clear()
 		Game.staging_mults.clear()
 		filling_tween.tween_interval(0.3 * Game.speed)
 	
+	for x in cx:
+		var subx = get_tree().create_tween()
+		var delay = 0.0
+		var min_hole = -1
+		var gems = []
+		var holes = []
+		for i in range(cy - 1, -1, -1):
+			var c = Vector2i(x, i)
+			if !get_cell(c).is_unmovable():
+				if get_gem_at(Vector2i(x, i)):
+					if i < min_hole:
+						gems.append(c)
+				else:
+					holes.append(c)
+					min_hole = i
+		while !holes.is_empty():
+			var c = holes[0]
+			holes.pop_front()
+			var sub = get_tree().create_tween()
+			sub.tween_interval(delay * Game.speed)
+			var cell_ui = ui.get_cell(c)
+			var cc = gems[0] if gems.size() > 0 else Vector2i(x, -1)
+			var start_pos = get_pos(cc) - Vector2(tile_sz, tile_sz) * 0.5
+			if cc.y < 0:
+				start_pos.y -= tile_sz
+			var end_pos = get_pos(c) - Vector2(tile_sz, tile_sz) * 0.5
+			if cc.y < 0:
+				sub.tween_callback(func():
+					var g = Game.get_gem()
+					set_gem_at(c, g)
+					if g.bound_item:
+						set_item_at(c, g.bound_item)
+				)
+			else:
+				gems.pop_front()
+				holes.append(cc)
+				holes.sort()
+				holes.reverse()
+				sub.tween_callback(func():
+					var og = set_gem_at(cc, null)
+					if og:
+						og = Game.get_gem(og)
+					var oi = set_item_at(cc, null)
+					if oi:
+						oi = Game.get_item(oi)
+					set_gem_at(c, og)
+					set_item_at(c, oi)
+				)
+			if cc.y < 0:
+				sub.tween_property(cell_ui, "scale", Vector2(1.0, 1.0), 0.1 * Game.speed).from(Vector2(0.0, 0.0)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+				sub.parallel()
+			var t = ((c.y + 2.0) / cy)
+			t *= t
+			t *= 0.4
+			sub.tween_property(cell_ui, "position", end_pos, t * Game.speed).from(start_pos).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+			sub.tween_callback(func():
+				Game.screen_shake_strength = 6.0
+				SSound.se_select.play()
+			)
+			subx.parallel().tween_subtween(sub)
+			delay += 0.2
+		filling_tween.parallel().tween_subtween(subx)
 	filling_tween.tween_callback(func():
-		var filled = false
-		for x in cx:
-			for y in cy:
-				var c = Vector2i(x, cy - y - 1)
-				if !get_gem_at(c):
-					step_down_cell(c)
-					filled = true
 		filling_tween = null
 		if Game.game_over_mark == "":
-			if filled:
-				SSound.se_zap.play()
-				fill_blanks()
-			else:
-				filling_finished.emit()
+			filling_finished.emit()
 	)
 
 func on_combo():
@@ -740,9 +745,9 @@ func matching():
 			for p in Game.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
-					var subtween = Game.get_tree().create_tween()
-					subtween.tween_interval(matched_num * 0.2 * Game.speed)
-					subtween.tween_callback(func():
+					var sub = Game.get_tree().create_tween()
+					sub.tween_interval(matched_num * 0.2 * Game.speed)
+					sub.tween_callback(func():
 						p.add_exp(1)
 						
 						var burning_cells = []
@@ -763,17 +768,15 @@ func matching():
 						SSound.se_marimba_scale[matched_num % 8].play()
 						Game.add_combo()
 						for c in res:
-							var g = get_gem_at(c)
-							var pos = get_pos(c)
 							score_at(c, 0, 0.0, p.mult)
 					)
 					matched_num += 1
 					
-					eliminate(res, subtween, ActiveReason.Pattern, p)
+					eliminate(res, sub, ActiveReason.Pattern, p)
 					
 					if matched_num > 0:
 						tween.parallel()
-					tween.tween_subtween(subtween)
+					tween.tween_subtween(sub)
 					
 					Game.speed *= 0.98
 					Game.speed = max(0.05, Game.speed)

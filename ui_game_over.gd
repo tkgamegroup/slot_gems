@@ -6,8 +6,8 @@ extends Control
 @onready var rolls_text : Label = $PanelContainer/VBoxContainer/GridContainer/Label4
 @onready var level_text : Label = $PanelContainer/VBoxContainer/GridContainer/Label6
 @onready var seed_text : Label = $PanelContainer/VBoxContainer/GridContainer/Label8
-@onready var new_run : Button = $PanelContainer/VBoxContainer/Button
-@onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button2
+@onready var new_run : Button = $PanelContainer/VBoxContainer/VBoxContainer/Button
+@onready var main_menu_button : Button = $PanelContainer/VBoxContainer/VBoxContainer/Button2
 
 func enter():
 	STooltip.close()

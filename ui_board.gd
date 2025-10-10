@@ -16,10 +16,10 @@ const outline_pb = preload("res://ui_outline.tscn")
 @onready var hover_ui : Sprite2D = $Hover
 
 func game_coord(c : Vector2i):
-	return c + Vector2i(Board.cx / 2, Board.cy / 2) - central_coord
+	return c + Vector2i(Board.cx, Board.cy) / 2 - central_coord
 
 func ui_coord(c : Vector2i):
-	return c - Vector2i(Board.cx / 2, Board.cy / 2) + central_coord
+	return c - Vector2i(Board.cx, Board.cy) / 2 + central_coord
 
 func hover_coord(to_game_coord : bool = false):
 	var c = tilemap.local_to_map(tilemap.get_local_mouse_position()) 

@@ -215,6 +215,7 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
 	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
 	tween.parallel().tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.parallel().tween_property(Game.background.material, "shader_parameter/color", Color(0.71, 0.703, 0.504), 0.8)
 	tween.tween_callback(func():
 		Game.refresh_cluster_levels()
 	)
@@ -236,6 +237,7 @@ func exit(tween : Tween = null, trans : bool = true):
 		if !tween:
 			tween = get_tree().create_tween()
 		tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(Game.background.material, "shader_parameter/color", Color(0.917, 0.921, 0.65), 0.8)
 		tween.parallel().tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
 		tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
 		tween.tween_callback(func():

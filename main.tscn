@@ -122,27 +122,32 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/brightness = 1.0
 shader_parameter/contrast = 3.0
 shader_parameter/multiply = 0.2
+shader_parameter/color = Color(0.917, 0.921, 0.65, 1)
 shader_parameter/ray_color = Color(1, 0.964, 0.69, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_41lik"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(0.83, 0.07, 0.09, 1)
 shader_parameter/u_seed = 0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jbvwl"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(1, 0.71, 0.16, 1)
-shader_parameter/u_seed = 1
+shader_parameter/u_seed = 0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sn1fb"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(0.61, 0.75, 0.25, 1)
-shader_parameter/u_seed = 2
+shader_parameter/u_seed = 0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yvsr8"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(0.56, 0.87, 0.96, 1)
-shader_parameter/u_seed = 3
+shader_parameter/u_seed = 0
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_n5t1e"]
 noise_type = 0
@@ -2342,27 +2347,33 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_yvsr8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "ui_bag_viewer_gems"
 
-[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 columns = 16
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.838897, 0.838897, 0.838897, 1)
 theme_override_font_sizes/font_size = 24
 text = "Items"
 
-[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="List2" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 columns = 24
@@ -2737,13 +2748,17 @@ text = "ui_game_over_seed"
 [node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "ui_game_over_new_run"
 
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")

@@ -5,6 +5,7 @@ shader_type canvas_item;
 
 uniform vec3 type_color : source_color;
 uniform uint u_seed;
+uniform vec2 offset;
 
 // implementation of MurmurHash (https://sites.google.com/site/murmurhash/) for a 
 // single unsigned integer.
@@ -142,10 +143,10 @@ float perlinNoise(vec3 position, int frequency, int octaveCount, float persisten
 
 void fragment() 
 {
-    vec2 position = UV * 5.0;
-    float value = perlinNoise(vec3(position, TIME * 0.25), 1, 6, 0.5, 2.0, u_seed); // multiple octaves
+    float value = perlinNoise(vec3(UV * 5.0 + offset, TIME * 0.25), 1, 6, 0.5, 2.0, u_seed); // multiple octaves
     value = (value + 1.0) * 0.5; // convert from range [-1, 1] to range [0, 1]
 	value += step(0.955, value) * 100.0;
 	value *= 1.2;
+	
     COLOR.rgb = mix(COLOR.rgb, value * type_color, 0.2);
 }

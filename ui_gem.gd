@@ -42,7 +42,6 @@ func update(g : Gem, override_item : int = -1):
 		#base.set_image(type, rune, item)
 		type_sp.frame = type
 		type_sp.material.set_shader_parameter("type_color", Gem.type_color(type))
-		type_sp.material.set_shader_parameter("u_seed", randi())
 		rune_sp.frame = rune
 		item_sp.frame = item
 	
@@ -71,3 +70,6 @@ func dissolve(duration : float):
 
 func _ready() -> void:
 	update(null)
+
+func _process(delta: float) -> void:
+	type_sp.material.set_shader_parameter("offset", global_position * 0.1)

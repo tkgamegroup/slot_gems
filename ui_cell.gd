@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 @onready var gem_ui = $Gem
 @onready var item_sp : AnimatedSprite2D = $Item
