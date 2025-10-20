@@ -11,8 +11,6 @@ enum
 	MatchingFinished,
 	GainGem,
 	LostGem,
-	GainItem,
-	LostItem,
 	GainRelic,
 	LostRelic,
 	GainPattern,

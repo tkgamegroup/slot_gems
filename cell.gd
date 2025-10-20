@@ -5,13 +5,11 @@ class_name Cell
 enum State
 {
 	Normal,
-	Consumed,
-	Burning
+	Consumed
 }
 
 var coord : Vector2i
 var gem : Gem = null
-var item : Item = null
 var state : int = 0
 var pinned : bool = false
 var frozen : bool = false
@@ -20,4 +18,4 @@ var in_mist : bool = false
 var event_listeners : Array[Hook]
 
 func is_unmovable():
-	return pinned || frozen
+	return pinned || frozen || (gem && gem.active)

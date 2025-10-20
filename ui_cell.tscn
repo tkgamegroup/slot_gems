@@ -1,9 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cpv0mxnsh1ct3"]
+[gd_scene load_steps=6 format=3 uid="uid://cpv0mxnsh1ct3"]
 
 [ext_resource type="Script" uid="uid://bwcptmt32c0ay" path="res://ui_cell.gd" id="1_c8dfl"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_sxxmi"]
-[ext_resource type="Texture2D" uid="uid://cm6ylnaxbthm4" path="res://images/burning.png" id="3_0hnpo"]
-[ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="3_cy07b"]
 [ext_resource type="Texture2D" uid="uid://bhcfbybb53f87" path="res://images/pined.png" id="5_qcpuj"]
 [ext_resource type="Texture2D" uid="uid://csgetbs60orud" path="res://images/frozen.png" id="5_v5bqx"]
 [ext_resource type="SpriteFrames" uid="uid://bybc42chjmbrn" path="res://images/nullify.tres" id="7_gl3ak"]
@@ -15,18 +13,6 @@ pivot_offset = Vector2(24, 24)
 script = ExtResource("1_c8dfl")
 
 [node name="Gem" parent="." instance=ExtResource("2_sxxmi")]
-
-[node name="Item" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("3_cy07b")
-
-[node name="Item2" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.5, 0.5)
-sprite_frames = ExtResource("3_cy07b")
-offset = Vector2(8, 8)
-
-[node name="Burn" type="Sprite2D" parent="."]
-visible = false
-texture = ExtResource("3_0hnpo")
 
 [node name="Pinned" type="Sprite2D" parent="."]
 visible = false

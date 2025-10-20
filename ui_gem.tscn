@@ -1,14 +1,20 @@
-[gd_scene load_steps=20 format=3 uid="uid://s5ehr1388thk"]
+[gd_scene load_steps=21 format=3 uid="uid://s5ehr1388thk"]
 
 [ext_resource type="Script" uid="uid://t4phq6vbt25s" path="res://ui_gem.gd" id="2_pbann"]
-[ext_resource type="Material" uid="uid://ch6a3tq6qlyfq" path="res://materials/gem.tres" id="2_yval8"]
+[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/jade.gdshader" id="2_yval8"]
 [ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="5_ahfnj"]
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="5_xnwot"]
+[ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="5_yval8"]
 [ext_resource type="Texture2D" uid="uid://cp7ifhua174gi" path="res://images/spark.png" id="6_4lclw"]
 [ext_resource type="Shader" uid="uid://w42xawe3frrc" path="res://materials/wild.gdshader" id="6_k4xum"]
 [ext_resource type="SpriteFrames" uid="uid://bgpse251ihp38" path="res://images/runes.tres" id="7_weldj"]
-[ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="8_foki2"]
-[ext_resource type="Shader" uid="uid://b17rpch1hfeio" path="res://materials/dissolve.gdshader" id="9_sjayb"]
+[ext_resource type="Shader" uid="uid://tjfce33cqren" path="res://materials/gem.gdshader" id="7_yval8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3vjey"]
+resource_local_to_scene = true
+shader = ExtResource("2_yval8")
+shader_parameter/type_color = Color(0.83, 0.07, 0.09, 1)
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="Gradient" id="Gradient_0lu4f"]
 offsets = PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1)
@@ -31,10 +37,16 @@ height = 32
 noise = SubResource("FastNoiseLite_1al16")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xnwot"]
-shader = ExtResource("9_sjayb")
+resource_local_to_scene = true
+shader = ExtResource("7_yval8")
+shader_parameter/fov = 90.0
+shader_parameter/cull_back = true
+shader_parameter/y_rot = 0.0
+shader_parameter/x_rot = 0.0
+shader_parameter/inset = 0.0
 shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_sx5gx")
-shader_parameter/dissolve = 1.0
-shader_parameter/burn_size = 0.10000000475
+shader_parameter/dissolve = 0.9950000472625
+shader_parameter/burn_size = 0.030000001425
 shader_parameter/burn_color = Color(0.8904463, 0.2967777, 0.30641142, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_4lclw"]
@@ -62,7 +74,7 @@ canvas_item_default_texture_filter = 0
 size = Vector2i(48, 48)
 
 [node name="Type" type="AnimatedSprite2D" parent="SubViewport"]
-material = ExtResource("2_yval8")
+material = SubResource("ShaderMaterial_3vjey")
 sprite_frames = ExtResource("5_xnwot")
 frame = 1
 centered = false
@@ -74,16 +86,17 @@ sprite_frames = ExtResource("5_xnwot")
 frame = 7
 centered = false
 
-[node name="Rune" type="AnimatedSprite2D" parent="SubViewport"]
+[node name="Item" type="AnimatedSprite2D" parent="SubViewport"]
 modulate = Color(0, 0, 0, 1)
+sprite_frames = ExtResource("5_yval8")
+centered = false
+offset = Vector2(8, 8)
+
+[node name="Rune" type="AnimatedSprite2D" parent="SubViewport"]
+modulate = Color(0, 0, 0, 0.6666667)
 sprite_frames = ExtResource("7_weldj")
 centered = false
-offset = Vector2(16, 16)
-
-[node name="Item" type="AnimatedSprite2D" parent="SubViewport"]
-sprite_frames = ExtResource("8_foki2")
-centered = false
-offset = Vector2(16, 16)
+offset = Vector2(12, 12)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_xnwot")
@@ -92,6 +105,7 @@ centered = false
 
 [node name="Charming" type="CPUParticles2D" parent="."]
 visible = false
+position = Vector2(24, 24)
 texture = ExtResource("5_ahfnj")
 local_coords = true
 emission_shape = 2
@@ -104,6 +118,7 @@ color_initial_ramp = SubResource("Gradient_kq7wp")
 
 [node name="Sharp" type="CPUParticles2D" parent="."]
 visible = false
+position = Vector2(24, 24)
 amount = 1
 texture = ExtResource("6_4lclw")
 lifetime = 2.5

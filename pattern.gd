@@ -74,7 +74,7 @@ func match_with(off : Vector2i) -> Array[Vector2i]:
 	var colors = []
 	for c in ocoords:
 		var g = Board.get_gem_at(c)
-		if g && g.type != Gem.Type.Colorless && !Board.get_cell(c).frozen:
+		if g && g.type != Gem.Type.None && g.type != Gem.Type.Colorless && !Board.get_cell(c).frozen:
 			colors.append(g.type)
 	if colors.size() < coords.size():
 		return [] as Array[Vector2i]

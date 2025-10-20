@@ -2,8 +2,8 @@ extends Node2D
 
 @onready var type_sp = $SubViewport/Type
 @onready var wild_sp = $SubViewport/Wild
-@onready var rune_sp = $SubViewport/Rune
 @onready var item_sp = $SubViewport/Item
+@onready var rune_sp = $SubViewport/Rune
 @onready var sp : Sprite2D = $Sprite2D
 @onready var charming_fx : CPUParticles2D = $Charming
 @onready var sharp_fx : CPUParticles2D = $Sharp
@@ -24,13 +24,11 @@ func reset(_type : int = 0, _rune : int = 0, _item : int = 0):
 	type_sp.show()
 	update(null)
 
-func update(g : Gem, override_item : int = -1):
+func update(g : Gem):
 	if g:
 		type = g.type
 		rune = g.rune
-		item = override_item
-		if item == -1 && g.bound_item:
-			item = g.bound_item.image_id
+		item = g.image_id
 		for enchant in Buff.find_all_typed(g, Buff.Type.Enchant):
 			var enchant_type = enchant.data["type"]
 			if enchant_type == "w_enchant_charming":
@@ -39,18 +37,22 @@ func update(g : Gem, override_item : int = -1):
 				sharp += 1
 	
 	if type_sp:
-		#base.set_image(type, rune, item)
 		type_sp.frame = type
 		type_sp.material.set_shader_parameter("type_color", Gem.type_color(type))
-		rune_sp.frame = rune
-		item_sp.frame = item
-	
-		if type == Gem.Type.Wild:
+		
+		if item > 0:
 			type_sp.hide()
-			wild_sp.show()
+			item_sp.frame = item
 		else:
-			type_sp.show()
-			wild_sp.hide()
+			if type == Gem.Type.Wild:
+				type_sp.hide()
+				wild_sp.show()
+			else:
+				type_sp.show()
+				wild_sp.hide()
+			item_sp.frame = 0
+		
+		rune_sp.frame = rune
 		
 		if charming > 0:
 			charming_fx.show()
@@ -60,6 +62,10 @@ func update(g : Gem, override_item : int = -1):
 			sharp_fx.show()
 		else:
 			sharp_fx.hide()
+
+func set_angle(angle : Vector2):
+	sp.material.set_shader_parameter("x_rot", angle.x)
+	sp.material.set_shader_parameter("y_rot", angle.y)
 
 func dissolve(duration : float):
 	var tween = get_tree().create_tween()
@@ -72,4 +78,4 @@ func _ready() -> void:
 	update(null)
 
 func _process(delta: float) -> void:
-	type_sp.material.set_shader_parameter("offset", global_position * 0.1)
+	type_sp.material.set_shader_parameter("offset", Vector2(0.01, 0.01) * global_position)

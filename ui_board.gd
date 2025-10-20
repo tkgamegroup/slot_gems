@@ -36,30 +36,22 @@ func get_cell(c : Vector2i) -> UiCell:
 func update_cell(c : Vector2i):
 	var cell = Board.get_cell(c)
 	var ui = get_cell(c)
-	ui.set_duplicant(false)
 	ui.gem_ui.reset()
+	ui.gem_ui.set_angle(Vector2(((c.y + 0.5) / Board.cy) - 0.5, 1.0 - ((c.x + 0.5) / Board.cx) - 0.5) * 10.0)
 	var g = Board.get_gem_at(c)
 	if g:
 		if cell.in_mist:
 			ui.gem_ui.reset(Gem.Type.Unknow, Gem.Rune.None)
 		else:
 			ui.gem_ui.update(g)
-		var i = Board.get_item_at(c)
-		if i:
-			ui.set_item_image(i.image_id, i.mounted.image_id if i.mounted else 0)
-			ui.set_duplicant(i.duplicant)
-		else:
-			ui.set_item_image(0, 0)
 	else:
 		ui.gem_ui.reset()
-		ui.set_item_image(0, 0)
 	if cell.state == Cell.State.Normal:
 		ui.gem_ui.position = Vector2(0, 0)
 		ui.gem_ui.scale = Vector2(1, 1)
 		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	elif cell.state == Cell.State.Consumed:
 		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
-	ui.burn.visible = cell.state == Cell.State.Burning
 	ui.pinned.visible = cell.pinned
 	ui.frozen.visible = cell.frozen
 	ui.set_nullified(cell.nullified)
@@ -146,11 +138,13 @@ func _ready() -> void:
 					SSound.se_error.play()
 					Game.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
 					return false
+				'''
 				var i = Board.get_item_at(coord)
 				if i && (i.name == "SinLust" || i.name == "SinGluttony" || i.name == "SinGreed" || i.name == "SinWrath" || i.name == "SinEnvy"):
 					SSound.se_error.play()
 					Game.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
 					return false
+				'''
 				Game.swaps -= 1
 				
 				Game.swap_hand_and_board(slot1, coord)

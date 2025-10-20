@@ -1,26 +1,11 @@
 extends Control
 
 @onready var gem_ui = $Gem
-@onready var item_sp : AnimatedSprite2D = $Item
-@onready var item2_2p : AnimatedSprite2D = $Item2
-@onready var burn : Sprite2D = $Burn
 @onready var pinned : Sprite2D = $Pinned
 @onready var frozen : Sprite2D = $Frozen
 @onready var nullified : Node2D = $Nullified
 @onready var nullified_sp1 : AnimatedSprite2D = $Nullified/sp1
 @onready var nullified_sp2 : AnimatedSprite2D = $Nullified/sp2
-
-func set_item_image(item : int, item2 : int = 0):
-	item_sp.frame = item
-	item2_2p.frame = item2
-
-func set_duplicant(v : bool):
-	if v:
-		item_sp.self_modulate = Color(0.45, 0.624, 0.906, 1.0)
-		item2_2p.self_modulate = Color(0.45, 0.624, 0.906, 1.0)
-	else:
-		item_sp.self_modulate = Color(1.0, 1.0, 1.0, 1.0)
-		item2_2p.self_modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 func set_nullified(v : bool):
 	if v:

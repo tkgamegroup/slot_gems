@@ -1,4 +1,4 @@
-[gd_scene load_steps=180 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=185 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -44,10 +44,14 @@
 [ext_resource type="AudioStream" uid="uid://bnfmwbpunud0i" path="res://sounds/lightning_fail.wav" id="18_bul2v"]
 [ext_resource type="AudioStream" uid="uid://b3wdrb7m6bi8r" path="res://sounds/skill.wav" id="18_f1p13"]
 [ext_resource type="AudioStream" uid="uid://ctj72fmpe5n0h" path="res://sounds/calc1.wav" id="20_5dllo"]
+[ext_resource type="AudioStream" uid="uid://bmasuojryrvr6" path="res://sounds/bubble_pop.wav" id="20_53bls"]
 [ext_resource type="AudioStream" uid="uid://byb7qfmj4ce2k" path="res://sounds/score_counting.wav" id="20_wy5fy"]
 [ext_resource type="Script" uid="uid://cejdm385qie14" path="res://ui_board.gd" id="21_34ol3"]
+[ext_resource type="AudioStream" uid="uid://btf6smvh1tnth" path="res://sounds/bubble_pop2.wav" id="21_lwnsi"]
 [ext_resource type="AudioStream" uid="uid://dclq4u83610do" path="res://sounds/calc2.wav" id="21_phcyf"]
+[ext_resource type="AudioStream" uid="uid://lc6e6xuhbvm8" path="res://sounds/bubble_pop3.wav" id="22_41lik"]
 [ext_resource type="AudioStream" uid="uid://2khtvdvdvbr0" path="res://sounds/enchant.wav" id="23_birbe"]
+[ext_resource type="AudioStream" uid="uid://cpkkextbq8y8f" path="res://sounds/break.wav" id="23_jbvwl"]
 [ext_resource type="AudioStream" uid="uid://3wg5uqxalyav" path="res://sounds/trash.wav" id="24_f1p13"]
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://c7txrafqs3mca" path="res://images/bag.png" id="30_fg5n8"]
@@ -63,9 +67,8 @@
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
 [ext_resource type="Shader" uid="uid://53fbdjte0jam" path="res://materials/mask.gdshader" id="38_yysqy"]
 [ext_resource type="FontFile" uid="uid://b0maexk5weyes" path="res://fonts/Arizonia-Regular.ttf" id="42_23xmf"]
-[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem.gdshader" id="42_h6isl"]
+[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/jade.gdshader" id="42_h6isl"]
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="42_swlj1"]
-[ext_resource type="Material" uid="uid://ch6a3tq6qlyfq" path="res://materials/gem.tres" id="42_yysqy"]
 [ext_resource type="Shader" uid="uid://b17rpch1hfeio" path="res://materials/dissolve.gdshader" id="43_yysqy"]
 [ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
 [ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/outline-o.png" id="45_53bls"]
@@ -110,6 +113,11 @@ random_volume_offset_db = 0.1
 streams_count = 1
 stream_0/stream = ExtResource("15_iwwqi")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jbvwl"]
+random_pitch = 1.5
+streams_count = 1
+stream_0/stream = ExtResource("23_jbvwl")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h6isl"]
 shader = ExtResource("38_yysqy")
 shader_parameter/radius = 0.0
@@ -128,25 +136,26 @@ shader_parameter/ray_color = Color(1, 0.964, 0.69, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_41lik"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(0.83, 0.07, 0.09, 1)
-shader_parameter/u_seed = 0
 shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jbvwl"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(1, 0.71, 0.16, 1)
-shader_parameter/u_seed = 0
 shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sn1fb"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(0.61, 0.75, 0.25, 1)
-shader_parameter/u_seed = 0
 shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yvsr8"]
 shader = ExtResource("42_h6isl")
 shader_parameter/type_color = Color(0.56, 0.87, 0.96, 1)
-shader_parameter/u_seed = 0
+shader_parameter/offset = Vector2(0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vieuh"]
+shader = ExtResource("42_h6isl")
+shader_parameter/type_color = Color(0.88, 0.2, 0.8, 1)
 shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_n5t1e"]
@@ -514,7 +523,7 @@ expand_margin_right = 20.0
 expand_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rycwm"]
-bg_color = Color(0.239266, 0.485527, 0.455179, 1)
+bg_color = Color(0.3136, 0.64, 0.60192, 1)
 border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
@@ -536,7 +545,7 @@ expand_margin_right = 20.0
 expand_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
-bg_color = Color(0, 0, 0, 0.19607843)
+bg_color = Color(1, 1, 1, 0.14901961)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcxqu"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
@@ -810,17 +819,40 @@ volume_db = -5.0
 max_polyphony = 10
 bus = &"SFX"
 
+[node name="BubblePop" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("20_53bls")
+volume_db = -20.0
+max_polyphony = 10
+bus = &"SFX"
+
+[node name="BubblePop2" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("21_lwnsi")
+volume_db = -15.0
+bus = &"SFX"
+
+[node name="BubblePop3" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("22_41lik")
+volume_db = -15.0
+bus = &"SFX"
+
+[node name="Break" type="AudioStreamPlayer" parent="SFX"]
+stream = SubResource("AudioStreamRandomizer_jbvwl")
+volume_db = -10.0
+bus = &"SFX"
+
 [node name="Calc1" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("20_5dllo")
+volume_db = -8.0
 bus = &"SFX"
 
 [node name="Calc2" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("21_phcyf")
+volume_db = -8.0
 bus = &"SFX"
 
 [node name="ScoreCounting" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("20_wy5fy")
-volume_db = -5.0
+volume_db = -15.0
 bus = &"SFX"
 
 [node name="Enchant" type="AudioStreamPlayer" parent="SFX"]
@@ -841,12 +873,12 @@ bus = &"SFX"
 
 [node name="DragItem" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("16_birbe")
-volume_db = -8.0
+volume_db = -20.0
 bus = &"SFX"
 
 [node name="DropItem" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("17_f1p13")
-volume_db = -8.0
+volume_db = -20.0
 bus = &"SFX"
 
 [node name="Skill" type="AudioStreamPlayer" parent="SFX"]
@@ -856,6 +888,7 @@ bus = &"SFX"
 
 [node name="Explode" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("12_773c0")
+volume_db = -10.0
 bus = &"SFX"
 
 [node name="LightningConnect" type="AudioStreamPlayer" parent="SFX"]
@@ -883,6 +916,7 @@ bus = &"SFX"
 
 [node name="WellDone" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("31_c2n8d")
+volume_db = -15.0
 bus = &"SFX"
 
 [node name="Error" type="AudioStreamPlayer" parent="SFX"]
@@ -985,7 +1019,7 @@ position = Vector2(4, 4)
 texture = ExtResource("45_53bls")
 
 [node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/Title/Control"]
-material = ExtResource("42_yysqy")
+material = SubResource("ShaderMaterial_vieuh")
 position = Vector2(1495.0001, 481)
 scale = Vector2(0.89427084, 0.89427084)
 sprite_frames = ExtResource("42_swlj1")
@@ -3001,7 +3035,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_f0uef")
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 10
-text = "Alt To Show More"
+text = "tt_alt_to_show_more"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/HBoxContainer"]
 visible = false

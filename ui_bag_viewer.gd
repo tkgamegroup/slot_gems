@@ -88,22 +88,6 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 				bar.color = Color(0.5, 0.8, 0.6)
 				bar.show()
 		gem_list.add_child(ctrl)
-	'''
-	for i in Game.items:
-		var ui = item_ui.instantiate()
-		ui.custom_minimum_size = Vector2(32, 36)
-		ui.setup(i)
-		
-		var bar = create_bar()
-		ui.add_child(bar)
-		if i.coord.x != -1 && i.coord.y != -1:
-			bar.color = Color(0.9, 0.6, 0.3, 1.0)
-			bar.show()
-		elif i.coord.x != -1:
-			bar.color = Color(0.5, 0.8, 0.6, 1.0)
-			bar.show()
-		item_list.add_child(ui)
-	'''
 	
 	self.show()
 	panel.show()

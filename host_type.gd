@@ -4,6 +4,6 @@ class_name HostType
 
 enum 
 {
-	Item,
+	Gem,
 	Relic
 }

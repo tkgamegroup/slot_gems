@@ -41,10 +41,7 @@ func setup(_type : String, _thing : String, _price : int):
 	price = _price
 
 func _ready() -> void:
-	if type != "w_socket":
-		title_txt.text = "[url=%s]%s[/url] [color=gray][url=%s]%s[/url][/color]" % [type, tr(type), thing, tr(thing)]
-	else:
-		title_txt.text = "[url=%s]%s[/url] [url=%s][img]%s[/img][/url]" % [type, tr(type), thing, Item.get_image_path(thing)]
+	title_txt.text = "[url=%s]%s[/url] [url=%s][img]%s[/img][/url]" % [type, tr(type), thing, Item.get_image_path(thing)]
 	title_txt.meta_hover_started.connect(func(meta):
 		var s = str(meta)
 		if s.begins_with("w_"):
@@ -121,10 +118,6 @@ func _ready() -> void:
 				particles2.emitting = true
 			)
 			tween.tween_interval(0.4)
-		elif type == "w_socket":
-			sp = AnimatedSprite2D.new()
-			self.add_child(sp)
-			tween.tween_property(sp, "position", slot.get_rect().get_center() - Vector2(16.0, 16.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.tween_callback(func():
 			if type == "w_enchant":
 				if thing == "w_enchant_charming":
@@ -137,8 +130,6 @@ func _ready() -> void:
 				elif thing == "w_omni":
 					var bid = Buff.create(gem, Buff.Type.ChangeRune, {"rune":Gem.Rune.Omni}, Buff.Duration.Eternal)
 					Buff.create(gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, Buff.Duration.Eternal)
-			elif type == "w_socket":
-				Game.socket_gem(gem, thing)
 			elif type == "w_delete":
 				Game.delete_gem(gem, gem_ui, "craft_slot")
 				gem = null
@@ -148,18 +139,6 @@ func _ready() -> void:
 		)
 		if type == "w_enchant":
 			tween.tween_interval(0.3)
-		elif type == "w_socket":
-			tween.tween_callback(func():
-				sp.queue_free()
-				gem_ui.update(gem)
-				particles1.emitting = true
-			)
-			tween.tween_interval(0.7)
-			tween.tween_callback(func():
-				SSound.se_enchant.play()
-				particles2.emitting = true
-			)
-			tween.tween_interval(0.7)
 		elif type == "w_delete":
 			tween.tween_interval(0.7)
 		elif type == "w_duplicate":

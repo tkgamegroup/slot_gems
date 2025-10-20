@@ -28,6 +28,7 @@ func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : floa
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
 	SSound.se_explode.play()
+	Game.screen_shake_strength = 18.0 * sp.scale.x
 	return sp
 	
 func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : float):
@@ -115,8 +116,8 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 		parent.add_child(poly)
 		poly.position = pos
 		var tween = Game.get_tree().create_tween()
-		tween.tween_property(poly, "position", pos + d * 25.0, 0.5)
-		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), 0.5)
+		tween.tween_property(poly, "position", pos + d * 45.0 + Vector2(randf_range(-20.0, +20.0), 100.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 		tween.tween_callback(poly.queue_free)
 
 func add_black_hole_rotating(pos : Vector2, size : Vector2, z_index : int, duration : float):

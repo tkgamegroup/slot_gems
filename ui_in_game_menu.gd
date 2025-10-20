@@ -72,7 +72,7 @@ func _ready() -> void:
 		SSound.se_click.play()
 		Game.screen_shake_strength = 8.0
 		exit()
-		STest.auto_place_items()
+		#STest.auto_place_items()
 	)
 	win_button.pressed.connect(func():
 		SSound.music_more_clear()

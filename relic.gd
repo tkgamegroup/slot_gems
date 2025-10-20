@@ -176,11 +176,13 @@ func setup(n : String):
 									check_coords.append(cc)
 							if !check_coords.has(c):
 								check_coords.append(c)
+						'''
 						for c in check_coords:
-							var i = Board.get_item_at(c)
-							if i && i.category == "Bomb":
-								Board.activate(i, HostType.Item, 0, c, Board.ActiveReason.Relic, self)
+							var g = Board.get_gem_at(c)
+							if g && g.category == "Bomb":
+								Board.activate(g, HostType.Gem, 0, c, Board.ActiveReason.Relic, self)
 								Board.set_item_at(c, null)
+						'''
 	elif name == "BlockedLever":
 		image_id = 5
 		extra["enable"] = true

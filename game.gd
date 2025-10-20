@@ -290,9 +290,6 @@ func add_gem(g : Gem, boardcast : bool = true):
 	status_bar_ui.gem_count_text.text = "%d" % gems.size()
 
 func remove_gem(g : Gem, boardcast : bool = true):
-	if g.bound_item:
-		remove_item(g.bound_item, boardcast)
-		g.bound_item = null
 	bag_gems.erase(g)
 	gems.erase(g)
 	
@@ -307,13 +304,13 @@ func get_gem(g : Gem = null) -> Gem:
 	if g:
 		bag_gems.erase(g)
 		return g
+	if bag_gems.is_empty():
+		return null
 	return SMath.pick_and_remove(bag_gems, Game.rng)
 
 func release_gem(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
-	if g.bound_item:
-		g.bound_item.coord = Vector2i(-1, -1)
 	Buff.clear(g, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.OnBoard])
 	bag_gems.append(g)
 
@@ -360,44 +357,6 @@ func gem_add_bonus_score(g : Gem, v : int):
 			h.host.on_event.call(Event.GemBonusScoreChanged, null, {"gem":g,"value":v})
 	g.bonus_score += v
 	return 
-
-func add_item(i : Item, boardcast : bool = true):
-	if boardcast:
-		for h in event_listeners:
-			if h.event == Event.GainGem:
-				h.host.on_event.call(Event.GainItem, null, i)
-	items.append(i)
-	bag_items.append(i)
-
-func remove_item(i : Item, boardcast : bool = true):
-	if bag_items.has(i):
-		bag_items.erase(i)
-	if !items.has(i):
-		assert("item is not in the list!")
-	items.erase(i)
-	
-	if boardcast:
-		for h in event_listeners:
-			if h.event == Event.GainGem:
-				h.host.on_event.call(Event.LostItem, null, i)
-
-func get_item(i : Item = null):
-	if i:
-		bag_items.erase(i)
-		return i
-	return SMath.pick_and_remove(bag_items, Game.rng)
-
-func release_item(i : Item):
-	if i.duplicant:
-		remove_item(i)
-		return
-	if i.mounted:
-		release_item(i.mounted)
-		i.mounted = null
-	i.coord = Vector2i(-1, -1)
-	Buff.clear_if_not(i, Buff.Duration.Eternal)
-	if items.has(i):
-		bag_items.append(i)
 
 func add_pattern(p : Pattern, boardcast : bool = true):
 	if boardcast:
@@ -471,6 +430,9 @@ func add_score(value : int, pos : Vector2):
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
 	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	tween.tween_callback(func():
+		lb.hide()
+	)
 	
 	add_score_dir *= -1
 
@@ -493,6 +455,9 @@ func add_mult(value : float, pos : Vector2):
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
 	tween.tween_property(ui, "position:x", pos.x + add_mult_dir * 5, 0.2)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	tween.tween_callback(func():
+		lb.hide()
+	)
 	
 	add_mult_dir *= -1
 
@@ -564,11 +529,6 @@ func copy_gem(src : Gem, dst : Gem):
 		new_b.duration = b.duration
 		new_b.data = b.data.duplicate(true)
 		dst.buffs.append(new_b)
-	if src.bound_item:
-		var new_i = Item.new()
-		new_i.setup(src.bound_item.name)
-		add_item(new_i)
-		dst.bound_item = new_i
 
 func duplicate_gem(g : Gem, ui, from : String = "hand"):
 	SSound.se_enchant.play()
@@ -598,13 +558,6 @@ func enchant_gem(g : Gem, type : String):
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_mult","add":1.5}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
 
-func socket_gem(g : Gem, item_name : String):
-	var i = Item.new()
-	i.setup(item_name)
-	add_item(i)
-	g.rune = Gem.Rune.None
-	g.bound_item = i
-
 func swap_hand_and_board(slot1 : Control, coord : Vector2i):
 	var tween = get_tree().create_tween()
 	var g1 = slot1.gem
@@ -620,24 +573,21 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i):
 	)
 	tween.tween_interval(0.1)
 	tween.tween_callback(func():
+		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, null)
-		Board.set_item_at(coord, null)
 	)
 	var sub1 = get_tree().create_tween()
 	var sub2 = get_tree().create_tween()
-	sub1.tween_property(slot1, "global_position", pos + Vector2(0, Board.tile_sz * 0.75), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	sub1.tween_property(slot1, "global_position", pos, 0.3)
-	sub2.tween_interval(0.15)
-	sub2.tween_property(slot2, "global_position", pos + Vector2(0.0, -Board.tile_sz * 0.75), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	sub2.tween_property(slot2, "elastic", 1.0, 0.3).from(0.0)
+	sub1.tween_property(slot1, "global_position", pos + Vector2(0, Board.tile_sz * 0.75), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub1.tween_property(slot1, "global_position", pos, 0.2)
+	sub2.tween_interval(0.1)
+	sub2.tween_property(slot2, "global_position", pos + Vector2(0.0, -Board.tile_sz * 0.75), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub2.tween_property(slot2, "elastic", 1.0, 0.2).from(0.0)
 	tween.tween_subtween(sub1)
 	tween.parallel().tween_subtween(sub2)
 		
 	tween.tween_callback(func():
-		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, g1)
-		if g1.bound_item:
-			Board.set_item_at(coord, g1.bound_item)
 		Hand.erase(slot1.get_index())
 		control_ui.update_preview()
 		Game.end_busy()
@@ -707,7 +657,6 @@ func process_command_line(cl : String):
 			var level_count = 1
 			var task_count = 1
 			var saving = ""
-			var additional_items = []
 			var additional_patterns = []
 			var additional_relics = []
 			var additional_enchants = []
@@ -726,16 +675,6 @@ func process_command_line(cl : String):
 				elif t == "-s":
 					saving = tokens[i + 1]
 					i += 1
-				elif t == "-ai":
-					var num = 1
-					var tt = tokens[i + 1]
-					i += 1
-					if tt.is_valid_int():
-						num = int(tt)
-						tt = tokens[i + 1]
-						i += 1
-					for j in num:
-						additional_items.append(tt)
 				elif t == "-ap":
 					var num = 1
 					var tt = tokens[i + 1]
@@ -761,7 +700,7 @@ func process_command_line(cl : String):
 					i += 1
 				elif t == "-es":
 					enable_shopping = true
-			STest.start_test(mode, level_count, task_count, "", saving, additional_items, additional_patterns, additional_relics, additional_enchants, true, enable_shopping)
+			STest.start_test(mode, level_count, task_count, "", saving, additional_patterns, additional_relics, additional_enchants, true, enable_shopping)
 
 func get_level_score(lv : int):
 	if lv <= 10:
@@ -830,7 +769,7 @@ func end_transition(tween : Tween):
 	tween.tween_callback(func():
 		match randi() % 2:
 			0: 
-				trans_sp.sprite_frames = Item.item_frames
+				trans_sp.sprite_frames = Gem.item_frames
 				trans_sp.frame = randi_range(1, 41)
 			1: 
 				trans_sp.sprite_frames = Relic.relic_frames
@@ -929,16 +868,16 @@ func start_game(saving : String = ""):
 			var g = Gem.new()
 			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Destroy
-			add_gem(g)
-			#socket_gem(g, "Rainbow")
-		for i in 16:
-			var g = Gem.new()
-			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Wisdom
+			g.setup("Bomb")
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.Type.Red
+			g.rune = Gem.Rune.Wisdom
+			add_gem(g)
+		for i in 16:
+			var g = Gem.new()
+			g.type = Gem.Type.Red
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
 		for i in 16:
@@ -1001,27 +940,6 @@ func start_game(saving : String = ""):
 			g.type = Gem.Type.Purple
 			g.rune = Gem.Rune.Grow
 			add_gem(g)
-		
-		for i in 0:
-			var item = Item.new()
-			item.setup("DyeRed")
-			add_item(item)
-		for i in 0:
-			var item = Item.new()
-			item.setup("DyeOrange")
-			add_item(item)
-		for i in 0:
-			var item = Item.new()
-			item.setup("DyeGreen")
-			add_item(item)
-		for i in 0:
-			var item = Item.new()
-			item.setup("DyeBlue")
-			add_item(item)
-		for i in 0:
-			var item = Item.new()
-			item.setup("DyePurple")
-			add_item(item)
 		'''
 		for i in 1:
 			var item = Item.new()
@@ -1342,7 +1260,7 @@ func save_to_file(name : String = "1"):
 		d["event"] = h.event
 		d["host_type"] = h.host_type
 		match h.host_type:
-			HostType.Item: d["host"] = Game.items.find(h.host)
+			HostType.Gem: d["host"] = Game.gems.find(h.host)
 			HostType.Relic: d["host"] = Game.relics.find(h.host)
 		d["once"] = h.once
 	
@@ -1419,36 +1337,12 @@ func save_to_file(name : String = "1"):
 			save_buff.call(b, buff)
 			buffs.append(buff)
 		gem["buffs"] = buffs
-		gem["bound_item"] = Game.items.find(g.bound_item)
 		gems.append(gem)
 	data["gems"] = gems
 	var bag_gems = []
 	for g in Game.bag_gems:
 		bag_gems.append(Game.gems.find(g))
 	data["bag_gems"] = bag_gems
-	var items = []
-	for i in Game.items:
-		var item = {}
-		item["name"] = i.name
-		item["power"] = i.power
-		item["duplicant"] = i.duplicant
-		item["tradeable"] = i.tradeable
-		item["mountable"] = i.mountable
-		item["mounted"] = Game.items.find(i.mounted)
-		item["coord"] = i.coord
-		var buffs = []
-		for b in i.buffs:
-			var buff = {}
-			save_buff.call(b, buff)
-			buffs.append(buff)
-		item["buffs"] = buffs
-		item["extra"] = i.extra.duplicate()
-		items.append(item)
-	data["items"] = items
-	var bag_items = []
-	for i in Game.bag_items:
-		bag_items.append(Game.items.find(i))
-	data["bag_items"] = bag_items
 	var patterns = []
 	for p in Game.patterns:
 		var pattern = {}
@@ -1475,7 +1369,6 @@ func save_to_file(name : String = "1"):
 		var cell = {}
 		cell["coord"] = c.coord
 		cell["gem"] = Game.gems.find(c.gem)
-		cell["item"] = Game.items.find(c.item)
 		cell["state"] = c.state
 		cell["pinned"] = c.pinned
 		cell["frozen"] = c.frozen
@@ -1554,7 +1447,7 @@ func load_from_file(name : String = "1"):
 		var host_idx = int(d["host"])
 		var host = null
 		match host_type:
-			HostType.Item: host = Game.items[host_idx]
+			HostType.Gem: host = Game.gems[host_idx]
 			HostType.Relic: host = Game.relics[host_idx]
 		var h = Hook.new(int(d["event"]), host, host_type, d["once"])
 		return h
@@ -1606,7 +1499,6 @@ func load_from_file(name : String = "1"):
 	Board.cy = int(data["cy"])
 	
 	var gems = data["gems"]
-	var bound_item_pair = []
 	for gem in gems:
 		var g = Gem.new()
 		g.type = int(gem["type"])
@@ -1619,38 +1511,10 @@ func load_from_file(name : String = "1"):
 		var buffs = gem["buffs"]
 		for buff in buffs:
 			load_buff.call(buff, g)
-		var idx = int(gem["bound_item"])
-		if idx != -1:
-			bound_item_pair.append(Pair.new(g, idx))
 		add_gem(g, false)
 	var bag_gems = data["bag_gems"]
 	for idx in bag_gems:
 		Game.bag_gems.append(Game.gems[idx])
-	var items = data["items"]
-	var item_mounted_pair = []
-	for item in items:
-		var i = Item.new()
-		i.setup(item["name"])
-		i.power = int(item["power"])
-		i.duplicant = item["duplicant"]
-		i.tradeable = item["tradeable"]
-		i.mountable = item["mountable"]
-		var idx = int("mounted")
-		if idx != -1:
-			item_mounted_pair.append(Pair.new(i, idx))
-		i.coord = str_to_var("Vector2i" + item["coord"])
-		var buffs = item["buffs"]
-		for buff in buffs:
-			load_buff.call(buff, i)
-		i.extra = SUtils.read_dictionary(item["extra"])
-		add_item(i, false)
-	for p in bound_item_pair:
-		p.first.bound_item = Game.items[p.second]
-	for p in item_mounted_pair:
-		p.first.mounted = Game.items[p.second]
-	var bag_items = data["bag_items"]
-	for idx in bag_items:
-		Game.bag_items.append(Game.items[idx])
 	var patterns = data["patterns"]
 	for pattern in patterns:
 		var p = Pattern.new()
@@ -1685,16 +1549,10 @@ func load_from_file(name : String = "1"):
 		var c = Board.add_cell(coord)
 		var ui = Game.Board.ui.get_cell(coord)
 		var gem_idx = cell["gem"]
-		var item_idx = cell["item"]
 		if gem_idx != -1:
 			var g = Game.gems[gem_idx]
 			c.gem = g
 			ui.gem_ui.reset(g.type, g.rune)
-		if item_idx != -1:
-			var i = Game.items[item_idx]
-			c.item = i
-			ui.set_item_image(i.image_id)
-			ui.set_duplicant(i.duplicant)
 		var state = cell["state"]
 		if state != Cell.State.Normal:
 			Board.set_state_at(coord, state)
@@ -1787,10 +1645,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					contents.append(Pair.new(tr("tt_cell_in_mist"), tr("tt_cell_in_mist_content")))
 				var g = Board.get_gem_at(c)
 				if g:
-					contents.append_array(g.get_tooltip(false))
-					var i = Board.get_item_at(c)
-					if i:
-						contents.append_array(i.get_tooltip())
+					contents.append_array(g.get_tooltip())
 					STooltip.show(contents, 0.3)
 			else:
 				control_ui.debug_text.text = ""
@@ -1852,11 +1707,8 @@ func _ready() -> void:
 			for x in Board.cx:
 				var c = Vector2i(x, y)
 				var g = Board.get_gem_at(c)
-				var i = Board.get_item_at(c)
 				if g:
 					Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
-				if i:
-					Buff.clear(i, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
 		
 		if game_over_mark != "":
 			lose()

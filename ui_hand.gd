@@ -50,12 +50,14 @@ func remove_slot(idx : int):
 func get_pos(idx : int):
 	return list.global_position + Vector2((item_w + gap) * idx + item_w * 0.5, item_h * 0.5)
 
+'''
 func place_item(ui : UiSlot, c : Vector2i):
 	if Board.place_item(c, null): # TODO
 		ui.queue_free()
 		list.remove_child(ui)
 		return true
 	return false
+'''
 
 func clear():
 	for n in list.get_children():
@@ -105,9 +107,5 @@ func _process(delta: float) -> void:
 			Hand.grabs[drag_idx] = g2
 			Hand.grabs[new_idx] = g1
 			g1.coord.x = new_idx
-			if g1.bound_item:
-				g1.bound_item.coord.x = new_idx
 			g2.coord.x = drag_idx
-			if g2.bound_item:
-				g2.bound_item.coord.x = drag_idx
 			list.move_child(Drag.ui, new_idx)

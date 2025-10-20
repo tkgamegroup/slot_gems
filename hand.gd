@@ -10,8 +10,6 @@ func add_gem(gem : Gem, pos : int = -1):
 	if pos == -1:
 		pos = grabs.size()
 	gem.coord = Vector2i(pos, -1)
-	if gem.bound_item:
-		gem.bound_item.coord = Vector2i(pos, -1)
 	grabs.insert(pos, gem)
 	return ui.add_slot(gem, pos)
 
@@ -46,21 +44,16 @@ func clear():
 
 func swap(coord : Vector2i, gem : Gem, immediately : bool = false):
 	var og = Board.set_gem_at(coord, null)
-	Board.set_item_at(coord, null)
 	if immediately:
 		Board.set_gem_at(coord, gem)
-		if gem.bound_item:
-			Board.set_item_at(coord, gem.bound_item)
 		add_gem(og)
 	else:
 		var pos = Board.get_pos(coord) - Vector2(16, 24)
 		var slot = add_gem(og)
 		slot.elastic = -1.0
 		var tween = get_tree().create_tween()
-		tween.tween_property(slot, "global_position", pos + Vector2(0.0, -48.0), 0.5).from(pos)
-		tween.tween_property(slot, "elastic", 1.0, 0.5).from(0.0)
+		tween.tween_property(slot, "global_position", pos + Vector2(0.0, -48.0), 0.3).from(pos)
+		tween.tween_property(slot, "elastic", 1.0, 0.3).from(0.0)
 		tween.tween_callback(func():
 			Board.set_gem_at(coord, gem)
-			if gem.bound_item:
-				Board.set_item_at(coord, gem.bound_item)
 		)

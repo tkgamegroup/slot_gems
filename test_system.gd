@@ -19,7 +19,6 @@ enum TaskSteps
 
 var filename : String
 var saving : String
-var additional_items : Array
 var additional_patterns : Array
 var additional_relics : Array
 var additional_enchants : Array
@@ -112,11 +111,6 @@ func has_matched_pattern():
 
 func start_game():
 	Game.start_game(saving)
-	for n in additional_items:
-		var i = Item.new()
-		i.setup(n)
-		Game.add_item(i)
-		Game.bag_items.append(i)
 	for n in additional_patterns:
 		var p = Pattern.new()
 		p.setup(n)
@@ -126,7 +120,7 @@ func start_game():
 		r.setup(n)
 		Game.add_relic(r)
 
-func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_items : Array = [], _additional_patterns : Array = [], _additional_relics : Array = [], _additional_enchants : Array = [], invincible : bool = true, _enable_shopping : bool = false):
+func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_patterns : Array = [], _additional_relics : Array = [], _additional_enchants : Array = [], invincible : bool = true, _enable_shopping : bool = false):
 	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
 	Game.performance_mode = true
 	Game.base_speed = 4.0
@@ -149,7 +143,6 @@ func start_test(_mode : int, _level_count : int, _task_count : int, fn : String 
 		filename = fn
 	
 	saving = _saving
-	additional_items = _additional_items
 	additional_patterns = _additional_patterns
 	additional_relics = _additional_relics
 	additional_enchants = _additional_enchants
@@ -361,6 +354,7 @@ func auto_swap_gems():
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 
+'''
 func auto_place_items():
 	if !Hand.grabs.is_empty():
 		var cx = Board.cx
@@ -520,6 +514,7 @@ func auto_place_items():
 							return true
 			return false
 		)
+'''
 
 func _ready() -> void:
 	timer.timeout.connect(time_out)

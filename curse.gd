@@ -116,15 +116,15 @@ func add_sin(n : String):
 		b.caster = self
 		created_sin = Item.new()
 		created_sin.setup(n)
-		created_sin.duplicant = true
 		Game.items.append(created_sin)
-		Board.set_item_at(afflicted_gem.coord, created_sin)
+		#Board.set_item_at(afflicted_gem.coord, created_sin)
 
 func remove_sin():
 	if afflicted_gem:
 		Buff.remove_by_caster(afflicted_gem, self)
 		if created_sin.coord.x != -1 && created_sin.coord.y != -1:
-			Board.set_item_at(created_sin.coord, null)
+			pass
+			#Board.set_item_at(created_sin.coord, null)
 		created_sin = null
 
 func remove():

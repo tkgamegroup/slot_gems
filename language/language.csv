@@ -86,6 +86,7 @@ ui_collections_relics,Relics,遗物
 ui_game_score,Score,分数
 ui_game_combos,Combos,连击
 ui_game_mult,Mult,倍率
+tt_alt_to_show_more,Alt to show more,按Alt显示更多
 tt_red_base_score,Red gems' base score,红色宝石基础分数
 tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
@@ -156,6 +157,7 @@ ui_game_over_level,Level,关卡
 ui_game_over_seed,Seed,种子
 ui_game_over_new_run,New Run,新的一局
 ui_game_over_main_menu,Main Menu,主菜单
+gem,Gem,宝石
 gem_none,None,无
 gem_red,Red,红
 gem_orange,Orange,橙
@@ -168,6 +170,7 @@ gem_unknown,Unknown,未知
 gem_score,Score: ,分数: 
 gem_mult,Mult: ,倍率: 
 gem_enchant,Enchant: %s,附魔: %s
+rune,Rune,符文
 rune_none,None,无
 rune_destroy,Destroy,破坏
 rune_wisdom,Wisdom,灵智

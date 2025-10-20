@@ -14,11 +14,6 @@ uniform float x_rot : hint_range(-180, 180) = 0.0;
 uniform float inset : hint_range(0, 1) = 0.0;
 // Consider changing this to a uniform and changing it from code
 
-uniform sampler2D dissolve_texture : source_color;
-uniform float dissolve : hint_range(0,1) = 1.0;
-uniform float burn_size: hint_range(0.0, 1.0, 0.001);
-uniform vec4 burn_color: source_color;
-
 varying flat vec2 o;
 varying vec3 p;
 
@@ -57,10 +52,4 @@ void fragment(){
 	vec2 uv = (p.xy / p.z).xy - o;
     COLOR = texture(TEXTURE, uv + 0.5);
 	COLOR.a *= step(max(abs(uv.x), abs(uv.y)), 0.5);
-	
-    vec4 noise_texture = texture(dissolve_texture, UV);
-	float burn_size_step = burn_size * step(0.001, dissolve) * step(dissolve, 0.999);
-	float threshold = smoothstep(noise_texture.x-burn_size_step, noise_texture.x, dissolve);
-	float border = smoothstep(noise_texture.x, noise_texture.x + burn_size_step, dissolve);
-	COLOR = vec4(mix(burn_color.rgb, COLOR.rgb, border), COLOR.a * threshold);
 }
