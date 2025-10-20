@@ -67,7 +67,7 @@ func _ready() -> void:
 		else:
 			if gem:
 				unload_gem()
-			load_gem(payload)
+			load_gem(payload.gem)
 			return true
 		return false
 	)

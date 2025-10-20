@@ -550,14 +550,9 @@ func clear_consumed():
 				if !Game.performance_mode:
 					var g = get_gem_at(c)
 					if g:
-						var ui_cell = ui.get_cell(c)
 						var sub = get_tree().create_tween()
-						SAnimation.shake(sub, ui_cell, 10.0, 0.15 * Game.speed)
-						sub.parallel()
-						sub.tween_property(ui_cell, "scale", Vector2(0.9, 0.9), 0.1 * Game.speed)
-						sub.tween_property(ui_cell, "scale", Vector2(1.0, 1.0), 0.1 * Game.speed)
 						sub.tween_callback(func():
-							SSound.se_break.play()
+							#SSound.se_break.play()
 							set_gem_at(c, null)
 							set_state_at(c, Cell.State.Normal)
 							var tex = Gem.gem_frames.get_frame_texture("default", g.type)
@@ -577,13 +572,13 @@ func fill_blanks():
 	if filling_tween:
 		return
 	filling_tween = Game.get_tree().create_tween()
-	filling_tween.tween_interval(max(0.1 * Game.speed, 0.05))
 	
 	if Game.gems.size() < Board.curr_min_gem_num:
 		Game.game_over_mark = "not_enough_gems"
 		Game.lose()
 		return
 	
+	var collect_tween = Game.get_tree().create_tween()
 	var staging_idx = 0
 	if !Game.staging_scores.is_empty() || !Game.staging_mults.is_empty():
 		Game.staging_scores.shuffle()
@@ -600,13 +595,12 @@ func fill_blanks():
 			sub.parallel()
 			SAnimation.quadratic_curve_to(sub, s.first, Game.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 			sub.tween_callback(func():
-				SSound.se_select.play()
 				Game.base_score += s.second
 			)
 			sub.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
-				filling_tween.parallel()
-			filling_tween.tween_subtween(sub)
+				collect_tween.parallel()
+			collect_tween.tween_subtween(sub)
 			staging_idx += 1
 		for s in Game.staging_mults:
 			var sub = get_tree().create_tween()
@@ -620,18 +614,17 @@ func fill_blanks():
 			sub.parallel()
 			SAnimation.quadratic_curve_to(sub, s.first, Game.calculator_bar_ui.mult_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * Game.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 			sub.tween_callback(func():
-				SSound.se_select.play()
 				Game.score_mult += s.second
 			)
 			sub.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
-				filling_tween.parallel()
-			filling_tween.tween_subtween(sub)
+				collect_tween.parallel()
+			collect_tween.tween_subtween(sub)
 			staging_idx += 1
 		Game.staging_scores.clear()
 		Game.staging_mults.clear()
-		filling_tween.tween_interval(0.3 * Game.speed)
 	
+	var down_tween = Game.get_tree().create_tween()
 	for x in cx:
 		var subx = get_tree().create_tween()
 		var delay = 0.0
@@ -687,7 +680,10 @@ func fill_blanks():
 			)
 			subx.parallel().tween_subtween(sub)
 			delay += 0.08
-		filling_tween.parallel().tween_subtween(subx)
+		down_tween.parallel().tween_subtween(subx)
+	
+	filling_tween.tween_subtween(collect_tween)
+	filling_tween.parallel().tween_subtween(down_tween)
 	filling_tween.tween_callback(func():
 		filling_tween = null
 		if Game.game_over_mark == "":
@@ -701,7 +697,6 @@ func on_combo():
 func matching():
 	var matched_num = 0
 	var tween = Game.get_tree().create_tween()
-	tween.tween_interval(0.4 * Game.speed)
 	
 	for y in cy:
 		for x in cx:
@@ -730,7 +725,6 @@ func matching():
 					Game.speed = max(0.05, Game.speed)
 	if Game.game_over_mark == "":
 		if matched_num == 0:
-			tween.tween_interval(0.55 * Game.speed)
 			tween.tween_callback(func():
 				if active_effects.is_empty():
 					matching_finished.emit()

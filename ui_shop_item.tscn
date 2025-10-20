@@ -11,8 +11,8 @@ border_width_right = 2
 border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 
 [node name="UiShopItem" type="VBoxContainer"]
-offset_right = 64.0
-offset_bottom = 91.0
+offset_right = 83.0
+offset_bottom = 44.0
 mouse_filter = 0
 script = ExtResource("1_e4q1j")
 
@@ -43,7 +43,7 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="ShopButton" index="0"]
+[node name="Button" parent="ShopButton/HBoxContainer" index="1"]
 text = "ui_buy"
 
 [editable path="ShopButton"]

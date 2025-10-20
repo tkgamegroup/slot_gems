@@ -116,8 +116,8 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 		parent.add_child(poly)
 		poly.position = pos
 		var tween = Game.get_tree().create_tween()
-		tween.tween_property(poly, "position", pos + d * 45.0 + Vector2(randf_range(-20.0, +20.0), 100.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.tween_property(poly, "position", pos + d * 105.0 + Vector2(randf_range(-20.0, +20.0), 50.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_callback(poly.queue_free)
 
 func add_black_hole_rotating(pos : Vector2, size : Vector2, z_index : int, duration : float):

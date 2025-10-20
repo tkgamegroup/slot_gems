@@ -3,24 +3,16 @@
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="1_i4576"]
 [ext_resource type="Script" uid="uid://f76s420ptttq" path="res://shop_button.gd" id="1_vc7fc"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rdvh"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc7fc"]
+bg_color = Color(0.114897, 0.114897, 0.114897, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_phcyf"]
-bg_color = Color(0.41, 0.1804, 0.253107, 1)
-border_color = Color(0.705882, 0.705882, 0.705882, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 5.0
-expand_margin_top = 4.0
-expand_margin_right = 5.0
-expand_margin_bottom = 4.0
-shadow_size = 1
-shadow_offset = Vector2(3, 2)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gx4rg"]
-bg_color = Color(0.41, 0.1804, 0.253107, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkkcx"]
+bg_color = Color(0.823529, 0.364706, 0.509804, 1)
 border_color = Color(0.705882, 0.705882, 0.705882, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -48,8 +40,8 @@ expand_margin_bottom = 4.0
 shadow_size = 1
 shadow_offset = Vector2(1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkkcx"]
-bg_color = Color(0.823529, 0.364706, 0.509804, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gx4rg"]
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
 border_color = Color(0.705882, 0.705882, 0.705882, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -62,56 +54,68 @@ expand_margin_bottom = 4.0
 shadow_size = 1
 shadow_offset = Vector2(3, 2)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc7fc"]
-bg_color = Color(0.114897, 0.114897, 0.114897, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.313695, 0.200541, 0.00778849, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_phcyf"]
+bg_color = Color(0.41, 0.1804, 0.253107, 1)
+border_color = Color(0.705882, 0.705882, 0.705882, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2(3, 2)
 
-[node name="ShopButton" type="VBoxContainer"]
-size_flags_horizontal = 0
-size_flags_vertical = 0
-script = ExtResource("1_vc7fc")
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rdvh"]
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 2
-theme_override_styles/focus = SubResource("StyleBoxEmpty_5rdvh")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_phcyf")
-theme_override_styles/hover = SubResource("StyleBoxFlat_gx4rg")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_5dllo")
-theme_override_styles/normal = SubResource("StyleBoxFlat_kkkcx")
-text = "ABC"
-
-[node name="Price" type="PanelContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="ShopButton" type="PanelContainer"]
+offset_right = 83.0
+offset_bottom = 40.0
+size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vc7fc")
+script = ExtResource("1_vc7fc")
 
-[node name="MarginContainer" type="MarginContainer" parent="Price"]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = -4
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Price/MarginContainer"]
+[node name="Price" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Price"]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="Label" type="Label" parent="Price/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="HBoxContainer/Price/HBoxContainer"]
 layout_mode = 2
 text = "2"
 
-[node name="Sprite2D" type="TextureRect" parent="Price/MarginContainer/HBoxContainer"]
+[node name="Sprite2D" type="TextureRect" parent="HBoxContainer/Price/HBoxContainer"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("1_i4576")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_kkkcx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5dllo")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gx4rg")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_phcyf")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5rdvh")
+text = "ABC"

@@ -1483,7 +1483,7 @@ theme_override_constants/separation = 12
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton/HBoxContainer" index="1"]
 text = "ui_shop_refresh"
 icon = ExtResource("61_ppx11")
 
@@ -1491,7 +1491,7 @@ icon = ExtResource("61_ppx11")
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton2" index="0"]
+[node name="Button" parent="SubViewportContainer/SubViewport/Canvas/Shop/HBoxContainer/VBoxContainer2/ShopButton2/HBoxContainer" index="1"]
 text = "ui_shop_upgrade"
 icon = ExtResource("62_1yv1y")
 
