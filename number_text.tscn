@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cju4gysu404r0"]
+[gd_scene load_steps=5 format=3 uid="uid://cju4gysu404r0"]
 
 [ext_resource type="Script" uid="uid://5nb23eab1mun" path="res://number_text.gd" id="1_nnhdv"]
+[ext_resource type="PackedScene" uid="uid://bfk7153owjlg0" path="res://float_text.tscn" id="2_1k47t"]
+[ext_resource type="FontVariation" uid="uid://bgc333n8f0dkw" path="res://fonts/Baloo2_number.tres" id="3_mko46"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nnhdv"]
 bg_color = Color(1, 1, 1, 1)
@@ -9,42 +11,28 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
-[node name="NumberText" type="Control"]
-custom_minimum_size = Vector2(16, 11)
-layout_mode = 3
-anchors_preset = 0
-offset_right = 16.0
-offset_bottom = 11.0
+[node name="NumberText" type="MarginContainer"]
+offset_right = 35.0
+offset_bottom = 36.0
 mouse_filter = 2
 script = ExtResource("1_nnhdv")
 
-[node name="Text" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -4.0
-offset_top = -11.0
-offset_right = 4.0
-offset_bottom = 11.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-text = "88"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="Text" parent="." instance=ExtResource("2_1k47t")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Shadow" parent="Text" index="0"]
+theme_override_fonts/font = ExtResource("3_mko46")
+
+[node name="Text" parent="Text" index="1"]
+clip_contents = false
+theme_override_fonts/normal_font = ExtResource("3_mko46")
 
 [node name="Panel" type="Panel" parent="."]
 visible = false
 clip_children = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nnhdv")
 
@@ -59,9 +47,15 @@ color = Color(0, 0, 0, 1)
 
 [node name="Change" type="Label" parent="Panel/ChangeBG"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -18.0
+offset_right = 10.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -69,7 +63,10 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.501961)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/shadow_outline_size = 2
+theme_override_fonts/font = ExtResource("3_mko46")
 theme_override_font_sizes/font_size = 22
 text = "-2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[editable path="Text"]

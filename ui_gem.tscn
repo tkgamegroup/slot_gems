@@ -64,7 +64,11 @@ colors = PackedColorArray(0.75, 0.195, 0.195, 1, 0.7, 0.637467, 0.231, 1, 0.2249
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.132075, 0.191011), 0.0, 0.0, 0, 0, Vector2(0.698113, 0.191011), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 4
 
-[node name="UiGem" type="Node2D"]
+[node name="UiGem" type="Control"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
 script = ExtResource("2_pbann")
 
 [node name="SubViewport" type="SubViewport" parent="."]
@@ -77,6 +81,12 @@ size = Vector2i(48, 48)
 material = SubResource("ShaderMaterial_3vjey")
 sprite_frames = ExtResource("5_xnwot")
 frame = 1
+centered = false
+
+[node name="Colorless" type="AnimatedSprite2D" parent="SubViewport"]
+visible = false
+sprite_frames = ExtResource("5_xnwot")
+frame = 6
 centered = false
 
 [node name="Wild" type="AnimatedSprite2D" parent="SubViewport"]

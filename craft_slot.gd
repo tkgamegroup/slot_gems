@@ -1,7 +1,6 @@
 extends Control
 
 const UiGem = preload("res://ui_gem.gd")
-const ShopButton = preload("res://shop_button.gd")
 
 @onready var title_txt : RichTextLabel = $Title
 @onready var slot : Control = $Control
@@ -10,7 +9,7 @@ const ShopButton = preload("res://shop_button.gd")
 @onready var img_close : TextureRect = $Control/Close
 @onready var particles1 : CPUParticles2D = $Control/CPUParticles2D
 @onready var particles2 : CPUParticles2D = $Control/CPUParticles2D2
-@onready var button : ShopButton = $ShopButton
+@onready var button = $Button
 
 var gem : Gem = null
 var type : String
@@ -45,18 +44,17 @@ func _ready() -> void:
 	title_txt.meta_hover_started.connect(func(meta):
 		var s = str(meta)
 		if s.begins_with("w_"):
-			STooltip.show([Pair.new(tr(s), tr(s + "_desc"))])
+			STooltip.show(title_txt, 1, [Pair.new(tr(s), tr(s + "_desc"))])
 		else:
 			var item = Item.new()
 			item.setup(thing)
-			STooltip.show(item.get_tooltip())
+			STooltip.show(title_txt, 1, item.get_tooltip())
 	)
 	title_txt.meta_hover_ended.connect(func(meta):
 		STooltip.close()
 	)
-	button.button.text = tr(type)
 	button.button.disabled = true
-	button.price.text = "%d" % price
+	button.get_child(1).text = "[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % price
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			img_open.modulate = Color(0.7, 0.7, 0.7, 1.0)
@@ -80,7 +78,7 @@ func _ready() -> void:
 	slot.mouse_entered.connect(func():
 		if gem:
 			SSound.se_select.play()
-			STooltip.show(gem.get_tooltip())
+			STooltip.show(slot, 1, gem.get_tooltip())
 	)
 	slot.mouse_exited.connect(func():
 		STooltip.close()

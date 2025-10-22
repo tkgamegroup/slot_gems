@@ -155,53 +155,51 @@ func get_mult():
 func get_rank():
 	return type * 0xffff + rune * 0xff + (100.0 / max(base_score + bonus_score + base_mult, 0.1))
 
-func get_tt_name():
-	var ret = ""
-	if coord.x != -1 && coord.y != -1:
-		var cell = Board.get_cell(coord)
-		if cell.in_mist:
-			ret = "%s (%s)" % [tr("gem_unknown"), tr("rune_unknown")]
-			return ret
-	var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
-	if color_change && color_change.duration != Buff.Duration.Eternal:
-		ret = "[color=GRAY][s]%s[/s][/color] %s" % [type_display_name(color_change.data["original_color_i"]), type_display_name(type)]
-	else:
-		ret = type_display_name(type)
-	if rune != Rune.None:
-		ret += " (%s)" % rune_display_name(rune)
-	return ret
-
-func get_description():
-	var ret = ""
-	ret += tr("gem_score")
-	ret += "%d" % int(get_base_score() * gain_scaler)
-	if bonus_score > 0:
-		ret += "+%d" % int(bonus_score * gain_scaler)
-	elif bonus_score < 0:
-		ret += "%d" % bonus_score
-	if base_mult != 0.0 || bonus_mult != 0.0:
-		ret += "\n" + tr("gem_mult")
-		ret += "%.2f" % (base_mult * gain_scaler)
-		if bonus_mult > 0:
-			ret += "+%.2f" % (bonus_mult * gain_scaler)
-		elif bonus_mult < 0:
-			ret += "%.2f" % (bonus_mult * gain_scaler)
-	for enchant in Buff.find_all_typed(self, Buff.Type.Enchant):
-		ret += "\n[color=GREEN]%s[/color]" % (tr("gem_enchant") % tr(enchant.data["type"]))
-	return ret
-
 func get_tooltip():
 	var ret : Array[Pair] = []
 	var title = ""
 	var content = ""
-	ret.append(Pair.new(get_tt_name(), get_description()))
+	var in_mist = false
+	if coord.x != -1 && coord.y != -1:
+		var cell = Board.get_cell(coord)
+		in_mist = cell.in_mist
+	if name == "":
+		title = tr("gem")
+	else:
+		title = tr("item_name_" + name)
+	var basics = ""
+	if type != Type.None:
+		var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
+		if color_change && color_change.duration != Buff.Duration.Eternal:
+			basics += "[color=GRAY][s]%s[/s][/color] %s" % [type_display_name(color_change.data["original_color_i"]), type_display_name(type)]
+		else:
+			basics += type_display_name(type)
+	if rune != Rune.None:
+		if !basics.is_empty():
+			basics += ", "
+		basics += rune_display_name(rune)
+	if !basics.is_empty():
+		content += basics + "\n"
+	content += tr("gem_score") + ("%d" % int(get_base_score() * gain_scaler))
+	if bonus_score > 0:
+		content += "+%d" % int(bonus_score * gain_scaler)
+	elif bonus_score < 0:
+		content += "%d" % bonus_score
+	if base_mult != 0.0 || bonus_mult != 0.0:
+		content += "\n" + tr("gem_mult") + ("%.2f" % (base_mult * gain_scaler))
+		if bonus_mult > 0:
+			content += "+%.2f" % (bonus_mult * gain_scaler)
+		elif bonus_mult < 0:
+			content += "%.2f" % (bonus_mult * gain_scaler)
+	for enchant in Buff.find_all_typed(self, Buff.Type.Enchant):
+		content += "\n[color=GREEN]%s[/color]" % (tr("gem_enchant") % tr(enchant.data["type"]))
 	if name != "":
-		content += tr("item_desc_" + name).format(extra)
 		if power != 0:
-			content = ("w_power: %d\n" % power) + content
+			content += ("\nw_power: %d" % power)
+		content += "\n" + tr("item_desc_" + name).format(extra)
 		if extra.has("buff_ids"):
 			content += "\n%d" % extra["buff_ids"].size()
-		ret.append(Pair.new(tr("item_name_" + name), content))
+	ret.append(Pair.new(title, content))
 	return ret
 
 static var s_id : int = 0

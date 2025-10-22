@@ -252,6 +252,8 @@ var filling_times : int = 0:
 				control_ui.filling_times_tween.tween_callback(func():
 					control_ui.filling_times_tween = null
 				)
+
+var resolution : Vector2i = Vector2i(1920, 1080)
 var crt_mode : bool = true:
 	set(v):
 		if crt_mode != v:
@@ -763,7 +765,7 @@ func begin_transition(tween : Tween):
 	blocker_ui.show()
 	trans_sp.sprite_frames = null
 	trans_sp.frame = 0
-	tween.tween_property(subviewport_container.material, "shader_parameter/radius", 3.2, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(subviewport_container.material, "shader_parameter/radius", 3.2, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 func end_transition(tween : Tween):
 	tween.tween_callback(func():
@@ -776,8 +778,8 @@ func end_transition(tween : Tween):
 				trans_sp.frame = randi_range(1, 14)
 		trans_sp.scale = Vector2(0.0, 0.0)
 	)
-	tween.tween_property(trans_sp, "scale", Vector2(3.0, 3.0), 0.4).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(subviewport_container.material, "shader_parameter/radius", 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(trans_sp, "scale", Vector2(3.0, 3.0), 0.2).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(subviewport_container.material, "shader_parameter/radius", 0.0, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(func():
 		blocker_ui.hide()
 	)
@@ -1645,8 +1647,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					contents.append(Pair.new(tr("tt_cell_in_mist"), tr("tt_cell_in_mist_content")))
 				var g = Board.get_gem_at(c)
 				if g:
-					contents.append_array(g.get_tooltip())
-					STooltip.show(contents, 0.3)
+					var cell_ui = Board.ui.get_cell(c)
+					if STooltip.node != cell_ui:
+						contents.append_array(g.get_tooltip())
+						STooltip.show(cell_ui, 0, contents)
 			else:
 				control_ui.debug_text.text = ""
 				STooltip.close()
@@ -1738,11 +1742,11 @@ func _ready() -> void:
 	screen_shake_noise.frequency = 0.2
 	screen_shake_noise.seed = randi()
 	
-	var window_size = Vector2(DisplayServer.window_get_size())
-	trans_bg.size = window_size
-	background.scale = window_size
-	subviewport.size = window_size
-	crt.material.set_shader_parameter("resolution", window_size)
+	resolution = Vector2(DisplayServer.window_get_size())
+	trans_bg.size = resolution
+	background.scale = resolution
+	subviewport.size = resolution
+	crt.material.set_shader_parameter("resolution", resolution)
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 func _process(delta: float) -> void:

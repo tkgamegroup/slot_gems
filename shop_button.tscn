@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://d0m0h6ygbqre"]
+[gd_scene load_steps=9 format=3 uid="uid://crop02l103hwx"]
 
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="1_i4576"]
-[ext_resource type="Script" uid="uid://f76s420ptttq" path="res://shop_button.gd" id="1_vc7fc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc7fc"]
 bg_color = Color(0.114897, 0.114897, 0.114897, 1)
@@ -10,6 +9,13 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.313695, 0.200541, 0.00778849, 1)
+
+[sub_resource type="GDScript" id="GDScript_i4576"]
+script/source = "extends Control
+
+@onready var button : Button = $HBoxContainer/Button
+@onready var price : Label = $HBoxContainer/Price/HBoxContainer/Label
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkkcx"]
 bg_color = Color(0.823529, 0.364706, 0.509804, 1)
@@ -76,7 +82,7 @@ offset_bottom = 40.0
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vc7fc")
-script = ExtResource("1_vc7fc")
+script = SubResource("GDScript_i4576")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_dl41d"]
 [ext_resource type="Texture2D" uid="uid://e4na8cwspcqj" path="res://images/slot_open.png" id="3_ea0bt"]
 [ext_resource type="Texture2D" uid="uid://bcsov5iskgy5q" path="res://images/slot_close.png" id="4_81fa8"]
-[ext_resource type="PackedScene" uid="uid://d0m0h6ygbqre" path="res://shop_button.tscn" id="5_dl41d"]
+[ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="5_dl41d"]
 
 [sub_resource type="Gradient" id="Gradient_jf4wm"]
 offsets = PackedFloat32Array(0.819703, 1)
@@ -37,7 +37,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 
 [node name="UiGem" parent="Control" instance=ExtResource("2_dl41d")]
-position = Vector2(22, 22)
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
 
 [node name="Open" type="TextureRect" parent="Control"]
 layout_mode = 1
@@ -87,6 +89,5 @@ scale_amount_min = 3.0
 scale_amount_max = 3.0
 color_ramp = SubResource("Gradient_wbchi")
 
-[node name="ShopButton" parent="." instance=ExtResource("5_dl41d")]
+[node name="Button" parent="." instance=ExtResource("5_dl41d")]
 layout_mode = 2
-size_flags_horizontal = 4

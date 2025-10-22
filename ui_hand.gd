@@ -50,15 +50,6 @@ func remove_slot(idx : int):
 func get_pos(idx : int):
 	return list.global_position + Vector2((item_w + gap) * idx + item_w * 0.5, item_h * 0.5)
 
-'''
-func place_item(ui : UiSlot, c : Vector2i):
-	if Board.place_item(c, null): # TODO
-		ui.queue_free()
-		list.remove_child(ui)
-		return true
-	return false
-'''
-
 func clear():
 	for n in list.get_children():
 		n.queue_free()

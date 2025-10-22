@@ -20,7 +20,7 @@ func _ready() -> void:
 	if no_exp_bar || true:
 		exp_bar.hide()
 	self.mouse_entered.connect(func():
-		STooltip.show(pattern.get_tooltip())
+		STooltip.show(self, 2, pattern.get_tooltip())
 	)
 	self.mouse_exited.connect(func():
 		STooltip.close()

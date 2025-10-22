@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b2oghrlvbbydy"]
 
 [ext_resource type="Script" uid="uid://cv2l3tl2csppp" path="res://ui_shop_item.gd" id="1_e4q1j"]
-[ext_resource type="PackedScene" uid="uid://d0m0h6ygbqre" path="res://shop_button.tscn" id="3_c0efl"]
+[ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="3_5w2cm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ubel"]
 bg_color = Color(0.114897, 0.114897, 0.114897, 1)
@@ -14,6 +14,7 @@ border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 offset_right = 83.0
 offset_bottom = 44.0
 mouse_filter = 0
+theme_override_constants/separation = 16
 script = ExtResource("1_e4q1j")
 
 [node name="Category" type="PanelContainer" parent="."]
@@ -39,11 +40,5 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="ShopButton" parent="." instance=ExtResource("3_c0efl")]
+[node name="Buy" parent="." instance=ExtResource("3_5w2cm")]
 layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Button" parent="ShopButton/HBoxContainer" index="1"]
-text = "ui_buy"
-
-[editable path="ShopButton"]

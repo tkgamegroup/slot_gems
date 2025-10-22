@@ -7,8 +7,8 @@ const gem_ui = preload("res://ui_gem.tscn")
 @onready var exit_button : Button = $HBoxContainer/VBoxContainer2/Button
 @onready var list1 : Control = $HBoxContainer/VBoxContainer/HBoxContainer
 @onready var list2 : Control = $HBoxContainer/VBoxContainer/HBoxContainer2
-@onready var refresh_button : Control = $HBoxContainer/VBoxContainer2/ShopButton
-@onready var expand_board_button : Control = $HBoxContainer/VBoxContainer2/ShopButton2
+@onready var refresh_button : Control = $HBoxContainer/VBoxContainer2/RichButton
+@onready var expand_board_button : Control = $HBoxContainer/VBoxContainer2/RichButton2
 
 var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
@@ -217,11 +217,12 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 		Game.refresh_cluster_levels()
 	)
 	
-	expand_board_button.price.text = "%d" % expand_board_price
 	expand_board_button.button.disabled = !(Game.board_size < 6)
+	expand_board_button.get_child(1).text = "%s\n[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % [tr("ui_shop_upgrade"), expand_board_price]
 	
 	refresh_price = refresh_base_price
-	refresh_button.price.text = "%d" % refresh_price
+	refresh_button.get_child(1).text = "%s\n[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
+	
 	delete_price = 0
 	
 	if do_refresh:
@@ -273,7 +274,7 @@ func _ready() -> void:
 		Game.coins -= refresh_price
 		
 		refresh_price += refresh_price_increase
-		refresh_button.price.text = "%d" % refresh_price
+		refresh_button.get_child(1).text = "%s\n[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
 		
 		refresh()
 	)

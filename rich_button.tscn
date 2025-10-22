@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://3a8ejhbdode0"]
+
+[ext_resource type="Script" uid="uid://co5jvh526pbwk" path="res://rich_button.gd" id="1_7q5do"]
+
+[node name="RichButton" type="MarginContainer"]
+offset_bottom = 2.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_7q5do")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+bbcode_enabled = true
+text = "abc"
+fit_content = true
+autowrap_mode = 0

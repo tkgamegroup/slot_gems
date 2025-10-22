@@ -12,11 +12,9 @@ func _ready() -> void:
 	else:
 		title_text.hide()
 	content_text.text = content
-	self.modulate.a = 0.0
+	title_text.visible_ratio = 0.0
+	content_text.visible_ratio = 0.0
 	var tween = Game.get_tree().create_tween()
-	tween.tween_property(self, "modulate:a", 1.0, 0.2)
-	'''
-	tween.parallel().tween_method(func(t):
-		content_text.text = content.substr(0, content.length() * t)
-	, 0.0, 1.0, 0.2)
-	'''
+	tween.tween_property(title_text, "visible_ratio", 1.0, 0.2)
+	tween.parallel().tween_property(content_text, "visible_ratio", 1.0, 0.2)
+	

@@ -7,7 +7,6 @@ extends Control
 @onready var relic_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List4
 @onready var close_button = $PanelContainer/VBoxContainer/Button
 
-const item_ui = preload("res://ui_item.tscn")
 const pattern_ui = preload("res://ui_pattern.tscn")
 const relic_ui = preload("res://ui_relic.tscn")
 
@@ -32,12 +31,14 @@ func enter():
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyePurple", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
+	'''
 	for n in items:
 		var i = Item.new()
 		i.setup(n)
 		var ui = item_ui.instantiate()
 		ui.setup(i)
 		item_list.add_child(ui)
+	'''
 	var patterns = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	for n in patterns:
 		var p = Pattern.new()

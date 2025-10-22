@@ -1,7 +1,7 @@
 extends Control
 
-@onready var title_txt : RichTextLabel = $MarginContainer2/Label
-@onready var title_txt_shadow : Label = $MarginContainer2/Label2
+@onready var title_txt : RichTextLabel = $MarginContainer2/Control/Text
+@onready var title_txt_shadow : Label = $MarginContainer2/Control/Shadow
 @onready var gems_root : Control = $Control
 @onready var button_list : Control = $MarginContainer/PanelContainer
 @onready var continue_button : Button = $MarginContainer/PanelContainer/HBoxContainer/Button1

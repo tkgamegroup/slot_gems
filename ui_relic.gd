@@ -12,7 +12,7 @@ func _ready() -> void:
 	
 	self.mouse_entered.connect(func():
 		SSound.se_select.play()
-		STooltip.show(relic.get_tooltip())
+		STooltip.show(self, 0, relic.get_tooltip())
 	)
 	self.mouse_exited.connect(func():
 		STooltip.close()

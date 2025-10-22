@@ -1,6 +1,6 @@
 extends Control
 
-@onready var text : Label = $Text
+@onready var text : Control = $Text
 @onready var change : Label = $Panel/ChangeBG/Change
 @onready var change_bg : ColorRect = $Panel/ChangeBG
 @onready var change_panel : Control = $Panel
@@ -56,16 +56,16 @@ func hint():
 	
 	if hint_tween:
 		hint_tween.custom_step(100.0)
-	var original_color = text.get_theme_color("font_color")
+	var original_color = text.text_lb.get_theme_color("default_color")
 	hint_tween = get_tree().create_tween()
 	hint_tween.tween_method(func(v):
-		text.add_theme_color_override("font_color", lerp(Color(0.866, 0.083, 0.0), original_color, v))
+		text.text_lb.add_theme_color_override("default_color", lerp(Color(0.866, 0.083, 0.0), original_color, v))
 	, 0.0, 1.0, 0.5)
 	hint_tween.parallel()
 	SAnimation.shake(hint_tween, text, 5.0, 0.5)
 
 func _ready() -> void:
-	text.add_theme_font_size_override("font_size", font_size)
+	text.font_size = font_size
 	change.add_theme_font_size_override("font_size", font_size)
 	self.custom_minimum_size = Vector2(font_size * 1.6, font_size)
 	self.size = self.custom_minimum_size

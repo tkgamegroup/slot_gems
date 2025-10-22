@@ -1,6 +1,7 @@
-extends Node2D
+extends Control
 
 @onready var type_sp = $SubViewport/Type
+@onready var colorless_sp = $SubViewport/Colorless
 @onready var wild_sp = $SubViewport/Wild
 @onready var item_sp = $SubViewport/Item
 @onready var rune_sp = $SubViewport/Rune
@@ -44,14 +45,22 @@ func update(g : Gem):
 			type_sp.hide()
 			item_sp.frame = item
 		else:
-			if type == Gem.Type.Wild:
+			if type == Gem.Type.Colorless:
 				type_sp.hide()
+				colorless_sp.show()
+				wild_sp.hide()
+				rune_sp.modulate = Color(1.0, 1.0, 1.0, 0.66)
+			elif type == Gem.Type.Wild:
+				type_sp.hide()
+				colorless_sp.hide()
 				wild_sp.show()
+				rune_sp.modulate = Color(0.0, 0.0, 0.0, 0.66)
 			else:
 				type_sp.show()
+				colorless_sp.hide()
 				wild_sp.hide()
+				rune_sp.modulate = Color(0.0, 0.0, 0.0, 0.66)
 			item_sp.frame = 0
-		
 		rune_sp.frame = rune
 		
 		if charming > 0:

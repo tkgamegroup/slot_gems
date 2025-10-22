@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://bgc333n8f0dkw"]
+
+[ext_resource type="FontFile" uid="uid://cp78tjuwu7qrs" path="res://fonts/Baloo2_Bold.ttf" id="1_2ixu5"]
+
+[resource]
+base_font = ExtResource("1_2ixu5")
+spacing_top = -16
+spacing_bottom = -16

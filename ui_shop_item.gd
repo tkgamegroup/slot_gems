@@ -1,14 +1,11 @@
 extends Control
 
-const ShopButton = preload("res://shop_button.gd")
-
 @onready var cate_frame : Control = $Category
 @onready var cate_label : Label = $Category/MarginContainer/Label
 @onready var content : Control = $Content
-@onready var button : ShopButton = $ShopButton
+@onready var buy_button = $Buy
 
 const gem_ui = preload("res://ui_gem.tscn")
-const item_ui = preload("res://ui_item.tscn")
 const pattern_ui = preload("res://ui_pattern.tscn")
 const relic_ui = preload("res://ui_relic.tscn")
 
@@ -29,13 +26,12 @@ func refresh_price():
 		price = int(original_price * 0.5)
 	else:
 		price = original_price
-	button.price.text = "%d" % price
 	if price > original_price:
-		button.price.add_theme_color_override("font_color", Color.ORANGE_RED)
+		buy_button.get_child(1).text = "[color=ORANGE_RED]%d[/color][img=16]res://images/coin.png[/img]" % price
 	elif price < original_price:
-		button.price.add_theme_color_override("font_color", Color.LAWN_GREEN)
+		buy_button.get_child(1).text = "[color=LAWN_GREEN]%d[/color][img=16]res://images/coin.png[/img]" % price
 	else:
-		button.price.add_theme_color_override("font_color", Color.WHITE)
+		buy_button.get_child(1).text = "[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % price
 
 func buy():
 	if Game.coins < price:
@@ -46,7 +42,7 @@ func buy():
 		Game.banner_ui.show_tip(tr("wr_relics_count_limit") % Game.MaxRelics, "", 1.0)
 		return false
 	
-	button.button.disabled = true
+	buy_button.button.disabled = true
 	SSound.se_coin.play()
 	Game.coins -= price
 	
@@ -104,7 +100,7 @@ func _ready() -> void:
 			ctrl.add_child(ui)
 			ctrl.mouse_entered.connect(func():
 				SSound.se_select.play()
-				STooltip.show(object.get_tooltip())
+				STooltip.show(ui, 1, object.get_tooltip())
 			)
 			ctrl.mouse_exited.connect(func():
 				STooltip.close()
@@ -121,12 +117,6 @@ func _ready() -> void:
 				lb.add_theme_constant_override("outline_size", 1)
 				ctrl.add_child(lb)
 			ui.position = Vector2(8, 8)
-		elif cate == "item":
-			var ui = item_ui.instantiate()
-			ui.setup(object)
-			ui.mouse_filter = Control.MOUSE_FILTER_PASS
-			content.add_child(ui)
-			ui.position = Vector2(16, 16)
 		elif cate == "pattern":
 			var ui = pattern_ui.instantiate()
 			ui.setup(object, true)
@@ -138,7 +128,7 @@ func _ready() -> void:
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
 			ui.position = Vector2(16, 16)
-	button.button.pressed.connect(func():
+	buy_button.button.pressed.connect(func():
 		buy()
 	)
 	refresh_price()

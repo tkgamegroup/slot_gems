@@ -43,15 +43,15 @@ func _ready() -> void:
 	text.meta_hover_started.connect(func(meta):
 		var s = str(meta)
 		if s.begins_with("w_"):
-			STooltip.show([Pair.new(tr(s), tr(s + "_desc"))])
+			STooltip.show(text, 1, [Pair.new(tr(s), tr(s + "_desc"))])
 		elif s.begins_with("gem_"):
-			STooltip.show([Pair.new(tr(s), "")])
+			STooltip.show(text, 1, [Pair.new(tr(s), "")])
 		elif s.begins_with("rune_"):
-			STooltip.show([Pair.new(tr(s), "")])
+			STooltip.show(text, 1, [Pair.new(tr(s), "")])
 		elif s.begins_with("relic_"):
 			var r = Relic.new()
 			r.setup(s.substr(6))
-			STooltip.show(r.get_tooltip())
+			STooltip.show(text, 1, r.get_tooltip())
 	)
 	text.meta_hover_ended.connect(func(meta):
 		STooltip.close()

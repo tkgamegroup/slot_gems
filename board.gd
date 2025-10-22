@@ -463,6 +463,7 @@ func process_active_effect(ae : ActiveEffect):
 		if gem.on_active.is_valid():
 			gem.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
 		gem.active = false
+		set_gem_at(gem.coord, null)
 	elif ae.type == HostType.Relic:
 		var relic : Relic = ae.host
 		if relic.on_active.is_valid():

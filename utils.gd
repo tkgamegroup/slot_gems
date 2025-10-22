@@ -10,25 +10,25 @@ static func get_formated_datetime() -> String:
 	return datetime
 
 const words = ["w_colorless", "w_wild", "w_omni", "w_eliminate", "w_active", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_nullified", "w_in_mist"]
-static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], used_items : Array = []) -> String:
+static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], used_gems : Array = []) -> String:
 	var ret = ""
 	var regex = RegEx.new()
-	regex.compile(r"\[item_([A-Za-z0-9]+)\]")
+	regex.compile(r"\[gem_([A-Za-z0-9]+)\]")
 	var last_end = 0
 	var matches = regex.search_all(text)
 	for m in matches:
 		var start = m.get_start()
 		var end = m.get_end()
 		ret += text.substr(last_end, start - last_end)
-		var item_name = m.get_string(1)
+		var gem_name = m.get_string(1)
 		if with_color:
 			if with_url:
-				ret += " [color=gray][b][url=item_" + item_name + "]" + Game.tr("item_name_" + item_name) + "[/url][/b][/color]"
+				ret += " [color=gray][b][url=gem_" + gem_name + "]" + Game.tr("gem_name_" + gem_name) + "[/url][/b][/color]"
 			else:
-				ret += " [color=gray][b]" + Game.tr("item_name_" + item_name) + "[/b][/color]"
+				ret += " [color=gray][b]" + Game.tr("gem_name_" + gem_name) + "[/b][/color]"
 		else:
-			ret += " " + Game.tr("item_name_" + item_name)
-		used_items.append(item_name)
+			ret += " " + Game.tr("gem_name_" + gem_name)
+		used_gems.append(gem_name)
 		last_end = end
 	ret += text.substr(last_end)
 	

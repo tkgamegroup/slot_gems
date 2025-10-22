@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfk7153owjlg0"]
+
+[ext_resource type="Script" uid="uid://cto1qy0wq4t3q" path="res://float_text.gd" id="1_e85ty"]
+[ext_resource type="Script" uid="uid://d3lc6t1s4w81a" path="res://rich_text_wave.gd" id="2_pkk68"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_0j2lc"]
+script = ExtResource("2_pkk68")
+metadata/_custom_type_script = "uid://d3lc6t1s4w81a"
+
+[node name="Control" type="MarginContainer"]
+offset_right = 35.0
+offset_bottom = 36.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_e85ty")
+
+[node name="Shadow" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0)
+theme_override_colors/font_shadow_color = Color(0.2, 0.2, 0.2, 0.5882353)
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Text" type="RichTextLabel" parent="."]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+custom_effects = [SubResource("RichTextEffect_0j2lc")]

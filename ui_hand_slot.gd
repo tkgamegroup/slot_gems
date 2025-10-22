@@ -1,6 +1,6 @@
 extends Control
 
-@onready var gem_ui : Node2D = $Gem
+@onready var gem_ui = $Gem
 
 var gem : Gem = null
 var preview = MatchPreview.new()
@@ -12,7 +12,7 @@ func _ready() -> void:
 	mouse_entered.connect(func():
 		if Drag.ui != self:
 			SSound.se_select.play()
-			STooltip.show(gem.get_tooltip())
+			STooltip.show(self, 3, gem.get_tooltip())
 			
 			if !Hand.ui.disabled:
 				preview.find_missing_ones(gem.type)
