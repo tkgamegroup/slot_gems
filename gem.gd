@@ -224,3 +224,88 @@ func setup(n : String):
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
+	elif name == "Flag":
+		type = Type.None
+		rune = Rune.None
+		image_id = 7
+		price = 2
+		extra["value"] = 10
+		on_event = func(event : int, tween : Tween, data):
+			match event: 
+				Event.ItemEntered:
+					if data == self:
+						Board.add_aura(self)
+				Event.ItemLeft:
+					if data == self:
+						Board.remove_aura(self)
+		on_aura = func(g : Gem):
+			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value"]}, Buff.Duration.OnBoard)
+			b.caster = self
+	elif name == "Rainbow":
+		type = Type.Wild
+		rune = Rune.None
+		image_id = 30
+		category = "Normal"
+		price = 2
+		extra["value"] = 8.0
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				var v = extra["value"]
+				var pos = Board.get_pos(coord)
+				Game.add_mult(v, pos)
+			)
+	elif name == "Ruby":
+		type = Type.Red
+		rune = Rune.None
+		image_id = 35
+		category = "Normal"
+		price = 3
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				Game.change_modifier("red_bouns_i", 1)
+				Game.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+			)
+	elif name == "Citrine":
+		type = Type.Orange
+		rune = Rune.None
+		image_id = 36
+		category = "Normal"
+		price = 3
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				Game.change_modifier("orange_bouns_i", 1)
+				Game.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+			)
+	elif name == "Emerald":
+		type = Type.Green
+		rune = Rune.None
+		image_id = 37
+		category = "Normal"
+		price = 3
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				Game.change_modifier("green_bouns_i", 1)
+				Game.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+			)
+	elif name == "Sapphire":
+		type = Type.Blue
+		rune = Rune.None
+		image_id = 38
+		category = "Normal"
+		price = 3
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				Game.change_modifier("blue_bouns_i", 1)
+				Game.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+			)
+	elif name == "Amethyst":
+		type = Type.Purple
+		rune = Rune.None
+		image_id = 39
+		category = "Normal"
+		price = 3
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				Game.change_modifier("purple_bouns_i", 1)
+				Game.float_text("%s +1" % tr("gem_purple"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+			)

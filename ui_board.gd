@@ -37,7 +37,7 @@ func update_cell(c : Vector2i):
 	var cell = Board.get_cell(c)
 	var ui = get_cell(c)
 	ui.gem_ui.reset()
-	ui.gem_ui.set_angle(Vector2(((c.y + 0.5) / Board.cy) - 0.5, 1.0 - ((c.x + 0.5) / Board.cx) - 0.5) * 10.0)
+	ui.gem_ui.angle = Vector2(((c.y + 0.5) / Board.cy) - 0.5, 1.0 - ((c.x + 0.5) / Board.cx) - 0.5) * 10.0
 	var g = Board.get_gem_at(c)
 	if g:
 		if cell.in_mist:

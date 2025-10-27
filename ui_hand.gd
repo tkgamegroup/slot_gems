@@ -34,6 +34,7 @@ func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
 				if !disabled:
 					STooltip.close()
 					SSound.se_drag_item.play()
+					Game.control_ui.start_shake(4.0, 1.5)
 					ui.rotation_degrees = 0.0
 					Drag.start("gem", ui, ui, func(target, extra):
 						if target && target != Board.ui:
@@ -80,7 +81,11 @@ func _process(delta: float) -> void:
 			var y = pow(sin(x_off * 0.03 + tt / 9.0), 2.0) * 3.0
 			if ui.get_global_rect().has_point(mpos):
 				y -= 5
-			ui.position = lerp(ui.position, Vector2(x_off, y), 0.2 * ui.elastic)
+			var p0 = ui.position
+			var p1 = Vector2(x_off, y)
+			ui.position = lerp(p0, p1, 0.2 * ui.elastic)
+			if (p0 - ui.position).length() > 50.0 && (ui.position - p1).length() < 300.0:
+				Game.control_ui.start_shake(4.0, 0.5)
 			ui.rotation_degrees = (sin(x_off * 0.05 + tt / 20.0)) * 3.0
 		if !(i == drag_idx && !drag_on_hand):
 			x_off += item_w + gap

@@ -8,6 +8,11 @@ extends Control
 @onready var sp : Sprite2D = $Sprite2D
 @onready var charming_fx : CPUParticles2D = $Charming
 @onready var sharp_fx : CPUParticles2D = $Sharp
+@export var angle : Vector2:
+	set(v):
+		angle = v
+		sp.material.set_shader_parameter("x_rot", angle.x)
+		sp.material.set_shader_parameter("y_rot", angle.y)
 
 var type : int
 var rune : int
@@ -71,10 +76,6 @@ func update(g : Gem):
 			sharp_fx.show()
 		else:
 			sharp_fx.hide()
-
-func set_angle(angle : Vector2):
-	sp.material.set_shader_parameter("x_rot", angle.x)
-	sp.material.set_shader_parameter("y_rot", angle.y)
 
 func dissolve(duration : float):
 	var tween = get_tree().create_tween()

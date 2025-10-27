@@ -69,10 +69,19 @@ ui_titile_collections,Collections,藏品
 ui_titile_options,Options,选项
 ui_titile_quit,Quit,退出
 ui_options_title,Options,选项
+ui_options_game,Game ,游戏
+ui_options_video,Video,视频
+ui_options_graphics,Graphics,图形
+ui_options_audio,Audio,音频
 ui_options_language,Language,语言
 ui_options_sfx_volume,SFX Volume,音效音量
 ui_options_music_volume,Music Volume,音乐音量
+ui_options_display_monitor,Display monitor,显示器
+ui_options_window_mode,Window Mode,窗口模式
+ui_options_windowed,Windowed,窗口
 ui_options_fullscreen,Fullscreen,全屏
+ui_options_borderless,Borderless,无边框窗口
+ui_options_resolution,Resolution,分辨率
 ui_options_game_speed,Game Speed,游戏速度
 ui_options_crt,CRT,CRT
 ui_options_performance_mode,Performance Mode,性能模式

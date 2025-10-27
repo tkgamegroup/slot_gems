@@ -21,6 +21,9 @@ const UiProp = preload("res://ui_prop.gd")
 var filling_times_tween : Tween = null
 @onready var debug_text : Label = $DebugText
 
+var shake_strength : float = 0.0
+var shake_coord : float = 0.0
+
 var preview = MatchPreview.new()
 
 func enter():
@@ -30,6 +33,10 @@ func enter():
 
 func exit():
 	self.hide()
+
+func start_shake(strength : float, pos : float = 0.0):
+	shake_strength = strength
+	shake_coord = pos * PI
 
 func update_preview():
 	preview.find_all_matchings()
@@ -101,7 +108,7 @@ func _ready() -> void:
 			Game.swaps += 1
 			
 			var p = Game.action_stack.back()
-			Game.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first)
+			Game.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first, "undo")
 			Game.action_stack.pop_back()
 			if Game.action_stack.is_empty():
 				undo_button.disabled = true
@@ -112,3 +119,9 @@ func _ready() -> void:
 	filling_times_text_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
+
+func _process(delta: float) -> void:
+	if !Game.performance_mode:
+		shake_coord += delta * PI
+		position.y = sin(shake_coord) * shake_strength
+		shake_strength *= 0.9

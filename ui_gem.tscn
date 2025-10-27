@@ -97,7 +97,6 @@ frame = 7
 centered = false
 
 [node name="Item" type="AnimatedSprite2D" parent="SubViewport"]
-modulate = Color(0, 0, 0, 1)
 sprite_frames = ExtResource("5_yval8")
 centered = false
 offset = Vector2(8, 8)

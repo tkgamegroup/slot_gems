@@ -36,7 +36,6 @@ STest="*res://test_system.gd"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
-window/stretch/scale_mode="integer"
 mouse_cursor/custom_image="res://images/pointer.png"
 mouse_cursor/custom_image_hotspot=Vector2(15, 4)
 

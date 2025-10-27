@@ -97,21 +97,6 @@ func setup(n : String):
 			for c in coords:
 				Board.pin(c)
 			return true
-	elif name == "Flag":
-		image_id = 7
-		price = 2
-		extra["value"] = 10
-		on_event = func(event : int, tween : Tween, data):
-			match event: 
-				Event.ItemEntered:
-					if data == self:
-						Board.add_aura(self)
-				Event.ItemLeft:
-					if data == self:
-						Board.remove_aura(self)
-		on_aura = func(g : Gem):
-			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value"]}, Buff.Duration.OnBoard)
-			b.caster = self
 	elif name == "C4":
 		image_id = 9
 		category = "Bomb"
@@ -707,17 +692,6 @@ func setup(n : String):
 				var sp = data.third
 				SAnimation.move_to(null, sp, Board.get_pos(coord), 0.3)
 				data.second = coord
-	elif name == "Rainbow":
-		image_id = 30
-		category = "Normal"
-		price = 2
-		extra["value"] = 8.0
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				var v = extra["value"]
-				var pos = Board.get_pos(coord)
-				Game.add_mult(v, pos)
-			)
 	elif name == "Idol":
 		image_id = 31
 		category = "Character"
@@ -835,51 +809,6 @@ func setup(n : String):
 					var g = Board.get_gem_at(c)
 					if g:
 						Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
-			)
-	elif name == "Ruby":
-		image_id = 35
-		category = "Normal"
-		price = 3
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Game.change_modifier("red_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
-			)
-	elif name == "Citrine":
-		image_id = 36
-		category = "Normal"
-		price = 3
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Game.change_modifier("orange_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
-			)
-	elif name == "Emerald":
-		image_id = 37
-		category = "Normal"
-		price = 3
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Game.change_modifier("green_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
-			)
-	elif name == "Sapphire":
-		image_id = 38
-		category = "Normal"
-		price = 3
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Game.change_modifier("blue_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
-			)
-	elif name == "Amethyst":
-		image_id = 39
-		category = "Normal"
-		price = 3
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Game.change_modifier("purple_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_purple"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "StrengthPotion":
 		image_id = 40
@@ -1012,10 +941,12 @@ func setup(n : String):
 			match event: 
 				Event.ItemEntered:
 					if data == self:
-						Board.add_aura(self)
+						pass
+						#Board.add_aura(self)
 				Event.ItemLeft:
 					if data == self:
-						Board.remove_aura(self)
+						pass
+						#Board.remove_aura(self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				Game.float_text(tr("t_Envy_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
@@ -1026,16 +957,11 @@ func setup(n : String):
 
 func get_tooltip():
 	var ret : Array[Pair] = []
-	var content = tr("item_desc_" + name).format(extra)
-	if power != 0:
-		content = ("w_power: %d\n" % power) + content
+	var content = ""
 	if tradeable:
 		content = "w_tradable\n" + content
 	if mountable != "":
 		content = ("w_mount for [color=gray][b]%s[/b][/color]\n" % mountable) + content
-	if extra.has("buff_ids"):
-		content += "\n%d" % extra["buff_ids"].size()
-	ret.append(Pair.new(tr("item_name_" + name), content))
 	if mounted:
 		ret.append_array(mounted.get_tooltip())
 	return ret

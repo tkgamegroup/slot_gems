@@ -36,7 +36,7 @@ var ui : UiBoard = null
 var num_tasks : int
 var show_coords : bool = false
 
-var auras : Array[Item] = []
+var auras : Array[Gem] = []
 var active_effects : Array[ActiveEffect] = []
 var active_serial : int = 0
 var event_listeners : Array[Hook]
@@ -359,27 +359,27 @@ func set_in_mist(c : Vector2i, v : bool):
 	ui.update_cell(c)
 	return true
 
-func add_aura(i : Item):
-	if auras.find(i) == -1:
-		auras.append(i)
+func add_aura(a : Gem):
+	if auras.find(a) == -1:
+		auras.append(a)
 	for y in cy:
 		for x in cx:
 			var c = Vector2i(x, y)
 			var g = get_gem_at(c)
 			if g:
-				Buff.remove_by_caster(g, i)
-				if i.on_aura.is_valid():
-					i.on_aura.call(g)
+				Buff.remove_by_caster(g, a)
+				if a.on_aura.is_valid():
+					a.on_aura.call(g)
 
-func remove_aura(i : Item):
-	if auras.find(i) != -1:
-		auras.erase(i)
+func remove_aura(a : Gem):
+	if auras.find(a) != -1:
+		auras.erase(a)
 		for y in cy:
 			for x in cx:
 				var c = Vector2i(x, y)
 				var g = get_gem_at(c)
 				if g:
-					Buff.remove_by_caster(g, i)
+					Buff.remove_by_caster(g, a)
 
 func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, source = null, first : bool = false):
 	var coords = []

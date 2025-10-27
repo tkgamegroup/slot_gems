@@ -560,15 +560,17 @@ func enchant_gem(g : Gem, type : String):
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_mult","add":1.5}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
 
-func swap_hand_and_board(slot1 : Control, coord : Vector2i):
+func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "swap"):
 	var tween = get_tree().create_tween()
 	var g1 = slot1.gem
 	var g2 = Board.get_gem_at(coord)
-	var pos = Board.get_pos(coord) - Vector2(Board.tile_sz, Board.tile_sz) * 0.5
+	var cell_pos = Board.get_pos(coord)
+	var mpos = get_viewport().get_mouse_position()
+	var hf_sz = Vector2(Board.tile_sz, Board.tile_sz) * 0.5
 	Game.begin_busy()
 	slot1.elastic = -1.0
 	var slot2 = Hand.add_gem(g2)
-	slot2.global_position = pos
+	slot2.global_position = cell_pos - hf_sz
 	slot2.elastic = -1.0
 	tween.tween_callback(func():
 		slot1.z_index = 10
@@ -580,14 +582,37 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i):
 	)
 	var sub1 = get_tree().create_tween()
 	var sub2 = get_tree().create_tween()
-	sub1.tween_property(slot1, "global_position", pos + Vector2(0, Board.tile_sz * 0.75), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	sub1.tween_property(slot1, "global_position", pos, 0.2)
+	var dir = mpos - cell_pos
+	var a = 0.0
+	var sec = 0
+	if reason == "undo":
+		a = 90.0
+		sec = 1
+	else:
+		a = rad_to_deg(dir.angle())
+		if a < 0.0:
+			a += 360.0
+		sec = int(a / 60.0)
+		a = sec * 60.0 + 30.0
+	dir = Vector2.from_angle(deg_to_rad(a))
+	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz + dir * Board.tile_sz * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz, 0.2)
 	sub2.tween_interval(0.1)
-	sub2.tween_property(slot2, "global_position", pos + Vector2(0.0, -Board.tile_sz * 0.75), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	var rot = Vector2(0.0, 0.0)
+	match sec:
+		0: rot = Vector2(-45.0, 30.0)
+		1: rot = Vector2(-45.0, 0.0)
+		2: rot = Vector2(-45.0, -30.0)
+		3: rot = Vector2(45.0, -30.0)
+		4: rot = Vector2(45.0, 0.0)
+		5: rot = Vector2(45.0, 30.0)
+	sub2.tween_property(slot2.gem_ui, "angle", rot, 0.07)
+	sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * Board.tile_sz * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub2.parallel().tween_property(slot2.gem_ui, "angle", Vector2(0.0, 0.0), 0.07)
 	sub2.tween_property(slot2, "elastic", 1.0, 0.2).from(0.0)
 	tween.tween_subtween(sub1)
 	tween.parallel().tween_subtween(sub2)
-		
+	
 	tween.tween_callback(func():
 		Board.set_gem_at(coord, g1)
 		Hand.erase(slot1.get_index())
@@ -744,6 +769,8 @@ func set_lang(lang : String):
 		TranslationServer.set_locale("zh")
 	if level > 0:
 		update_level_text(level)
+	if options_ui.visible:
+		options_ui.lang_changed()
 
 func set_fullscreen(v : bool):
 	pass
@@ -1134,13 +1161,8 @@ func new_level(tween : Tween = null):
 		save_to_file()
 	)
 	if !STest.testing:
-		tween.tween_interval(1.0)
-		banner_ui.appear(get_level_title(level + 1, get_level_reward(level + 1)), SUtils.format_text(get_level_desc(get_level_score(level + 1), Game.level_curses[level] if !Game.level_curses.is_empty() else ([] as Array[Curse])), true, false), tween)
-		var temp_text1 = banner_ui.text1.duplicate()
-		var temp_text2 = banner_ui.text2.duplicate()
-		temp_text1.size = status_bar_ui.level_text.size
-		temp_text2.size = status_bar_ui.level_target.size
-		tween.tween_interval(0.5)
+		tween.tween_property(status_bar_ui.level_text, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(status_bar_ui.level_target, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.tween_callback(func():
 			Curse.pick_targets()
 			for c in current_curses:
@@ -1152,16 +1174,6 @@ func new_level(tween : Tween = null):
 		tween.tween_interval(0.3)
 		tween.tween_callback(func():
 			Curse.apply_curses()
-			banner_ui.disappear(null, true)
-			banner_ui.add_child(temp_text1)
-			banner_ui.add_child(temp_text2)
-		)
-		tween.tween_property(temp_text1, "global_position", status_bar_ui.level_text.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-		tween.parallel().tween_property(temp_text2, "global_position", status_bar_ui.level_target.global_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-		tween.tween_callback(func():
-			banner_ui.hide()
-			temp_text1.queue_free()
-			temp_text2.queue_free()
 		)
 		if level == 0:
 			tween.tween_callback(func():
@@ -1170,10 +1182,6 @@ func new_level(tween : Tween = null):
 	else:
 		Curse.pick_targets()
 		Curse.apply_curses()
-	tween.tween_callback(func():
-		status_bar_ui.level_text.modulate.a = 1.0
-		status_bar_ui.level_target.modulate.a = 1.0
-	)
 	tween.tween_callback(func():
 		stage = Stage.Deploy
 		end_busy()
