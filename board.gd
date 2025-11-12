@@ -331,7 +331,6 @@ func unfreeze(c : Vector2i):
 	if !is_valid(c):
 		return
 	var idx = c.y * cx + c.x
-	var cell = cells[idx]
 	cells[idx].frozen = false
 	ui.update_cell(c)
 

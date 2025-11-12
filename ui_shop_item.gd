@@ -27,11 +27,11 @@ func refresh_price():
 	else:
 		price = original_price
 	if price > original_price:
-		buy_button.get_child(1).text = "[color=ORANGE_RED]%d[/color][img=16]res://images/coin.png[/img]" % price
+		buy_button.text.text = "[color=ORANGE_RED]%d[/color][img=16]res://images/coin.png[/img]" % price
 	elif price < original_price:
-		buy_button.get_child(1).text = "[color=LAWN_GREEN]%d[/color][img=16]res://images/coin.png[/img]" % price
+		buy_button.text.text = "[color=LAWN_GREEN]%d[/color][img=16]res://images/coin.png[/img]" % price
 	else:
-		buy_button.get_child(1).text = "[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % price
+		buy_button.text.text = "[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % price
 
 func buy():
 	if Game.coins < price:
@@ -42,7 +42,7 @@ func buy():
 		Game.banner_ui.show_tip(tr("wr_relics_count_limit") % Game.MaxRelics, "", 1.0)
 		return false
 	
-	buy_button.button.disabled = true
+	buy_button.disabled = true
 	SSound.se_coin.play()
 	Game.coins -= price
 	
@@ -100,7 +100,7 @@ func _ready() -> void:
 			ctrl.add_child(ui)
 			ctrl.mouse_entered.connect(func():
 				SSound.se_select.play()
-				STooltip.show(ui, 1, object.get_tooltip())
+				STooltip.show(ui, 0, object.get_tooltip())
 			)
 			ctrl.mouse_exited.connect(func():
 				STooltip.close()
@@ -127,7 +127,7 @@ func _ready() -> void:
 			ui.setup(object)
 			ui.mouse_filter = Control.MOUSE_FILTER_PASS
 			content.add_child(ui)
-			ui.position = Vector2(16, 16)
+			ui.position = Vector2(8, 8)
 	buy_button.button.pressed.connect(func():
 		buy()
 	)

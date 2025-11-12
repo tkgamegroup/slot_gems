@@ -2,29 +2,25 @@ extends Object
 
 class_name Gem
 
-enum Type
+enum
 {
-	None,
-	Red,
-	Orange,
-	Green,
-	Blue,
-	Purple,
+	None = 0,
+	Unknow,
+	ColorRed,
+	ColorOrange,
+	ColorGreen,
+	ColorBlue,
+	ColorPurple,
 	Colorless,
-	Wild,
-	Unknow,
-	Count = 5
-}
-
-enum Rune
-{
-	None,
-	Destroy,
-	Wisdom,
-	Grow,
-	Omni,
-	Unknow,
-	Count = 3
+	ColorWild,
+	ColorAny,
+	RuneWaves,
+	RunePalm,
+	RuneStarfish,
+	RuneOmni,
+	RuneAny,
+	ColorCount = 5,
+	RuneCount = 5
 }
 
 const gem_frames : SpriteFrames = preload("res://images/gems.tres")
@@ -32,8 +28,8 @@ const rune_frames : SpriteFrames = preload("res://images/runes.tres")
 const item_frames : SpriteFrames = preload("res://images/items.tres")
 
 var id : int
-var type : int = Type.None
-var rune : int = Rune.None
+var type : int = None
+var rune : int = None
 var name : String
 var category : String
 var image_id : int
@@ -58,92 +54,97 @@ var on_event : Callable
 
 static func type_name(t : int):
 	match t:
-		Type.None: return "None"
-		Type.Red: return "Red"
-		Type.Orange: return "Orange"
-		Type.Green: return "Green"
-		Type.Blue: return "Blue"
-		Type.Purple: return "Purple"
-		Type.Colorless: return "Colorless"
-		Type.Wild: return "Wild"
+		None: return "None"
+		ColorRed: return "Red"
+		ColorOrange: return "Orange"
+		ColorGreen: return "Green"
+		ColorBlue: return "Blue"
+		ColorPurple: return "Purple"
+		Colorless: return "Colorless"
+		ColorWild: return "Wild"
+		ColorAny: return "Any"
 	return ""
 
 static func type_display_name(t : int):
 	match t:
-		Type.None: return Game.tr("gem_none")
-		Type.Red: return Game.tr("gem_red")
-		Type.Orange: return Game.tr("gem_orange")
-		Type.Green: return Game.tr("gem_green")
-		Type.Blue: return Game.tr("gem_blue")
-		Type.Purple: return Game.tr("gem_purple")
-		Type.Colorless: return "w_colorless"
-		Type.Wild: return "w_wild"
+		None: return Game.tr("gem_none")
+		ColorRed: return Game.tr("gem_red")
+		ColorOrange: return Game.tr("gem_orange")
+		ColorGreen: return Game.tr("gem_green")
+		ColorBlue: return Game.tr("gem_blue")
+		ColorPurple: return Game.tr("gem_purple")
+		Colorless: return "w_colorless"
+		ColorWild: return "w_wild"
+		ColorAny: return Game.tr("gem_any")
 	return ""
 
 static func name_to_type(s : String):
 	match s:
-		"None": return Type.None
-		"Red": return Type.Red
-		"Orange": return Type.Orange
-		"Green": return Type.Green
-		"Blue": return Type.Blue
-		"Purple": return Type.Purple
-		"Colorless": return Type.Colorless
-		"Wild": return Type.Wild
+		"None": return None
+		"Red": return ColorRed
+		"Orange": return ColorOrange
+		"Green": return ColorGreen
+		"Blue": return ColorBlue
+		"Purple": return ColorPurple
+		"Colorless": return Colorless
+		"Wild": return ColorWild
+		"Any": return ColorAny
 
 static func type_color(t : int) -> Color:
 	match t:
-		Type.None: return Color(0, 0, 0, 0)
-		Type.Red: return Color(0.83, 0.07, 0.09, 1.0)
-		Type.Orange: return Color(1.0, 0.71, 0.16)
-		Type.Green: return Color(0.61, 0.75, 0.25)
-		Type.Blue: return Color(0.56, 0.87, 0.96)
-		Type.Purple: return Color(0.88, 0.20, 0.80)
+		None: return Color(0, 0, 0, 0)
+		ColorRed: return Color(0.83, 0.07, 0.09, 1.0)
+		ColorOrange: return Color(1.0, 0.71, 0.16)
+		ColorGreen: return Color(0.61, 0.75, 0.25)
+		ColorBlue: return Color(0.56, 0.87, 0.96)
+		ColorPurple: return Color(0.88, 0.20, 0.80)
 	return Color.WHITE
 
 static func type_img(t : int):
 	match t:
-		Type.Red: return "res://images/red.png"
-		Type.Orange: return "res://images/orange.png"
-		Type.Green: return "res://images/green.png"
-		Type.Blue: return "res://images/blue.png"
-		Type.Purple: return "res://images/purple.png"
-		Type.Colorless: return "res://images/colorless.png"
+		ColorRed: return "res://images/red.png"
+		ColorOrange: return "res://images/orange.png"
+		ColorGreen: return "res://images/green.png"
+		ColorBlue: return "res://images/blue.png"
+		ColorPurple: return "res://images/purple.png"
+		Colorless: return "res://images/colorless.png"
 	return ""
 
 static func rune_name(r : int):
 	match r:
-		Rune.Destroy: return "Destroy"
-		Rune.Wisdom: return "Wisdom"
-		Rune.Grow: return "Grow"
-		Rune.Omni: return "Omni"
+		RuneWaves: return "Waves"
+		RunePalm: return "Palm"
+		RuneStarfish: return "Starfish"
+		RuneOmni: return "Omni"
+		RuneAny: return "Any"
 	return "None"
 
 static func rune_display_name(r : int):
 	match r:
-		Rune.Destroy: return Game.tr("rune_destroy")
-		Rune.Wisdom: return Game.tr("rune_wisdom")
-		Rune.Grow: return Game.tr("rune_grow")
-		Rune.Omni: return "w_omni"
+		RuneWaves: return Game.tr("rune_waves")
+		RunePalm: return Game.tr("rune_palm")
+		RuneStarfish: return Game.tr("rune_starfish")
+		RuneOmni: return "w_omni"
+		RuneAny: return Game.tr("rune_any")
 	return "None"
 
 static func rune_icon(r : int):
 	match r:
-		Rune.Destroy: return "res://images/rune_destroy.png"
-		Rune.Wisdom: return "res://images/rune_wisdom.png"
-		Rune.Grow: return "res://images/rune_grow.png"
-		Rune.Omni: return "res://images/rune_omni.png"
+		RuneWaves: return "res://images/rune_waves.png"
+		RunePalm: return "res://images/rune_palm.png"
+		RuneStarfish: return "res://images/rune_starfish.png"
+		RuneOmni: return "res://images/rune_omni.png"
 	return ""
 
 func get_base_score():
 	var ret = base_score
 	match type:
-		Type.Red: ret += Game.modifiers["red_bouns_i"]
-		Type.Orange: ret += Game.modifiers["orange_bouns_i"]
-		Type.Green: ret += Game.modifiers["green_bouns_i"]
-		Type.Blue: ret += Game.modifiers["blue_bouns_i"]
-		Type.Purple: ret += Game.modifiers["purple_bouns_i"]
-		Type.Wild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["purple_bouns_i"]
+		ColorRed: ret += Game.modifiers["red_bouns_i"]
+		ColorOrange: ret += Game.modifiers["orange_bouns_i"]
+		ColorGreen: ret += Game.modifiers["green_bouns_i"]
+		ColorBlue: ret += Game.modifiers["blue_bouns_i"]
+		ColorPurple: ret += Game.modifiers["purple_bouns_i"]
+		ColorWild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["purple_bouns_i"]
 	return ret
 
 func get_score():
@@ -168,13 +169,13 @@ func get_tooltip():
 	else:
 		title = tr("item_name_" + name)
 	var basics = ""
-	if type != Type.None:
+	if type != None:
 		var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
 		if color_change && color_change.duration != Buff.Duration.Eternal:
 			basics += "[color=GRAY][s]%s[/s][/color] %s" % [type_display_name(color_change.data["original_color_i"]), type_display_name(type)]
 		else:
 			basics += type_display_name(type)
-	if rune != Rune.None:
+	if rune != None:
 		if !basics.is_empty():
 			basics += ", "
 		basics += rune_display_name(rune)
@@ -209,8 +210,8 @@ func setup(n : String):
 	s_id += 1
 	name = n
 	if name == "Bomb":
-		type = Type.None
-		rune = Rune.None
+		type = None
+		rune = None
 		base_score = 0
 		image_id = 8
 		category = "Bomb"
@@ -225,8 +226,8 @@ func setup(n : String):
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "Flag":
-		type = Type.None
-		rune = Rune.None
+		type = None
+		rune = None
 		image_id = 7
 		price = 2
 		extra["value"] = 10
@@ -242,8 +243,8 @@ func setup(n : String):
 			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value"]}, Buff.Duration.OnBoard)
 			b.caster = self
 	elif name == "Rainbow":
-		type = Type.Wild
-		rune = Rune.None
+		type = ColorWild
+		rune = None
 		image_id = 30
 		category = "Normal"
 		price = 2
@@ -255,8 +256,8 @@ func setup(n : String):
 				Game.add_mult(v, pos)
 			)
 	elif name == "Ruby":
-		type = Type.Red
-		rune = Rune.None
+		type = ColorRed
+		rune = None
 		image_id = 35
 		category = "Normal"
 		price = 3
@@ -266,8 +267,8 @@ func setup(n : String):
 				Game.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Citrine":
-		type = Type.Orange
-		rune = Rune.None
+		type = ColorOrange
+		rune = None
 		image_id = 36
 		category = "Normal"
 		price = 3
@@ -277,8 +278,8 @@ func setup(n : String):
 				Game.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Emerald":
-		type = Type.Green
-		rune = Rune.None
+		type = ColorGreen
+		rune = None
 		image_id = 37
 		category = "Normal"
 		price = 3
@@ -288,8 +289,8 @@ func setup(n : String):
 				Game.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Sapphire":
-		type = Type.Blue
-		rune = Rune.None
+		type = ColorBlue
+		rune = None
 		image_id = 38
 		category = "Normal"
 		price = 3
@@ -299,8 +300,8 @@ func setup(n : String):
 				Game.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Amethyst":
-		type = Type.Purple
-		rune = Rune.None
+		type = ColorPurple
+		rune = None
 		image_id = 39
 		category = "Normal"
 		price = 3

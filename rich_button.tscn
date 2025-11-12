@@ -3,7 +3,10 @@
 [ext_resource type="Script" uid="uid://co5jvh526pbwk" path="res://rich_button.gd" id="1_7q5do"]
 
 [node name="RichButton" type="MarginContainer"]
-offset_bottom = 2.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 36.0
+grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_7q5do")

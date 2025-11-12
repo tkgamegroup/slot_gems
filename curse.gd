@@ -112,7 +112,7 @@ static func apply_curses():
 
 func add_sin(n : String):
 	if afflicted_gem:
-		var b = Buff.create(afflicted_gem, Buff.Type.ChangeRune, {"rune":Gem.Rune.None}, Buff.Duration.OnBoard) 
+		var b = Buff.create(afflicted_gem, Buff.Type.ChangeRune, {"rune":Gem.None}, Buff.Duration.OnBoard) 
 		b.caster = self
 		created_sin = Item.new()
 		created_sin.setup(n)

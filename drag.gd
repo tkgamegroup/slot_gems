@@ -34,6 +34,7 @@ func start(_type : String, _payload, _ui : Control, _release_cb : Callable):
 	payload = _payload
 	ui = _ui
 	ui.z_index = 10
+	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	release_cb = _release_cb
 
 func release(target = null, extra : Dictionary = {}):
@@ -51,6 +52,7 @@ func release(target = null, extra : Dictionary = {}):
 	payload = null
 	if ui:
 		ui.z_index = 0
+		ui.mouse_filter = Control.MOUSE_FILTER_STOP
 		ui = null
 	release_cb = Callable()
 	processing = false
@@ -67,12 +69,13 @@ func _input(event: InputEvent) -> void:
 					var extra = {}
 					for t in targets:
 						if t.first == type:
-							if t.second == Board.ui && Board.ui.visible:
-								var c = Board.ui.hover_coord(true)
-								if Board.is_valid(c):
-									target = t
-									extra["coord"] = c
-									break
+							if t.second == Board.ui:
+								if Board.ui.visible:
+									var c = Board.ui.hover_coord(true)
+									if Board.is_valid(c):
+										target = t
+										extra["coord"] = c
+										break
 							else:
 								var pos = t.second.get_local_mouse_position()
 								var rect = t.second.get_rect()

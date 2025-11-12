@@ -56,7 +56,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		ctrl.custom_minimum_size = Vector2(48, 52)
 		ctrl.mouse_entered.connect(func():
 			SSound.se_select.play()
-			STooltip.show(ctrl, 1, g.get_tooltip())
+			STooltip.show(ctrl, 0, g.get_tooltip())
 		)
 		ctrl.mouse_exited.connect(func():
 			STooltip.close()

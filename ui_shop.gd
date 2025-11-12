@@ -4,11 +4,11 @@ const craft_slot_pb = preload("res://craft_slot.tscn")
 const shop_item_pb = preload("res://ui_shop_item.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 
-@onready var exit_button : Button = $HBoxContainer/VBoxContainer2/Button
-@onready var list1 : Control = $HBoxContainer/VBoxContainer/HBoxContainer
-@onready var list2 : Control = $HBoxContainer/VBoxContainer/HBoxContainer2
-@onready var refresh_button : Control = $HBoxContainer/VBoxContainer2/RichButton
-@onready var expand_board_button : Control = $HBoxContainer/VBoxContainer2/RichButton2
+@onready var list1 : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer
+@onready var list2 : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer2
+@onready var refresh_button : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton
+@onready var expand_board_button : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton2
+@onready var exit_button : Button = $SubViewport/Panel/HBoxContainer/VBoxContainer2/Button
 
 var expand_board_price : int = 15
 var expand_board_price_increase : int = 10
@@ -27,7 +27,7 @@ func clear():
 		n.queue_free()
 
 func buy_expand_board():
-	if expand_board_button.button.disabled:
+	if expand_board_button.disabled:
 		return false
 	if Game.gems.size() < Board.next_min_gem_num:
 		SSound.se_error.play()
@@ -41,7 +41,7 @@ func buy_expand_board():
 	Game.coins -= expand_board_price
 	
 	expand_board_price += expand_board_price_increase
-	expand_board_button.button.disabled = true
+	expand_board_button.disabled = true
 	
 	Game.board_size += 1
 	Board.resize(Game.board_size)
@@ -83,7 +83,7 @@ func refresh(tween : Tween = null):
 	
 	Game.control_ui.play_button.disabled = true
 	Hand.ui.disabled = true
-	refresh_button.button.disabled = true
+	refresh_button.disabled = true
 	
 	clear()
 	
@@ -95,8 +95,8 @@ func refresh(tween : Tween = null):
 			var price = 0
 			var quantity = 1
 			if Game.rng.randf() > 0.4:
-				gem.type = Game.rng.randi() % Gem.Type.Count + 1
-				gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
+				gem.type = Game.rng.randi() % Gem.ColorCount + Gem.ColorRed
+				gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
 				if Game.rng.randf() > 0.5:
 					price = 1
 					quantity = 5
@@ -105,8 +105,8 @@ func refresh(tween : Tween = null):
 					quantity = 1
 			else:
 				if Game.rng.randf() > 0.25:
-					gem.type = Game.rng.randi() % Gem.Type.Count + 1
-					gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
+					gem.type = Game.rng.randi() % Gem.ColorCount + Gem.ColorRed
+					gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
 					if Game.rng.randf() > 0.5:
 						Game.enchant_gem(gem, "w_enchant_charming")
 					else:
@@ -114,17 +114,17 @@ func refresh(tween : Tween = null):
 					price = 2
 				else:
 					if Game.rng.randf() > 0.66:
-						gem.type = Gem.Type.Colorless
-						gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
+						gem.type = Gem.Colorless
+						gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
 						gem.base_score = 60
 						price = 1
 					elif Game.rng.randf() > 0.5:
-						gem.type = Gem.Type.Wild
-						gem.rune = Game.rng.randi() % Gem.Rune.Count + 1
+						gem.type = Gem.ColorWild
+						gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
 						price = 5
 					else:
-						gem.type = Game.rng.randi() % Gem.Type.Count + 1
-						gem.rune = Gem.Rune.Omni
+						gem.type = Game.rng.randi() % Gem.ColorCount + Gem.ColorRed
+						gem.rune = Gem.RuneOmni
 						price = 5
 			ui.setup("gem", gem, price, quantity)
 			list1.add_child(ui)
@@ -189,7 +189,7 @@ func refresh(tween : Tween = null):
 		)
 	tween.tween_callback(func():
 		Hand.ui.disabled = false
-		refresh_button.button.disabled = false
+		refresh_button.disabled = false
 		Game.save_to_file()
 	)
 	return tween
@@ -198,30 +198,32 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	if !tween:
 		tween = get_tree().create_tween()
 	
-	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
-	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(func():
-		Game.score = 0
-		
-		Game.status_bar_ui.level_text.text = tr("ui_shop_title")
-		Game.status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
-		
-		self.scale = Vector2(1.0, 0.0)
-		self.show()
-	)
-	tween.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
-	tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
-	tween.parallel().tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.parallel().tween_property(Game.background.material, "shader_parameter/color", Color(0.71, 0.703, 0.504), 0.8)
-	tween.tween_callback(func():
+	self.show()
+	self.material.set_shader_parameter("x_rot", -90.0)
+	var sub1 = get_tree().create_tween()
+	var sub2 = get_tree().create_tween()
+	sub1.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5)
+	sub1.tween_callback(func():
 		Game.refresh_cluster_levels()
 	)
+	sub2.parallel().tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
+	sub2.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
+	sub2.tween_callback(func():
+		Game.score = 0
+		Game.status_bar_ui.level_text.text = tr("ui_shop_title")
+		Game.status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
+	)
+	sub2.tween_property(Game.status_bar_ui.level_text, "modulate:a", 1.0, 0.3)
+	sub2.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 1.0, 0.3)
+	tween.tween_subtween(sub1)
+	tween.parallel().tween_subtween(sub2)
+	tween.parallel().tween_property(Game.background.material, "shader_parameter/color", Color(0.71, 0.703, 0.504), 0.8)
 	
-	expand_board_button.button.disabled = !(Game.board_size < 6)
-	expand_board_button.get_child(1).text = "%s\n[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % [tr("ui_shop_upgrade"), expand_board_price]
+	expand_board_button.disabled = !(Game.board_size < 6)
+	expand_board_button.text.text = "%s %d[img=16]res://images/coin.png[/img]" % [tr("ui_shop_upgrade"), expand_board_price]
 	
 	refresh_price = refresh_base_price
-	refresh_button.get_child(1).text = "%s\n[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
+	refresh_button.text.text = "%s %d[img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
 	
 	delete_price = 0
 	
@@ -234,7 +236,7 @@ func exit(tween : Tween = null, trans : bool = true):
 	if trans:
 		if !tween:
 			tween = get_tree().create_tween()
-		tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5)
 		tween.parallel().tween_property(Game.background.material, "shader_parameter/color", Color(0.917, 0.921, 0.65), 0.8)
 		tween.parallel().tween_property(Game.status_bar_ui.level_text, "modulate:a", 0.0, 0.3)
 		tween.parallel().tween_property(Game.status_bar_ui.level_target, "modulate:a", 0.0, 0.3)
@@ -274,7 +276,7 @@ func _ready() -> void:
 		Game.coins -= refresh_price
 		
 		refresh_price += refresh_price_increase
-		refresh_button.get_child(1).text = "%s\n[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
+		refresh_button.text.text = "%s %d[img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
 		
 		refresh()
 	)

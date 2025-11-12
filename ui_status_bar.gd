@@ -39,31 +39,31 @@ const NumberText = preload("res://number_text.gd")
 
 func _ready() -> void:
 	red_bouns_container.mouse_entered.connect(func():
-		STooltip.show(red_bouns_container, 1, [Pair.new(tr("tt_red_base_score"), "%d" % Game.modifiers["red_bouns_i"])])
+		STooltip.show(red_bouns_container, 0, [Pair.new(tr("tt_red_base_score"), "%d" % Game.modifiers["red_bouns_i"])])
 	)
 	red_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	orange_bouns_container.mouse_entered.connect(func():
-		STooltip.show(orange_bouns_container, 1, [Pair.new(tr("tt_orange_base_score"), "%d" % Game.modifiers["orange_bouns_i"])])
+		STooltip.show(orange_bouns_container, 0, [Pair.new(tr("tt_orange_base_score"), "%d" % Game.modifiers["orange_bouns_i"])])
 	)
 	orange_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	green_bouns_container.mouse_entered.connect(func():
-		STooltip.show(green_bouns_container, 1, [Pair.new(tr("tt_green_base_score"), "%d" % Game.modifiers["green_bouns_i"])])
+		STooltip.show(green_bouns_container, 0, [Pair.new(tr("tt_green_base_score"), "%d" % Game.modifiers["green_bouns_i"])])
 	)
 	green_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	blue_bouns_container.mouse_entered.connect(func():
-		STooltip.show(blue_bouns_container, 1, [Pair.new(tr("tt_blue_base_score"), "%d" % Game.modifiers["blue_bouns_i"])])
+		STooltip.show(blue_bouns_container, 0, [Pair.new(tr("tt_blue_base_score"), "%d" % Game.modifiers["blue_bouns_i"])])
 	)
 	blue_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	purple_bouns_container.mouse_entered.connect(func():
-		STooltip.show(purple_bouns_container, 1, [Pair.new(tr("tt_purple_base_score"), "%d" % Game.modifiers["purple_bouns_i"])])
+		STooltip.show(purple_bouns_container, 0, [Pair.new(tr("tt_purple_base_score"), "%d" % Game.modifiers["purple_bouns_i"])])
 	)
 	purple_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -77,10 +77,10 @@ func _ready() -> void:
 	level_target.meta_hover_started.connect(func(meta):
 		var s = str(meta)
 		if s.begins_with("w_"):
-			STooltip.show(level_target, 1, [Pair.new(tr(s), tr(s + "_desc"))])
+			STooltip.show(level_target, 0, [Pair.new(tr(s), tr(s + "_desc"))])
 		elif s.begins_with("item_"):
 			var item_name = s.substr(5)
-			STooltip.show(level_target, 1, [Pair.new(tr("item_name_" + item_name), tr("item_desc_" + item_name))])
+			STooltip.show(level_target, 0, [Pair.new(tr("item_name_" + item_name), tr("item_desc_" + item_name))])
 	)
 	level_target.meta_hover_ended.connect(func():
 		STooltip.close()
@@ -90,7 +90,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 1
-		STooltip.show(cluster_level1_ctrl, 1, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
+		STooltip.show(cluster_level1_ctrl, 0, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
 	)
 	cluster_level1_ctrl.mouse_exited.connect(func():
 		STooltip.close()
@@ -100,7 +100,7 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 2
-		STooltip.show(cluster_level2_ctrl, 1, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
+		STooltip.show(cluster_level2_ctrl, 0, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
 	)
 	cluster_level2_ctrl.mouse_exited.connect(func():
 		STooltip.close()
@@ -110,19 +110,19 @@ func _ready() -> void:
 		if !Game.shop_ui.visible:
 			lv -= 1
 		lv = int(lv / 3) * 3 + 3
-		STooltip.show(cluster_level3_ctrl, 1, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
+		STooltip.show(cluster_level3_ctrl, 0, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
 	)
 	cluster_level3_ctrl.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	board_size_container.mouse_entered.connect(func():
-		STooltip.show(board_size_container, 1, [Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
+		STooltip.show(board_size_container, 3, [Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)
 	hand_container.mouse_entered.connect(func():
-		STooltip.show(hand_container, 1, [Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % Game.max_hand_grabs)])
+		STooltip.show(hand_container, 3, [Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % Game.max_hand_grabs)])
 	)
 	coins_container.mouse_entered.connect(func():
-		STooltip.show(coins_container, 1, [Pair.new(tr("tt_game_coins_title"), "%d" % Game.coins)])
+		STooltip.show(coins_container, 3, [Pair.new(tr("tt_game_coins_title"), "%d" % Game.coins)])
 	)
 	coins_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -138,7 +138,7 @@ func _ready() -> void:
 			Game.bag_viewer_ui.exit()
 	)
 	bag_button.mouse_entered.connect(func():
-		STooltip.show(bag_button, 2, [Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_content"))])
+		STooltip.show(bag_button, 3, [Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_content"))])
 	)
 	bag_button.mouse_exited.connect(func():
 		STooltip.close()
@@ -146,7 +146,7 @@ func _ready() -> void:
 	Drag.add_target("gem", bag_button, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			#Drag.ui.action.show()
-			STooltip.show(bag_button, 2, [Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_trade_content"))])
+			STooltip.show(bag_button, 3, [Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_trade_content"))])
 		elif ev == "peek_exited":
 			#if Drag.ui:
 			#	Drag.ui.action.hide()
@@ -158,13 +158,13 @@ func _ready() -> void:
 			#Hand.draw()
 	)
 	gem_count_text.mouse_entered.connect(func():
-		STooltip.show(gem_count_text, 2, [Pair.new(tr("tt_game_gem_number"), "%d" % Game.gems.size())])
+		STooltip.show(gem_count_text, 3, [Pair.new(tr("tt_game_gem_number"), "%d" % Game.gems.size())])
 	)
 	gem_count_text.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	gem_count_limit_text.mouse_entered.connect(func():
-		STooltip.show(gem_count_limit_text, 2, [Pair.new("", tr("tt_game_upgrade_number_and_min_number") % [Board.next_min_gem_num, Board.curr_min_gem_num])])
+		STooltip.show(gem_count_limit_text, 3, [Pair.new("", tr("tt_game_upgrade_number_and_min_number") % [Board.next_min_gem_num, Board.curr_min_gem_num])])
 	)
 	gem_count_limit_text.mouse_exited.connect(func():
 		STooltip.close()
@@ -175,7 +175,7 @@ func _ready() -> void:
 		Game.toggle_in_game_menu()
 	)
 	gear_button.mouse_entered.connect(func():
-		STooltip.show(gear_button, 2, [Pair.new(tr("tt_game_menu_title"), "")])
+		STooltip.show(gear_button, 3, [Pair.new(tr("tt_game_menu_title"), "")])
 	)
 	gear_button.mouse_exited.connect(func():
 		STooltip.close()
@@ -186,7 +186,7 @@ func _ready() -> void:
 		Game.tutorial_ui.enter()
 	)
 	tutorial_button.mouse_entered.connect(func():
-		STooltip.show(tutorial_button, 2, [Pair.new(tr("tt_game_tutorial"), "")])
+		STooltip.show(tutorial_button, 3, [Pair.new(tr("tt_game_tutorial"), "")])
 	)
 	tutorial_button.mouse_exited.connect(func():
 		STooltip.close()

@@ -22,16 +22,16 @@ func load_gem(_gem : Gem):
 		img_open.hide()
 		img_close.show()
 		gem_ui.update(gem)
-		button.button.disabled = false
+		button.disabled = false
 
 func unload_gem():
 	if gem:
-		var slot = Hand.add_gem(gem)
-		slot.global_position = slot.get_global_rect().get_center()
+		var ui = Hand.add_gem(gem)
+		ui.global_position = slot.get_global_rect().get_center()
 		img_open.show()
 		img_close.hide()
 		gem_ui.reset()
-		button.button.disabled = true
+		button.disabled = true
 		gem = null
 
 func setup(_type : String, _thing : String, _price : int):
@@ -40,21 +40,24 @@ func setup(_type : String, _thing : String, _price : int):
 	price = _price
 
 func _ready() -> void:
-	title_txt.text = "[url=%s]%s[/url] [url=%s][img]%s[/img][/url]" % [type, tr(type), thing, Item.get_image_path(thing)]
+	if thing != "":
+		title_txt.text = "[url=%s]%s[/url] [color=cyan][url=%s]%s[/url][/color]" % [type, tr(type), thing, tr(thing)]
+	else:
+		title_txt.text = "[url=%s]%s[/url]" % [type, tr(type)]
 	title_txt.meta_hover_started.connect(func(meta):
 		var s = str(meta)
 		if s.begins_with("w_"):
-			STooltip.show(title_txt, 1, [Pair.new(tr(s), tr(s + "_desc"))])
+			STooltip.show(title_txt, 0, [Pair.new(tr(s), tr(s + "_desc"))])
 		else:
 			var item = Item.new()
 			item.setup(thing)
-			STooltip.show(title_txt, 1, item.get_tooltip())
+			STooltip.show(title_txt, 0, item.get_tooltip())
 	)
 	title_txt.meta_hover_ended.connect(func(meta):
 		STooltip.close()
 	)
-	button.button.disabled = true
-	button.get_child(1).text = "[color=WHITE]%d[/color][img=16]res://images/coin.png[/img]" % price
+	button.disabled = true
+	button.text.text = "%d[img=16]res://images/coin.png[/img]" % price
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			img_open.modulate = Color(0.7, 0.7, 0.7, 1.0)
@@ -78,7 +81,7 @@ func _ready() -> void:
 	slot.mouse_entered.connect(func():
 		if gem:
 			SSound.se_select.play()
-			STooltip.show(slot, 1, gem.get_tooltip())
+			STooltip.show(slot, 0, gem.get_tooltip())
 	)
 	slot.mouse_exited.connect(func():
 		STooltip.close()
@@ -99,7 +102,7 @@ func _ready() -> void:
 				Game.banner_ui.show_tip(tr("wr_delete_gem_count_limit") % Board.curr_min_gem_num, "", 1.0)
 				return
 		
-		button.button.disabled = true
+		button.disabled = true
 		Game.coins -= price
 		SSound.se_coin.play()
 		
@@ -123,10 +126,10 @@ func _ready() -> void:
 				elif thing == "w_enchant_sharp":
 					Game.enchant_gem(gem, "w_enchant_sharp")
 				elif thing == "w_wild":
-					var bid = Buff.create(gem, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.Eternal)
+					var bid = Buff.create(gem, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.Eternal)
 					Buff.create(gem, Buff.Type.Enchant, {"type":"w_wild","bid":bid}, Buff.Duration.Eternal)
 				elif thing == "w_omni":
-					var bid = Buff.create(gem, Buff.Type.ChangeRune, {"rune":Gem.Rune.Omni}, Buff.Duration.Eternal)
+					var bid = Buff.create(gem, Buff.Type.ChangeRune, {"rune":Gem.RuneOmni}, Buff.Duration.Eternal)
 					Buff.create(gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, Buff.Duration.Eternal)
 			elif type == "w_delete":
 				Game.delete_gem(gem, gem_ui, "craft_slot")

@@ -7,12 +7,12 @@ const UiHandSlot = preload("res://ui_hand_slot.gd")
 const cell_pb = preload("res://ui_cell.tscn")
 const outline_pb = preload("res://ui_outline.tscn")
 
-@onready var panel : Panel = $Panel
 @onready var tilemap : TileMapLayer = $TileMapLayer
-@onready var outlines_root : Node2D = $Outlines
-@onready var underlay : Node2D = $Underlay
-@onready var cells_root : Node2D = $Cells
-@onready var overlay : Node2D = $Overlay
+@onready var panel : Panel = $SubViewport/Panel
+@onready var outlines_root : Node2D = $SubViewport/Outlines
+@onready var underlay : Node2D = $SubViewport/Underlay
+@onready var cells_root : Node2D = $SubViewport/Cells
+@onready var overlay : Node2D = $SubViewport/Overlay
 @onready var hover_ui : Sprite2D = $Hover
 
 func game_coord(c : Vector2i):
@@ -41,7 +41,7 @@ func update_cell(c : Vector2i):
 	var g = Board.get_gem_at(c)
 	if g:
 		if cell.in_mist:
-			ui.gem_ui.reset(Gem.Type.Unknow, Gem.Rune.None)
+			ui.gem_ui.reset(Gem.Unknow, Gem.None)
 		else:
 			ui.gem_ui.update(g)
 	else:
@@ -90,12 +90,12 @@ func enter(tween : Tween = null, trans : bool = true):
 		if !tween:
 			tween = get_tree().create_tween()
 		tween.tween_callback(func():
-			self.scale = Vector2(1.0, 0.0)
+			self.material.set_shader_parameter("x_rot", -90.0)
 			self.show()
 		)
-		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5)
 	else:
-		self.scale = Vector2(1.0, 1.0)
+		self.material.set_shader_parameter("x_rot", 0.0)
 		self.show()
 	return tween
 
@@ -103,7 +103,7 @@ func exit(tween : Tween = null, trans : bool = true):
 	if trans:
 		if !tween:
 			tween = get_tree().create_tween()
-		tween.tween_property(self, "scale", Vector2(1.0, 0.0), 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5)
 		tween.tween_callback(func():
 			self.hide()
 		)

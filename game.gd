@@ -600,12 +600,12 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	sub2.tween_interval(0.1)
 	var rot = Vector2(0.0, 0.0)
 	match sec:
-		0: rot = Vector2(-45.0, 30.0)
-		1: rot = Vector2(-45.0, 0.0)
-		2: rot = Vector2(-45.0, -30.0)
-		3: rot = Vector2(45.0, -30.0)
-		4: rot = Vector2(45.0, 0.0)
-		5: rot = Vector2(45.0, 30.0)
+		0: rot = Vector2(-75.0, 30.0)
+		1: rot = Vector2(-75.0, 0.0)
+		2: rot = Vector2(-75.0, -30.0)
+		3: rot = Vector2(75.0, -30.0)
+		4: rot = Vector2(75.0, 0.0)
+		5: rot = Vector2(75.0, 30.0)
 	sub2.tween_property(slot2.gem_ui, "angle", rot, 0.07)
 	sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * Board.tile_sz * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	sub2.parallel().tween_property(slot2.gem_ui, "angle", Vector2(0.0, 0.0), 0.07)
@@ -875,13 +875,17 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		for i in 1:
 			var p = Pattern.new()
-			p.setup("I")
+			p.setup("|")
 			add_pattern(p)
 		for i in 1:
 			var p = Pattern.new()
 			p.setup("/")
 			add_pattern(p)
 		'''
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("Island")
+			add_pattern(p)
 		for i in 1:
 			var p = Pattern.new()
 			p.setup("Y")
@@ -893,81 +897,81 @@ func start_game(saving : String = ""):
 			r.setup("Libra")
 			add_relic(r)
 		
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Destroy
+			g.type = Gem.ColorRed
+			g.rune = Gem.RuneWaves
 			g.setup("Bomb")
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Wisdom
+			g.type = Gem.ColorRed
+			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Red
-			g.rune = Gem.Rune.Grow
+			g.type = Gem.ColorRed
+			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Orange
-			g.rune = Gem.Rune.Destroy
+			g.type = Gem.ColorOrange
+			g.rune = Gem.RuneWaves
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Orange
-			g.rune = Gem.Rune.Wisdom
+			g.type = Gem.ColorOrange
+			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Orange
-			g.rune = Gem.Rune.Grow
+			g.type = Gem.ColorOrange
+			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Green
-			g.rune = Gem.Rune.Destroy
+			g.type = Gem.ColorGreen
+			g.rune = Gem.RuneWaves
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Green
-			g.rune = Gem.Rune.Wisdom
+			g.type = Gem.ColorGreen
+			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Green
-			g.rune = Gem.Rune.Grow
+			g.type = Gem.ColorGreen
+			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Blue
-			g.rune = Gem.Rune.Destroy
+			g.type = Gem.ColorBlue
+			g.rune = Gem.RuneWaves
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Blue
-			g.rune = Gem.Rune.Wisdom
+			g.type = Gem.ColorBlue
+			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Blue
-			g.rune = Gem.Rune.Grow
+			g.type = Gem.ColorBlue
+			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Purple
-			g.rune = Gem.Rune.Destroy
+			g.type = Gem.ColorPurple
+			g.rune = Gem.RuneWaves
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Purple
-			g.rune = Gem.Rune.Wisdom
+			g.type = Gem.ColorPurple
+			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 160:
 			var g = Gem.new()
-			g.type = Gem.Type.Purple
-			g.rune = Gem.Rune.Grow
+			g.type = Gem.ColorPurple
+			g.rune = Gem.RuneStarfish
 			add_gem(g)
 		'''
 		for i in 1:
@@ -1038,7 +1042,7 @@ func update_level_text(lv : int, target : int = -1, reward : int = -1, curses : 
 		target = get_level_score(lv)
 	if reward == -1:
 		reward = get_level_reward(lv)
-	status_bar_ui.level_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % SUtils.format_text(get_level_desc(target, curses), true, true)
+	status_bar_ui.level_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_level_desc(target, curses), true, true)
 
 var cluster_level_tween : Tween = null
 
@@ -1638,9 +1642,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				command_line_edit.visible = !command_line_edit.visible
 				if command_line_edit.visible:
 					command_line_edit.grab_focus()
-	elif event is InputEventMouseButton:
-		if event.is_pressed():
-			pass
 	elif event is InputEventMouseMotion:
 		if Board.ui.visible:
 			var c = Board.ui.hover_coord(true)
@@ -1658,7 +1659,20 @@ func _unhandled_input(event: InputEvent) -> void:
 					var cell_ui = Board.ui.get_cell(c)
 					if STooltip.node != cell_ui:
 						contents.append_array(g.get_tooltip())
-						STooltip.show(cell_ui, 0, contents)
+						var dir = 0
+						var hcx = Board.cx / 2
+						var hcy = Board.cy / 2
+						if c.x <= hcx:
+							if c.y <= hcy:
+								dir = 0
+							else:
+								dir = 1
+						else:
+							if c.y <= hcy:
+								dir = 3
+							else:
+								dir = 2
+						STooltip.show(cell_ui, dir, contents)
 			else:
 				control_ui.debug_text.text = ""
 				STooltip.close()

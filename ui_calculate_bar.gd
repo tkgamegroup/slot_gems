@@ -59,7 +59,7 @@ func calculate():
 	tween.tween_callback(func():
 		calculated_text.show()
 		calculated_text.text = "%d" % result["value"]
-		calculated_text.position = Vector2((1280 - calculated_text.size.x) * 0.5, 150)
+		calculated_text.position = Vector2((Game.resolution.x - calculated_text.size.x) * 0.5, 220)
 	)
 	SAnimation.jump(tween, calculated_text, 8, 0.5 * Game.speed, Callable(), true, false)
 	tween.tween_property(panel, "scale", Vector2(0.0, 0.0), 0.3 * Game.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)

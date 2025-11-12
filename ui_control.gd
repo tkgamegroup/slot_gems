@@ -19,7 +19,7 @@ const UiProp = preload("res://ui_prop.gd")
 @onready var filling_times_text_container : Control = $PanelContainer
 @onready var filling_times_text : Label = $PanelContainer/FillingTimes
 var filling_times_tween : Tween = null
-@onready var debug_text : Label = $DebugText
+@onready var debug_text : Label = $MarginContainer/DebugText
 
 var shake_strength : float = 0.0
 var shake_coord : float = 0.0
@@ -64,7 +64,7 @@ func _ready() -> void:
 		var desc = tr("tt_game_roll_content")
 		if Game.next_roll_extra_draws > 0:
 			desc += "\nDraw %d extra item(s)." % Game.next_roll_extra_draws
-		STooltip.show(roll_button, 3, [Pair.new(tr("tt_game_roll_title"), desc)])
+		STooltip.show(roll_button, 1, [Pair.new(tr("tt_game_roll_title"), desc)])
 	)
 	roll_button.mouse_exited.connect(func():
 		STooltip.close()
@@ -80,7 +80,7 @@ func _ready() -> void:
 		if !play_button.disabled:
 			preview.show()
 		
-		STooltip.show(play_button, 3, [Pair.new(tr("tt_game_match_title"), tr("tt_game_match_content"))])
+		STooltip.show(play_button, 1, [Pair.new(tr("tt_game_match_title"), tr("tt_game_match_content"))])
 	)
 	play_button.mouse_exited.connect(func():
 		STooltip.close()
@@ -114,7 +114,7 @@ func _ready() -> void:
 				undo_button.disabled = true
 	)
 	filling_times_text_container.mouse_entered.connect(func():
-		STooltip.show(filling_times_text_container, 3, [Pair.new(tr("tt_game_filling_times_title"), tr("tt_game_filling_times_content"))])
+		STooltip.show(filling_times_text_container, 1, [Pair.new(tr("tt_game_filling_times_title"), tr("tt_game_filling_times_content"))])
 	)
 	filling_times_text_container.mouse_exited.connect(func():
 		STooltip.close()

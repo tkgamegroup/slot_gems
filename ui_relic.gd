@@ -9,11 +9,3 @@ func setup(_relic : Relic):
 
 func _ready() -> void:
 	sp.frame = relic.image_id
-	
-	self.mouse_entered.connect(func():
-		SSound.se_select.play()
-		STooltip.show(self, 0, relic.get_tooltip())
-	)
-	self.mouse_exited.connect(func():
-		STooltip.close()
-	)

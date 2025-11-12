@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://03641uiumwkc"
-path="res://.godot/imported/rune_destroy.png-354fd8ba23e5aaa4e7e8bfbf0111c7bb.ctex"
+uid="uid://c6hkoccdc4iuv"
+path="res://.godot/imported/hex-o-d.png-f19cd6ff8599a95b3af7b7405744b4f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/rune_destroy.png"
-dest_files=["res://.godot/imported/rune_destroy.png-354fd8ba23e5aaa4e7e8bfbf0111c7bb.ctex"]
+source_file="res://images/hex-o-d.png"
+dest_files=["res://.godot/imported/hex-o-d.png-f19cd6ff8599a95b3af7b7405744b4f6.ctex"]
 
 [params]
 

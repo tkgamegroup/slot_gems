@@ -22,6 +22,13 @@ func release_dragging():
 func add_ui(r : Relic):
 	var ui = relic_pb.instantiate()
 	ui.setup(r)
+	ui.mouse_entered.connect(func():
+		SSound.se_select.play()
+		STooltip.show(ui, 0, r.get_tooltip())
+	)
+	ui.mouse_exited.connect(func():
+		STooltip.close()
+	)
 	list.add_child(ui)
 	r.ui = ui
 	var n = list.get_child_count()

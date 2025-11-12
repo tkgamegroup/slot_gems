@@ -5,14 +5,14 @@ extends Control
 @onready var wild_sp = $SubViewport/Wild
 @onready var item_sp = $SubViewport/Item
 @onready var rune_sp = $SubViewport/Rune
-@onready var sp : Sprite2D = $Sprite2D
+@onready var display : Sprite2D = $Display
 @onready var charming_fx : CPUParticles2D = $Charming
 @onready var sharp_fx : CPUParticles2D = $Sharp
 @export var angle : Vector2:
 	set(v):
 		angle = v
-		sp.material.set_shader_parameter("x_rot", angle.x)
-		sp.material.set_shader_parameter("y_rot", angle.y)
+		display.material.set_shader_parameter("x_rot", angle.x)
+		display.material.set_shader_parameter("y_rot", angle.y)
 
 var type : int
 var rune : int
@@ -43,19 +43,19 @@ func update(g : Gem):
 				sharp += 1
 	
 	if type_sp:
-		type_sp.frame = type
+		type_sp.frame = type - Gem.ColorRed + 1
 		type_sp.material.set_shader_parameter("type_color", Gem.type_color(type))
 		
 		if item > 0:
 			type_sp.hide()
 			item_sp.frame = item
 		else:
-			if type == Gem.Type.Colorless:
+			if type == Gem.Colorless:
 				type_sp.hide()
 				colorless_sp.show()
 				wild_sp.hide()
 				rune_sp.modulate = Color(1.0, 1.0, 1.0, 0.66)
-			elif type == Gem.Type.Wild:
+			elif type == Gem.ColorWild:
 				type_sp.hide()
 				colorless_sp.hide()
 				wild_sp.show()
@@ -66,7 +66,7 @@ func update(g : Gem):
 				wild_sp.hide()
 				rune_sp.modulate = Color(0.0, 0.0, 0.0, 0.66)
 			item_sp.frame = 0
-		rune_sp.frame = rune
+		rune_sp.frame = rune - Gem.RuneWaves + 1
 		
 		if charming > 0:
 			charming_fx.show()
@@ -79,7 +79,7 @@ func update(g : Gem):
 
 func dissolve(duration : float):
 	var tween = get_tree().create_tween()
-	tween.tween_property(sp.material, "shader_parameter/dissolve", 0.0, duration)
+	tween.tween_property(display.material, "shader_parameter/dissolve", 0.0, duration)
 	tween.tween_callback(func():
 		self.hide()
 	)

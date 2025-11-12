@@ -13,7 +13,7 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 [sub_resource type="Gradient" id="Gradient_wbchi"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[node name="EnchantSlot" type="VBoxContainer"]
+[node name="CraftSlot" type="VBoxContainer"]
 custom_minimum_size = Vector2(44, 100)
 offset_right = 44.0
 offset_bottom = 100.0
@@ -31,15 +31,17 @@ horizontal_alignment = 1
 meta_underlined = false
 
 [node name="Control" type="Control" parent="."]
-custom_minimum_size = Vector2(44, 44)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
 [node name="UiGem" parent="Control" instance=ExtResource("2_dl41d")]
 layout_mode = 0
-offset_right = 48.0
-offset_bottom = 48.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 54.0
+offset_bottom = 54.0
 
 [node name="Open" type="TextureRect" parent="Control"]
 layout_mode = 1
@@ -55,7 +57,7 @@ offset_bottom = 44.0
 texture = ExtResource("4_81fa8")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="Control"]
-position = Vector2(22, 22)
+position = Vector2(30, 30)
 emitting = false
 amount = 16
 lifetime = 2.0
@@ -73,7 +75,7 @@ scale_amount_max = 3.0
 color_ramp = SubResource("Gradient_jf4wm")
 
 [node name="CPUParticles2D2" type="CPUParticles2D" parent="Control"]
-position = Vector2(22, 22)
+position = Vector2(30, 30)
 emitting = false
 amount = 20
 lifetime = 0.4

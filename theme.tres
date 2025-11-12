@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=24 format=3 uid="uid://lm57pm3v4aq7"]
 
 [ext_resource type="FontFile" uid="uid://cp78tjuwu7qrs" path="res://fonts/Baloo2_Bold.ttf" id="1_cjfk0"]
-[ext_resource type="FontFile" uid="uid://vm58fvt8waip" path="res://fonts/Baloo2.ttf" id="1_e1x85"]
+[ext_resource type="FontFile" uid="uid://vm58fvt8waip" path="res://fonts/Baloo2.ttf" id="2_vj6dk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1x85"]
 content_margin_top = 0.0
@@ -142,7 +142,7 @@ expand_margin_left = 8.0
 expand_margin_right = 8.0
 
 [resource]
-default_font = ExtResource("1_e1x85")
+default_font = ExtResource("2_vj6dk")
 default_font_size = 22
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_focus_color = Color(1, 1, 1, 1)

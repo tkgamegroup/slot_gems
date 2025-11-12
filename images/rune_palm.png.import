@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bil43w0xe883m"
-path="res://.godot/imported/rune_wisdom.png-37a53a8c08dcce14f9f1c7006f986f09.ctex"
+uid="uid://cu1rt4xk7q85q"
+path="res://.godot/imported/rune_palm.png-f4b70d649a5d245d8807dc00ba7572f3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/rune_wisdom.png"
-dest_files=["res://.godot/imported/rune_wisdom.png-37a53a8c08dcce14f9f1c7006f986f09.ctex"]
+source_file="res://images/rune_palm.png"
+dest_files=["res://.godot/imported/rune_palm.png-f4b70d649a5d245d8807dc00ba7572f3.ctex"]
 
 [params]
 

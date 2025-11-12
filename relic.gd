@@ -22,19 +22,19 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 	var runes = []
 	for c in coords:
 		var p = Pair.new(c, Board.get_gem_at(c).rune)
-		if p.second == Gem.Rune.Destroy:
+		if p.second == Gem.RuneWaves:
 			if need_destroy > 0:
 				need_destroy -= 1
 				runes.append(p)
-		elif p.second == Gem.Rune.Wisdom:
+		elif p.second == Gem.RunePalm:
 			if need_wisdom > 0:
 				need_wisdom -= 1
 				runes.append(p)
-		elif p.second == Gem.Rune.Grow:
+		elif p.second == Gem.RuneStarfish:
 			if need_grow > 0:
 				need_grow -= 1
 				runes.append(p)
-		elif p.second == Gem.Rune.Omni:
+		elif p.second == Gem.RuneOmni:
 			if need_destroy > 0:
 				need_destroy -= 1
 				runes.append(p)
@@ -332,7 +332,7 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.Rune.Destroy:
+					if g && g.rune == Gem.RuneWaves:
 						Game.add_mult(extra["value"], Board.get_pos(c))
 	elif name == "TheOldOak":
 		image_id = 15
@@ -351,7 +351,7 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.Rune.Grow:
+					if g && g.rune == Gem.RuneStarfish:
 						Game.add_mult(extra["value"], Board.get_pos(c))
 	elif name == "TheSchoolOfAthens":
 		image_id = 16
@@ -370,7 +370,7 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.Rune.Wisdom:
+					if g && g.rune == Gem.RunePalm:
 						Game.add_mult(extra["value"], Board.get_pos(c))
 	elif name == "RockBottom":
 		image_id = 17
@@ -714,7 +714,7 @@ func setup(n : String):
 					active_constellation(0, 1, 2, data["coords"], tween)
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var cands = Board.filter(func(gem : Gem, item : Item):
-				if gem && gem.type != Gem.Type.Wild:
+				if gem && gem.type != Gem.ColorWild:
 					return true
 				return false
 			)
@@ -724,7 +724,7 @@ func setup(n : String):
 				tween.tween_callback(func():
 					for c in targets:
 						var g = Board.get_gem_at(c)
-						if g && g.type != Gem.Type.Wild:
+						if g && g.type != Gem.ColorWild:
 							SEffect.add_leading_line(ui_pos, Board.get_pos(c))
 				)
 				tween.tween_interval(0.3)
@@ -732,8 +732,8 @@ func setup(n : String):
 					var ok = false
 					for c in targets:
 						var g = Board.get_gem_at(c)
-						if g && g.type != Gem.Type.Wild:
-							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.OnBoard)
+						if g && g.type != Gem.ColorWild:
+							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.OnBoard)
 							ok = true
 					if ok:
 						SSound.se_vibra.play()

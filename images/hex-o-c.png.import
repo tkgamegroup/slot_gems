@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpbwgcoq21dfi"
-path="res://.godot/imported/bomb.png-e012e53795df25869aca4c7980b733de.ctex"
+uid="uid://dc7o2imrrqedg"
+path="res://.godot/imported/hex-o-c.png-2a8363490268a06c96d4526a7d905d50.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/items/bomb.png"
-dest_files=["res://.godot/imported/bomb.png-e012e53795df25869aca4c7980b733de.ctex"]
+source_file="res://images/hex-o-c.png"
+dest_files=["res://.godot/imported/hex-o-c.png-2a8363490268a06c96d4526a7d905d50.ctex"]
 
 [params]
 

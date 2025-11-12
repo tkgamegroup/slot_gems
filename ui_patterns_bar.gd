@@ -22,6 +22,13 @@ func release_dragging():
 func add_ui(p : Pattern):
 	var ui = pattern_pb.instantiate()
 	ui.setup(p)
+	ui.mouse_entered.connect(func():
+		SSound.se_select.play()
+		STooltip.show(ui, 3, p.get_tooltip())
+	)
+	ui.mouse_exited.connect(func():
+		STooltip.close()
+	)
 	list.add_child(ui)
 	p.ui = ui
 	var n = list.get_child_count()

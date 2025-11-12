@@ -10,9 +10,9 @@ func _ready() -> void:
 	gem_ui.update(gem)
 	
 	mouse_entered.connect(func():
-		if Drag.ui != self:
+		if Drag.ui != self && elastic > 0.5:
 			SSound.se_select.play()
-			STooltip.show(self, 3, gem.get_tooltip())
+			STooltip.show(self, 1, gem.get_tooltip())
 			
 			if !Hand.ui.disabled:
 				preview.find_missing_ones(gem.type)

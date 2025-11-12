@@ -12,6 +12,7 @@ offset_right = 35.0
 offset_bottom = 36.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
+mouse_filter = 2
 script = ExtResource("1_e85ty")
 
 [node name="Shadow" type="Label" parent="."]
@@ -25,6 +26,7 @@ vertical_alignment = 1
 
 [node name="Text" type="RichTextLabel" parent="."]
 layout_mode = 2
+mouse_filter = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false

@@ -23,8 +23,7 @@ func find_missing_ones(type : int):
 	for y in Board.cy:
 		for x in Board.cx:
 			for p in Game.patterns:
-				var coords : Array[Vector2i]
-				var res : Array[Vector2i] = p.differ(Vector2i(x, y), type, 1, coords)
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), type)
 				if !res.is_empty():
 					var found = false
 					for m in matchings:

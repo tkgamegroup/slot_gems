@@ -43,7 +43,7 @@ func setup(n : String):
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Red}, Buff.Duration.OnBoard)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorRed}, Buff.Duration.OnBoard)
 				return true
 			return false
 	elif name == "DyeOrange":
@@ -52,7 +52,7 @@ func setup(n : String):
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Orange}, Buff.Duration.OnBoard)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorOrange}, Buff.Duration.OnBoard)
 				return true
 			return false
 	elif name == "DyeGreen":
@@ -61,7 +61,7 @@ func setup(n : String):
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Green}, Buff.Duration.OnBoard)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorGreen}, Buff.Duration.OnBoard)
 				return true
 			return false
 	elif name == "DyeBlue":
@@ -70,7 +70,7 @@ func setup(n : String):
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Blue}, Buff.Duration.ThisLevel)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorBlue}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "DyePurple":
@@ -79,7 +79,7 @@ func setup(n : String):
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Purple}, Buff.Duration.OnBoard)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorPurple}, Buff.Duration.OnBoard)
 				return true
 			return false
 	elif name == "Pin":
@@ -288,9 +288,9 @@ func setup(n : String):
 		price = 4
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
-			if g && g.type != Gem.Type.Wild:
+			if g && g.type != Gem.ColorWild:
 				var cands = Board.filter(func(gem : Gem, item : Item):
-					if gem && gem.type != Gem.Type.Wild:
+					if gem && gem.type != Gem.ColorWild:
 						return true
 					return false
 				)
@@ -298,8 +298,8 @@ func setup(n : String):
 					var pos = Board.get_pos(coord)
 					var targets = SMath.pick_n_random(cands, 3, Game.rng) 
 					for c in targets:
-						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
+						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.ThisLevel)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.ThisLevel)
 				return true
 			return false
 	elif name == "Fire":
@@ -389,8 +389,8 @@ func setup(n : String):
 		price = 5
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
-			if g && g.type != Gem.Type.Colorless:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Colorless}, Buff.Duration.ThisLevel)
+			if g && g.type != Gem.Colorless:
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Colorless}, Buff.Duration.ThisLevel)
 				for i in 2:
 					Game.Hand.draw()
 				return true
@@ -740,7 +740,7 @@ func setup(n : String):
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var cands = Board.filter(func(gem : Gem, item : Item):
-				if gem && gem.type != Gem.Type.Wild:
+				if gem && gem.type != Gem.ColorWild:
 					return true
 				return false
 			)
@@ -754,7 +754,7 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					for c in targets:
-						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.OnBoard)
+						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.OnBoard)
 					if !targets.is_empty():
 						SSound.se_vibra.play()
 				)
@@ -808,7 +808,7 @@ func setup(n : String):
 				for c in Board.offset_neighbors(coord):
 					var g = Board.get_gem_at(c)
 					if g:
-						Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Type.Wild}, Buff.Duration.ThisLevel)
+						Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.ThisLevel)
 			)
 	elif name == "StrengthPotion":
 		image_id = 40
