@@ -49,8 +49,9 @@ func update_preview():
 		for c in m:
 			var g = Board.get_gem_at(c)
 			if g:
-				base += g.get_score()
-				mult += g.get_mult()
+				if !Game.no_score_marks[g.type] && !Game.no_score_marks[g.rune]:
+					base += g.get_score()
+					mult += g.get_mult()
 	expected_score_text.text = "%d" % int(base * Game.mult_from_combos(combos) * mult)
 
 func _ready() -> void:

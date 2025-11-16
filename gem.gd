@@ -10,11 +10,10 @@ enum
 	ColorOrange,
 	ColorGreen,
 	ColorBlue,
-	ColorPurple,
-	Colorless,
+	ColorMagenta,
 	ColorWild,
 	ColorAny,
-	RuneWaves,
+	Runewave,
 	RunePalm,
 	RuneStarfish,
 	RuneOmni,
@@ -59,8 +58,7 @@ static func type_name(t : int):
 		ColorOrange: return "Orange"
 		ColorGreen: return "Green"
 		ColorBlue: return "Blue"
-		ColorPurple: return "Purple"
-		Colorless: return "Colorless"
+		ColorMagenta: return "Magenta"
 		ColorWild: return "Wild"
 		ColorAny: return "Any"
 	return ""
@@ -72,8 +70,7 @@ static func type_display_name(t : int):
 		ColorOrange: return Game.tr("gem_orange")
 		ColorGreen: return Game.tr("gem_green")
 		ColorBlue: return Game.tr("gem_blue")
-		ColorPurple: return Game.tr("gem_purple")
-		Colorless: return "w_colorless"
+		ColorMagenta: return Game.tr("gem_magenta")
 		ColorWild: return "w_wild"
 		ColorAny: return Game.tr("gem_any")
 	return ""
@@ -85,8 +82,7 @@ static func name_to_type(s : String):
 		"Orange": return ColorOrange
 		"Green": return ColorGreen
 		"Blue": return ColorBlue
-		"Purple": return ColorPurple
-		"Colorless": return Colorless
+		"Magenta": return ColorMagenta
 		"Wild": return ColorWild
 		"Any": return ColorAny
 
@@ -97,22 +93,22 @@ static func type_color(t : int) -> Color:
 		ColorOrange: return Color(1.0, 0.71, 0.16)
 		ColorGreen: return Color(0.61, 0.75, 0.25)
 		ColorBlue: return Color(0.56, 0.87, 0.96)
-		ColorPurple: return Color(0.88, 0.20, 0.80)
+		ColorMagenta: return Color(0.88, 0.20, 0.80)
 	return Color.WHITE
 
 static func type_img(t : int):
 	match t:
+		None: return "res://images/colorless.png"
 		ColorRed: return "res://images/red.png"
 		ColorOrange: return "res://images/orange.png"
 		ColorGreen: return "res://images/green.png"
 		ColorBlue: return "res://images/blue.png"
-		ColorPurple: return "res://images/purple.png"
-		Colorless: return "res://images/colorless.png"
+		ColorMagenta: return "res://images/magenta.png"
 	return ""
 
 static func rune_name(r : int):
 	match r:
-		RuneWaves: return "Waves"
+		Runewave: return "wave"
 		RunePalm: return "Palm"
 		RuneStarfish: return "Starfish"
 		RuneOmni: return "Omni"
@@ -121,7 +117,7 @@ static func rune_name(r : int):
 
 static func rune_display_name(r : int):
 	match r:
-		RuneWaves: return Game.tr("rune_waves")
+		Runewave: return Game.tr("rune_wave")
 		RunePalm: return Game.tr("rune_palm")
 		RuneStarfish: return Game.tr("rune_starfish")
 		RuneOmni: return "w_omni"
@@ -130,7 +126,7 @@ static func rune_display_name(r : int):
 
 static func rune_icon(r : int):
 	match r:
-		RuneWaves: return "res://images/rune_waves.png"
+		Runewave: return "res://images/rune_wave.png"
 		RunePalm: return "res://images/rune_palm.png"
 		RuneStarfish: return "res://images/rune_starfish.png"
 		RuneOmni: return "res://images/rune_omni.png"
@@ -143,8 +139,8 @@ func get_base_score():
 		ColorOrange: ret += Game.modifiers["orange_bouns_i"]
 		ColorGreen: ret += Game.modifiers["green_bouns_i"]
 		ColorBlue: ret += Game.modifiers["blue_bouns_i"]
-		ColorPurple: ret += Game.modifiers["purple_bouns_i"]
-		ColorWild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["purple_bouns_i"]
+		ColorMagenta: ret += Game.modifiers["magenta_bouns_i"]
+		ColorWild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["magenta_bouns_i"]
 	return ret
 
 func get_score():
@@ -300,13 +296,13 @@ func setup(n : String):
 				Game.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Amethyst":
-		type = ColorPurple
+		type = ColorMagenta
 		rune = None
 		image_id = 39
 		category = "Normal"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("purple_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_purple"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				Game.change_modifier("magenta_bouns_i", 1)
+				Game.float_text("%s +1" % tr("gem_magenta"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckgpel2kqhlog"
-path="res://.godot/imported/the_school_of_athens.png-68da08ecc105f4cf517cc72330c1db7b.ctex"
+uid="uid://b1x450f7i3nmg"
+path="res://.godot/imported/painting_of_blue.png-313bd1d4663441401546b5c47665a3b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/the_school_of_athens.png"
-dest_files=["res://.godot/imported/the_school_of_athens.png-68da08ecc105f4cf517cc72330c1db7b.ctex"]
+source_file="res://images/relics/painting_of_blue.png"
+dest_files=["res://.godot/imported/painting_of_blue.png-313bd1d4663441401546b5c47665a3b8.ctex"]
 
 [params]
 

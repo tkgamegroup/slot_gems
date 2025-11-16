@@ -2,22 +2,24 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://crvat663k6w1u"
-path="res://.godot/imported/les_demoiselles_d_avignon.png-5bae140879fc38a32db142c0b20d62bf.ctex"
+uid="uid://bpmonffyemkop"
+path="res://.godot/imported/painting_of_palm.png-cd3ce3a05fb069398848cdde4c8442c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/les_demoiselles_d_avignon.png"
-dest_files=["res://.godot/imported/les_demoiselles_d_avignon.png-5bae140879fc38a32db142c0b20d62bf.ctex"]
+source_file="res://images/relics/painting_of_palm.png"
+dest_files=["res://.godot/imported/painting_of_palm.png-cd3ce3a05fb069398848cdde4c8442c3.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
@@ -25,6 +27,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

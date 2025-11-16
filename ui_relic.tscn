@@ -4,7 +4,7 @@
 [ext_resource type="SpriteFrames" uid="uid://40bpuolcf1pa" path="res://images/relics.tres" id="2_qah4w"]
 
 [node name="UiRelic" type="Control"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0

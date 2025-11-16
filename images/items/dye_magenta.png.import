@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2tmb13dkcpb8"
-path="res://.godot/imported/purple.png-4428b75a8f6f81fc5c83ebd32a1b704e.ctex"
+uid="uid://dqkai8831jyx4"
+path="res://.godot/imported/dye_magenta.png-6c574b965bf9a1d75228b2867edede15.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/purple.png"
-dest_files=["res://.godot/imported/purple.png-4428b75a8f6f81fc5c83ebd32a1b704e.ctex"]
+source_file="res://images/items/dye_magenta.png"
+dest_files=["res://.godot/imported/dye_magenta.png-6c574b965bf9a1d75228b2867edede15.ctex"]
 
 [params]
 

@@ -30,7 +30,7 @@ func enter():
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
-	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyePurple", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
+	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyeMagenta", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
 	'''
 	for n in items:
 		var i = Item.new()

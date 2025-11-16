@@ -44,18 +44,6 @@ func _ready() -> void:
 		title_txt.text = "[url=%s]%s[/url] [color=cyan][url=%s]%s[/url][/color]" % [type, tr(type), thing, tr(thing)]
 	else:
 		title_txt.text = "[url=%s]%s[/url]" % [type, tr(type)]
-	title_txt.meta_hover_started.connect(func(meta):
-		var s = str(meta)
-		if s.begins_with("w_"):
-			STooltip.show(title_txt, 0, [Pair.new(tr(s), tr(s + "_desc"))])
-		else:
-			var item = Item.new()
-			item.setup(thing)
-			STooltip.show(title_txt, 0, item.get_tooltip())
-	)
-	title_txt.meta_hover_ended.connect(func(meta):
-		STooltip.close()
-	)
 	button.disabled = true
 	button.text.text = "%d[img=16]res://images/coin.png[/img]" % price
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):

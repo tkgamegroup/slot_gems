@@ -19,16 +19,14 @@ func release_dragging():
 		dragging.z_index = 0
 		dragging = null
 
+func get_ui(idx : int):
+	if idx == -1:
+		idx = list.get_child_count() - 1
+	return list.get_child(idx)
+
 func add_ui(p : Pattern):
 	var ui = pattern_pb.instantiate()
-	ui.setup(p)
-	ui.mouse_entered.connect(func():
-		SSound.se_select.play()
-		STooltip.show(ui, 3, p.get_tooltip())
-	)
-	ui.mouse_exited.connect(func():
-		STooltip.close()
-	)
+	ui.setup(p, false, 3)
 	list.add_child(ui)
 	p.ui = ui
 	var n = list.get_child_count()
@@ -51,6 +49,11 @@ func clear():
 		list.custom_minimum_size = Vector2(item_w, 0)
 		number_text.text = "(%d/%d)" % [list.get_child_count(), Game.MaxPatterns]
 
+func get_pos(idx : int):
+	if idx == -1:
+		idx = list.get_child_count()
+	return list.global_position + Vector2(0, (item_h + gap) * idx)
+
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(item_w, 0)
 	
@@ -62,8 +65,8 @@ func _process(delta: float) -> void:
 		var y_off = 0
 		for i in n:
 			var ui = list.get_child(i)
-			if ui != dragging:
-				ui.position = lerp(ui.position, Vector2(0, y_off), 0.2)
+			if ui != dragging && ui.elastic > 0.0:
+				ui.position = lerp(ui.position, Vector2(0, y_off), 0.2 * ui.elastic)
 			y_off += item_h + gap
 		if dragging:
 			var h = item_h * n + (n - 1) * gap

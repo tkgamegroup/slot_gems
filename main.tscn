@@ -1,4 +1,4 @@
-[gd_scene load_steps=179 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=180 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -81,7 +81,7 @@
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/orange.png" id="63_f1p13"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
-[ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/purple.png" id="64_4obbf"]
+[ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/magenta.png" id="64_4obbf"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="Shader" uid="uid://bptjtflv2v5ak" path="res://materials/perspective.gdshader" id="64_jbvwl"]
 [ext_resource type="SpriteFrames" uid="uid://ce4mcwrcnqlca" path="res://images/dot.tres" id="64_ovcoh"]
@@ -96,6 +96,7 @@
 [ext_resource type="Texture2D" uid="uid://bbh7xqdxi817y" path="res://images/left.png" id="75_ppx11"]
 [ext_resource type="Texture2D" uid="uid://xisl1nrbb2ei" path="res://images/spotlight.png" id="78_41lik"]
 [ext_resource type="Script" uid="uid://caypb4y5bf3py" path="res://ui_tutorial.gd" id="80_f1p13"]
+[ext_resource type="Script" uid="uid://cv7nxdr7kyb51" path="res://rich_text_tt.gd" id="87_sn1fb"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
 random_pitch = 1.1
@@ -121,7 +122,7 @@ stream_0/stream = ExtResource("23_jbvwl")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h6isl"]
 shader = ExtResource("38_yysqy")
-shader_parameter/radius = 0.0
+shader_parameter/offset = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_33ybg"]
 shader = ExtResource("1_gsejj")
@@ -651,7 +652,7 @@ shader_parameter/pixel_strength = -2.0
 [node name="Main" type="Node2D"]
 
 [node name="TransBG" type="ColorRect" parent="."]
-color = Color(0.6888, 0.84, 0.72911996, 1)
+color = Color(0.8, 0.8666667, 0.6862745, 1)
 
 [node name="Control" type="Control" parent="TransBG"]
 layout_mode = 1
@@ -1138,16 +1139,16 @@ size = Vector2i(1920, 1080)
 render_target_update_mode = 0
 
 [node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport"]
-custom_minimum_size = Vector2(508, 340)
+custom_minimum_size = Vector2(618, 387)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -278.0
-offset_top = -172.5
-offset_right = 278.0
-offset_bottom = 172.5
+offset_left = -326.0
+offset_top = -193.5
+offset_right = 326.0
+offset_bottom = 193.5
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -1159,12 +1160,12 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer"]
-custom_minimum_size = Vector2(304, 0)
+custom_minimum_size = Vector2(494, 0)
 layout_mode = 2
 theme_override_constants/separation = 32
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(384, 118)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -1761,6 +1762,7 @@ autowrap_mode = 0
 horizontal_alignment = 1
 justification_flags = 0
 meta_underlined = false
+script = ExtResource("87_sn1fb")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Game/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
 layout_mode = 2
@@ -2480,16 +2482,17 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jcxqu")
 script = ExtResource("80_f1p13")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial"]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -150.0
-offset_right = 200.0
-offset_bottom = 150.0
+offset_left = -80.5
+offset_top = -172.0
+offset_right = 80.5
+offset_bottom = 172.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
@@ -2498,11 +2501,43 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_swlj1")
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+tabs_visible = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
+text = "ui_tutorial_page1"
+fit_content = true
+scroll_active = false
 meta_underlined = false
+script = ExtResource("87_sn1fb")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "ui_tutorial_page2"
+fit_content = true
+scroll_active = false
+meta_underlined = false
+script = ExtResource("87_sn1fb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer/VBoxContainer2"]
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer"]
 layout_mode = 2

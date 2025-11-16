@@ -6,8 +6,8 @@ extends Control
 @onready var buy_button = $Buy
 
 const gem_ui = preload("res://ui_gem.tscn")
-const pattern_ui = preload("res://ui_pattern.tscn")
 const relic_ui = preload("res://ui_relic.tscn")
+const pattern_ui = preload("res://ui_pattern.tscn")
 
 var cate : String
 var object
@@ -48,15 +48,14 @@ func buy():
 	
 	var tween = Game.get_tree().create_tween()
 	if cate == "gem":
-		var ui = gem_ui.instantiate()
-		ui.update(object)
+		var ui = content.get_child(0)
+		ui.reparent(Game.game_ui)
 		ui.position = self.global_position
-		ui.scale = Vector2(2.0, 2.0)
-		Game.game_ui.add_child(ui)
 		
-		tween.tween_property(ui, "scale", Vector2(1.0, 1.0), 0.4)
+		tween.tween_property(ui, "global_position", self.global_position - Vector2(0.0, 100.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.tween_property(ui, "scale", Vector2(0.5, 0.5), 0.4)
 		tween.parallel()
-		SAnimation.cubic_curve_to(tween, ui, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+		SAnimation.cubic_curve_to(tween, ui, Game.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5)
 		tween.tween_callback(func():
 			var original = object as Gem
 			for i in quantity:
@@ -67,21 +66,24 @@ func buy():
 			ui.queue_free()
 		)
 	elif cate == "relic":
-		var img = AnimatedSprite2D.new()
-		img.sprite_frames = Relic.relic_frames
-		img.frame = object.image_id
-		img.position = self.global_position
-		img.scale = Vector2(2.0, 2.0)
-		Game.game_ui.add_child(img)
+		Game.add_relic(object)
+		var ui = Game.relics_bar_ui.get_ui(-1)
+		ui.elastic = 0.0
+		ui.global_position = self.global_position
 		
-		SAnimation.cubic_curve_to(tween, img, Game.relics_bar_ui.get_pos(-1), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
-		tween.tween_callback(func():
-			Game.add_relic(object)
-			img.queue_free()
-		)
+		tween.tween_property(ui, "global_position", self.global_position - Vector2(0.0, 100.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.tween_property(ui, "elastic", 1.0, 0.4)
+	elif cate == "pattern":
+		Game.add_pattern(object)
+		var ui = Game.patterns_bar_ui.get_ui(-1)
+		ui.elastic = 0.0
+		ui.global_position = self.global_position
+		
+		tween.tween_property(ui, "global_position", self.global_position - Vector2(0.0, 100.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.tween_property(ui, "elastic", 1.0, 0.4)
 	tween.tween_callback(func():
-		Game.save_to_file()
 		self.queue_free()
+		Game.save_to_file()
 	)
 	
 	self.hide()

@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://bvxv5b6nmq63w"]
+[gd_scene load_steps=9 format=3 uid="uid://bvxv5b6nmq63w"]
 
 [ext_resource type="Script" uid="uid://b5pwo17ho4uyi" path="res://craft_slot.gd" id="1_vs883"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_dl41d"]
+[ext_resource type="Script" uid="uid://cv7nxdr7kyb51" path="res://rich_text_tt.gd" id="2_ea0bt"]
 [ext_resource type="Texture2D" uid="uid://e4na8cwspcqj" path="res://images/slot_open.png" id="3_ea0bt"]
 [ext_resource type="Texture2D" uid="uid://bcsov5iskgy5q" path="res://images/slot_close.png" id="4_81fa8"]
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="5_dl41d"]
@@ -29,6 +30,7 @@ bbcode_enabled = true
 fit_content = true
 horizontal_alignment = 1
 meta_underlined = false
+script = ExtResource("2_ea0bt")
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(60, 60)

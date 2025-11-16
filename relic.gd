@@ -22,7 +22,7 @@ func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int
 	var runes = []
 	for c in coords:
 		var p = Pair.new(c, Board.get_gem_at(c).rune)
-		if p.second == Gem.RuneWaves:
+		if p.second == Gem.Runewave:
 			if need_destroy > 0:
 				need_destroy -= 1
 				runes.append(p)
@@ -260,7 +260,7 @@ func setup(n : String):
 			elif event == Event.Combo:
 				if Game.combos > 0 && Game.combos % 5 == 0:
 					Buff.create(Game, Buff.Type.ValueModifier, {"target":"gain_scaler","set":5.0}, Buff.Duration.ThisCombo)
-	elif name == "RedComposition":
+	elif name == "PaintingOfRed":
 		image_id = 9
 		extra["value"] = 40
 		price = 5
@@ -271,7 +271,7 @@ func setup(n : String):
 			elif event == Event.LostRelic:
 				if data == self:
 					Game.change_modifier("red_bouns_i", -extra["value"])
-	elif name == "Sunflowers":
+	elif name == "PaintingOfOrange":
 		image_id = 10
 		extra["value"] = 40
 		price = 5
@@ -282,7 +282,7 @@ func setup(n : String):
 			elif event == Event.LostRelic:
 				if data == self:
 					Game.change_modifier("orange_bouns_i", -extra["value"])
-	elif name == "WaterLilies":
+	elif name == "PaintingOfGreen":
 		image_id = 11
 		extra["value"] = 40
 		price = 5
@@ -293,7 +293,7 @@ func setup(n : String):
 			elif event == Event.LostRelic:
 				if data == self:
 					Game.change_modifier("green_bouns_i", -extra["value"])
-	elif name == "BlueNude":
+	elif name == "PaintingOfBlue":
 		image_id = 12
 		extra["value"] = 40
 		price = 5
@@ -304,18 +304,18 @@ func setup(n : String):
 			elif event == Event.LostRelic:
 				if data == self:
 					Game.change_modifier("blue_bouns_i", -extra["value"])
-	elif name == "LesDemoisellesDAvignon":
+	elif name == "PaintingOfMagenta":
 		image_id = 13
 		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
-					Game.change_modifier("purple_bouns_i", extra["value"])
+					Game.change_modifier("magenta_bouns_i", extra["value"])
 			elif event == Event.LostRelic:
 				if data == self:
-					Game.change_modifier("purple_bouns_i", -extra["value"])
-	elif name == "DestructionOfPompeiiAndHerculaneum":
+					Game.change_modifier("magenta_bouns_i", -extra["value"])
+	elif name == "PaintingOfWave":
 		image_id = 14
 		extra["value"] = 0.21
 		price = 5
@@ -332,9 +332,9 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.RuneWaves:
+					if g && g.rune == Gem.Runewave:
 						Game.add_mult(extra["value"], Board.get_pos(c))
-	elif name == "TheOldOak":
+	elif name == "PaintingOfPalm":
 		image_id = 15
 		extra["value"] = 0.21
 		price = 5
@@ -353,7 +353,7 @@ func setup(n : String):
 					var g = Board.get_gem_at(c)
 					if g && g.rune == Gem.RuneStarfish:
 						Game.add_mult(extra["value"], Board.get_pos(c))
-	elif name == "TheSchoolOfAthens":
+	elif name == "PaintingOfStarfish":
 		image_id = 16
 		extra["value"] = 0.21
 		price = 5

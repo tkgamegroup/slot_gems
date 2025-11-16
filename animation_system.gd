@@ -56,7 +56,7 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 
 	)
 	tween.parallel().tween_method(func(t):
 		target.global_position = SMath.cubic_bezier(d.p0, d.p1, d.p2, d.p3, t)
-	, 0.0, 1.0, duration)
+	, 0.0, 1.0, duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	return tween
 
 func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable(), do_scale : bool = true, do_translate : bool = true):

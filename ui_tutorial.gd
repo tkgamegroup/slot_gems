@@ -1,21 +1,24 @@
 extends Panel
 
 @onready var panel : Control = $PanelContainer
-@onready var text : RichTextLabel = $PanelContainer/VBoxContainer/Text
+@onready var tab_container : TabContainer = $PanelContainer/VBoxContainer/TabContainer
 @onready var prev_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Prev
 @onready var next_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Next
 @onready var elements_image : TextureRect = $Elements
 @onready var close_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button
+@onready var pattern_list = $PanelContainer/VBoxContainer/TabContainer/VBoxContainer2/HBoxContainer
+
+const ui_pattern_pb = preload("res://ui_pattern.tscn")
 
 var view_idx : int = 0
 
 func update_view():
 	match view_idx:
 		0: 
-			text.text = tr("ui_tutorial_how_to_play_text")
+			tab_container.current_tab = 0
 			elements_image.show()
 		1: 
-			text.text = tr("ui_tutorial_gem_text")
+			tab_container.current_tab = 1
 			elements_image.hide()
 	prev_button.disabled = view_idx == 0
 	next_button.disabled = view_idx == 1
@@ -40,23 +43,26 @@ func exit():
 	)
 
 func _ready() -> void:
-	text.meta_hover_started.connect(func(meta):
-		var s = str(meta)
-		if s.begins_with("w_"):
-			STooltip.show(text, 0, [Pair.new(tr(s), tr(s + "_desc"))])
-		elif s.begins_with("gem_"):
-			STooltip.show(text, 0, [Pair.new(tr(s), "")])
-		elif s.begins_with("rune_"):
-			STooltip.show(text, 0, [Pair.new(tr(s), "")])
-		elif s.begins_with("relic_"):
-			var r = Relic.new()
-			r.setup(s.substr(6))
-			STooltip.show(text, 0, r.get_tooltip())
-	)
-	text.meta_hover_ended.connect(func(meta):
-		STooltip.close()
-	)
-	
+	var p1 = Pattern.new()
+	p1.setup("\\")
+	var pui1 = ui_pattern_pb.instantiate()
+	pui1.setup(p1, true)
+	pattern_list.add_child(pui1)
+	var p2 = Pattern.new()
+	p2.setup("|")
+	var pui2 = ui_pattern_pb.instantiate()
+	pui2.setup(p2, true)
+	pattern_list.add_child(pui2)
+	var p3 = Pattern.new()
+	p3.setup("/")
+	var pui3 = ui_pattern_pb.instantiate()
+	pui3.setup(p3, true)
+	pattern_list.add_child(pui3)
+	var p4 = Pattern.new()
+	p4.setup("Island")
+	var pui4 = ui_pattern_pb.instantiate()
+	pui4.setup(p4, true)
+	pattern_list.add_child(pui4)
 	prev_button.pressed.connect(func():
 		if view_idx > 0:
 			view_idx -= 1
@@ -67,7 +73,6 @@ func _ready() -> void:
 			view_idx += 1
 			update_view()
 	)
-	
 	close_button.pressed.connect(func():
 		exit()
 	)

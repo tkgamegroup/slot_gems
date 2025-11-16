@@ -1,9 +1,7 @@
  ,en,zh
 game_title,Place & Play,放与播放
-w_colorless,Colorless,无光
-w_colorless_desc,Can not match with any color.,不可以与任何颜色匹配。
 w_wild,Wild,狂野
-w_wild_desc,Can match with any color.,可以与任何颜色匹配。
+w_wild_desc,Can use as any color.,可以代替任何颜色。
 w_omni,Omni,全能
 w_omni_desc,Can use as any rune.,可以代替任何符文。
 w_enchant,Enchant,附魔
@@ -40,6 +38,14 @@ w_nullified,Nullified,无效化
 w_nullified_desc,Score and Mult getting from nullified will become 0.,从无效化中获取的分数跟倍率会变成0。
 w_in_mist,Shrouded In Mist,迷雾笼罩
 w_in_mist_desc,Color and rune unknown.,无法获知颜色与符文。
+curse_red_no_score,Red gems do not score.,红色宝石不会得分。
+curse_orange_no_score,Orange gems do not score.,橙色宝石不会得分。
+curse_green_no_score,Green gems do not score.,绿色宝石不会得分。
+curse_blue_no_score,Blue gems do not score.,蓝色宝石不会得分。
+curse_magenta_no_score,Magenta gems do not score.,品红色宝石不会得分。
+curse_wave_no_score,Gems with Wave rune do not score.,带有海浪符文的宝石不会得分。
+curse_palm_no_score,Gems with Palm rune do not score.,带有棕榈符文的宝石不会得分。
+curse_starfish_no_score,Gems with Starfish rune do not score.,带有海星符文的宝石不会得分。
 curse_lust,Afflict %d random gems with [item_SinLust].,使%d个随机的宝石获得[item_SinLust]。
 curse_gluttony,Afflict %d random gems with [item_SinGluttony].,使%d个随机的宝石获得[item_SinGluttony]。
 curse_greed,Split your coins into %d [item_SinGreed].,把你的金币分散到%d个[item_SinGreed]。
@@ -98,7 +104,7 @@ tt_red_base_score,Red gems' base score,红色宝石基础分数
 tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
-tt_purple_base_score,Purple gems' base score,紫色宝石基础分数
+tt_magenta_base_score,Magenta gems' base score,品红色宝石基础分数
 ui_game_level,Level %d (Reward: %d[img width=16]res://images/coin.png[/img]),关卡 %d（奖励：%d[img width=16]res://images/coin.png[/img]）
 ui_game_target_score,Score at lease %d.,最少达到 %d 分。
 ui_game_board_size,BS,棋盘
@@ -131,10 +137,9 @@ tt_at_least_score,At Least Score: %d,最少得分：%d
 ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
-ui_bag_viewer_in_hand,In Hand,手中
-ui_tutorial_how_to_play_title,How To Play,玩法
-ui_tutorial_how_to_play_text," - Drag a gem from Hand to Board to swap them. (You start with 5 Swaps per level)\n - Click the start button to match patterns and score.\n - You pass the level when you reach the target score. When you use up all the Swaps but don’t reach the target score, you lose the game.", - 从手上拖拽一个宝石到棋盘上来交换。（一开始你每关有5次交换）\n – 点击开始按钮来开始匹配图案并得分。\n - 当你达到目标分数时，你过关。当你用完所有的交换次数却没有达到目标分数，你游戏失败。
-ui_tutorial_gem_text," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_purple][img]res://images/purple.png[/img][/url], also [url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_purple][img]res://images/purple.png[/img][/url]，还有[url=w_colorless][img]res://images/colorless.png[/img][/url][url=w_wild][img]res://images/wild.png[/img][/url]。\n – 宝石可以有3种符文[url=rune_destroy][img]res://images/rune_destroy.png[/img][/url][url=rune_wisdom][img]res://images/rune_wisdom.png[/img][/url][url=rune_grow][img]res://images/rune_grow.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。
+ui_bag_viewer_in_hand,In Hand,手上
+ui_tutorial_page1," - Drag a gem from [color=cyan]Hand[/color] to [color=cyan]Board[/color] to swap them. (You start with 5 [color=cyan]Swaps[/color] per level)\n - Click the [color=cyan]Play button[/color] to match [color=cyan]Patterns[/color] and score.\n - You pass the level when you reach the target score. When you use up all the [color=cyan]Swaps[/color] but don’t reach the target score, you lose the game.", - 从[color=cyan]手上[/color]拖拽一个宝石到[color=cyan]棋盘[/color]上来交换。（一开始你每关有5次[color=cyan]交换次数[/color]）\n – 点击[color=cyan]开始按钮[/color]来开始匹配[color=cyan]图案[/color]并得分。\n - 当你达到目标分数时，你过关。当你用完所有的[color=cyan]交换次数[/color]却没有达到目标分数，你游戏失败。
+ui_tutorial_page2," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url], also [/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_palm][img]res://images/rune_palm.png[/img][/url][url=rune_starfish][img]res://images/rune_starfish.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n – Here are some [color=cyan]Patterns[/color]. They will have specific color or rune requirements.", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url]，还有[url=w_wild][img]res://images/wild.png[/img][/url]。\n – 宝石有3种符文[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_palm][img]res://images/rune_palm.png[/img][/url][url=rune_starfish][img]res://images/rune_starfish.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n – 以下是一些[color=cyan]图案[/color]。它们会有特定的颜色或者符文需求。
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
@@ -170,7 +175,7 @@ gem_red,Red,红
 gem_orange,Orange,橙
 gem_green,Green,绿
 gem_blue,Blue,蓝
-gem_purple,Purple ,紫
+gem_magenta,Magenta,品红
 gem_colorless,Colorless,无色
 gem_wild,Wild,狂野
 gem_any,Any Color,任意颜色
@@ -180,7 +185,7 @@ gem_mult,Mult: ,倍率:
 gem_enchant,Enchant: %s,附魔: %s
 rune,Rune,符文
 rune_none,None,无
-rune_waves,Waves,海浪
+rune_wave,Wave,海浪
 rune_palm,Palm,棕榈
 rune_starfish,Starfish,海星
 rune_omni,Omni,全能
@@ -190,6 +195,7 @@ pattern_name_prefix,Pattern: ,图案：
 pattern_name_\,Pattern: \,图案：\
 pattern_name_|,Pattern: |,图案：|
 pattern_name_/,Pattern: /,图案：/
+pattern_name_Island,Island,岛屿
 pattern_desc,LV: %d\nExp: %d/%d\nMult: %d,等级：%d\n经验：%d/%d\n倍率：%d
 item_name_DyeRed,Dye: Red,染色剂：红
 item_desc_DyeRed,w_quick: Change gem to red color temporarily.,w_quick：临时改变宝石颜色为红。
@@ -199,8 +205,8 @@ item_name_DyeGreen,Dye: Green,染色剂：绿
 item_desc_DyeGreen,w_quick: Change gem to green color temporarily.,w_quick：临时改变宝石颜色为绿。
 item_name_DyeBlue,Dye: Blue,染色剂：蓝
 item_desc_DyeBlue,w_quick: Change gem to blue color temporarily.,w_quick：临时改变宝石颜色为蓝。
-item_name_DyePurple,Dye: Purple,染色剂：紫
-item_desc_DyePurple,w_quick: Change gem to purple color temporarily.,w_quick：临时改变宝石颜色为紫。
+item_name_DyeMagenta,Dye: Magenta,染色剂：品红
+item_desc_DyeMagenta,w_quick: Change gem to magenta color temporarily.,w_quick：临时改变宝石颜色为品红。
 item_name_Pin,Pin,大头针
 item_desc_Pin,"w_quick: Pin the cell and if it is on one or more patterns, pin those cells as well.",w_quick：固定格子并且如果在一个或多个图案中，把那些格子也固定。
 item_name_Flag,Flag,旗帜
@@ -274,7 +280,7 @@ item_desc_Emerald,Eliminate: Green gems' base score +1.,消除：绿色宝石的
 item_name_Sapphire,Sapphire,蓝宝石
 item_desc_Sapphire,Eliminate: Blue gems' base score +1.,消除：蓝色宝石的基础分数+1。
 item_name_Amethyst,Amethyst,紫水晶
-item_desc_Amethyst,Eliminate: Purple gems' base score +1.,消除：紫色宝石的基础分数+1。
+item_desc_Amethyst,Eliminate: Magenta gems' base score +1.,消除：紫色宝石的基础分数+1。
 item_name_StrengthPotion,Strength Potion,力量药水
 item_desc_StrengthPotion,w_quick: Target Item +10 w_power until the end of level.,w_quick：使目标道具直到关卡结束前获得+10w_power。
 item_name_EchoTotem,Echo Totem,回音图腾
@@ -310,22 +316,22 @@ relic_name_Premeditation,Premeditation,预谋
 relic_desc_Premeditation,Combo starts from {value}.,连击从{value}开始。
 relic_name_PentagramPower,Pentagram Power,五角之力
 relic_desc_PentagramPower,"Every 5 Combos, get 5 times Score and Mult in that combo.",每5个连击，那次连击获得5倍分数与倍率。
-relic_name_RedComposition,"Composition with Red, Blue and Yellow",红、蓝、黄构图
-relic_desc_RedComposition,Red gems' base score +{value}.,红色宝石的基础分数+{value}。
-relic_name_Sunflowers,Sunflowers,向日葵
-relic_desc_Sunflowers,Orange gems' base score +{value}.,橙色宝石的基础分数+{value}。
-relic_name_WaterLilies,Water Lilies,睡莲
-relic_desc_WaterLilies,Green gems' base score +{value}.,绿色宝石的基础分数+{value}。
-relic_name_BlueNude,Blue Nude,蓝色裸体
-relic_desc_BlueNude,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
-relic_name_LesDemoisellesDAvignon,Les Demoiselles d'Avignon,阿维尼翁的少女
-relic_desc_LesDemoisellesDAvignon,Purple gems' base score +{value}.,紫色宝石的基础分数+{value}。
-relic_name_DestructionOfPompeiiAndHerculaneum,Destruction Of Pompeii And Herculaneum,庞贝与赫库兰尼姆的毁灭
-relic_desc_DestructionOfPompeiiAndHerculaneum,+{value} mult when eliminate a gem with Destroy rune.,消除破坏符文的宝石时+{value} 倍率。
-relic_name_TheOldOak,The Old Oak,老橡树
-relic_desc_TheOldOak,+{value} mult when eliminate a gem with Grow rune.,消除生长符文的宝石时+{value} 倍率。
-relic_name_TheSchoolOfAthens,The School Of Athens,雅典学院
-relic_desc_TheSchoolOfAthens,+{value} mult when eliminate a gem with Wisom rune.,消除智慧符文的宝石时+{value} 倍率。
+relic_name_PaintingOfRed,"Composition with Red, Blue and Yellow",红、蓝、黄构图
+relic_desc_PaintingOfRed,Red gems' base score +{value}.,红色宝石的基础分数+{value}。
+relic_name_PaintingOfOrange,Sunflowers,向日葵
+relic_desc_PaintingOfOrange,Orange gems' base score +{value}.,橙色宝石的基础分数+{value}。
+relic_name_PaintingOfGreen,Water Lilies,睡莲
+relic_desc_PaintingOfGreen,Green gems' base score +{value}.,绿色宝石的基础分数+{value}。
+relic_name_PaintingOfBlue,Blue Nude,蓝色裸体
+relic_desc_PaintingOfBlue,Blue gems' base score +{value}.,蓝色宝石的基础分数+{value}。
+relic_name_PaintingOfMagenta,Les Demoiselles d'Avignon,阿维尼翁的少女
+relic_desc_PaintingOfMagenta,Magenta gems' base score +{value}.,品红色宝石的基础分数+{value}。
+relic_name_PaintingOfWave,The Great Wave off Kanagawa,神奈川冲浪里
+relic_desc_PaintingOfWave,+{value} mult when eliminate a gem with Wave rune.,消除带有海浪符文的宝石时+{value} 倍率。
+relic_name_PaintingOfPalm,Palm Trees,棕榈树
+relic_desc_PaintingOfPalm,+{value} mult when eliminate a gem with Palm rune.,消除带有棕榈符文的宝石时+{value} 倍率。
+relic_name_PaintingOfStarfish,The Starry Night,星夜
+relic_desc_PaintingOfStarfish,+{value} mult when eliminate a gem with Starfish rune.,消除带有海星符文的宝石时+{value} 倍率。
 relic_name_RockBottom,Rock Bottom,谷底石
 relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座

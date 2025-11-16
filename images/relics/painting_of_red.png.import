@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bil43w0xe883m"
-path="res://.godot/imported/rune_waves.png-857fe23105bcc298ee2ac26f4b315b4f.ctex"
+uid="uid://bip8y8ndhbfdi"
+path="res://.godot/imported/painting_of_red.png-4f5fcbe3963a28f88c909ad43bbfa0bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/rune_waves.png"
-dest_files=["res://.godot/imported/rune_waves.png-857fe23105bcc298ee2ac26f4b315b4f.ctex"]
+source_file="res://images/relics/painting_of_red.png"
+dest_files=["res://.godot/imported/painting_of_red.png-4f5fcbe3963a28f88c909ad43bbfa0bf.ctex"]
 
 [params]
 

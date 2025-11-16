@@ -135,7 +135,6 @@ var patterns : Array[Pattern]
 var gems : Array[Gem]
 var bag_gems : Array[Gem] = []
 var items : Array[Item]
-var bag_items : Array[Item] = []
 var relics : Array[Relic]
 var event_listeners : Array[Hook]
 var level : int
@@ -147,6 +146,7 @@ var target_score : int
 var reward : int
 var current_curses : Array[Curse]
 var level_curses : Array[Array]
+var no_score_marks : Dictionary[int, Array]
 var base_score_tween : Tween = null
 var base_score : int:
 	set(v):
@@ -332,8 +332,8 @@ func on_modifier_changed(name):
 		status_bar_ui.green_bouns_text.set_value(modifiers["green_bouns_i"])
 	elif name == "blue_bouns_i":
 		status_bar_ui.blue_bouns_text.set_value(modifiers["blue_bouns_i"])
-	elif name == "purple_bouns_i":
-		status_bar_ui.purple_bouns_text.set_value(modifiers["purple_bouns_i"])
+	elif name == "magenta_bouns_i":
+		status_bar_ui.magenta_bouns_text.set_value(modifiers["magenta_bouns_i"])
 	for h in event_listeners:
 		if h.event == Event.ModifierChanged:
 			h.host.on_event.call(Event.ModifierChanged, null, {"name":name,"value":modifiers[name]})
@@ -819,7 +819,6 @@ func start_game(saving : String = ""):
 	gems.clear()
 	bag_gems.clear()
 	items.clear()
-	bag_items.clear()
 	
 	Board.clear()
 	Hand.clear()
@@ -832,7 +831,7 @@ func start_game(saving : String = ""):
 	modifiers["orange_bouns_i"] = 0
 	modifiers["green_bouns_i"] = 0
 	modifiers["blue_bouns_i"] = 0
-	modifiers["purple_bouns_i"] = 0
+	modifiers["magenta_bouns_i"] = 0
 	modifiers["played_i"] = 0
 	modifiers["base_combo_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
@@ -897,80 +896,80 @@ func start_game(saving : String = ""):
 			r.setup("Libra")
 			add_relic(r)
 		
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
-			g.rune = Gem.RuneWaves
+			g.rune = Gem.Runewave
 			g.setup("Bomb")
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
-			g.rune = Gem.RuneWaves
+			g.rune = Gem.Runewave
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
-			g.rune = Gem.RuneWaves
+			g.rune = Gem.Runewave
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
-			g.rune = Gem.RuneWaves
+			g.rune = Gem.Runewave
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.ColorPurple
-			g.rune = Gem.RuneWaves
+			g.type = Gem.ColorMagenta
+			g.rune = Gem.Runewave
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.ColorPurple
+			g.type = Gem.ColorMagenta
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 160:
+		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.ColorPurple
+			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
 		'''
@@ -1032,8 +1031,9 @@ func get_level_desc(target : int, curses : Array[Curse] = []):
 				cates[c.type] = 1
 		var text = ""
 		for k in cates.keys():
-			text = (tr(k) % cates[k]) + text
-		ret += " [color=red]%s[/color]" % text
+			#text = (tr(k) % cates[k]) + text
+			text = tr(k) + text
+		ret += " %s" % text
 	return ret
 
 func update_level_text(lv : int, target : int = -1, reward : int = -1, curses : Array[Curse] = []):
@@ -1091,24 +1091,17 @@ func refresh_cluster_levels():
 			else:
 				change_cluster_level_frame(i, 0)
 
-const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
+#const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
+const curse_types = ["red_no_score", "orange_no_score", "green_no_score", "blue_no_score", "magenta_no_score", "wave_no_score", "palm_no_score", "starfish_no_score"]
 func build_level_curses():
-	for i in level + 3 - level_curses.size():
+	var build_times = level + 3 - level_curses.size()
+	for i in build_times:
 		var curses : Array[Curse] = []
 		var type = SMath.pick_random(curse_types)
-		type = "lust"
 		var num = 0
 		match (level + i) % 3:
-			1:
-				match type:
-					"lust": num = 2
-					"gluttony": num = 2
-					"greed": num = 3
-					"sloth": num = 10
-					"wrath": num = 3
-					"envy": num = 1
-					"pride": num = 5
 			2:
+				num = 1
 				match type:
 					"lust": num = 4
 					"gluttony": num = 5
@@ -1680,7 +1673,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	randomize()
 	
-	subviewport.size = get_viewport().size
+	for i in Gem.ColorCount:
+		no_score_marks[Gem.ColorRed + i] = []
+		no_score_marks[Gem.ColorRed + i].push_front(false)
+	for i in Gem.RuneCount:
+		no_score_marks[Gem.Runewave + i] = []
+		no_score_marks[Gem.Runewave + i].push_front(false)
 	
 	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
 	Board.rolling_finished.connect(func():

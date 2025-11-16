@@ -286,10 +286,12 @@ func score_at(c : Vector2i, additional_score : int = 0, additional_mult : float 
 	var g = cell.gem
 	if !g:
 		return
+	if Game.no_score_marks[g.type].front() || Game.no_score_marks[g.rune].front():
+		return
 	var pos = get_pos(c)
 	Game.add_score((g.get_score() + additional_score) * mult, pos)
 	var gem_mult = g.get_mult()
-	if gem_mult != 0.0:
+	if gem_mult + additional_mult != 0.0:
 		Game.add_mult((gem_mult + additional_mult) * mult, pos)
 
 func pin(c : Vector2i):

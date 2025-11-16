@@ -67,7 +67,7 @@ func write_game_status():
 	var orange_num = 0
 	var green_num = 0
 	var blue_num = 0
-	var purple_num = 0
+	var magenta_num = 0
 	var wild_num = 0
 	for g in Game.gems:
 		match g.type:
@@ -75,9 +75,9 @@ func write_game_status():
 			Gem.ColorOrange: orange_num += 1
 			Gem.ColorGreen: green_num += 1
 			Gem.ColorBlue: blue_num += 1
-			Gem.ColorPurple: purple_num += 1
+			Gem.ColorMagenta: magenta_num += 1
 			Gem.ColorWild: wild_num += 1
-	write("Red: %d, Orange: %d, Green: %d, Blue: %d, Purple: %d, Wild: %d" % [red_num, orange_num, green_num, blue_num, purple_num, wild_num])
+	write("Red: %d, Orange: %d, Green: %d, Blue: %d, Magenta: %d, Wild: %d" % [red_num, orange_num, green_num, blue_num, magenta_num, wild_num])
 	var items_str = ""
 	for i in Game.items:
 		if !items_str.is_empty():
@@ -246,7 +246,7 @@ func time_out():
 				step = TaskSteps.ToMatch
 				#Game.roll()
 		elif step == TaskSteps.ToMatch:
-			#if Game.bag_items.size() > 0 && Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.plays:
+			#if Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.plays:
 			#	step = TaskSteps.ToMatch
 			#	Game.roll()
 			#else:
@@ -343,8 +343,8 @@ func auto_swap_gems():
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
-			elif g.type == Gem.ColorPurple:
-				var arr = missing_one_places[Gem.ColorPurple]
+			elif g.type == Gem.ColorMagenta:
+				var arr = missing_one_places[Gem.ColorMagenta]
 				if !arr.is_empty():
 					if Game.swaps > 0:
 						Game.swaps -= 1
@@ -385,8 +385,8 @@ func auto_place_items():
 				if !arr.is_empty():
 					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true
-			elif item.name.begins_with("DyePurple"):
-				var arr = missing_one_places[Gem.ColorPurple - 1]
+			elif item.name.begins_with("DyeMagenta"):
+				var arr = missing_one_places[Gem.ColorMagenta - 1]
 				if !arr.is_empty():
 					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
 						return true

@@ -73,13 +73,13 @@ func setup(n : String):
 				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorBlue}, Buff.Duration.ThisLevel)
 				return true
 			return false
-	elif name == "DyePurple":
+	elif name == "DyeMagenta":
 		image_id = 5
 		price = 1
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
 			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorPurple}, Buff.Duration.OnBoard)
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorMagenta}, Buff.Duration.OnBoard)
 				return true
 			return false
 	elif name == "Pin":
@@ -389,8 +389,8 @@ func setup(n : String):
 		price = 5
 		on_quick = func(coord : Vector2i):
 			var g = Board.get_gem_at(coord)
-			if g && g.type != Gem.Colorless:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.Colorless}, Buff.Duration.ThisLevel)
+			if g && g.type != Gem.None:
+				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.None}, Buff.Duration.ThisLevel)
 				for i in 2:
 					Game.Hand.draw()
 				return true

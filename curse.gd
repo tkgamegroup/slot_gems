@@ -77,6 +77,22 @@ static func apply_curses():
 	for k in cates.keys():
 		var cs = cates[k]
 		match k:
+			"curse_red_no_score":
+				Game.no_score_marks[Gem.ColorRed].push_front(true)
+			"curse_orange_no_score":
+				Game.no_score_marks[Gem.ColorOrange].push_front(true)
+			"curse_green_no_score":
+				Game.no_score_marks[Gem.ColorGreen].push_front(true)
+			"curse_blue_no_score":
+				Game.no_score_marks[Gem.ColorBlue].push_front(true)
+			"curse_magenta_no_score":
+				Game.no_score_marks[Gem.ColorMagenta].push_front(true)
+			"curse_wave_no_score":
+				Game.no_score_marks[Gem.Runewave].push_front(true)
+			"curse_palm_no_score":
+				Game.no_score_marks[Gem.RunePalm].push_front(true)
+			"curse_starfish_no_score":
+				Game.no_score_marks[Gem.RuneStarfish].push_front(true)
 			"curse_lust":
 				for c in cs:
 					c.add_sin("SinLust")
@@ -116,7 +132,7 @@ func add_sin(n : String):
 		b.caster = self
 		created_sin = Item.new()
 		created_sin.setup(n)
-		Game.items.append(created_sin)
+		#Game.items.append(created_sin)
 		#Board.set_item_at(afflicted_gem.coord, created_sin)
 
 func remove_sin():
@@ -129,6 +145,22 @@ func remove_sin():
 
 func remove():
 	match type:
+		"curse_red_no_score":
+			Game.no_score_marks[Gem.ColorRed].pop_front()
+		"curse_orange_no_score":
+			Game.no_score_marks[Gem.ColorOrange].pop_front()
+		"curse_green_no_score":
+			Game.no_score_marks[Gem.ColorGreen].pop_front()
+		"curse_blue_no_score":
+			Game.no_score_marks[Gem.ColorBlue].pop_front()
+		"curse_magenta_no_score":
+			Game.no_score_marks[Gem.ColorMagenta].pop_front()
+		"curse_wave_no_score":
+			Game.no_score_marks[Gem.Runewave].pop_front()
+		"curse_palm_no_score":
+			Game.no_score_marks[Gem.RunePalm].pop_front()
+		"curse_starfish_no_score":
+			Game.no_score_marks[Gem.RuneStarfish].pop_front()
 		"curse_lust":
 			remove_sin()
 		"curse_gluttony":

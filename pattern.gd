@@ -47,7 +47,7 @@ func setup(n : String):
 	elif name == "Island":
 		coord_groups.append([Vector3i(1, -1, 0)])
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, -1, -1)])
-		recipes.append([Gem.RunePalm, Gem.RuneWaves])
+		recipes.append([Gem.RunePalm, Gem.Runewave])
 
 func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int = Gem.None):
 	var base_c = Board.offset_to_cube(off)
@@ -83,7 +83,7 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 						mismatcheds.append(coords[j])
 						if check_color == val || check_color == Gem.ColorWild:
 							checkeds.append(coords[j])
-			elif val >= Gem.RuneWaves && val <= Gem.RuneAny:
+			elif val >= Gem.Runewave && val <= Gem.RuneAny:
 				for j in coords.size():
 					var v = runes[j]
 					if val == Gem.RuneAny && v != Gem.RuneOmni:
@@ -152,15 +152,15 @@ func get_tooltip():
 	for i in recipes.size():
 		var r = recipes[i]
 		if recipes.size() > 1:
-			content += "\nRecipe %d:\n" % i
-		else:
-			content += "\nRecipe:\n"
+			if !content.is_empty():
+				content += "\n"
+			content += "Recipe %d:\n" % i
 		for j in r.size():
 			var v = r[j]
 			content += "%s - " % char(ord('A') + j)
 			if v >= Gem.ColorRed && v <= Gem.ColorAny:
 				content += "%s\n" % Gem.type_display_name(v)
-			elif v >= Gem.RuneWaves && v <= Gem.RuneAny:
+			elif v >= Gem.Runewave && v <= Gem.RuneAny:
 				content += "%s\n" % Gem.rune_display_name(v)
 			else:
 				content += "%s\n" % tr("gem_unknow")

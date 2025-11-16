@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1x450f7i3nmg"
-path="res://.godot/imported/blue_nude.png-b3a89fbc3ccbbae8cf4c796c85c1b9fa.ctex"
+uid="uid://duxf2fpbu5lct"
+path="res://.godot/imported/painting_of_wave.png-a73c77a3244ac85b506c8a9bd331541a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/blue_nude.png"
-dest_files=["res://.godot/imported/blue_nude.png-b3a89fbc3ccbbae8cf4c796c85c1b9fa.ctex"]
+source_file="res://images/relics/painting_of_wave.png"
+dest_files=["res://.godot/imported/painting_of_wave.png-a73c77a3244ac85b506c8a9bd331541a.ctex"]
 
 [params]
 

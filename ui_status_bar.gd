@@ -12,8 +12,8 @@ const NumberText = preload("res://number_text.gd")
 @onready var green_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText
 @onready var blue_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer
 @onready var blue_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText
-@onready var purple_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
-@onready var purple_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
+@onready var magenta_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
+@onready var magenta_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
 @onready var level_container : Control = $HBoxContainer/VBoxContainer4
 @onready var level_text : RichTextLabel = $HBoxContainer/VBoxContainer4/Level
 @onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
@@ -62,27 +62,16 @@ func _ready() -> void:
 	blue_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	purple_bouns_container.mouse_entered.connect(func():
-		STooltip.show(purple_bouns_container, 0, [Pair.new(tr("tt_purple_base_score"), "%d" % Game.modifiers["purple_bouns_i"])])
+	magenta_bouns_container.mouse_entered.connect(func():
+		STooltip.show(magenta_bouns_container, 0, [Pair.new(tr("tt_magenta_base_score"), "%d" % Game.modifiers["magenta_bouns_i"])])
 	)
-	purple_bouns_container.mouse_exited.connect(func():
+	magenta_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	score_container.mouse_entered.connect(func():
 		STooltip.close()
 	)
 	level_container.mouse_entered.connect(func():
-		STooltip.close()
-	)
-	level_target.meta_hover_started.connect(func(meta):
-		var s = str(meta)
-		if s.begins_with("w_"):
-			STooltip.show(level_target, 0, [Pair.new(tr(s), tr(s + "_desc"))])
-		elif s.begins_with("item_"):
-			var item_name = s.substr(5)
-			STooltip.show(level_target, 0, [Pair.new(tr("item_name_" + item_name), tr("item_desc_" + item_name))])
-	)
-	level_target.meta_hover_ended.connect(func():
 		STooltip.close()
 	)
 	cluster_level1_ctrl.mouse_entered.connect(func():

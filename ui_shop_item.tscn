@@ -35,7 +35,8 @@ theme_override_constants/margin_right = 8
 layout_mode = 2
 text = "Item"
 
-[node name="Content" type="BoxContainer" parent="."]
+[node name="Content" type="CenterContainer" parent="."]
+custom_minimum_size = Vector2(0, 108)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2

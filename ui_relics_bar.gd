@@ -6,7 +6,7 @@ extends PanelContainer
 const relic_pb = preload("res://ui_relic.tscn")
 const ctx_menu_pb = preload("res://ui_context_menu.tscn")
 const item_w = 104
-const item_h = 64
+const item_h = 72
 const gap = 8
 
 var dragging : Control = null
@@ -19,16 +19,14 @@ func release_dragging():
 		dragging.z_index = 0
 		dragging = null
 
+func get_ui(idx : int):
+	if idx == -1:
+		idx = list.get_child_count() - 1
+	return list.get_child(idx)
+
 func add_ui(r : Relic):
 	var ui = relic_pb.instantiate()
-	ui.setup(r)
-	ui.mouse_entered.connect(func():
-		SSound.se_select.play()
-		STooltip.show(ui, 0, r.get_tooltip())
-	)
-	ui.mouse_exited.connect(func():
-		STooltip.close()
-	)
+	ui.setup(r, 0)
 	list.add_child(ui)
 	r.ui = ui
 	var n = list.get_child_count()
@@ -56,6 +54,7 @@ func add_ui(r : Relic):
 func remove_ui(r : Relic):
 	list.remove_child(r.ui)
 	r.ui.queue_free()
+	r.ui = null
 
 func clear():
 	if list:
@@ -81,8 +80,8 @@ func _process(delta: float) -> void:
 		var y_off = 0
 		for i in n:
 			var ui = list.get_child(i)
-			if ui != dragging:
-				ui.position = lerp(ui.position, Vector2(20, y_off), 0.2)
+			if ui != dragging && ui.elastic > 0.0:
+				ui.position = lerp(ui.position, Vector2(20, y_off), 0.2 * ui.elastic)
 			y_off += item_h + gap
 		if dragging:
 			var h = item_h * n + (n - 1) * gap

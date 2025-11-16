@@ -74,8 +74,8 @@ func buy_randomly():
 	return false
 
 const items_pool = ["Flag", "Bomb", "C4", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Amethyst"]
-const relics_pool = ["ExplosionScience", "HighExplosives", "SympatheticDetonation", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "DestructionOfPompeiiAndHerculaneum", "TheOldOak", "TheSchoolOfAthens", "Aries", "Taurus", "Gemini", "Leo", "Virgo", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "HalfPriceCoupon"]
-const patterns_pool = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
+const relics_pool = ["ExplosionScience", "HighExplosives", "MobiusStrip", "Premeditation", "PentagramPower", "PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfPalm", "PaintingOfStarfish", "HalfPriceCoupon"]
+const patterns_pool = ["\\", "|", "/", "Y", "C", "O", "√", "X"]
 
 func refresh(tween : Tween = null):
 	if !tween:
@@ -96,7 +96,7 @@ func refresh(tween : Tween = null):
 			var quantity = 1
 			if Game.rng.randf() > 0.4:
 				gem.type = Game.rng.randi() % Gem.ColorCount + Gem.ColorRed
-				gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
+				gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.Runewave
 				if Game.rng.randf() > 0.5:
 					price = 1
 					quantity = 5
@@ -104,23 +104,18 @@ func refresh(tween : Tween = null):
 					price = 0
 					quantity = 1
 			else:
-				if Game.rng.randf() > 0.25:
+				if Game.rng.randf() > 0.2:
 					gem.type = Game.rng.randi() % Gem.ColorCount + Gem.ColorRed
-					gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
+					gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.Runewave
 					if Game.rng.randf() > 0.5:
 						Game.enchant_gem(gem, "w_enchant_charming")
 					else:
 						Game.enchant_gem(gem, "w_enchant_sharp")
 					price = 2
 				else:
-					if Game.rng.randf() > 0.66:
-						gem.type = Gem.Colorless
-						gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
-						gem.base_score = 60
-						price = 1
-					elif Game.rng.randf() > 0.5:
+					if Game.rng.randf() > 0.5:
 						gem.type = Gem.ColorWild
-						gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.RuneWaves
+						gem.rune = Game.rng.randi() % Gem.RuneCount + Gem.Runewave
 						price = 5
 					else:
 						gem.type = Game.rng.randi() % Gem.ColorCount + Gem.ColorRed
@@ -129,25 +124,51 @@ func refresh(tween : Tween = null):
 			ui.setup("gem", gem, price, quantity)
 			list1.add_child(ui)
 		)
-	var not_owned_relics = []
+	var relics_pool2 = []
+	var boom_ability = false
+	for g in Game.gems:
+		if g.category == "Bomb":
+			boom_ability = true
+			break
 	for n in relics_pool:
 		var has = false
+		if !boom_ability:
+			if n == "ExplosionScience" || n == "HighExplosives":
+				continue
 		for r in Game.relics:
 			if r.name == n:
 				has = true
 				break
 		if !has:
-			not_owned_relics.append(n)
-	for i in min(2, not_owned_relics.size()):
+			relics_pool2.append(n)
+	for i in min(2, relics_pool2.size()):
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = shop_item_pb.instantiate()
 			var relic = Relic.new()
-			relic.setup(SMath.pick_and_remove(not_owned_relics, Game.rng))
+			relic.setup(SMath.pick_and_remove(relics_pool2, Game.rng))
 			ui.setup("relic", relic, relic.price)
 			list1.add_child(ui)
 		)
-	for i in 3:
+	var patterns_pool2 = []
+	for n in patterns_pool:
+		var has = false
+		for p in Game.patterns:
+			if p.name == n:
+				has = true
+				break
+		if !has:
+			patterns_pool2.append(n)
+	for i in 1:
+		tween.tween_interval(0.04)
+		tween.tween_callback(func():
+			var ui = shop_item_pb.instantiate()
+			var pattern = Pattern.new()
+			pattern.setup(SMath.pick_random(patterns_pool2, Game.rng))
+			ui.setup("pattern", pattern, pattern.price)
+			list1.add_child(ui)
+		)
+	for i in 4:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
 			var ui = craft_slot_pb.instantiate()
@@ -167,24 +188,6 @@ func refresh(tween : Tween = null):
 						ui.setup("w_enchant", "w_wild", 6)
 					else:
 						ui.setup("w_enchant", "w_omni", 6)
-			list2.add_child(ui)
-		)
-	var not_owned_patterns = []
-	for n in patterns_pool:
-		var has = false
-		for p in Game.patterns:
-			if p.name == n:
-				has = true
-				break
-		if !has:
-			not_owned_patterns.append(n)
-	for i in 0:
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var ui = shop_item_pb.instantiate()
-			var pattern = Pattern.new()
-			pattern.setup(SMath.pick_random(not_owned_patterns, Game.rng))
-			ui.setup("pattern", pattern, pattern.price)
 			list2.add_child(ui)
 		)
 	tween.tween_callback(func():

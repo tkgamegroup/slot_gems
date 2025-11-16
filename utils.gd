@@ -51,7 +51,7 @@ static func replacing_number_tag(text : String, with_color : bool) -> String:
 	ret += text.substr(last_end)
 	return ret
 
-const words = ["w_colorless", "w_wild", "w_omni", "w_eliminate", "w_active", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_nullified", "w_in_mist"]
+const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_nullified", "w_in_mist"]
 static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], used_gems : Array = []) -> String:
 	var ret = ""
 	ret = replacing_gem_tag(text, with_color, with_url, used_gems)
