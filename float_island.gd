@@ -32,7 +32,7 @@ func setup(_target, _move_strength : float, _rotate_strength : float, freq : flo
 	)
 
 func update(delta: float):
-	if enable && !Game.performance_mode:
+	if enable && !App.performance_mode:
 		noise_coord += 1.0 * delta
 		wave_coord += Vector2(delta, delta) + Vector2(noise.get_noise_2d(17.1, noise_coord), noise.get_noise_2d(97.9, noise_coord)) * 0.15
 		var value = Vector2(sin(wave_coord.x), sin(wave_coord.y))

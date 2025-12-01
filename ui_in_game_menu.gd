@@ -12,57 +12,55 @@ extends Control
 func enter():
 	SSound.music_less_clear()
 	STooltip.close()
-	self.self_modulate.a = 0.0
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
+	self.self_modulate.a = 0.0
 	self.show()
 	panel.show()
+	
+	App.game_tweens.process_mode = Node.PROCESS_MODE_DISABLED
+	
+	var tween = App.create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 
 func exit(trans = true):
 	if trans:
 		panel.hide()
 		self.self_modulate.a = 1.0
-		var tween = get_tree().create_tween()
+		var tween = App.create_tween()
 		tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 		tween.tween_callback(func():
 			self.hide()
+			App.game_tweens.process_mode = Node.PROCESS_MODE_INHERIT
 		)
 	else:
 		self.hide()
+		App.game_tweens.process_mode = Node.PROCESS_MODE_INHERIT
 	
 func _ready() -> void:
 	resume_button.pressed.connect(func():
 		SSound.music_more_clear()
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
 	)
 	options_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit(false)
-		Game.options_ui.enter(true)
+		App.options_ui.enter(true)
 	)
 	main_menu_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		for t in get_tree().get_processed_tweens():
-			t.custom_step(100.0)
+		App.screen_shake_strength = 8.0
+		App.exit_game()
 		exit()
 		
-		var tween = Game.get_tree().create_tween()
-		Game.begin_transition(tween)
+		var tween = App.create_tween()
+		App.begin_transition(tween)
 		tween.tween_callback(func():
-			if Board.ui.visible:
-				Board.ui.exit(null, false)
-			elif Game.shop_ui.visible:
-				Game.shop_ui.exit(null, false)
-			Game.control_ui.exit()
-			Game.game_ui.hide()
-			Game.title_ui.enter()
+			App.title_ui.enter()
 		)
-		Game.end_transition(tween)
+		App.end_transition(tween)
 	)
 	quit_to_desktop_button.pressed.connect(func():
 		get_tree().quit()
@@ -70,21 +68,22 @@ func _ready() -> void:
 	auto_place_items_button.pressed.connect(func():
 		SSound.music_more_clear()
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
 		#STest.auto_place_items()
 	)
 	win_button.pressed.connect(func():
 		SSound.music_more_clear()
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
-		Game.win()
+		App.win()
 	)
 	lose_button.pressed.connect(func():
 		SSound.music_more_clear()
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
-		Game.lose()
+		App.game_over_mark = "not_reach_score"
+		App.lose()
 	)

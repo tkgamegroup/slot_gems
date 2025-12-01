@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://s5ehr1388thk"]
 
 [ext_resource type="Script" uid="uid://t4phq6vbt25s" path="res://ui_gem.gd" id="2_pbann"]
-[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/jade.gdshader" id="2_yval8"]
+[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem_kink.gdshader" id="2_yval8"]
 [ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="5_ahfnj"]
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="5_xnwot"]
 [ext_resource type="SpriteFrames" uid="uid://c18w0067lhwqr" path="res://images/items.tres" id="5_yval8"]

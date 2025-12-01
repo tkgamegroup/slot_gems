@@ -15,7 +15,7 @@ enum Duration
 {
 	ThisCombo,
 	ThisMatching,
-	ThisLevel,
+	ThisRound,
 	OnBoard,
 	Eternal
 }

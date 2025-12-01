@@ -2,7 +2,7 @@ extends Object
 
 class_name TaskRecord
 
-var levels : Array[LevelRecord]
+var rounds : Array[RoundRecord]
 
 func _init() -> void:
-	levels.append(LevelRecord.new())
+	rounds.append(RoundRecord.new())

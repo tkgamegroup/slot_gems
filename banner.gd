@@ -20,13 +20,13 @@ func appear(_text1 : String, _text2 : String, tween : Tween = null):
 	self.show()
 	
 	if !tween:
-		tween = get_tree().create_tween()
+		tween = App.game_tweens.create_tween()
 	tween.tween_property(self, "position:x", (vp.x - self.size.x) * 0.5, 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	return tween
 
 func disappear(tween : Tween = null, hide_text : bool = false):
 	if !tween:
-		tween = get_tree().create_tween()
+		tween = App.game_tweens.create_tween()
 	if hide_text:
 		text1.hide()
 		text2.hide()
@@ -40,7 +40,7 @@ func show_tip(_text1 : String, _text2 : String, duration : float):
 	if show_tip_tween:
 		show_tip_tween.kill()
 		show_tip_tween = null
-	show_tip_tween = get_tree().create_tween()
+	show_tip_tween = App.game_tweens.create_tween()
 	appear(_text1, _text2, show_tip_tween)
 	show_tip_tween.tween_interval(duration)
 	disappear(show_tip_tween)

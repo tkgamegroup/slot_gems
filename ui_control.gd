@@ -28,8 +28,6 @@ var preview = MatchPreview.new()
 
 func enter():
 	self.show()
-	var tween = get_tree().create_tween()
-	return tween
 
 func exit():
 	self.hide()
@@ -49,22 +47,22 @@ func update_preview():
 		for c in m:
 			var g = Board.get_gem_at(c)
 			if g:
-				if !Game.no_score_marks[g.type] && !Game.no_score_marks[g.rune]:
+				if !App.no_score_marks[g.type].front() && !App.no_score_marks[g.rune].front():
 					base += g.get_score()
 					mult += g.get_mult()
-	expected_score_text.text = "%d" % int(base * Game.mult_from_combos(combos) * mult)
+	expected_score_text.text = "%d" % int(base * App.mult_from_combos(combos) * mult)
 
 func _ready() -> void:
 	roll_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		roll_button.disabled = true
-		Game.roll()
+		App.roll()
 	)
 	roll_button.mouse_entered.connect(func():
 		var desc = tr("tt_game_roll_content")
-		if Game.next_roll_extra_draws > 0:
-			desc += "\nDraw %d extra item(s)." % Game.next_roll_extra_draws
+		if App.next_roll_extra_draws > 0:
+			desc += "\nDraw %d extra item(s)." % App.next_roll_extra_draws
 		STooltip.show(roll_button, 1, [Pair.new(tr("tt_game_roll_title"), desc)])
 	)
 	roll_button.mouse_exited.connect(func():
@@ -72,10 +70,10 @@ func _ready() -> void:
 	)
 	play_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		play_button.disabled = true
 		play_button.mouse_exited.emit()
-		Game.play()
+		App.play()
 	)
 	play_button.mouse_entered.connect(func():
 		if !play_button.disabled:
@@ -89,29 +87,29 @@ func _ready() -> void:
 	)
 	pin_ui.button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.set_props(Game.Props.Pin)
+		App.screen_shake_strength = 8.0
+		App.set_props(App.Props.Pin)
 	)
 	activate_ui.button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.set_props(Game.Props.Activate)
+		App.screen_shake_strength = 8.0
+		App.set_props(App.Props.Activate)
 	)
 	grab_ui.button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.set_props(Game.Props.Grab)
+		App.screen_shake_strength = 8.0
+		App.set_props(App.Props.Grab)
 	)
 	undo_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		if !Game.action_stack.is_empty():
-			Game.swaps += 1
+		App.screen_shake_strength = 8.0
+		if !App.action_stack.is_empty():
+			App.swaps += 1
 			
-			var p = Game.action_stack.back()
-			Game.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first, "undo")
-			Game.action_stack.pop_back()
-			if Game.action_stack.is_empty():
+			var p = App.action_stack.back()
+			App.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first, "undo")
+			App.action_stack.pop_back()
+			if App.action_stack.is_empty():
 				undo_button.disabled = true
 	)
 	filling_times_text_container.mouse_entered.connect(func():
@@ -122,7 +120,7 @@ func _ready() -> void:
 	)
 
 func _process(delta: float) -> void:
-	if !Game.performance_mode:
+	if !App.performance_mode:
 		shake_coord += delta * PI
 		position.y = sin(shake_coord) * shake_strength
 		shake_strength *= 0.9

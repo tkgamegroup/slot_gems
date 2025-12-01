@@ -18,11 +18,11 @@ var dir : int = 0
 func reset():
 	for n in list1.get_children():
 		if n != ui_show_more:
-			n.queue_free()
 			list1.remove_child(n)
+			n.queue_free()
 	for n in list2.get_children():
-		n.queue_free()
 		list2.remove_child(n)
+		n.queue_free()
 	ui_show_more.hide()
 	list2.hide()
 
@@ -33,11 +33,11 @@ func show(_node, _dir : int, contents : Array[Pair]):
 	
 	for n in list1.get_children():
 		if n != ui_show_more:
-			n.queue_free()
 			list1.remove_child(n)
+			n.queue_free()
 	for n in list2.get_children():
-		n.queue_free()
 		list2.remove_child(n)
+		n.queue_free()
 	ui_show_more.hide()
 	list2.hide()
 	

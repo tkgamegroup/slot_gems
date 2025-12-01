@@ -1,8 +1,6 @@
 extends Node
 
 func fade_in(n, tween : Tween, s0 : float, s1 : float, duration : float):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	n.scale = Vector2(s0, s0)
 	n.modulate.a = 0.0
 	if s0 != s1:
@@ -12,8 +10,6 @@ func fade_in(n, tween : Tween, s0 : float, s1 : float, duration : float):
 	return tween
 
 func fade_out(n, tween : Tween, s0 : float, s1 : float, duration : float):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	n.scale = Vector2(s0, s0)
 	n.modulate.a = 1.0
 	if s0 != s1:
@@ -23,14 +19,10 @@ func fade_out(n, tween : Tween, s0 : float, s1 : float, duration : float):
 	return tween
 
 func move_to(tween : Tween, target, p : Vector2, duration : float):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	tween.tween_property(target, "global_position", p, duration)
 	return tween
 
 func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1 : Vector2, duration : float):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	var d = {}
 	d.p2 = p2
 	tween.tween_callback(func():
@@ -44,8 +36,6 @@ func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1 : Vector2, du
 	return tween
 
 func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 : Vector2, duration : float):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	var d = {}
 	d.p3 = p3
 	tween.tween_callback(func():
@@ -60,8 +50,6 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 
 	return tween
 
 func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable(), do_scale : bool = true, do_translate : bool = true):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	var parent = target.get_parent()
 	target.pivot_offset.y = target.size.y
 	if do_scale:
@@ -82,7 +70,5 @@ func jump(tween : Tween, target, height : float, duration : float, cb : Callable
 	return tween
 
 func shake(tween : Tween, target, amount : float, duration : float):
-	if !tween:
-		tween = Game.get_tree().create_tween()
 	tween.tween_property(target, "position", target.position, duration).from(target.position + Vector2(sign(randf() - 0.5) * amount, sign(randf() - 0.5) * amount)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
 	return tween

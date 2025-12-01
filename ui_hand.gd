@@ -34,7 +34,7 @@ func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
 				if !disabled:
 					STooltip.close()
 					SSound.se_drag_item.play()
-					Game.control_ui.start_shake(4.0, 1.5)
+					App.control_ui.start_shake(4.0, 1.5)
 					ui.rotation_degrees = 0.0
 					Drag.start("gem", ui, ui, func(target, extra):
 						if target && target != Board.ui:
@@ -45,20 +45,24 @@ func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
 
 func remove_slot(idx : int):
 	var n = list.get_child(idx)
-	n.queue_free()
 	list.remove_child(n)
+	n.queue_free()
 
 func get_pos(idx : int):
 	return list.global_position + Vector2((item_w + gap) * idx + item_w * 0.5, item_h * 0.5)
 
 func clear():
 	for n in list.get_children():
-		n.queue_free()
 		list.remove_child(n)
+		n.queue_free()
+
+func resize():
+	var n = max(App.max_hand_grabs, 5)
+	custom_minimum_size = Vector2(item_w * n + gap * (n - 1), 48)
+	size = Vector2(0.0, 0.0)
 
 func _ready() -> void:
-	var n = max(Game.max_hand_grabs, 5)
-	custom_minimum_size = Vector2(item_w * n + gap * (n - 1), 50)
+	resize()
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()
@@ -85,7 +89,7 @@ func _process(delta: float) -> void:
 			var p1 = Vector2(x_off, y)
 			ui.position = lerp(p0, p1, 0.2 * ui.elastic)
 			if (p0 - ui.position).length() > 50.0 && (ui.position - p1).length() < 300.0:
-				Game.control_ui.start_shake(4.0, 0.5)
+				App.control_ui.start_shake(4.0, 0.5)
 			ui.rotation_degrees = (sin(x_off * 0.05 + tt / 20.0)) * 3.0
 		if !(i == drag_idx && !drag_on_hand):
 			x_off += item_w + gap

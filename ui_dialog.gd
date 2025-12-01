@@ -19,16 +19,16 @@ func open(_title : String, _content : String, yes_action : Callable, no_action :
 	action2 = no_action
 	
 	self.self_modulate.a = 0.0
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
-	
 	self.show()
 	panel.show()
+	
+	var tween = App.create_tween()
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 
 func exit():
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = get_tree().create_tween()
+	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()

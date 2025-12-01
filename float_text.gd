@@ -20,7 +20,7 @@ extends Control
 func update_text():
 	if text_lb:
 		if is_visible_in_tree():
-			var tween = get_tree().create_tween()
+			var tween = App.create_tween()
 			tween.tween_callback(func():
 				text_lb.text = "[my_wave amp=%.1f freq=%.1f off=%.1f]%s[/my_wave]" % [float(offset) * 0.5, freq, global_position.x + global_position.y, text]
 			)

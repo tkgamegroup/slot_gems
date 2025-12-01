@@ -14,7 +14,7 @@ func _ready() -> void:
 	content_text.text = content
 	title_text.visible_ratio = 0.0
 	content_text.visible_ratio = 0.0
-	var tween = Game.get_tree().create_tween()
+	var tween = App.create_tween()
 	tween.tween_property(title_text, "visible_ratio", 1.0, 0.2)
 	tween.parallel().tween_property(content_text, "visible_ratio", 1.0, 0.2)
 	

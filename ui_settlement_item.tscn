@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://b84tiivarbtcg"]
+
+[ext_resource type="Script" uid="uid://n7kkxuun2q81" path="res://ui_settlement_item.gd" id="1_i73lo"]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+script = ExtResource("1_i73lo")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+
+[node name="Label3" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0

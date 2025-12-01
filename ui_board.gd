@@ -58,11 +58,11 @@ func update_cell(c : Vector2i):
 
 func clear():
 	for n in outlines_root.get_children():
-		n.queue_free()
 		outlines_root.remove_child(n)
-	for n in cells_root.get_children():
 		n.queue_free()
+	for n in cells_root.get_children():
 		cells_root.remove_child(n)
+		n.queue_free()
 
 func add_cell(c : Vector2i):
 	var pos = get_pos(c) - Vector2(Board.tile_sz, Board.tile_sz) * 0.5
@@ -75,20 +75,27 @@ func add_cell(c : Vector2i):
 	cell.position = pos
 	cells_root.add_child(cell)
 
-func enter(tween : Tween = null, trans : bool = true):
+func update_rect(even_bs : bool, do_set : bool = true):
 	tilemap.clear()
 	for y in Board.cy:
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
-	var rect = tilemap.get_used_rect()
-	panel.position = tilemap.map_to_local(rect.position) - Vector2(Board.tile_sz * 0.75, Board.tile_sz * 1.5)
-	panel.size = tilemap.map_to_local(rect.end) - panel.position
-	if Game.board_size % 2 == 0:
-		panel.position.y += 24
+	var used = tilemap.get_used_rect()
+	var p = tilemap.map_to_local(used.position) - Vector2(Board.tile_sz * 0.75, Board.tile_sz * 1.5)
+	var s = tilemap.map_to_local(used.end) - p
+	if even_bs:
+		p.y += Board.tile_sz * 0.5
+	if do_set:
+		panel.position = p
+		panel.size = s
+	return Rect2(p, s)
+
+func enter(tween : Tween = null, trans : bool = true):
+	update_rect(App.board_size % 2 == 0)
 	
 	if trans:
 		if !tween:
-			tween = get_tree().create_tween()
+			tween = App.game_tweens.create_tween()
 		tween.tween_callback(func():
 			self.material.set_shader_parameter("x_rot", -90.0)
 			self.show()
@@ -99,16 +106,11 @@ func enter(tween : Tween = null, trans : bool = true):
 		self.show()
 	return tween
 
-func exit(tween : Tween = null, trans : bool = true):
-	if trans:
-		if !tween:
-			tween = get_tree().create_tween()
-		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5)
-		tween.tween_callback(func():
-			self.hide()
-		)
-	else:
+func exit(tween : Tween):
+	tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5)
+	tween.tween_callback(func():
 		self.hide()
+	)
 	return tween
 
 func _input(event: InputEvent) -> void:
@@ -130,28 +132,28 @@ func _ready() -> void:
 		elif ev == "peek_exited":
 			pass
 		else:
-			if Game.swaps > 0:
+			if App.swaps > 0:
 				var slot1 = payload as UiHandSlot
 				var coord = extra["coord"]
 				var g2 = Board.get_gem_at(coord)
 				if Board.get_cell(coord).in_mist:
 					SSound.se_error.play()
-					Game.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
+					App.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
 					return false
 				'''
 				var i = Board.get_item_at(coord)
 				if i && (i.name == "SinLust" || i.name == "SinGluttony" || i.name == "SinGreed" || i.name == "SinWrath" || i.name == "SinEnvy"):
 					SSound.se_error.play()
-					Game.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
+					App.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
 					return false
 				'''
-				Game.swaps -= 1
+				App.swaps -= 1
 				
-				Game.swap_hand_and_board(slot1, coord)
-				Game.action_stack.append(Pair.new(coord, g2))
-				Game.control_ui.undo_button.disabled = false
+				App.swap_hand_and_board(slot1, coord)
+				App.action_stack.append(Pair.new(coord, g2))
+				App.control_ui.undo_button.disabled = false
 				return true
 			else:
-				Game.control_ui.swaps_text.hint()
+				App.control_ui.swaps_text.hint()
 		return false
 	)

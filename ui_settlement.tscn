@@ -1,9 +1,32 @@
-[gd_scene load_steps=2 format=3 uid="uid://0d8hp6hk1n5m"]
+[gd_scene load_steps=2 format=3 uid="uid://bcik5qdd1gx1u"]
 
-[ext_resource type="Script" path="res://ui_settlement.gd" id="1_ow0da"]
+[sub_resource type="GDScript" id="GDScript_bpnin"]
+script/source = "extends Control
+
+@onready var name_text = $Label
+@onready var bar_text = $Label2
+@onready var value_text = $Label3
+
+var name_str : String
+var value_str : String
+
+const bar_str = \"..................................................................\"
+
+func _ready() -> void:
+	name_text.text = name_str
+	value_text.text = value_str
+	
+	var tween = get_tree().create_tween()
+	tween.tween_method(func(t):
+		bar_text.text = bar_str.substr(0, int(bar_str.length() * t))
+	, 0.0, 1.0, 0.2)
+	tween.tween_callback(func():
+		value_text.show()
+	)
+"
 
 [node name="HBoxContainer" type="HBoxContainer"]
-script = ExtResource("1_ow0da")
+script = SubResource("GDScript_bpnin")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2

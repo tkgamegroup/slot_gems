@@ -24,7 +24,7 @@ var additional_relics : Array
 var additional_enchants : Array
 var mode : int
 var task_count : int
-var task_level_count : int
+var task_round_count : int
 var task_index : int:
 	set(v):
 		task_index = v
@@ -51,8 +51,8 @@ func write(s : String):
 	else:
 		print(s)
 
-func write_level(l : LevelRecord):
-	write("Level Score: %d, Level Combos: %d, Level Relic Effects: %d" % [l.score, l.combos, l.relic_effects])
+func write_round(r : RoundRecord):
+	write("Round Score: %d, Round Combos: %d, Round Relic Effects: %d" % [r.score, r.combos, r.relic_effects])
 
 func write_matching(idx : int, m : MatchingRecord):
 	write("Matching %d: %d Score, %d Combos, %d Relic Effects" % [idx, m.score, m.combos, m.relic_effects])
@@ -69,7 +69,7 @@ func write_game_status():
 	var blue_num = 0
 	var magenta_num = 0
 	var wild_num = 0
-	for g in Game.gems:
+	for g in App.gems:
 		match g.type:
 			Gem.ColorRed: red_num += 1
 			Gem.ColorOrange: orange_num += 1
@@ -79,56 +79,56 @@ func write_game_status():
 			Gem.ColorWild: wild_num += 1
 	write("Red: %d, Orange: %d, Green: %d, Blue: %d, Magenta: %d, Wild: %d" % [red_num, orange_num, green_num, blue_num, magenta_num, wild_num])
 	var items_str = ""
-	for i in Game.items:
+	for i in App.items:
 		if !items_str.is_empty():
 			items_str += ", "
 		items_str += i.name
 	write("Items: %s" % items_str)
 	var patterns_str = ""
-	for p in Game.patterns:
+	for p in App.patterns:
 		if !patterns_str.is_empty():
 			patterns_str += ", "
 		patterns_str += p.name
 	write("Patterns: %s" % patterns_str)
 	var relics_str = ""
-	for r in Game.relics:
+	for r in App.relics:
 		if !relics_str.is_empty():
 			relics_str += ", "
 		relics_str += r.name
 	write("Relics: %s" % relics_str)
-	write("Rolls: %d" % Game.rolls_per_level)
-	write("Matches: %d" % Game.plays_per_level)
+	write("Rolls: %d" % App.rolls_per_round)
+	write("Matches: %d" % App.plays_per_round)
 	end_write()
 
 func has_matched_pattern():
 	for y in Board.cy:
 		for x in Board.cx:
-			for p in Game.patterns:
+			for p in App.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
 					return true
 	return false
 
 func start_game():
-	Game.start_game(saving)
+	App.start_game(saving)
 	for n in additional_patterns:
 		var p = Pattern.new()
 		p.setup(n)
-		Game.add_pattern(p)
+		App.add_pattern(p)
 	for n in additional_relics:
 		var r = Relic.new()
 		r.setup(n)
-		Game.add_relic(r)
+		App.add_relic(r)
 
-func start_test(_mode : int, _level_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_patterns : Array = [], _additional_relics : Array = [], _additional_enchants : Array = [], invincible : bool = true, _enable_shopping : bool = false):
+func start_test(_mode : int, _round_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_patterns : Array = [], _additional_relics : Array = [], _additional_enchants : Array = [], invincible : bool = true, _enable_shopping : bool = false):
 	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
-	Game.performance_mode = true
-	Game.base_speed = 4.0
-	Game.speed = 1.0 / Game.base_speed
+	App.performance_mode = true
+	App.base_speed = 4.0
+	App.speed = 1.0 / App.base_speed
 	
 	mode = _mode
 	task_count = _task_count
-	task_level_count = _level_count
+	task_round_count = _round_count
 	task_index = 0
 	step = TaskSteps.ToRoll
 	
@@ -146,11 +146,11 @@ func start_test(_mode : int, _level_count : int, _task_count : int, fn : String 
 	additional_patterns = _additional_patterns
 	additional_relics = _additional_relics
 	additional_enchants = _additional_enchants
-	Game.invincible = invincible
+	App.invincible = invincible
 	enable_shopping = _enable_shopping
 	
-	if Game.title_ui.visible:
-		Game.title_ui.hide()
+	if App.title_ui.visible:
+		App.title_ui.hide()
 	start_game()
 	
 	write_game_status()
@@ -159,55 +159,55 @@ func start_test(_mode : int, _level_count : int, _task_count : int, fn : String 
 	label.show()
 
 func time_out():
-	if Game.stage == Game.Stage.Deploy || Game.stage == Game.Stage.LevelOver:
+	if App.stage == App.Stage.Deploy || App.stage >= App.Stage.Settlement:
 		if step == TaskSteps.ToRoll:
-			if Game.level_clear_ui.visible || Game.game_over_ui.visible:
+			if App.settlement_ui.visible || App.game_over_ui.visible:
 				var curr_task = records.back()
-				if curr_task.levels.size() == task_level_count || Game.game_over_ui.visible:
-					for l in curr_task.levels:
-						l.matchings.pop_back()
+				if curr_task.rounds.size() == task_round_count || App.game_over_ui.visible:
+					for r in curr_task.rounds:
+						r.matchings.pop_back()
 					
 					if mode == Mode.AverageScore:
 						begin_write()
 						write("======Task %d======" % task_index)
-						for i in curr_task.levels.size():
-							var curr_level = curr_task.levels[i]
-							write("====Level %d====" % (i + 1))
-							write_level(curr_level)
-							for j in curr_level.matchings.size():
-								write_matching(j, curr_level.matchings[j])
+						for i in curr_task.rounds.size():
+							var r = curr_task.rounds[i]
+							write("====Round %d====" % (i + 1))
+							write_round(r)
+							for j in r.matchings.size():
+								write_matching(j, r.matchings[j])
 						write("======Statics For %d Task(s)======" % (task_index + 1))
 						var head_str = ""
-						for i in task_level_count:
-							head_str += "\tLevel %d" % (i + 1)
+						for i in task_round_count:
+							head_str += "\tRound %d" % (i + 1)
 						write(head_str)
 						var max_matching_num = 0
 						var avg_line = "Avg\t"
-						for i in task_level_count:
+						for i in task_round_count:
 							var score = 0
 							var combos = 0
 							var relic_effects = 0
-							for r in records:
-								var l = r.levels[i]
-								max_matching_num = max(max_matching_num, l.matchings.size())
-								score += l.score
-								combos += l.combos
-								relic_effects += l.relic_effects
+							for rc in records:
+								var r = rc.rounds[i]
+								max_matching_num = max(max_matching_num, r.matchings.size())
+								score += r.score
+								combos += r.combos
+								relic_effects += r.relic_effects
 							avg_line += "%.1f,%.2f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size(), float(relic_effects) / records.size()]
 						write(avg_line)
 						for j in max_matching_num:
 							var line = "Matching %d\t" % j
-							for i in task_level_count:
+							for i in task_round_count:
 								var score = 0
 								var combos = 0
 								var relic_effects = 0
-								for r in records:
-									if r.levels.size() <= i:
+								for rc in records:
+									if rc.rounds.size() <= i:
 										continue
-									var l = r.levels[i]
-									if l.matchings.size() <= j:
+									var r = rc.rounds[i]
+									if r.matchings.size() <= j:
 										continue
-									var m = l.matchings[j]
+									var m = r.matchings[j]
 									score += m.score
 									combos += m.combos
 									relic_effects += m.relic_effects
@@ -226,64 +226,64 @@ func time_out():
 				else:
 					if mode == Mode.RealPlay:
 						begin_write()
-						write("======Level %d======" % curr_task.levels.size())
-						var curr_level = curr_task.levels.back()
-						write_level(curr_level)
-						for j in curr_level.matchings.size():
-							write_matching(j, curr_level.matchings[j])
+						write("======Round %d======" % curr_task.rounds.size())
+						var r = curr_task.rounds.back()
+						write_round(r)
+						for j in r.matchings.size():
+							write_matching(j, r.matchings[j])
 						end_write()
 					
-					curr_task.levels.append(LevelRecord.new())
+					curr_task.rounds.append(RoundRecord.new())
 					if !enable_shopping:
-						Game.new_level()
+						App.next_round()
 					else:
 						step = TaskSteps.ToShop
-						Game.level_clear_ui.exit()
+						App.settlement_ui.exit()
 				
-				Game.level_clear_ui.hide()
-				Game.game_over_ui.hide()
+				App.settlement_ui.hide()
+				App.game_over_ui.hide()
 			else:
 				step = TaskSteps.ToMatch
-				#Game.roll()
+				#App.roll()
 		elif step == TaskSteps.ToMatch:
-			#if Hand.grabs.size() < Game.max_hand_grabs && Game.rolls >= Game.plays:
+			#if Hand.grabs.size() < App.max_hand_grabs && App.rolls >= App.plays:
 			#	step = TaskSteps.ToMatch
-			#	Game.roll()
+			#	App.roll()
 			#else:
-				#if !has_matched_pattern() && Game.rolls >= Game.plays:
+				#if !has_matched_pattern() && App.rolls >= App.plays:
 				#	step = TaskSteps.ToMatch
-				#	Game.roll()
-				#elif Game.plays > 0:
+				#	App.roll()
+				#elif App.plays > 0:
 					var curr_task = records.back()
-					if curr_task.levels.size() == 1:
+					if curr_task.rounds.size() == 1:
 						for ec in additional_enchants:
 							var g = Hand.grabs.pick_random()
-							Game.enchant_gem(g, ec)
+							App.enchant_gem(g, ec)
 					auto_swap_gems()
 					#auto_place_items()
 					step = TaskSteps.GetResult
-					Game.play()
+					App.play()
 		elif step == TaskSteps.GetResult:
-			var his = Game.history
-			var curr_level : LevelRecord = records.back().levels.back()
-			var curr_record : MatchingRecord = curr_level.matchings.back()
+			var his = App.history
+			var curr_round : RoundRecord = records.back().rounds.back()
+			var curr_record : MatchingRecord = curr_round.matchings.back()
 			curr_record.score = his.last_matching_score
 			curr_record.combos = his.last_matching_combos
 			curr_record.relic_effects = his.relic_effects
 			curr_record.actives = his.last_matching_actives
-			curr_level.score += his.last_matching_score
-			curr_level.combos += his.last_matching_combos
-			curr_level.relic_effects += his.relic_effects
-			curr_level.actives += his.last_matching_actives
-			curr_level.matchings.append(MatchingRecord.new())
+			curr_round.score += his.last_matching_score
+			curr_round.combos += his.last_matching_combos
+			curr_round.relic_effects += his.relic_effects
+			curr_round.actives += his.last_matching_actives
+			curr_round.matchings.append(MatchingRecord.new())
 			step = TaskSteps.ToRoll
-			if his.last_matching_score == 0 && !Game.level_clear_ui.visible:
-				Game.lose()
+			if his.last_matching_score == 0 && !App.settlement_ui.visible:
+				App.lose()
 		elif step == TaskSteps.ToShop:
-			if Game.shop_ui.visible:
+			if App.shop_ui.visible:
 				for i in 5:
-					Game.shop_ui.buy_randomly()
-				Game.shop_ui.exit()
+					App.shop_ui.buy_randomly()
+				App.shop_ui.exit()
 				step = TaskSteps.ToRoll
 				write_game_status()
 
@@ -292,7 +292,7 @@ func get_missing_one_places() -> Dictionary[int, Array]:
 	for y in Board.cy:
 		for x in Board.cx:
 			var c = Vector2i(x, y)
-			for p in Game.patterns:
+			for p in App.patterns:
 				for i in Gem.ColorCount:
 					var res : Array[Vector2i] = p.match_with(c, Gem.ColorRed + i)
 					if !res.is_empty():
@@ -314,40 +314,40 @@ func auto_swap_gems():
 			if g.type == Gem.ColorRed:
 				var arr = missing_one_places[Gem.ColorRed]
 				if !arr.is_empty():
-					if Game.swaps > 0:
-						Game.swaps -= 1
+					if App.swaps > 0:
+						App.swaps -= 1
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.ColorOrange:
 				var arr = missing_one_places[Gem.ColorOrange]
 				if !arr.is_empty():
-					if Game.swaps > 0:
-						Game.swaps -= 1
+					if App.swaps > 0:
+						App.swaps -= 1
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.ColorGreen:
 				var arr = missing_one_places[Gem.ColorGreen]
 				if !arr.is_empty():
-					if Game.swaps > 0:
-						Game.swaps -= 1
+					if App.swaps > 0:
+						App.swaps -= 1
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.ColorBlue:
 				var arr = missing_one_places[Gem.ColorBlue]
 				if !arr.is_empty():
-					if Game.swaps > 0:
-						Game.swaps -= 1
+					if App.swaps > 0:
+						App.swaps -= 1
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
 			elif g.type == Gem.ColorMagenta:
 				var arr = missing_one_places[Gem.ColorMagenta]
 				if !arr.is_empty():
-					if Game.swaps > 0:
-						Game.swaps -= 1
+					if App.swaps > 0:
+						App.swaps -= 1
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
@@ -402,7 +402,7 @@ func auto_place_items():
 		for y in cy:
 			for x in cx:
 				var c = Vector2i(x, y)
-				for p in Game.patterns:
+				for p in App.patterns:
 					var res : Array[Vector2i] = p.match_with(c)
 					for cc in res:
 						activater_places.append(cc)

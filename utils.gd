@@ -22,11 +22,11 @@ static func replacing_gem_tag(text : String, with_color : bool, with_url : bool,
 		var gem_name = m.get_string(1)
 		if with_color:
 			if with_url:
-				ret += " [color=cyan][url=gem_%s]%s[/url][/color]" % [gem_name, Game.tr("gem_name_" + gem_name)]
+				ret += " [color=cyan][url=gem_%s]%s[/url][/color]" % [gem_name, App.tr("gem_name_" + gem_name)]
 			else:
-				ret += " [color=cyan]%s[/color]" % Game.tr("gem_name_" + gem_name)
+				ret += " [color=cyan]%s[/color]" % App.tr("gem_name_" + gem_name)
 		else:
-			ret += " " + Game.tr("gem_name_" + gem_name)
+			ret += " " + App.tr("gem_name_" + gem_name)
 		used_gems.append(gem_name)
 		last_end = end
 	ret += text.substr(last_end)
@@ -61,11 +61,11 @@ static func format_text(text : String, with_color : bool, with_url : bool, used_
 		if text.find(w) != -1:
 			if with_color:
 				if with_url:
-					ret = ret.replace(w, "[url=%s][color=cyan]%s[/color][/url]" % [w, Game.tr(w)])
+					ret = ret.replace(w, "[url=%s][color=cyan]%s[/color][/url]" % [w, App.tr(w)])
 				else:
-					ret = ret.replace(w, "[color=cyan]%s[/color]" % Game.tr(w))
+					ret = ret.replace(w, "[color=cyan]%s[/color]" % App.tr(w))
 			else:
-				ret = ret.replace(w, Game.tr(w))
+				ret = ret.replace(w, App.tr(w))
 			used_words.append(w)
 	
 	return ret

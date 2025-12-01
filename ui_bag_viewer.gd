@@ -17,11 +17,11 @@ var select_callback : Callable
 
 func clear():
 	for n in gem_list.get_children():
-		n.queue_free()
 		gem_list.remove_child(n)
-	for n in item_list.get_children():
 		n.queue_free()
+	for n in item_list.get_children():
 		item_list.remove_child(n)
+		n.queue_free()
 
 func create_bar():
 	var bar = ColorRect.new()
@@ -32,9 +32,11 @@ func create_bar():
 	return bar
 
 func enter(select_category : String = "", _select_num : int = 0, select_prompt : String = "", _select_callback : Callable = Callable()):
-	clear()
 	self.self_modulate.a = 0.0
-	var tween = get_tree().create_tween()
+	self.show()
+	panel.show()
+	
+	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	if _select_num == 0:
@@ -51,7 +53,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		comfirm_button.disabled = false
 		select_num = _select_num
 		select_callback = _select_callback
-	for g in Game.gems:
+	for g in App.gems:
 		var ctrl = Control.new()
 		ctrl.custom_minimum_size = Vector2(48, 52)
 		ctrl.mouse_entered.connect(func():
@@ -87,14 +89,13 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 				bar.color = Color(0.5, 0.8, 0.6)
 				bar.show()
 		gem_list.add_child(ctrl)
-	
-	self.show()
-	panel.show()
 
 func exit():
 	panel.hide()
+	clear()
+	
 	self.self_modulate.a = 1.0
-	var tween = get_tree().create_tween()
+	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
@@ -107,7 +108,7 @@ func _ready() -> void:
 	)
 	comfirm_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
 		select_callback.call(selecteds)
 	)

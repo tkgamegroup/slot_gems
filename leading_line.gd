@@ -15,7 +15,7 @@ func setup(_p0 : Vector2, _p1 : Vector2, _span : float, _duration : float, _widt
 func _ready() -> void:
 	set_point_position(0, p0)
 	set_point_position(1, p0)
-	var tween = get_tree().create_tween()
+	var tween = App.game_tweens.create_tween()
 	var tt = duration * (1.0 + span)
 	tween.tween_method(func(t : float):
 		if t < duration:

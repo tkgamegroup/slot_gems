@@ -70,7 +70,7 @@ func update(g : Gem):
 			sharp_fx.hide()
 
 func dissolve(duration : float):
-	var tween = get_tree().create_tween()
+	var tween = App.game_tweens.create_tween()
 	tween.tween_property(display.material, "shader_parameter/dissolve", 0.0, duration)
 	tween.tween_callback(func():
 		self.hide()

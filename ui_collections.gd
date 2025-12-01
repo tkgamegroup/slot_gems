@@ -12,22 +12,24 @@ const relic_ui = preload("res://ui_relic.tscn")
 
 func clear():
 	for n in item_list.get_children():
-		n.queue_free()
 		item_list.remove_child(n)
+		n.queue_free()
 	for n in skill_list.get_children():
-		n.queue_free()
 		skill_list.remove_child(n)
+		n.queue_free()
 	for n in pattern_list.get_children():
-		n.queue_free()
 		pattern_list.remove_child(n)
-	for n in relic_list.get_children():
 		n.queue_free()
+	for n in relic_list.get_children():
 		relic_list.remove_child(n)
+		n.queue_free()
 
 func enter():
-	clear()
 	self.self_modulate.a = 0.0
-	var tween = get_tree().create_tween()
+	self.show()
+	panel.show()
+	
+	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyeMagenta", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
@@ -53,14 +55,13 @@ func enter():
 		var ui = relic_ui.instantiate()
 		ui.setup(r)
 		relic_list.add_child(ui)
-	
-	self.show()
-	panel.show()
 
 func exit():
 	panel.hide()
+	clear()
+	
 	self.self_modulate.a = 1.0
-	var tween = get_tree().create_tween()
+	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
@@ -69,6 +70,6 @@ func exit():
 func _ready() -> void:
 	close_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
 	)

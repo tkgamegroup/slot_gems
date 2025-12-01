@@ -36,7 +36,6 @@ var music_eq_t : float = 0.0
 @onready var se_lightning_fail : AudioStreamPlayer = $/root/Main/SFX/LightningFail
 @onready var se_start_buring : AudioStreamPlayer = $/root/Main/SFX/StartBurning
 @onready var se_end_buring : AudioStreamPlayer = $/root/Main/SFX/EndBurning
-@onready var se_level_clear : AudioStreamPlayer = $/root/Main/SFX/LevelClear
 @onready var se_well_done : AudioStreamPlayer = $/root/Main/SFX/WellDone
 @onready var se_error : AudioStreamPlayer = $/root/Main/SFX/Error
 @onready var music : AudioStreamPlayer = $/root/Main/Music
@@ -47,7 +46,7 @@ func music_less_clear():
 	if music_eq_tween:
 		music_eq_tween.kill()
 		music_eq_tween = null
-	music_eq_tween = get_tree().create_tween()
+	music_eq_tween = App.create_tween()
 	music_eq_tween.tween_method(func(t : float):
 		music_eq.set_band_gain_db(2, -30.0 * t)
 		music_eq.set_band_gain_db(3, -30.0 * t)
@@ -59,7 +58,7 @@ func music_more_clear():
 	if music_eq_tween:
 		music_eq_tween.kill()
 		music_eq_tween = null
-	music_eq_tween = get_tree().create_tween()
+	music_eq_tween = App.create_tween()
 	music_eq_tween.tween_method(func(t : float):
 		music_eq.set_band_gain_db(2, -30.0 * t)
 		music_eq.set_band_gain_db(3, -30.0 * t)
@@ -77,7 +76,7 @@ func _ready() -> void:
 	se_marimba_scale.append($/root/Main/SFX/Marimba7)
 	se_marimba_scale.append($/root/Main/SFX/Marimba8)
 	music.finished.connect(func():
-		var tween = get_tree().create_tween()
+		var tween = App.create_tween()
 		tween.tween_interval(1.0)
 		tween.tween_callback(func():
 			music.play()

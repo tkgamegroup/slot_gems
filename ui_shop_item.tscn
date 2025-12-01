@@ -3,43 +3,51 @@
 [ext_resource type="Script" uid="uid://cv2l3tl2csppp" path="res://ui_shop_item.gd" id="1_e4q1j"]
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="3_5w2cm"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ubel"]
-bg_color = Color(0.114897, 0.114897, 0.114897, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eiamj"]
+draw_center = false
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_color = Color(0.313695, 0.200541, 0.00778849, 1)
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
 
-[node name="UiShopItem" type="VBoxContainer"]
+[node name="UiShopItem" type="PanelContainer"]
+self_modulate = Color(1, 1, 1, 0)
 offset_right = 83.0
-offset_bottom = 44.0
-mouse_filter = 0
-theme_override_constants/separation = 16
+offset_bottom = 160.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_eiamj")
 script = ExtResource("1_e4q1j")
 
-[node name="Category" type="PanelContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="Content" type="CenterContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="Buy" parent="VBoxContainer" instance=ExtResource("3_5w2cm")]
+layout_mode = 2
+
+[node name="Price" type="RichTextLabel" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_6ubel")
-
-[node name="MarginContainer" type="MarginContainer" parent="Category"]
-layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
-
-[node name="Label" type="Label" parent="Category/MarginContainer"]
-layout_mode = 2
-text = "Item"
-
-[node name="Content" type="CenterContainer" parent="."]
-custom_minimum_size = Vector2(0, 108)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-
-[node name="Buy" parent="." instance=ExtResource("3_5w2cm")]
-layout_mode = 2
+bbcode_enabled = true
+text = "abc"
+fit_content = true
+autowrap_mode = 0

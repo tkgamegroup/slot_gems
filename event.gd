@@ -4,8 +4,8 @@ class_name Event
 
 enum
 {
-	LevelBegan,
-	LevelEnded,
+	RoundBegan,
+	RoundEnded,
 	RollingFinished,
 	FillingFinished,
 	MatchingFinished,

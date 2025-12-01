@@ -53,7 +53,7 @@ curse_sloth,%d random cells are w_in_mist.,%d个随机的格子被w_in_mist。
 curse_wrath,Delete %d random gems on Board.,随机删除%d个棋盘上的宝石。
 curse_envy,Afflict %d random gems with [item_SinEnvy].,使%d个随机的宝石获得[item_SinEnvy]。
 curse_pride,%d random cells are w_nullified.,%d个随机的格子被w_nullified。
-game_over_not_reach_score,Out Of Swaps And Not Reach Target Score,没有交换次数且没有达到目标分数
+game_over_not_reach_score,Not Reach Target Score,没有达到目标分数
 game_over_not_enough_gems,Not Enough Gems,宝石数量不足
 game_over_sin_lust,Effect Of Sin Lust,罪·色欲的效果
 game_over_sin_gluttony,Effect Of Sin Gluttony,罪·暴食的效果
@@ -67,6 +67,7 @@ wr_relics_count_limit,You can have up to %d relics,您最多拥有%d个遗物
 wr_ban_swapping_in_mist,You can’t swap gems in the mist,你不能交换迷雾中的宝石
 wr_ban_swapping_sin,You can’t swap gems that have a Sin,你不能交换拥有罪的宝石
 ui_close,Close,关闭
+ui_confirm,Confirm,确认
 ui_titile_continue,Continue,继续游戏
 ui_titile_new_game,New Game,新游戏
 ui_titile_collections,Collections,藏品
@@ -105,7 +106,7 @@ tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
 tt_magenta_base_score,Magenta gems' base score,品红色宝石基础分数
-ui_game_level,Level %d (Reward: %d[img width=16]res://images/coin.png[/img]),关卡 %d（奖励：%d[img width=16]res://images/coin.png[/img]）
+ui_game_round,Round %d (Reward: %d[img width=16]res://images/coin.png[/img]),回合 %d（奖励：%d[img width=16]res://images/coin.png[/img]）
 ui_game_target_score,Score at lease %d.,最少达到 %d 分。
 ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
@@ -138,15 +139,16 @@ ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
 ui_bag_viewer_in_hand,In Hand,手上
-ui_tutorial_page1," - Drag a gem from [color=cyan]Hand[/color] to [color=cyan]Board[/color] to swap them. (You start with 5 [color=cyan]Swaps[/color] per level)\n - Click the [color=cyan]Play button[/color] to match [color=cyan]Patterns[/color] and score.\n - You pass the level when you reach the target score. When you use up all the [color=cyan]Swaps[/color] but don’t reach the target score, you lose the game.", - 从[color=cyan]手上[/color]拖拽一个宝石到[color=cyan]棋盘[/color]上来交换。（一开始你每关有5次[color=cyan]交换次数[/color]）\n – 点击[color=cyan]开始按钮[/color]来开始匹配[color=cyan]图案[/color]并得分。\n - 当你达到目标分数时，你过关。当你用完所有的[color=cyan]交换次数[/color]却没有达到目标分数，你游戏失败。
+ui_tutorial_page1," - Drag a gem from [color=cyan]Hand[/color] to [color=cyan]Board[/color] to swap them. (You start with 5 [color=cyan]Swaps[/color] per round)\n - Click the [color=cyan]Play button[/color] to match [color=cyan]Patterns[/color] and score.\n - You pass the round when you reach the target score. When you use up all the [color=cyan]Swaps[/color] but don’t reach the target score, you lose the game.", - 从[color=cyan]手上[/color]拖拽一个宝石到[color=cyan]棋盘[/color]上来交换。（一开始你每回合有5次[color=cyan]交换次数[/color]）\n – 点击[color=cyan]开始按钮[/color]来开始匹配[color=cyan]图案[/color]并得分。\n – 当你达到目标分数时，你通过回合。当你用完所有的[color=cyan]交换次数[/color]却没有达到目标分数，你游戏失败。
 ui_tutorial_page2," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url], also [/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_palm][img]res://images/rune_palm.png[/img][/url][url=rune_starfish][img]res://images/rune_starfish.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n – Here are some [color=cyan]Patterns[/color]. They will have specific color or rune requirements.", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url]，还有[url=w_wild][img]res://images/wild.png[/img][/url]。\n – 宝石有3种符文[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_palm][img]res://images/rune_palm.png[/img][/url][url=rune_starfish][img]res://images/rune_starfish.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n – 以下是一些[color=cyan]图案[/color]。它们会有特定的颜色或者符文需求。
+ui_shop_item_nothing,Nothing,什么也\n不要
+ui_shop_item_return,Return,返还
+ui_shop_item_increase_swaps,Increase Swaps,增加\n交换次数
+ui_shop_item_increase_hand_size,Increase Hand Size,增加\n手牌数
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
-ui_shop_upgrade,Board Size\nUpgrade,棋盘大小\n升级
-ui_shop_upgrade_insufficient_quantity_title,Not Enough Gems,宝石数量不足
-ui_shop_upgrade_insufficient_quantity_content,Requires at least %d gems,需要至少%d个宝石
-ui_shop_exit,Exit,退出
+ui_shop_next_round,Next Round,下一回合
 ui_buy,Buy,购买
 ui_sell,Sell %d,出售 %d
 ui_in_game_menu_title,Menu,菜单
@@ -157,15 +159,19 @@ ui_in_game_quit_to_desktop,Quit To Desktop,退出到桌面
 ui_in_game_menu_auto_place_items,Auto Place Items,自动放道具
 ui_in_game_menu_win,Win,赢
 ui_in_game_menu_lose,Lose,输
-ui_level_clear_title,Level Clear!,过关！
-ui_level_clear_level_rewards,Level Reward,关卡奖励
-ui_level_clear_swap_rewards,Swaps,交换次数
-ui_level_clear_interest,Interest,利息
-ui_level_clear_button_text,Take %d,拿走 %d
+ui_settlement_title,Settlement,结算
+ui_settlement_round_rewards,Round Reward,回合奖励
+ui_settlement_swap_rewards,Swaps,交换次数
+ui_settlement_interest,Interest,利息
+ui_settlement_cash_out,Cash Out %d,提现 %d
+ui_upgrade_title,Choose An Upgrade,选择一个升级
+ui_upgrade_board,Board Size\nUpgrade,棋盘大小\n升级
+ui_upgrade_board_insufficient_quantity_title,Not Enough Gems,宝石数量不足
+ui_upgrade_board_insufficient_quantity_content,Requires at least %d gems,需要至少%d个宝石
 ui_game_over_title,Game Over,游戏结束
-ui_game_over_max_match,Max Match Score,最高匹配分数
+ui_game_over_max_match,Max Single Match,最高单次匹配
 ui_game_over_swaps,Swaps,交换次数
-ui_game_over_level,Level,关卡
+ui_game_over_round,Round ,回合
 ui_game_over_seed,Seed,种子
 ui_game_over_new_run,New Run,新的一局
 ui_game_over_main_menu,Main Menu,主菜单

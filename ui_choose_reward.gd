@@ -13,9 +13,9 @@ var callback : Callable
 
 func choose(idx : int):
 	SSound.se_click.play()
-	Game.screen_shake_strength = 8.0
+	App.screen_shake_strength = 8.0
 	buttons_list.hide()
-	var tween = Game.get_tree().create_tween()
+	var tween = App.game_tweens.create_tween()
 	var n = reward_list.get_child_count()
 	for i in n:
 		if i != idx:
@@ -38,14 +38,18 @@ func choose(idx : int):
 
 func enter(rewards : Array, _callback : Callable):
 	callback = _callback
+	
 	self.self_modulate.a = 0.0
-	var tween = get_tree().create_tween()
+	self.show()
+	panel.show()
+	
+	var tween = App.game_tweens.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	buttons_list.show()
 	for n in reward_list.get_children():
-		n.queue_free()
 		reward_list.remove_child(n)
+		n.queue_free()
 	for i in rewards.size():
 		var r = rewards[i]
 		var ui = reward_pb.instantiate()
@@ -56,14 +60,11 @@ func enter(rewards : Array, _callback : Callable):
 					choose(i)
 		)
 		reward_list.add_child(ui)
-	
-	self.show()
-	panel.show()
 
 func exit():
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = get_tree().create_tween()
+	var tween = App.game_tweens.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
@@ -72,13 +73,13 @@ func exit():
 func _ready() -> void:
 	hide_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 	)
 	reroll_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 	)
 	skip_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 	)

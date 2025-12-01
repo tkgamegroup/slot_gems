@@ -18,28 +18,32 @@ extends Control
 
 func enter(second : bool = false):
 	STooltip.close()
-	var tween = get_tree().create_tween()
+	
+	self.show()
+	panel.show()
+	tab_container.current_tab = 0
+	
+	App.game_tweens.process_mode = Node.PROCESS_MODE_DISABLED
+	
+	var tween = App.create_tween()
 	tween.tween_property(panel, "position:y", panel.position.y, 0.5).from(panel.position.y + 100).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	if !second:
 		self.self_modulate.a = 0.0
 		tween.parallel().tween_property(self, "self_modulate:a", 1.0, 0.3)
 	else:
 		self.self_modulate.a = 1.0
-	
-	self.show()
-	panel.show()
-	tab_container.current_tab = 0
 
 func exit():
-	if Game.game_ui.visible:
+	if App.game_ui.visible:
 		SSound.music_more_clear()
 	
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = get_tree().create_tween()
+	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
+		App.game_tweens.process_mode = Node.PROCESS_MODE_INHERIT
 	)
 
 func tab_changed(tab : int):
@@ -50,14 +54,14 @@ func tab_changed(tab : int):
 		elif locale.begins_with("zh"):
 			language_select.selected = 1
 		game_speed_select.selected = 0
-		if Game.base_speed > 0.5:
+		if App.base_speed > 0.5:
 			game_speed_select.selected = 1
-		elif Game.base_speed > 1.0:
+		elif App.base_speed > 1.0:
 			game_speed_select.selected = 2
-		elif Game.base_speed > 2.0:
+		elif App.base_speed > 2.0:
 			game_speed_select.selected = 3
-		performance_mode_checkbox.set_pressed_no_signal(Game.performance_mode)
-		invincible_checkbox.set_pressed_no_signal(Game.invincible)
+		performance_mode_checkbox.set_pressed_no_signal(App.performance_mode)
+		invincible_checkbox.set_pressed_no_signal(App.invincible)
 	elif tab == 1:
 		var monitor_count = DisplayServer.get_screen_count()
 		monitor_select.clear()
@@ -72,7 +76,7 @@ func tab_changed(tab : int):
 			window_mode_select.selected = 2
 		video_apply_button.disabled = true
 	elif tab == 2:
-		crt_checkbox.set_pressed_no_signal(Game.crt_mode)
+		crt_checkbox.set_pressed_no_signal(App.crt_mode)
 	elif tab == 3:
 		se_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.se_bus_index))
 		music_volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(SSound.music_bus_index))
@@ -87,16 +91,16 @@ func _ready() -> void:
 	tab_changed(0)
 	tab_container.tab_changed.connect(func(tab : int):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		tab_changed(tab)
 	)
 	lang_changed()
 	language_select.item_selected.connect(func(idx):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		match idx:
-			0: Game.set_lang("en")
-			1: Game.set_lang("zh")
+			0: App.set_lang("en")
+			1: App.set_lang("zh")
 	)
 	se_volume_slider.value_changed.connect(func(v):
 		AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(v))
@@ -120,47 +124,47 @@ func _ready() -> void:
 	)
 	monitor_select.item_selected.connect(func(idx):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		video_apply_button.disabled = false
 	)
 	window_mode_select.item_selected.connect(func(idx):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		video_apply_button.disabled = false
 	)
 	game_speed_select.item_selected.connect(func(idx):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		match idx:
-			0: Game.base_speed = 0.5
-			1: Game.base_speed = 1.0
-			2: Game.base_speed = 2.0
-			3: Game.base_speed = 4.0
-		Game.speed = 1.0 / Game.base_speed
+			0: App.base_speed = 0.5
+			1: App.base_speed = 1.0
+			2: App.base_speed = 2.0
+			3: App.base_speed = 4.0
+		App.speed = 1.0 / App.base_speed
 	)
 	crt_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.crt_mode = v
+		App.screen_shake_strength = 8.0
+		App.crt_mode = v
 	)
 	performance_mode_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.performance_mode = v
+		App.screen_shake_strength = 8.0
+		App.performance_mode = v
 	)
 	invincible_checkbox.toggled.connect(func(v):
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.invincible = v
+		App.screen_shake_strength = 8.0
+		App.invincible = v
 	)
 	close_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
+		App.screen_shake_strength = 8.0
 		exit()
 	)
 	#close_button.mouse_entered.connect(SSound.se_select.play)
 	command_line.text_submitted.connect(func(cl : String):
 		exit()
-		Game.process_command_line(cl)
+		App.process_command_line(cl)
 		command_line.clear()
 	)

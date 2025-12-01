@@ -1,6 +1,6 @@
 extends Object
 
-class_name LevelRecord
+class_name RoundRecord
 
 var score : int = 0
 var combos : int = 0

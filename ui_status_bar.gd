@@ -14,17 +14,17 @@ const NumberText = preload("res://number_text.gd")
 @onready var blue_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText
 @onready var magenta_bouns_container : Control = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2
 @onready var magenta_bouns_text : NumberText = $HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText
-@onready var level_container : Control = $HBoxContainer/VBoxContainer4
-@onready var level_text : RichTextLabel = $HBoxContainer/VBoxContainer4/Level
-@onready var level_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
-@onready var cluster_level1_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control
-@onready var cluster_level1_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control/AnimatedSprite2D
-@onready var cluster_level2_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control2
-@onready var cluster_level2_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control2/AnimatedSprite2D
-@onready var cluster_level3_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control3
-@onready var cluster_level3_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control3/AnimatedSprite2D
-@onready var cluster_level_ctrls = [cluster_level1_ctrl, cluster_level2_ctrl, cluster_level3_ctrl] 
-@onready var cluster_level_sps = [cluster_level1_sp, cluster_level2_sp, cluster_level3_sp] 
+@onready var round_container : Control = $HBoxContainer/VBoxContainer4
+@onready var round_text : RichTextLabel = $HBoxContainer/VBoxContainer4/Round
+@onready var round_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
+@onready var cluster_round1_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control
+@onready var cluster_round1_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control/AnimatedSprite2D
+@onready var cluster_round2_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control2
+@onready var cluster_round2_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control2/AnimatedSprite2D
+@onready var cluster_round3_ctrl : Control = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control3
+@onready var cluster_round3_sp : AnimatedSprite2D = $HBoxContainer/VBoxContainer4/HBoxContainer2/Control3/AnimatedSprite2D
+@onready var cluster_round_ctrls = [cluster_round1_ctrl, cluster_round2_ctrl, cluster_round3_ctrl] 
+@onready var cluster_round_sps = [cluster_round1_sp, cluster_round2_sp, cluster_round3_sp] 
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer
 @onready var board_size_text : NumberText = $HBoxContainer/HBoxContainer/BoardSize
 @onready var hand_container : Control = $HBoxContainer/HBoxContainer4
@@ -39,31 +39,31 @@ const NumberText = preload("res://number_text.gd")
 
 func _ready() -> void:
 	red_bouns_container.mouse_entered.connect(func():
-		STooltip.show(red_bouns_container, 0, [Pair.new(tr("tt_red_base_score"), "%d" % Game.modifiers["red_bouns_i"])])
+		STooltip.show(red_bouns_container, 0, [Pair.new(tr("tt_red_base_score"), "%d" % App.modifiers["red_bouns_i"])])
 	)
 	red_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	orange_bouns_container.mouse_entered.connect(func():
-		STooltip.show(orange_bouns_container, 0, [Pair.new(tr("tt_orange_base_score"), "%d" % Game.modifiers["orange_bouns_i"])])
+		STooltip.show(orange_bouns_container, 0, [Pair.new(tr("tt_orange_base_score"), "%d" % App.modifiers["orange_bouns_i"])])
 	)
 	orange_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	green_bouns_container.mouse_entered.connect(func():
-		STooltip.show(green_bouns_container, 0, [Pair.new(tr("tt_green_base_score"), "%d" % Game.modifiers["green_bouns_i"])])
+		STooltip.show(green_bouns_container, 0, [Pair.new(tr("tt_green_base_score"), "%d" % App.modifiers["green_bouns_i"])])
 	)
 	green_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	blue_bouns_container.mouse_entered.connect(func():
-		STooltip.show(blue_bouns_container, 0, [Pair.new(tr("tt_blue_base_score"), "%d" % Game.modifiers["blue_bouns_i"])])
+		STooltip.show(blue_bouns_container, 0, [Pair.new(tr("tt_blue_base_score"), "%d" % App.modifiers["blue_bouns_i"])])
 	)
 	blue_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	magenta_bouns_container.mouse_entered.connect(func():
-		STooltip.show(magenta_bouns_container, 0, [Pair.new(tr("tt_magenta_base_score"), "%d" % Game.modifiers["magenta_bouns_i"])])
+		STooltip.show(magenta_bouns_container, 0, [Pair.new(tr("tt_magenta_base_score"), "%d" % App.modifiers["magenta_bouns_i"])])
 	)
 	magenta_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -71,60 +71,60 @@ func _ready() -> void:
 	score_container.mouse_entered.connect(func():
 		STooltip.close()
 	)
-	level_container.mouse_entered.connect(func():
+	round_container.mouse_entered.connect(func():
 		STooltip.close()
 	)
-	cluster_level1_ctrl.mouse_entered.connect(func():
-		var lv = Game.level
-		if !Game.shop_ui.visible:
-			lv -= 1
-		lv = int(lv / 3) * 3 + 1
-		STooltip.show(cluster_level1_ctrl, 0, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
+	cluster_round1_ctrl.mouse_entered.connect(func():
+		var r = App.round
+		if !App.shop_ui.visible:
+			r -= 1
+		r = int(r / 3) * 3 + 1
+		STooltip.show(cluster_round1_ctrl, 0, [Pair.new(App.get_round_title(r, App.get_round_reward(r)), App.get_round_desc(App.get_round_score(r), App.round_curses[r - 1] if !App.round_curses.is_empty() else ([] as Array[Curse])))])
 	)
-	cluster_level1_ctrl.mouse_exited.connect(func():
+	cluster_round1_ctrl.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	cluster_level2_ctrl.mouse_entered.connect(func():
-		var lv = Game.level
-		if !Game.shop_ui.visible:
-			lv -= 1
-		lv = int(lv / 3) * 3 + 2
-		STooltip.show(cluster_level2_ctrl, 0, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
+	cluster_round2_ctrl.mouse_entered.connect(func():
+		var r = App.round
+		if !App.shop_ui.visible:
+			r -= 1
+		r = int(r / 3) * 3 + 2
+		STooltip.show(cluster_round2_ctrl, 0, [Pair.new(App.get_round_title(r, App.get_round_reward(r)), App.get_round_desc(App.get_round_score(r), App.round_curses[r - 1] if !App.round_curses.is_empty() else ([] as Array[Curse])))])
 	)
-	cluster_level2_ctrl.mouse_exited.connect(func():
+	cluster_round2_ctrl.mouse_exited.connect(func():
 		STooltip.close()
 	)
-	cluster_level3_ctrl.mouse_entered.connect(func():
-		var lv = Game.level
-		if !Game.shop_ui.visible:
-			lv -= 1
-		lv = int(lv / 3) * 3 + 3
-		STooltip.show(cluster_level3_ctrl, 0, [Pair.new(Game.get_level_title(lv, Game.get_level_reward(lv)), Game.get_level_desc(Game.get_level_score(lv), Game.level_curses[lv - 1] if !Game.level_curses.is_empty() else ([] as Array[Curse])))])
+	cluster_round3_ctrl.mouse_entered.connect(func():
+		var r = App.round
+		if !App.shop_ui.visible:
+			r -= 1
+		r = int(r / 3) * 3 + 3
+		STooltip.show(cluster_round3_ctrl, 0, [Pair.new(App.get_round_title(r, App.get_round_reward(r)), App.get_round_desc(App.get_round_score(r), App.round_curses[r - 1] if !App.round_curses.is_empty() else ([] as Array[Curse])))])
 	)
-	cluster_level3_ctrl.mouse_exited.connect(func():
+	cluster_round3_ctrl.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	board_size_container.mouse_entered.connect(func():
 		STooltip.show(board_size_container, 3, [Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)
 	hand_container.mouse_entered.connect(func():
-		STooltip.show(hand_container, 3, [Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % Game.max_hand_grabs)])
+		STooltip.show(hand_container, 3, [Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % App.max_hand_grabs)])
 	)
 	coins_container.mouse_entered.connect(func():
-		STooltip.show(coins_container, 3, [Pair.new(tr("tt_game_coins_title"), "%d" % Game.coins)])
+		STooltip.show(coins_container, 3, [Pair.new(tr("tt_game_coins_title"), "%d" % App.coins)])
 	)
 	coins_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	bag_button.pressed.connect(func():
-		if !Game.bag_viewer_ui.visible:
+		if !App.bag_viewer_ui.visible:
 			STooltip.close()
 			SSound.se_open_bag.play()
-			Game.screen_shake_strength = 8.0
-			Game.bag_viewer_ui.enter()
+			App.screen_shake_strength = 8.0
+			App.bag_viewer_ui.enter()
 		else:
 			SSound.se_close_bag.play()
-			Game.bag_viewer_ui.exit()
+			App.bag_viewer_ui.exit()
 	)
 	bag_button.mouse_entered.connect(func():
 		STooltip.show(bag_button, 3, [Pair.new(tr("tt_game_bag_title"), tr("tt_game_bag_content"))])
@@ -143,11 +143,11 @@ func _ready() -> void:
 		else:
 			pass
 			# trade
-			#Game.release_gem(dragging.gem)
+			#App.release_gem(dragging.gem)
 			#Hand.draw()
 	)
 	gem_count_text.mouse_entered.connect(func():
-		STooltip.show(gem_count_text, 3, [Pair.new(tr("tt_game_gem_number"), "%d" % Game.gems.size())])
+		STooltip.show(gem_count_text, 3, [Pair.new(tr("tt_game_gem_number"), "%d" % App.gems.size())])
 	)
 	gem_count_text.mouse_exited.connect(func():
 		STooltip.close()
@@ -160,8 +160,8 @@ func _ready() -> void:
 	)
 	gear_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.toggle_in_game_menu()
+		App.screen_shake_strength = 8.0
+		App.toggle_in_game_menu()
 	)
 	gear_button.mouse_entered.connect(func():
 		STooltip.show(gear_button, 3, [Pair.new(tr("tt_game_menu_title"), "")])
@@ -171,8 +171,8 @@ func _ready() -> void:
 	)
 	tutorial_button.pressed.connect(func():
 		SSound.se_click.play()
-		Game.screen_shake_strength = 8.0
-		Game.tutorial_ui.enter()
+		App.screen_shake_strength = 8.0
+		App.tutorial_ui.enter()
 	)
 	tutorial_button.mouse_entered.connect(func():
 		STooltip.show(tutorial_button, 3, [Pair.new(tr("tt_game_tutorial"), "")])

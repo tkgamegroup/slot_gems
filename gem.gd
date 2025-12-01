@@ -65,14 +65,14 @@ static func type_name(t : int):
 
 static func type_display_name(t : int):
 	match t:
-		None: return Game.tr("gem_none")
-		ColorRed: return Game.tr("gem_red")
-		ColorOrange: return Game.tr("gem_orange")
-		ColorGreen: return Game.tr("gem_green")
-		ColorBlue: return Game.tr("gem_blue")
-		ColorMagenta: return Game.tr("gem_magenta")
+		None: return App.tr("gem_none")
+		ColorRed: return App.tr("gem_red")
+		ColorOrange: return App.tr("gem_orange")
+		ColorGreen: return App.tr("gem_green")
+		ColorBlue: return App.tr("gem_blue")
+		ColorMagenta: return App.tr("gem_magenta")
 		ColorWild: return "w_wild"
-		ColorAny: return Game.tr("gem_any")
+		ColorAny: return App.tr("gem_any")
 	return ""
 
 static func name_to_type(s : String):
@@ -117,11 +117,11 @@ static func rune_name(r : int):
 
 static func rune_display_name(r : int):
 	match r:
-		Runewave: return Game.tr("rune_wave")
-		RunePalm: return Game.tr("rune_palm")
-		RuneStarfish: return Game.tr("rune_starfish")
+		Runewave: return App.tr("rune_wave")
+		RunePalm: return App.tr("rune_palm")
+		RuneStarfish: return App.tr("rune_starfish")
 		RuneOmni: return "w_omni"
-		RuneAny: return Game.tr("rune_any")
+		RuneAny: return App.tr("rune_any")
 	return "None"
 
 static func rune_icon(r : int):
@@ -135,12 +135,12 @@ static func rune_icon(r : int):
 func get_base_score():
 	var ret = base_score
 	match type:
-		ColorRed: ret += Game.modifiers["red_bouns_i"]
-		ColorOrange: ret += Game.modifiers["orange_bouns_i"]
-		ColorGreen: ret += Game.modifiers["green_bouns_i"]
-		ColorBlue: ret += Game.modifiers["blue_bouns_i"]
-		ColorMagenta: ret += Game.modifiers["magenta_bouns_i"]
-		ColorWild: ret += Game.modifiers["red_bouns_i"] + Game.modifiers["orange_bouns_i"] + Game.modifiers["green_bouns_i"] + Game.modifiers["blue_bouns_i"] + Game.modifiers["magenta_bouns_i"]
+		ColorRed: ret += App.modifiers["red_bouns_i"]
+		ColorOrange: ret += App.modifiers["orange_bouns_i"]
+		ColorGreen: ret += App.modifiers["green_bouns_i"]
+		ColorBlue: ret += App.modifiers["blue_bouns_i"]
+		ColorMagenta: ret += App.modifiers["magenta_bouns_i"]
+		ColorWild: ret += App.modifiers["red_bouns_i"] + App.modifiers["orange_bouns_i"] + App.modifiers["green_bouns_i"] + App.modifiers["blue_bouns_i"] + App.modifiers["magenta_bouns_i"]
 	return ret
 
 func get_score():
@@ -249,7 +249,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				var v = extra["value"]
 				var pos = Board.get_pos(coord)
-				Game.add_mult(v, pos)
+				App.add_mult(v, pos)
 			)
 	elif name == "Ruby":
 		type = ColorRed
@@ -259,8 +259,8 @@ func setup(n : String):
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("red_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.change_modifier("red_bouns_i", 1)
+				App.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Citrine":
 		type = ColorOrange
@@ -270,8 +270,8 @@ func setup(n : String):
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("orange_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.change_modifier("orange_bouns_i", 1)
+				App.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Emerald":
 		type = ColorGreen
@@ -281,8 +281,8 @@ func setup(n : String):
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("green_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.change_modifier("green_bouns_i", 1)
+				App.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Sapphire":
 		type = ColorBlue
@@ -292,8 +292,8 @@ func setup(n : String):
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("blue_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.change_modifier("blue_bouns_i", 1)
+				App.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
 	elif name == "Amethyst":
 		type = ColorMagenta
@@ -303,6 +303,6 @@ func setup(n : String):
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Game.change_modifier("magenta_bouns_i", 1)
-				Game.float_text("%s +1" % tr("gem_magenta"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.change_modifier("magenta_bouns_i", 1)
+				App.float_text("%s +1" % tr("gem_magenta"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
 			)
