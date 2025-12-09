@@ -1822,7 +1822,7 @@ func _ready() -> void:
 			control_ui.filling_times_text_container.hide()
 			calculator_bar_ui.calculate()
 	)
-	Hand.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/Hand
+	Hand.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Hand
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		stage = Stage.Deploy

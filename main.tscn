@@ -1216,21 +1216,25 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_4wyqg")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl"]
+[node name="MarginContainer2" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -120.0
-offset_top = -60.0
-offset_right = 120.0
+offset_left = -112.0
+offset_top = -64.0
+offset_right = 112.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/margin_bottom = 100
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2"]
+layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Undo" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2"]
+[node name="Undo" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/icon_normal_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_colors/icon_focus_color = Color(0.8, 0.8, 0.8, 1)
@@ -1245,40 +1249,40 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_41lik")
 disabled = true
 icon = ExtResource("45_5yh34")
 
-[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2"]
+[node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fepj7")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = -8
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
 text = "ui_game_rolls"
 
-[node name="Rolls" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Rolls" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0, 0.505917, 0.560746, 1)
 theme_override_font_sizes/font_size = 32
 text = "9"
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -1286,20 +1290,20 @@ theme_override_constants/shadow_outline_size = 0
 theme_override_font_sizes/font_size = 16
 text = "ui_game_swaps"
 
-[node name="Swaps" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3" instance=ExtResource("31_uatky")]
+[node name="Swaps" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3" instance=ExtResource("31_uatky")]
 layout_mode = 2
 font_size = 40
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps" index="0"]
 text = "0"
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Text" index="1"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Text" index="1"]
 theme_override_colors/default_color = Color(1, 1, 1, 1)
 
-[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Panel/ChangeBG" index="0"]
 text = "0"
 
-[node name="Roll" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer"]
+[node name="Roll" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1311,7 +1315,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_phcyf")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_nldc7")
 text = "ui_game_roll"
 
-[node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer"]
+[node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -1319,13 +1323,13 @@ mouse_filter = 2
 theme_override_constants/separation = 8
 script = ExtResource("53_mnqjw")
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/Hand"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Hand"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_vertical = 6
 mouse_filter = 2
 
-[node name="Play" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer"]
+[node name="Play" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 32
@@ -1338,13 +1342,13 @@ text = " "
 icon = ExtResource("54_eldhe")
 icon_alignment = 1
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/Play"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/Play/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control"]
 visible = false
 layout_mode = 1
 anchors_preset = 12
@@ -1356,27 +1360,27 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_yjja3")
 
-[node name="ExpectedScore" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer"]
+[node name="ExpectedScore" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "9999"
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = -8
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 12
 text = "ui_game_matches"
 
-[node name="Plays" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2"]
+[node name="Plays" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.709994, 0.313104, 0, 1)
@@ -3313,8 +3317,8 @@ mouse_filter = 2
 [node name="TestTimer" type="Timer" parent="."]
 
 [editable path="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer2/Control"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Text"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp2"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp3"]
