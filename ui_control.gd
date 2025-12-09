@@ -46,10 +46,9 @@ func update_preview():
 		combos += 1
 		for c in m:
 			var g = Board.get_gem_at(c)
-			if g:
+			if g && g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
 				if !App.no_score_marks[g.type].front() && !App.no_score_marks[g.rune].front():
 					base += g.get_score()
-					mult += g.get_mult()
 	expected_score_text.text = "%d" % int(base * App.mult_from_combos(combos) * mult)
 
 func _ready() -> void:

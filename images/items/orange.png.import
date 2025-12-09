@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bveiu3cj4i577"
-path="res://.godot/imported/sapphire.png-0cc143f334e64e06776492337aca3f65.ctex"
+uid="uid://dsg7rlnqly7rv"
+path="res://.godot/imported/orange.png-5940099103288ed749caaccf31d6e757.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/items/sapphire.png"
-dest_files=["res://.godot/imported/sapphire.png-0cc143f334e64e06776492337aca3f65.ctex"]
+source_file="res://images/items/orange.png"
+dest_files=["res://.godot/imported/orange.png-5940099103288ed749caaccf31d6e757.ctex"]
 
 [params]
 

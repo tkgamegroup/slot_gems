@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1s0bbor3j8ey"]
+
+[ext_resource type="Texture2D" uid="uid://cg37bnjaouvdn" path="res://images/drop.png" id="1_b04ml"]
+
+[sub_resource type="Gradient" id="Gradient_50j67"]
+offsets = PackedFloat32Array(0, 0.75634515, 1)
+colors = PackedColorArray(1, 1, 1, 0.49803922, 1, 1, 1, 0.49803922, 1, 1, 1, 0)
+
+[node name="Splash" type="CPUParticles2D"]
+emitting = false
+amount = 5
+texture = ExtResource("1_b04ml")
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.7
+local_coords = true
+direction = Vector2(0, 1)
+spread = 20.0
+gravity = Vector2(0, -100)
+initial_velocity_min = 200.0
+initial_velocity_max = 200.0
+color_ramp = SubResource("Gradient_50j67")

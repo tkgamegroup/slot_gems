@@ -8,7 +8,8 @@ enum Type
 	ChangeColor,
 	ChangeRune,
 	ValueModifier,
-	Enchant
+	Enchant,
+	Parasitical
 }
 
 enum Duration
@@ -94,6 +95,8 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 		Type.Enchant:
 			b.data["type"] = parms["type"]
 			b.data["bid"] = parms["bid"]
+		Type.Parasitical:
+			b.data["type"] = parms["type"]
 	host.buffs.append(b)
 	if type == Type.ValueModifier:
 		SUtils.calc_value_with_modifiers(host, b.data["target"], b.data["sub_attr"])

@@ -244,15 +244,12 @@ func time_out():
 				App.game_over_ui.hide()
 			else:
 				step = TaskSteps.ToMatch
-				#App.roll()
 		elif step == TaskSteps.ToMatch:
 			#if Hand.grabs.size() < App.max_hand_grabs && App.rolls >= App.plays:
 			#	step = TaskSteps.ToMatch
-			#	App.roll()
 			#else:
 				#if !has_matched_pattern() && App.rolls >= App.plays:
 				#	step = TaskSteps.ToMatch
-				#	App.roll()
 				#elif App.plays > 0:
 					var curr_task = records.back()
 					if curr_task.rounds.size() == 1:
@@ -294,9 +291,9 @@ func get_missing_one_places() -> Dictionary[int, Array]:
 			var c = Vector2i(x, y)
 			for p in App.patterns:
 				for i in Gem.ColorCount:
-					var res : Array[Vector2i] = p.match_with(c, Gem.ColorRed + i)
+					var res : Array[Vector2i] = p.match_with(c, Gem.ColorFirst + i)
 					if !res.is_empty():
-						ret[Gem.ColorRed + i].append(res[0])
+						ret[Gem.ColorFirst + i].append(res[0])
 	return ret
 
 func auto_swap_gems():
@@ -308,7 +305,7 @@ func auto_swap_gems():
 		for g in Hand.grabs:
 			grabs.append(g)
 		grabs.sort_custom(func(a : Gem, b : Gem):
-			return a.get_score() + a.get_mult() > b.get_score() + b.get_mult()
+			return a.get_score() > b.get_score()
 		)
 		for g in grabs:
 			if g.type == Gem.ColorRed:

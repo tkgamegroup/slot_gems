@@ -97,19 +97,6 @@ func setup(n : String):
 			for c in coords:
 				Board.pin(c)
 			return true
-	elif name == "C4":
-		image_id = 9
-		category = "Bomb"
-		price = 3
-		power = 50
-		extra["range"] = 2
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			if reason == Board.ActiveReason.Item && source.category == "Bomb":
-				tween.tween_callback(func():
-					Board.activate(self, HostType.Gem, 0, coord, reason, source)
-				)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "ChainBomb":
 		image_id = 10
 		category = "Bomb"
@@ -242,46 +229,6 @@ func setup(n : String):
 					Board.score_at(c)
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "Lightning":
-		image_id = 12
-		category = "Normal"
-		price = 5
-		power = 3
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
-			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var targets = Board.filter(func(gem : Gem, item : Item):
-				return item && item.name == "Lightning"
-			)
-			for ae in Board.active_effects:
-				if ae.host.name == "Lightning":
-					targets.append(ae.host)
-			targets.sort_custom(func(c1, c2):
-				return Board.offset_distance(c1, coord) < Board.offset_distance(c2, coord)
-			)
-			if targets.size() >= 2:
-				var coords : Array[Vector2i] = []
-				for i in targets.size() - 1:
-					var p0 = targets[i]
-					var p1 = targets[i + 1]
-					for c in Board.draw_line(Board.offset_to_cube(p0), Board.offset_to_cube(p1)):
-						var cc = Board.cube_to_offset(c)
-						coords.append(cc)
-					tween.tween_callback(func():
-						var fx = SEffect.add_lighning(Board.get_pos(p0), Board.get_pos(p1), 3, 0.5 * App.speed)
-						Board.ui.overlay.add_child(fx)
-					)
-				coords.append(targets.back())
-				tween.tween_interval(0.5 * App.speed)
-				tween.tween_callback(func():
-						App.add_combo()
-						for c in coords:
-							if Board.is_valid(c):
-								Board.score_at(c, power)
-				)
-				Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "ColorPalette":
 		image_id = 13
 		category = "Normal"
@@ -634,56 +581,6 @@ func setup(n : String):
 			tween.tween_callback(func():
 				App.add_score(extra["value"], Board.get_pos(coord))
 			)
-	elif name == "IaiCut":
-		image_id = 28
-		category = "Normal"
-		price = 5
-		on_place = func(coord : Vector2i, reason : int):
-			extra.num = 1
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			if reason == Board.ActiveReason.Item && source.name == "Iai Cut":
-				extra.num += 1
-			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
-			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var cc = Board.offset_to_cube(coord)
-			var arr = [0, 1, 2]
-			var coords : Array[Vector2i] = []
-			for i in min(extra.num, 3):
-				var sub_coords : Array[Vector2i] = []
-				var d = SMath.pick_and_remove(arr, App.game_rng)
-				match d:
-					0: 
-						for x in Board.cx:
-							var c = Board.cube_to_offset(Vector3i(x, -x - cc.z, cc.z))
-							if Board.is_valid(c):
-								sub_coords.append(c)
-					1: 
-						for x in Board.cx:
-							var c = Board.cube_to_offset(Vector3i(cc.x, x - cc.x, -x))
-							if Board.is_valid(c):
-								sub_coords.append(c)
-					2: 
-						for x in Board.cx:
-							var c = Board.cube_to_offset(Vector3i(x - cc.y, cc.y, -x))
-							if Board.is_valid(c):
-								sub_coords.append(c)
-				var p0 = Board.get_pos(sub_coords.front())
-				var p1 = Board.get_pos(sub_coords.back())
-				tween.tween_callback(func():
-					var sp = SEffect.add_slash(p0, p1, 3, 0.5 * App.speed)
-					Board.ui.overlay.add_child(sp)
-				)
-				coords.append_array(sub_coords)
-			tween.tween_interval(0.5 * App.speed)
-			tween.tween_callback(func():
-				App.add_combo()
-				for c in coords:
-					if Board.is_valid(c):
-						Board.score_at(c)
-			)
-			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "Magnet":
 		image_id = 29
 		category = "Normal"
@@ -826,47 +723,6 @@ func setup(n : String):
 		image_id = 41
 		category = "Normal"
 		price = 4
-	elif name == "Volcano":
-		image_id = 41
-		category = "Normal"
-		price = 5
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
-			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
-			var pos = Board.get_pos(coord)
-			var coords : Array[Vector2i] = []
-			for i in 2:
-				var cands = []
-				for c in Board.offset_ring(coord, 1):
-					if Board.is_valid(c) && !coords.has(c):
-						cands.append(c)
-				for c in Board.offset_ring(coord, 2):
-					if Board.is_valid(c) && !coords.has(c):
-						cands.append(c)
-				if !cands.is_empty():
-					var arr = []
-					for c in SMath.pick_n_random(cands, 2, App.game_rng):
-						arr.append(Triple.new(c, Board.get_pos(c), null))
-						coords.append(c)
-					tween.tween_interval(0.1)
-					for t in arr:
-						var sp = Sprite2D.new()
-						sp.texture = SEffect.fireball_image
-						sp.position = pos
-						sp.z_index = 3
-						Board.ui.overlay.add_child(sp)
-						t.third = sp
-						tween.parallel()
-						SAnimation.quadratic_curve_to(tween, sp, t.second, Vector2(0.5, 0.5), 0.4 * App.speed)
-					tween.tween_callback(func():
-						App.add_combo()
-						for t in arr:
-							Board.score_at(t.first)
-							t.third.queue_free()
-					)
-					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
 	elif name == "SinLust":
 		image_id = 42
 		price = 0
@@ -875,15 +731,11 @@ func setup(n : String):
 				0:
 					tween.tween_callback(func():
 						var generated_score = 0
-						var generated_mult = 0.0
 						for p in App.staging_scores:
 							generated_score += p.second
-						for p in App.staging_mults:
-							generated_mult += p.second
 						var pos = Board.get_pos(coord)
 						App.float_text(tr("t_Lust_effect1"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 						App.add_score(generated_score, pos)
-						App.add_mult(generated_mult, pos)
 					)
 				1:
 					tween.tween_callback(func():
@@ -952,7 +804,7 @@ func setup(n : String):
 				App.float_text(tr("t_Envy_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
 			)
 		on_aura = func(g : Gem):
-			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"gain_scaler","add":-0.25}, Buff.Duration.OnBoard)
+			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"score_mult","add":-0.25}, Buff.Duration.OnBoard)
 			b.caster = self
 
 func get_tooltip():

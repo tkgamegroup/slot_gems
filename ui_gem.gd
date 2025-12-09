@@ -16,6 +16,7 @@ extends Control
 var type : int
 var rune : int
 var item : int
+var gem_kind : bool = false
 var charming : int = 0
 var sharp : int = 0
 
@@ -23,6 +24,7 @@ func reset(_type : int = 0, _rune : int = 0, _item : int = 0):
 	type = _type
 	rune = _rune
 	item = _item
+	gem_kind = false
 	charming = 0
 	sharp = 0
 	wild_sp.hide()
@@ -34,6 +36,7 @@ func update(g : Gem):
 		type = g.type
 		rune = g.rune
 		item = g.image_id
+		gem_kind = (g.category == "Gem")
 		for enchant in Buff.find_all_typed(g, Buff.Type.Enchant):
 			var enchant_type = enchant.data["type"]
 			if enchant_type == "w_enchant_charming":
@@ -42,12 +45,16 @@ func update(g : Gem):
 				sharp += 1
 	
 	if type_sp:
-		type_sp.frame = type - Gem.ColorRed + 1
+		type_sp.frame = type - Gem.ColorFirst + 1
 		type_sp.material.set_shader_parameter("type_color", Gem.type_color(type))
 		
 		if item > 0:
-			type_sp.hide()
-			item_sp.frame = item
+			if gem_kind:
+				type_sp.frame = item
+				item_sp.frame = 0
+			else:
+				type_sp.hide()
+				item_sp.frame = item
 		else:
 			if type == Gem.ColorWild:
 				type_sp.hide()
@@ -58,7 +65,7 @@ func update(g : Gem):
 				wild_sp.hide()
 				rune_sp.modulate = Color(0.0, 0.0, 0.0, 0.66)
 			item_sp.frame = 0
-		rune_sp.frame = rune - Gem.Runewave + 1
+		rune_sp.frame = rune - Gem.RuneFirst + 1
 		
 		if charming > 0:
 			charming_fx.show()

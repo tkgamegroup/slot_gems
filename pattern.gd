@@ -47,7 +47,7 @@ func setup(n : String):
 	elif name == "Island":
 		coord_groups.append([Vector3i(1, -1, 0)])
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, -1, -1)])
-		recipes.append([Gem.RunePalm, Gem.Runewave])
+		recipes.append([Gem.RunePalm, Gem.RuneWave])
 
 func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int = Gem.None):
 	var base_c = Board.offset_to_cube(off)
@@ -66,33 +66,35 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 				if !cell || cell.frozen:
 					return [] as Array[Vector2i]
 				var g = Board.get_gem_at(oc)
-				if !g:
+				if !g || g.active:
 					return [] as Array[Vector2i]
 				coords.append(oc)
 				colors.append(g.type)
 				runes.append(g.rune)
 			var val = r[i]
-			if val >= Gem.ColorRed && val <= Gem.ColorAny:
+			if val >= Gem.ColorFirst && val <= Gem.ColorAny:
 				for j in coords.size():
 					var v = colors[j]
-					if val == Gem.ColorAny && v != Gem.ColorWild:
-						val = v
-					if v == val || v == Gem.ColorWild:
+					if val >= Gem.ColorComboFirst && val <= Gem.ColorComboLast && v != Gem.ColorWild:
+						if (val == Gem.ColorAny && v >= Gem.ColorFirst && v <= Gem.ColorLast) || Gem.color_combo_contains(val, v):
+							val = v
+					if v == val || v == Gem.ColorWild || Gem.color_combo_contains(v, val):
 						matcheds.append(coords[j])
 					else:
 						mismatcheds.append(coords[j])
-						if check_color == val || check_color == Gem.ColorWild:
+						if check_color == val || check_color == Gem.ColorWild || Gem.color_combo_contains(check_color, val):
 							checkeds.append(coords[j])
-			elif val >= Gem.Runewave && val <= Gem.RuneAny:
+			elif val >= Gem.RuneFirst && val <= Gem.RuneAny:
 				for j in coords.size():
 					var v = runes[j]
-					if val == Gem.RuneAny && v != Gem.RuneOmni:
-						val = v
-					if v == val || v == Gem.RuneOmni:
+					if val >= Gem.RuneComboFirst && val <= Gem.RuneComboLast && v != Gem.RuneOmni:
+						if (val == Gem.RuneAny && v >= Gem.RuneFirst && v <= Gem.RuneLast) || Gem.rune_combo_contains(val, v):
+							val = v
+					if v == val || v == Gem.RuneOmni || Gem.rune_combo_contains(v, val):
 						matcheds.append(coords[j])
 					else:
 						mismatcheds.append(coords[j])
-						if check_rune == val || check_rune == Gem.RuneOmni:
+						if check_rune == val || check_rune == Gem.RuneOmni || Gem.rune_combo_contains(check_rune, val):
 							checkeds.append(coords[j])
 	if check_color != Gem.None || check_rune != Gem.None:
 		if mismatcheds.size() == 1 && !checkeds.is_empty():
@@ -158,9 +160,9 @@ func get_tooltip():
 		for j in r.size():
 			var v = r[j]
 			content += "%s - " % char(ord('A') + j)
-			if v >= Gem.ColorRed && v <= Gem.ColorAny:
+			if v >= Gem.ColorFirst && v <= Gem.ColorAny:
 				content += "%s\n" % Gem.type_display_name(v)
-			elif v >= Gem.Runewave && v <= Gem.RuneAny:
+			elif v >= Gem.RuneFirst && v <= Gem.RuneAny:
 				content += "%s\n" % Gem.rune_display_name(v)
 			else:
 				content += "%s\n" % tr("gem_unknow")

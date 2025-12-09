@@ -71,7 +71,7 @@ func exit(trans : bool = true):
 	
 	clear()
 	
-	if true:
+	if App.round % 3 == 0:
 		if trans:
 			panel.modulate.a = 1.0
 			var tween = App.game_tweens.create_tween()

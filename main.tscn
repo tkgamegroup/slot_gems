@@ -65,7 +65,7 @@
 [ext_resource type="Texture2D" uid="uid://cysxj0usxav6n" path="res://images/gear.png" id="38_us2c3"]
 [ext_resource type="Shader" uid="uid://53fbdjte0jam" path="res://materials/mask.gdshader" id="38_yysqy"]
 [ext_resource type="FontFile" uid="uid://b0maexk5weyes" path="res://fonts/Arizonia-Regular.ttf" id="42_23xmf"]
-[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem_kink.gdshader" id="42_h6isl"]
+[ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem_kind.gdshader" id="42_h6isl"]
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="42_swlj1"]
 [ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
 [ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/hex-o.png" id="45_53bls"]

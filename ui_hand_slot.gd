@@ -15,8 +15,9 @@ func _ready() -> void:
 			STooltip.show(self, 1, gem.get_tooltip())
 			
 			if !Hand.ui.disabled:
-				preview.find_missing_ones(gem.type)
-				preview.show()
+				if gem.type != Gem.None || gem.rune != Gem.None:
+					preview.find_missing_ones(gem.type, gem.rune)
+					preview.show()
 	)
 	mouse_exited.connect(func():
 		STooltip.close()

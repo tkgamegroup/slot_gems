@@ -3,6 +3,7 @@ extends Node
 enum ActiveReason
 {
 	Pattern,
+	Gem,
 	Item,
 	Relic,
 	RcAction,
@@ -171,13 +172,20 @@ func set_gem_at(c : Vector2i, g : Gem):
 	if og:
 		for h in event_listeners:
 			h.host.on_event.call(Event.GemLeft, null, og)
+		SMath.remove_if(event_listeners, func(h : Hook):
+			return h.host == og
+		)
 		App.release_gem(og)
 	cell.gem = g
 	if g:
 		g.coord = c
+		g.board_stamp = App.round
 		for a in auras:
 			if a.on_aura.is_valid():
 				a.on_aura.call(g)
+		if g.on_event.is_valid():
+			var h = Hook.new(-1, g, HostType.Gem, false)
+			event_listeners.append(h)
 		for h in event_listeners:
 			h.host.on_event.call(Event.GemEntered, null, g)
 	else:
@@ -185,54 +193,6 @@ func set_gem_at(c : Vector2i, g : Gem):
 		cell.frozen = false
 	ui.update_cell(c)
 	return og
-
-'''
-func set_item_at(c : Vector2i, i : Item, r : int = PlaceReason.None):
-	c = format_coord(c)
-	if !is_valid(c):
-		return
-	var cell = cells[c.y * cx + c.x]
-	var oi = cell.item
-	if oi:
-		for h in event_listeners:
-			h.host.on_event.call(Event.ItemLeft, null, oi)
-		SMath.remove_if(event_listeners, func(h : Hook):
-			return h.host == oi
-		)
-		App.release_item(oi)
-	if i:
-		i.coord = c
-		i.eliminated = false
-		if i.on_place.is_valid():
-			i.on_place.call(c, r)
-		if i.on_event.is_valid():
-			var h = Hook.new(-1, i, HostType.Gem, false)
-			event_listeners.append(h)
-		for h in event_listeners:
-			h.host.on_event.call(Event.ItemEntered, null, i)
-	cell.item = i
-	ui.update_cell(c)
-	return oi
-'''
-
-'''
-func place_item(c : Vector2i, i : Item, reason : int = PlaceReason.FromHand):
-	c = format_coord(c)
-	if !is_valid(c):
-		return false
-	var g = get_gem_at(c)
-	if !g:
-		return false
-	var oi = get_item_at(c)
-	if i.on_quick.is_valid():
-		if i.on_quick.call(c):
-			App.release_item(i)
-			return true
-	else:
-		set_item_at(c, i, reason)
-		return true
-	return false
-'''
 
 func get_state_at(c : Vector2i):
 	c = format_coord(c)
@@ -286,13 +246,11 @@ func score_at(c : Vector2i, additional_score : int = 0, additional_mult : float 
 	var g = cell.gem
 	if !g:
 		return
-	if App.no_score_marks[g.type].front() || App.no_score_marks[g.rune].front():
-		return
+	if g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
+		if App.no_score_marks[g.type].front() || App.no_score_marks[g.rune].front():
+			return
 	var pos = get_pos(c)
 	App.add_score((g.get_score() + additional_score) * mult, pos)
-	var gem_mult = g.get_mult()
-	if gem_mult + additional_mult != 0.0:
-		App.add_mult((gem_mult + additional_mult) * mult, pos)
 
 func pin(c : Vector2i):
 	c = format_coord(c)
@@ -588,7 +546,7 @@ func clear_consumed():
 							#SSound.se_break.play()
 							set_gem_at(c, null)
 							set_state_at(c, Cell.State.Normal)
-							var tex = Gem.gem_frames.get_frame_texture("default", g.type)
+							var tex = Gem.gem_frames.get_frame_texture("default", g.type - Gem.ColorFirst + 1)
 							SEffect.add_break_pieces(get_pos(c), Vector2(tile_sz, tile_sz), tex, ui.overlay)
 						)
 						sub.tween_interval(0.4 * App.speed)
@@ -613,9 +571,8 @@ func fill_blanks():
 	
 	var collect_tween = App.game_tweens.create_tween()
 	var staging_idx = 0
-	if !App.staging_scores.is_empty() || !App.staging_mults.is_empty():
+	if !App.staging_scores.is_empty():
 		App.staging_scores.shuffle()
-		App.staging_mults.shuffle()
 		for s in App.staging_scores:
 			var sub = App.game_tweens.create_tween()
 			sub.tween_interval(staging_idx * 0.02)
@@ -635,27 +592,7 @@ func fill_blanks():
 				collect_tween.parallel()
 			collect_tween.tween_subtween(sub)
 			staging_idx += 1
-		for s in App.staging_mults:
-			var sub = App.game_tweens.create_tween()
-			sub.tween_interval(staging_idx * 0.02)
-			sub.tween_callback(func():
-				var trail = trail_pb.instantiate()
-				trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
-				s.first.add_child(trail)
-			)
-			sub.tween_property(s.first, "scale", Vector2(0.8, 0.8), 0.5 * App.speed)
-			sub.parallel()
-			SAnimation.quadratic_curve_to(sub, s.first, App.calculator_bar_ui.mult_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * App.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
-			sub.tween_callback(func():
-				App.score_mult += s.second
-			)
-			sub.tween_callback(s.first.queue_free)
-			if staging_idx > 0:
-				collect_tween.parallel()
-			collect_tween.tween_subtween(sub)
-			staging_idx += 1
 		App.staging_scores.clear()
-		App.staging_mults.clear()
 	
 	var down_tween = App.game_tweens.create_tween()
 	for x in cx:
@@ -810,7 +747,7 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		for c in coords:
 			score_at(c, p)
 	)
-	eliminate(coords, tween, ActiveReason.Item, source)
+	eliminate(coords, tween, ActiveReason.Gem, source)
 	if !outer_tween:
 		tween.tween_callback(App.end_busy)
 	return coords

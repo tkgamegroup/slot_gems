@@ -5,6 +5,7 @@ const big_explosion_frames : SpriteFrames = preload("res://images/big_explosion.
 const black_hole_rotating_frames : SpriteFrames = preload("res://images/black_hole_rotating.tres")
 const white_hole_injection_frames : SpriteFrames = preload("res://images/white_hole_injection.tres")
 const slash_frames : SpriteFrames = preload("res://images/slash.tres")
+const splash_pb = preload("res://splash.tscn")
 const fireball_image : Texture = preload("res://images/fireball.png")
 const distortion = preload("res://fx_distortion.tscn")
 const lightning = preload("res://fx_lightning.tscn")
@@ -61,11 +62,24 @@ func add_slash(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()
 	sp.position = pos
 	sp.sprite_frames = slash_frames
-	sp.speed_scale = 0.5 / duration
-	var dist = p0.distance_to(p1)
+	sp.speed_scale = 0.25 / duration
+	var dist = p0.distance_to(p1) + Board.tile_sz * 2.0
 	sp.scale = Vector2(dist, dist) / 128.0
 	sp.rotation = (p1 - p0).angle()
 	sp.play("default")
+	sp.z_index = z_index
+	var tween = App.game_tweens.create_tween()
+	tween.tween_interval(duration)
+	tween.tween_callback(sp.queue_free)
+	return sp
+
+func add_splash(p0 : Vector2, p1 : Vector2, color : Color, z_index : int, duration : float):
+	var sp : CPUParticles2D = splash_pb.instantiate()
+	sp.position = p0
+	sp.rotation = (p1 - p0).angle() - PI * 0.5
+	sp.modulate = color
+	sp.lifetime = duration
+	sp.emitting = true
 	sp.z_index = z_index
 	var tween = App.game_tweens.create_tween()
 	tween.tween_interval(duration)

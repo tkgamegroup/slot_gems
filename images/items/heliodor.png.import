@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bveiu3cj4i577"
-path="res://.godot/imported/sapphire.png-0cc143f334e64e06776492337aca3f65.ctex"
+uid="uid://w0ddkb6yn7aa"
+path="res://.godot/imported/heliodor.png-29959d3fd81c6b926e736361bb7f421f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/items/sapphire.png"
-dest_files=["res://.godot/imported/sapphire.png-0cc143f334e64e06776492337aca3f65.ctex"]
+source_file="res://images/items/heliodor.png"
+dest_files=["res://.godot/imported/heliodor.png-29959d3fd81c6b926e736361bb7f421f.ctex"]
 
 [params]
 

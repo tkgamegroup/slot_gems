@@ -18,75 +18,6 @@ var ui : UiRelic = null
 
 static var relic_names : Array[String] = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "RockBottom", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 
-func active_constellation(need_destroy : int, need_wisdom : int, need_grow : int, coords : Array, tween : Tween, do_active : bool = true):
-	var runes = []
-	for c in coords:
-		var p = Pair.new(c, Board.get_gem_at(c).rune)
-		if p.second == Gem.Runewave:
-			if need_destroy > 0:
-				need_destroy -= 1
-				runes.append(p)
-		elif p.second == Gem.RunePalm:
-			if need_wisdom > 0:
-				need_wisdom -= 1
-				runes.append(p)
-		elif p.second == Gem.RuneStarfish:
-			if need_grow > 0:
-				need_grow -= 1
-				runes.append(p)
-		elif p.second == Gem.RuneOmni:
-			if need_destroy > 0:
-				need_destroy -= 1
-				runes.append(p)
-			elif need_wisdom > 0:
-				need_wisdom -= 1
-				runes.append(p)
-			elif need_grow > 0:
-				need_grow -= 1
-				runes.append(p)
-	if need_destroy == 0 && need_wisdom == 0 && need_grow == 0:
-		var sps = []
-		var c = Vector2(0.0, 0.0)
-		for p in runes:
-			var sp = AnimatedSprite2D.new()
-			sp.sprite_frames = Gem.rune_frames
-			sp.frame = p.second
-			sp.modulate = Color("#5b6ee1", 0.0)
-			sp.position = Board.get_pos(p.first)
-			Board.ui.overlay.add_child(sp)
-			sps.append(sp)
-			c += sp.position
-		c /= runes.size()
-		var idx = 0
-		for sp in sps:
-			var subtween = App.game_tweens.create_tween()
-			subtween.tween_interval(idx * 0.1 * App.speed)
-			subtween.tween_property(sp, "modulate:a", 1.0, 0.05 * App.speed)
-			subtween.tween_property(sp, "scale", Vector2(2.5, 2.5), 1.0 * App.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-			subtween.parallel().tween_property(sp, "modulate:a", 0.0, 1.0 * App.speed)
-			#subtween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.8 * App.speed)
-			#subtween.tween_property(sp, "position", c, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-			#subtween.parallel().tween_property(sp, "scale", Vector2(0.0, 0.0), 0.3 * App.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-			subtween.tween_callback(func():
-				sp.queue_free()
-			)
-			if idx > 0:
-				tween.parallel()
-			tween.tween_subtween(subtween)
-			idx += 1
-		if do_active:
-			tween.tween_callback(func():
-				SSound.se_skill.play()
-				#SEffect.add_leading_line(c, ui.get_global_rect().get_center(), 0.3 * App.speed, 2.0)
-			)
-			#tween.tween_interval(0.3 * App.speed)
-			tween.tween_callback(func():
-				Board.activate(self, HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
-			)
-		App.history.relic_effects += 1
-		return true
-	return false
-
 func setup(n : String):
 	name = n
 	if name == "ExplosionScience":
@@ -247,6 +178,7 @@ func setup(n : String):
 	elif name == "PentagramPower":
 		image_id = 8
 		price = 9
+		extra["value"] = 25.0
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
 				if data == self:
@@ -259,7 +191,8 @@ func setup(n : String):
 							break
 			elif event == Event.Combo:
 				if App.combos > 0 && App.combos % 5 == 0:
-					Buff.create(App, Buff.Type.ValueModifier, {"target":"gain_scaler","set":5.0}, Buff.Duration.ThisCombo)
+					var v = extra["value"]
+					Buff.create(App, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":v}, Buff.Duration.ThisCombo)
 	elif name == "PaintingOfRed":
 		image_id = 9
 		extra["value"] = 40
@@ -317,7 +250,7 @@ func setup(n : String):
 					App.change_modifier("magenta_bouns_i", -extra["value"])
 	elif name == "PaintingOfWave":
 		image_id = 14
-		extra["value"] = 0.21
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
@@ -332,11 +265,11 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.Runewave:
-						App.add_mult(extra["value"], Board.get_pos(c))
+					if g && g.rune == Gem.RuneWave || g.rune == Gem.RuneOmni:
+						App.add_score(extra["value"], Board.get_pos(c))
 	elif name == "PaintingOfPalm":
 		image_id = 15
-		extra["value"] = 0.21
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
@@ -351,11 +284,11 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.RuneStarfish:
-						App.add_mult(extra["value"], Board.get_pos(c))
+					if g && g.rune == Gem.RunePalm || g.rune == Gem.RuneOmni:
+						App.add_score(extra["value"], Board.get_pos(c))
 	elif name == "PaintingOfStarfish":
 		image_id = 16
-		extra["value"] = 0.21
+		extra["value"] = 40
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == Event.GainRelic:
@@ -370,8 +303,8 @@ func setup(n : String):
 			elif event == Event.Eliminated:
 				for c in data["coords"]:
 					var g = Board.get_gem_at(c)
-					if g && g.rune == Gem.RunePalm:
-						App.add_mult(extra["value"], Board.get_pos(c))
+					if g && g.rune == Gem.RuneStarfish || g.rune == Gem.RuneOmni:
+						App.add_score(extra["value"], Board.get_pos(c))
 	elif name == "RockBottom":
 		image_id = 17
 		on_event = func(event : int, tween : Tween, data):
@@ -407,7 +340,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(3, 0, 0, data["coords"], tween)
+					#active_constellation(3, 0, 0, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var times = extra["times"]
 			for i in times:
@@ -434,11 +368,12 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					if active_constellation(0, 0, 3, data["coords"], tween, false):
-						tween.tween_callback(func():
-							App.add_score(extra["value"], ui.get_global_rect().get_center() + Vector2(84, 0))
-						)
-						tween.tween_interval(0.5 * App.speed)
+					#if active_constellation(0, 0, 3, data["coords"], tween, false):
+					#	tween.tween_callback(func():
+					#		App.add_score(extra["value"], ui.get_global_rect().get_center() + Vector2(84, 0))
+					#	)
+					#	tween.tween_interval(0.5 * App.speed)
+					pass
 	elif name == "Gemini":
 		image_id = 20
 		price = 4
@@ -454,7 +389,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 3, 0, data["coords"], tween)
+					#active_constellation(0, 3, 0, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !Hand.grabs.is_empty():
 				var idx = 0
@@ -480,7 +416,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 1, 2, data["coords"], tween)
+					#active_constellation(0, 1, 2, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !App.current_curses.is_empty():
 				var ui_pos = ui.get_global_rect().get_center()
@@ -508,17 +445,18 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					if active_constellation(2, 1, 1, data["coords"], tween, false):
-						tween.tween_callback(func():
-							var ui_pos = ui.get_global_rect().get_center()
-							SEffect.add_leading_line(ui_pos, App.control_ui.swaps_text.get_global_rect().get_center())
-						)
-						tween.tween_interval(0.3)
-						tween.tween_callback(func():
-							SSound.se_vibra.play()
-							App.swaps += 1
-						)
-						tween.tween_interval(0.5 * App.speed)
+					#if active_constellation(2, 1, 1, data["coords"], tween, false):
+					#	tween.tween_callback(func():
+					#		var ui_pos = ui.get_global_rect().get_center()
+					#		SEffect.add_leading_line(ui_pos, App.control_ui.swaps_text.get_global_rect().get_center())
+					#	)
+					#	tween.tween_interval(0.3)
+					#	tween.tween_callback(func():
+					#		SSound.se_vibra.play()
+					#		App.swaps += 1
+					#	)
+					#	tween.tween_interval(0.5 * App.speed)
+					pass
 	elif name == "Virgo":
 		image_id = 23
 		price = 4
@@ -535,13 +473,14 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					if active_constellation(0, 2, 1, data["coords"], tween, false):
-						tween.tween_callback(func():
-							var v = extra["value"]
-							var pos = ui.get_global_rect().get_center() + Vector2(84, 0)
-							App.add_mult(v, pos)
-						)
-						tween.tween_interval(0.5 * App.speed)
+					#if active_constellation(0, 2, 1, data["coords"], tween, false):
+					#	tween.tween_callback(func():
+					#		var v = extra["value"]
+					#		var pos = ui.get_global_rect().get_center() + Vector2(84, 0)
+					#		App.add_mult(v, pos)
+					#	)
+					#	tween.tween_interval(0.5 * App.speed)
+					pass
 	elif name == "Libra":
 		image_id = 24
 		on_event = func(event : int, tween : Tween, data):
@@ -556,7 +495,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 2, 1, data["coords"], tween)
+					#active_constellation(0, 2, 1, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			tween.tween_callback(func():
 				App.float_text(tr("t_Libra_effect"), ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 1.0, 1.0, 1.0), 22)
@@ -580,7 +520,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(2, 1, 0, data["coords"], tween)
+					#active_constellation(2, 1, 0, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !Hand.grabs.is_empty() && App.gems.size() - 1 >= Board.curr_min_gem_num:
 				var idx = Hand.grabs.size() - 1
@@ -607,7 +548,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(2, 1, 0, data["coords"], tween)
+					#active_constellation(2, 1, 0, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var target = Vector2i(-1, -1)
 			var highest_score = 0
@@ -645,14 +587,15 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					if active_constellation(1, 0, 2, data["coords"], tween, false):
-						tween.tween_callback(func():
-							var amount = extra["amount"]
-							SSound.se_coin.play()
-							App.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 0.84, 0.0), 22)
-							App.coins += amount
-						)
-						tween.tween_interval(0.5 * App.speed)
+					#if active_constellation(1, 0, 2, data["coords"], tween, false):
+					#	tween.tween_callback(func():
+					#		var amount = extra["amount"]
+					#		SSound.se_coin.play()
+					#		App.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 0.84, 0.0), 22)
+					#		App.coins += amount
+					#	)
+					#	tween.tween_interval(0.5 * App.speed)
+					pass
 	elif name == "Aquarius":
 		image_id = 28
 		price = 4
@@ -669,7 +612,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 3, 0, data["coords"], tween)
+					#active_constellation(0, 3, 0, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var cands = Board.filter(func(gem : Gem, item : Item):
 				return gem != null
@@ -711,7 +655,8 @@ func setup(n : String):
 							break
 			elif event == Event.Eliminated:
 				if data["reason"] == Board.ActiveReason.Pattern:
-					active_constellation(0, 1, 2, data["coords"], tween)
+					#active_constellation(0, 1, 2, data["coords"], tween)
+					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var cands = Board.filter(func(gem : Gem, item : Item):
 				if gem && gem.type != Gem.ColorWild:

@@ -182,7 +182,6 @@ var base_score : int:
 			base_score = v
 			calculator_bar_ui.base_score_text.text = "%d" % base_score
 var staging_scores : Array[Pair]
-var staging_mults : Array[Pair]
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
@@ -297,11 +296,15 @@ var invincible : bool = false
 
 func add_gem(g : Gem, boardcast : bool = true):
 	if boardcast:
+		if g.on_event.is_valid():
+			g.on_event.call(Event.GainGem, null, g)
 		for h in event_listeners:
 			if h.event == Event.GainGem:
 				h.host.on_event.call(Event.GainGem, null, g)
+	
 	gems.append(g)
 	bag_gems.append(g)
+	g.bag_stamp = round
 	
 	status_bar_ui.gem_count_text.text = "%d" % gems.size()
 
@@ -310,6 +313,8 @@ func remove_gem(g : Gem, boardcast : bool = true):
 	gems.erase(g)
 	
 	if boardcast:
+		if g.on_event.is_valid():
+			g.on_event.call(Event.LostGem, null, g)
 		for h in event_listeners:
 			if h.event == Event.GainGem:
 				h.host.on_event.call(Event.LostGem, null, g)
@@ -389,17 +394,20 @@ func add_relic(r : Relic, boardcast : bool = true):
 		for h in event_listeners:
 			if h.event == Event.GainRelic:
 				h.host.on_event.call(Event.GainRelic, null, r)
+	
 	relics.append(r)
 	relics_bar_ui.add_ui(r)
 
-func remove_relic(r : Relic):
-	if r.on_event.is_valid():
-		r.on_event.call(Event.LostRelic, null, r)
-	for h in event_listeners:
-		if h.event == Event.LostRelic:
-			h.host.on_event.call(Event.LostRelic, null, r)
+func remove_relic(r : Relic, boardcast : bool = true):
 	relics.erase(r)
 	relics_bar_ui.remove_ui(r)
+	
+	if boardcast:
+		if r.on_event.is_valid():
+			r.on_event.call(Event.LostRelic, null, r)
+		for h in event_listeners:
+			if h.event == Event.LostRelic:
+				h.host.on_event.call(Event.LostRelic, null, r)
 
 func has_relic(n : String):
 	for r in relics:
@@ -409,8 +417,12 @@ func has_relic(n : String):
 
 func add_combo():
 	combos += 1
-	Buff.clear(self, [Buff.Duration.ThisCombo])
+	var buffs_to_clear = []
+	for b in self.buffs:
+		if b.duration == Buff.Duration.ThisCombo:
+			buffs_to_clear.append(b.uid)
 	Board.on_combo()
+	Buff.remove_by_id_list(self, buffs_to_clear)
 
 func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0), font_size : int = 16):
 	pos += Vector2(randf() * 10.0 - 5.0, randf() * 10.0 - 5.0)
@@ -443,39 +455,14 @@ func add_score(value : int, pos : Vector2):
 	staging_scores.append(Pair.new(ui, value))
 	
 	var tween = App.create_tween()
-	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
-	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2)
-	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
+	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2 * speed)
+	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_callback(func():
 		lb.hide()
 	)
 	
 	add_score_dir *= -1
-
-var add_mult_dir : int = 1
-func add_mult(value : float, pos : Vector2):
-	value = value * gain_scaler
-	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
-	var ui = popup_txt_pb.instantiate()
-	ui.position = pos
-	ui.scale = Vector2(1.3, 1.3)
-	var lb : Label = ui.get_child(0)
-	lb.text = "%.2f" % value
-	lb.add_theme_color_override("font_color", Color(1.0, 0.8, 0.3))
-	ui.z_index = 6
-	Board.ui.overlay.add_child(ui)
-	
-	staging_mults.append(Pair.new(ui, value))
-	
-	var tween = App.create_tween()
-	tween.tween_property(ui, "position:y", pos.y - 20, 0.1)
-	tween.tween_property(ui, "position:x", pos.x + add_mult_dir * 5, 0.2)
-	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_callback(func():
-		lb.hide()
-	)
-	
-	add_mult_dir *= -1
 
 var status_tween : Tween
 func float_status_text(s : String, col : Color):
@@ -530,12 +517,14 @@ func delete_gem(g : Gem, ui, from : String = "hand"):
 	)
 
 func copy_gem(src : Gem, dst : Gem):
+	dst.name = src.name
+	if dst.name != "":
+		dst.setup(dst.name)
 	dst.type = src.type
 	dst.rune = src.rune
 	dst.base_score = src.base_score
 	dst.bonus_score = src.bonus_score
-	dst.base_mult = src.base_mult
-	dst.bonus_mult = src.bonus_mult
+	dst.score_mult = src.score_mult
 	for b in src.buffs:
 		var new_b = Buff.new()
 		new_b.uid = Buff.s_uid
@@ -571,7 +560,7 @@ func enchant_gem(g : Gem, type : String):
 	if type == "w_enchant_charming":
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_score","add":200}, Buff.Duration.Eternal)
 	elif type == "w_enchant_sharp":
-		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"base_mult","add":1.5}, Buff.Duration.Eternal)
+		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"score_mult","mult":2.0}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
 
 func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "swap"):
@@ -629,7 +618,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	
 	tween.tween_callback(func():
 		Board.set_gem_at(coord, g1)
-		Hand.erase(slot1.get_index())
+		Hand.erase(slot1.get_index(), false)
 		control_ui.update_preview()
 		App.end_busy()
 	)
@@ -915,8 +904,8 @@ func start_game(saving : String = ""):
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
-			g.rune = Gem.Runewave
-			g.setup("Bomb")
+			g.rune = Gem.RuneWave
+			g.setup("Volcano")
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
@@ -931,7 +920,7 @@ func start_game(saving : String = ""):
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
-			g.rune = Gem.Runewave
+			g.rune = Gem.RuneWave
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
@@ -946,7 +935,7 @@ func start_game(saving : String = ""):
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
-			g.rune = Gem.Runewave
+			g.rune = Gem.RuneWave
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
@@ -961,7 +950,7 @@ func start_game(saving : String = ""):
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
-			g.rune = Gem.Runewave
+			g.rune = Gem.RuneWave
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
@@ -976,7 +965,7 @@ func start_game(saving : String = ""):
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
-			g.rune = Gem.Runewave
+			g.rune = Gem.RuneWave
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
@@ -1228,7 +1217,6 @@ func round_end():
 	Board.clear_active_effects()
 	calculator_bar_ui.disappear()
 	control_ui.swaps_text.show_change = false
-	swaps = 0
 	control_ui.swaps_text.show_change = true
 	action_stack.clear()
 	control_ui.undo_button.disabled = true
@@ -1239,6 +1227,9 @@ func round_end():
 	Buff.clear(self, [Buff.Duration.ThisRound])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisRound])
+	for h in event_listeners:
+		if h.event == Event.RoundEnded:
+			h.host.on_event.call(Event.RoundEnded, null, null)
 
 func win():
 	round_end()
@@ -1251,7 +1242,6 @@ func lose():
 	stage = Stage.GameOver
 	game_over_ui.enter()
 
-# abandon
 func roll():
 	#if rolls > 0:
 		stage = Stage.Rolling
@@ -1378,9 +1368,10 @@ func save_to_file(name : String = "1"):
 		gem["rune"] = g.rune
 		gem["base_score"] = g.base_score
 		gem["bonus_score"] = g.bonus_score
-		gem["base_mult"] = g.base_mult
-		gem["bonus_mult"] = g.bonus_mult
+		gem["score_mult"] = g.score_mult
 		gem["coord"] = g.coord
+		gem["board_stamp"] = g.board_stamp
+		gem["bag_stamp"] = g.bag_stamp
 		var buffs = []
 		for b in g.buffs:
 			var buff = {}
@@ -1586,9 +1577,10 @@ func load_from_file(name : String = "1"):
 		g.rune = int(gem["rune"])
 		g.base_score = int(gem["base_score"])
 		g.bonus_score = int(gem["bonus_score"])
-		g.base_mult = gem["base_mult"]
-		g.bonus_mult = gem["bonus_mult"]
+		g.score_mult = gem["score_mult"]
 		g.coord = str_to_var("Vector2i" + gem["coord"])
+		g.board_stamp = int(gem["board_stamp"])
+		g.bag_stamp = int(gem["bag_stamp"])
 		var buffs = gem["buffs"]
 		for buff in buffs:
 			load_buff.call(buff, g)
@@ -1785,11 +1777,11 @@ func _ready() -> void:
 	no_score_marks[Gem.None] = []
 	no_score_marks[Gem.None].push_front(false)
 	for i in Gem.ColorCount:
-		no_score_marks[Gem.ColorRed + i] = []
-		no_score_marks[Gem.ColorRed + i].push_front(false)
+		no_score_marks[Gem.ColorFirst + i] = []
+		no_score_marks[Gem.ColorFirst + i].push_front(false)
 	for i in Gem.RuneCount:
-		no_score_marks[Gem.Runewave + i] = []
-		no_score_marks[Gem.Runewave + i].push_front(false)
+		no_score_marks[Gem.RuneFirst + i] = []
+		no_score_marks[Gem.RuneFirst + i].push_front(false)
 	
 	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
 	Board.rolling_finished.connect(func():

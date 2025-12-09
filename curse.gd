@@ -88,7 +88,7 @@ static func apply_curses():
 			"curse_magenta_no_score":
 				App.no_score_marks[Gem.ColorMagenta].push_front(true)
 			"curse_wave_no_score":
-				App.no_score_marks[Gem.Runewave].push_front(true)
+				App.no_score_marks[Gem.RuneWave].push_front(true)
 			"curse_palm_no_score":
 				App.no_score_marks[Gem.RunePalm].push_front(true)
 			"curse_starfish_no_score":
@@ -156,7 +156,7 @@ func remove():
 		"curse_magenta_no_score":
 			App.no_score_marks[Gem.ColorMagenta].pop_front()
 		"curse_wave_no_score":
-			App.no_score_marks[Gem.Runewave].pop_front()
+			App.no_score_marks[Gem.RuneWave].pop_front()
 		"curse_palm_no_score":
 			App.no_score_marks[Gem.RunePalm].pop_front()
 		"curse_starfish_no_score":

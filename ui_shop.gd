@@ -41,7 +41,7 @@ func buy_randomly():
 			return item.buy()
 	return false
 
-const items_pool = ["Flag", "Bomb", "C4", "Rainbow", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Amethyst"]
+const items_pool = ["Flag", "Bomb", "C4", "Rainbow", "Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst"]
 const relics_pool = ["ExplosionScience", "HighExplosives", "MobiusStrip", "Premeditation", "PentagramPower", "PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfPalm", "PaintingOfStarfish", "HalfPriceCoupon"]
 
 func refresh(tween : Tween = null):
@@ -61,45 +61,49 @@ func refresh(tween : Tween = null):
 			var gem = Gem.new()
 			var price = 0
 			var quantity = 1
-			if App.shop_rng.randf() > 0.4:
-				gem.type = App.shop_rng.randi() % Gem.ColorCount + Gem.ColorRed
-				gem.rune = App.shop_rng.randi() % Gem.RuneCount + Gem.Runewave
+			if App.shop_rng.randf() > 0.2:
 				if App.shop_rng.randf() > 0.5:
-					price = 1
-					quantity = 5
+					gem.type = App.shop_rng.randi() % Gem.ColorCount + Gem.ColorFirst
+					gem.rune = App.shop_rng.randi() % Gem.RuneCount + Gem.RuneFirst
+					if App.shop_rng.randf() > 0.5:
+						price = 1
+						quantity = 5
+					else:
+						price = 0
+						quantity = 1
 				else:
-					price = 0
-					quantity = 1
+					if App.shop_rng.randf() > 0.7:
+						gem.type = App.shop_rng.randi() % Gem.ColorCount + Gem.ColorFirst
+						gem.rune = App.shop_rng.randi() % Gem.RuneCount + Gem.RuneFirst
+						if App.shop_rng.randf() > 0.5:
+							App.enchant_gem(gem, "w_enchant_charming")
+						else:
+							App.enchant_gem(gem, "w_enchant_sharp")
+						price = 2
+					else:
+						gem.setup(SMath.pick_random(items_pool, App.shop_rng))
+						price = 2
 			else:
-				if App.shop_rng.randf() > 0.2:
-					gem.type = App.shop_rng.randi() % Gem.ColorCount + Gem.ColorRed
-					gem.rune = App.shop_rng.randi() % Gem.RuneCount + Gem.Runewave
-					if App.shop_rng.randf() > 0.5:
-						App.enchant_gem(gem, "w_enchant_charming")
-					else:
-						App.enchant_gem(gem, "w_enchant_sharp")
-					price = 2
+				if App.shop_rng.randf() > 0.5:
+					gem.type = Gem.ColorWild
+					gem.rune = App.shop_rng.randi() % Gem.RuneCount + Gem.RuneFirst
+					price = 5
 				else:
-					if App.shop_rng.randf() > 0.5:
-						gem.type = Gem.ColorWild
-						gem.rune = App.shop_rng.randi() % Gem.RuneCount + Gem.Runewave
-						price = 5
-					else:
-						gem.type = App.shop_rng.randi() % Gem.ColorCount + Gem.ColorRed
-						gem.rune = Gem.RuneOmni
-						price = 5
+					gem.type = App.shop_rng.randi() % Gem.ColorCount + Gem.ColorFirst
+					gem.rune = Gem.RuneOmni
+					price = 5
 			ui.setup("gem", gem, price, quantity)
 			list1.add_child(ui)
 		)
 	var relics_pool2 = []
-	var boom_ability = false
+	var explode_ability = false
 	for g in App.gems:
 		if g.category == "Bomb":
-			boom_ability = true
+			explode_ability = true
 			break
 	for n in relics_pool:
 		var has = false
-		if !boom_ability:
+		if !explode_ability:
 			if n == "ExplosionScience" || n == "HighExplosives":
 				continue
 		for r in App.relics:
@@ -127,7 +131,7 @@ func refresh(tween : Tween = null):
 				else:
 					ui.setup("w_enchant", "w_enchant_sharp", 1)
 			else:
-				if App.shop_rng.randf() >= 0.25:
+				if App.shop_rng.randf() >= 0.1:
 					if App.shop_rng.randf() >= 0.5:
 						ui.setup("w_delete", "", delete_price)
 					else:
@@ -157,7 +161,7 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	
 	var sub1 = App.game_tweens.create_tween()
 	var sub2 = App.game_tweens.create_tween()
-	sub1.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5)
+	sub1.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 	sub1.tween_callback(func():
 		App.refresh_cluster_rounds()
 	)
@@ -188,7 +192,7 @@ func exit(tween : Tween = null, trans : bool = true):
 	if trans:
 		if !tween:
 			tween = App.game_tweens.create_tween()
-		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5)
+		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 		tween.parallel().tween_property(App.background.material, "shader_parameter/color", Color(0.917, 0.921, 0.65), 0.8)
 		tween.parallel().tween_property(App.status_bar_ui.round_text, "modulate:a", 0.0, 0.3)
 		tween.parallel().tween_property(App.status_bar_ui.round_target, "modulate:a", 0.0, 0.3)

@@ -18,12 +18,12 @@ func find_all_matchings():
 				if !res.is_empty():
 					matchings.append(res)
 
-func find_missing_ones(type : int):
+func find_missing_ones(check_color : int, check_rune : int):
 	matchings.clear()
 	for y in Board.cy:
 		for x in Board.cx:
 			for p in App.patterns:
-				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), type)
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), check_color, check_rune)
 				if !res.is_empty():
 					var found = false
 					for m in matchings:
