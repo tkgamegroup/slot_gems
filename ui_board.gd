@@ -1,7 +1,5 @@
 extends Control
 
-const central_coord = Vector2i(26, 11)
-
 const UiCell = preload("res://ui_cell.gd")
 const UiHandSlot = preload("res://ui_hand_slot.gd")
 const cell_pb = preload("res://ui_cell.tscn")
@@ -16,10 +14,10 @@ const outline_pb = preload("res://ui_outline.tscn")
 @onready var hover_ui : Sprite2D = $Hover
 
 func game_coord(c : Vector2i):
-	return c + Vector2i(Board.cx, Board.cy) / 2 - central_coord
+	return c + Vector2i(Board.cx, Board.cy) / 2 - C.BOARD_CENTER
 
 func ui_coord(c : Vector2i):
-	return c - Vector2i(Board.cx, Board.cy) / 2 + central_coord
+	return c - Vector2i(Board.cx, Board.cy) / 2 + C.BOARD_CENTER
 
 func hover_coord(to_game_coord : bool = false):
 	var c = tilemap.local_to_map(tilemap.get_local_mouse_position()) 
@@ -65,7 +63,7 @@ func clear():
 		n.queue_free()
 
 func add_cell(c : Vector2i):
-	var pos = get_pos(c) - Vector2(Board.tile_sz, Board.tile_sz) * 0.5
+	var pos = get_pos(c) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 	
 	var outline = outline_pb.instantiate()
 	outline.position = pos
@@ -81,10 +79,10 @@ func update_rect(even_bs : bool, do_set : bool = true):
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
 	var used = tilemap.get_used_rect()
-	var p = tilemap.map_to_local(used.position) - Vector2(Board.tile_sz * 0.75, Board.tile_sz * 1.5)
+	var p = tilemap.map_to_local(used.position) - Vector2(C.BOARD_TILE_SZ * 0.75, C.BOARD_TILE_SZ * 1.5)
 	var s = tilemap.map_to_local(used.end) - p
 	if even_bs:
-		p.y += Board.tile_sz * 0.5
+		p.y += C.BOARD_TILE_SZ * 0.5
 	if do_set:
 		panel.position = p
 		panel.size = s
@@ -117,7 +115,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Board && self.visible:
 			var c = hover_coord()
-			var cc = c + Vector2i(Board.cx / 2, Board.cy / 2) - central_coord
+			var cc = c + Vector2i(Board.cx / 2, Board.cy / 2) - C.BOARD_CENTER
 			if Board.is_valid(cc):
 				hover_ui.show()
 				hover_ui.position = get_pos(c)

@@ -78,6 +78,7 @@ size = Vector2i(48, 48)
 
 [node name="Type" type="AnimatedSprite2D" parent="SubViewport"]
 material = SubResource("ShaderMaterial_3vjey")
+scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("5_xnwot")
 frame = 1
 centered = false
@@ -85,16 +86,19 @@ centered = false
 [node name="Wild" type="AnimatedSprite2D" parent="SubViewport"]
 visible = false
 material = SubResource("ShaderMaterial_gsthc")
+scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("5_xnwot")
 frame = 7
 centered = false
 
 [node name="Item" type="AnimatedSprite2D" parent="SubViewport"]
+scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("5_xnwot")
 centered = false
 
 [node name="Rune" type="AnimatedSprite2D" parent="SubViewport"]
 modulate = Color(0, 0, 0, 0.6666667)
+scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("7_weldj")
 centered = false
 offset = Vector2(12, 12)

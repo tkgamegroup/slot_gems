@@ -11,3 +11,6 @@ pivot_offset = Vector2(24, 24)
 script = ExtResource("1_xb2mb")
 
 [node name="Gem" parent="." instance=ExtResource("4_tb125")]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0

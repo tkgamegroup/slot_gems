@@ -20,7 +20,6 @@ enum PlaceReason
 var cx : int
 var cy : int
 const cx_mult : int = 3
-const tile_sz : int = 48
 var cells : Array[Cell]
 var curr_min_gem_num : int
 var next_min_gem_num : int
@@ -465,6 +464,8 @@ func update_gem_quantity_limit():
 	App.status_bar_ui.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
 
 func setup(_hf_cy : int):
+	ui.tilemap.tile_set.tile_size = Vector2i(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ)
+	
 	clear()
 	
 	cy = _hf_cy * 2
@@ -547,7 +548,7 @@ func clear_consumed():
 							set_gem_at(c, null)
 							set_state_at(c, Cell.State.Normal)
 							var tex = Gem.gem_frames.get_frame_texture("default", g.type - Gem.ColorFirst + 1)
-							SEffect.add_break_pieces(get_pos(c), Vector2(tile_sz, tile_sz), tex, ui.overlay)
+							SEffect.add_break_pieces(get_pos(c), Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, ui.overlay)
 						)
 						sub.tween_interval(0.4 * App.speed)
 						tween.parallel().tween_subtween(sub)
@@ -617,10 +618,10 @@ func fill_blanks():
 			sub.tween_interval(delay * App.speed)
 			var cell_ui = ui.get_cell(c)
 			var cc = gems[0] if gems.size() > 0 else Vector2i(x, -1)
-			var start_pos = get_pos(cc) - Vector2(tile_sz, tile_sz) * 0.5
+			var start_pos = get_pos(cc) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 			if cc.y < 0:
-				start_pos.y -= tile_sz
-			var end_pos = get_pos(c) - Vector2(tile_sz, tile_sz) * 0.5
+				start_pos.y -= C.BOARD_TILE_SZ
+			var end_pos = get_pos(c) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 			if cc.y < 0:
 				sub.tween_callback(func():
 					var g = App.get_gem()

@@ -4,8 +4,8 @@ const slot_ui = preload("res://ui_hand_slot.tscn")
 const UiSlot = preload("res://ui_hand_slot.gd")
 
 @onready var list = $Control
-const item_w = 48
-const item_h = 48
+const item_w = C.SPRITE_SZ
+const item_h = C.SPRITE_SZ
 const gap = 8
 
 var disabled : bool = false:

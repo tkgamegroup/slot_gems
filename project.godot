@@ -21,6 +21,7 @@ buses/default_bus_layout="uid://0tfmg84n6txe"
 
 [autoload]
 
+C="*res://constans.gd"
 SSound="*res://sound_system.gd"
 SAnimation="*res://animation_system.gd"
 SEffect="*res://effect_system.gd"

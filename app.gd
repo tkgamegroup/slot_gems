@@ -569,7 +569,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	var g2 = Board.get_gem_at(coord)
 	var cell_pos = Board.get_pos(coord)
 	var mpos = get_viewport().get_mouse_position()
-	var hf_sz = Vector2(Board.tile_sz, Board.tile_sz) * 0.5
+	var hf_sz = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 	App.begin_busy()
 	slot1.elastic = -1.0
 	var slot2 = Hand.add_gem(g2)
@@ -598,7 +598,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 		sec = int(a / 60.0)
 		a = sec * 60.0 + 30.0
 	dir = Vector2.from_angle(deg_to_rad(a))
-	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz + dir * Board.tile_sz * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz + dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz, 0.2)
 	sub2.tween_interval(0.1)
 	var rot = Vector2(0.0, 0.0)
@@ -610,7 +610,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 		4: rot = Vector2(75.0, 0.0)
 		5: rot = Vector2(75.0, 30.0)
 	sub2.tween_property(slot2.gem_ui, "angle", rot, 0.07)
-	sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * Board.tile_sz * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	sub2.parallel().tween_property(slot2.gem_ui, "angle", Vector2(0.0, 0.0), 0.07)
 	sub2.tween_property(slot2, "elastic", 1.0, 0.2).from(0.0)
 	tween.tween_subtween(sub1)
@@ -1300,6 +1300,7 @@ func save_to_file(name : String = "1"):
 		d["once"] = h.once
 	
 	var data = {}
+	data["stage"] = ""
 	data["game_rng_seed"] = App.game_rng.seed
 	data["game_rng_state"] = App.game_rng.state
 	data["round_rng_seed"] = App.round_rng.seed

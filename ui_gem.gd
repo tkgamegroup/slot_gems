@@ -1,5 +1,6 @@
 extends Control
 
+@onready var sub_viewport = $SubViewport
 @onready var type_sp = $SubViewport/Type
 @onready var wild_sp = $SubViewport/Wild
 @onready var item_sp = $SubViewport/Item
@@ -84,6 +85,10 @@ func dissolve(duration : float):
 	)
 
 func _ready() -> void:
+	self.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
+	self.pivot_offset = Vector2(C.SPRITE_SZ, C.SPRITE_SZ) * 0.5
+	sub_viewport.size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
+	
 	update(null)
 
 func _process(delta: float) -> void:

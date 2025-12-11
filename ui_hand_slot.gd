@@ -7,6 +7,9 @@ var preview = MatchPreview.new()
 var elastic : float = 1.0
 
 func _ready() -> void:
+	self.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
+	self.pivot_offset = Vector2(C.SPRITE_SZ, C.SPRITE_SZ) * 0.5
+	
 	gem_ui.update(gem)
 	
 	mouse_entered.connect(func():
