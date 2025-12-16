@@ -4,6 +4,5 @@
 
 [node name="Outline" type="Sprite2D"]
 modulate = Color(0.51718444, 0.5171845, 0.51718444, 1)
-scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_qasoe")
 centered = false

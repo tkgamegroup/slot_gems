@@ -46,7 +46,7 @@ func refresh_price():
 			color = "ORANGE_RED"
 		elif price < original_price:
 			color = "LAWN_GREEN"
-	var text = "[color=%s]%d[/color][img=16]res://images/coin.png[/img]" % [color, price]
+	var text = "[img]res://images/coin.png[/img][color=%s]%d[/color]" % [color, price]
 	if original_price < 0:
 		text = tr("ui_shop_item_return") + text
 	if no_button:
@@ -149,7 +149,7 @@ func buy(tween : Tween = null):
 func _ready() -> void:
 	if cate == "gem":
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(64, 64)
+		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ) + Vector2(16, 16)
 		var ui = gem_ui.instantiate()
 		ui.update(object)
 		ctrl.add_child(ui)

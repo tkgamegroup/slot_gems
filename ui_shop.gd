@@ -179,7 +179,7 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	tween.parallel().tween_property(App.background.material, "shader_parameter/color", Color(0.71, 0.703, 0.504), 0.8)
 	
 	refresh_price = refresh_base_price
-	refresh_button.text.text = "%s %d[img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
+	refresh_button.text.text = "%s [img]res://images/coin.png[/img]%d" % [tr("ui_shop_refresh"), refresh_price]
 	
 	delete_price = 0
 	
@@ -225,7 +225,7 @@ func _ready() -> void:
 		App.coins -= refresh_price
 		
 		refresh_price += refresh_price_increase
-		refresh_button.text.text = "%s %d[img=16]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
+		refresh_button.text.text = "%s %d[img]res://images/coin.png[/img]" % [tr("ui_shop_refresh"), refresh_price]
 		
 		refresh()
 	)

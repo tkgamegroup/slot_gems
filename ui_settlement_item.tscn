@@ -7,15 +7,18 @@ script = ExtResource("1_i73lo")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 
 [node name="Label2" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 clip_text = true
 
 [node name="Label3" type="RichTextLabel" parent="."]
 visible = false
 layout_mode = 2
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0

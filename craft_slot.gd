@@ -45,7 +45,7 @@ func _ready() -> void:
 	else:
 		title_txt.text = "[url=%s]%s[/url]" % [type, tr(type)]
 	button.disabled = true
-	button.text.text = "%d[img=16]res://images/coin.png[/img]" % price
+	button.text.text = "[img=24]res://images/coin.png[/img]%d" % price
 	Drag.add_target("gem", slot, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			img_open.modulate = Color(0.7, 0.7, 0.7, 1.0)

@@ -6,6 +6,7 @@ var ui : Control
 var release_cb : Callable
 var targets : Array[Triple]
 var processing : bool = false
+const offset : Vector2 = Vector2(0, -0)
 
 func add_target(_type : String, node, cb : Callable):
 	var t = Triple.new(_type, node, cb)
@@ -89,4 +90,4 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	if ui:
-		ui.global_position = get_global_mouse_position() - (ui.size * 0.5)
+		ui.global_position = get_global_mouse_position() - (ui.size * 0.5) + offset

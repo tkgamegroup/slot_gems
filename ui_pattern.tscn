@@ -9,39 +9,39 @@
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mtyre"]
 texture = ExtResource("2_osotj")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 0:0/0/modulate = Color(1, 1, 1, 0.392157)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tcs51"]
 texture = ExtResource("2_osotj")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mk3kv"]
 texture = ExtResource("3_5jo1r")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qfjdw"]
 texture = ExtResource("4_fmous")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uubn7"]
 texture = ExtResource("5_pos7q")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u5asb"]
 texture = ExtResource("6_n6157")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_e64fm"]
 tile_shape = 3
 tile_offset_axis = 1
-tile_size = Vector2i(48, 48)
+tile_size = Vector2i(72, 72)
 sources/0 = SubResource("TileSetAtlasSource_mtyre")
 sources/1 = SubResource("TileSetAtlasSource_tcs51")
 sources/2 = SubResource("TileSetAtlasSource_mk3kv")
@@ -59,13 +59,13 @@ bg_color = Color(1, 1, 1, 1)
 custom_minimum_size = Vector2(78, 108)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 26.0
-offset_bottom = 36.0
+offset_right = 78.0
+offset_bottom = 108.0
 size_flags_horizontal = 4
 script = ExtResource("1_wvl8u")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.33, 0.33)
 tile_map_data = PackedByteArray("AAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAADAAIAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_e64fm")
 

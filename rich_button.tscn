@@ -19,6 +19,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "abc"
 fit_content = true
