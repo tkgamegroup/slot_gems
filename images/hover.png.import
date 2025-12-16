@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://np31u18iwfdo"
-path="res://.godot/imported/quetion_mark.png-24ef41bf54f917e5b3875c97b1114f5b.ctex"
+uid="uid://ed1myix0g4wq"
+path="res://.godot/imported/hover.png-99cb6a50cd60c2eadcab7d60bad1bc0d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/quetion_mark.png"
-dest_files=["res://.godot/imported/quetion_mark.png-24ef41bf54f917e5b3875c97b1114f5b.ctex"]
+source_file="res://images/hover.png"
+dest_files=["res://.godot/imported/hover.png-99cb6a50cd60c2eadcab7d60bad1bc0d.ctex"]
 
 [params]
 
