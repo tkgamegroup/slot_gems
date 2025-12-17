@@ -905,12 +905,11 @@ func start_game(saving : String = ""):
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
-			g.setup("Volcano")
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()
-			g.type = Gem.ColorWild
-			g.rune = Gem.None
+			g.type = Gem.ColorRed
+			g.rune = Gem.RunePalm
 			add_gem(g)
 		for i in 16:
 			var g = Gem.new()

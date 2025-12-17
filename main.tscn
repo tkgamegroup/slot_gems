@@ -95,6 +95,7 @@
 [ext_resource type="Texture2D" uid="uid://xisl1nrbb2ei" path="res://images/spotlight.png" id="78_41lik"]
 [ext_resource type="Script" uid="uid://caypb4y5bf3py" path="res://ui_tutorial.gd" id="80_f1p13"]
 [ext_resource type="Script" uid="uid://cv7nxdr7kyb51" path="res://rich_text_tt.gd" id="87_sn1fb"]
+[ext_resource type="Texture2D" uid="uid://dfg6sxc03r2og" path="res://images/right.png" id="88_sn1fb"]
 [ext_resource type="Script" uid="uid://wa74t8m4uwaa" path="res://ui_upgrade.gd" id="94_sn1fb"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
@@ -521,7 +522,7 @@ expand_margin_right = 20.0
 expand_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n5t1e"]
-bg_color = Color(0.5156732, 0.60584235, 0.6115604, 1)
+bg_color = Color(0.50249547, 0.6037912, 0.57311046, 1)
 border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
@@ -534,8 +535,6 @@ expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hwh0u"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_av48c"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6isl"]
 bg_color = Color(0.59, 0.0708, 0.0708, 0.588235)
@@ -1055,32 +1054,32 @@ alignment = 1
 
 [node name="Button1" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 64
 text = "ui_titile_continue"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 64
 text = "ui_titile_new_game"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 64
 disabled = true
 text = "ui_titile_collections"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 64
 text = "ui_titile_options"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button5" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 64
 text = "ui_titile_quit"
 metadata/_edit_use_anchors_ = true
 
@@ -2108,13 +2107,19 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_lwnsi")
 [node name="BaseScore" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -26.0
+offset_right = 100.0
+offset_bottom = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 32
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -2130,16 +2135,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -4.5
-offset_top = -11.5
-offset_right = 4.5
-offset_bottom = 11.5
+offset_left = -6.5
+offset_top = -26.0
+offset_right = 6.5
+offset_bottom = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1e-05, 1)
 pivot_offset = Vector2(4, 11)
 theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 32
 text = "x"
 
 [node name="Panel2" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
@@ -2150,14 +2155,20 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_41lik")
 [node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel2"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -26.0
+offset_right = 30.0
+offset_bottom = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 32
 text = "0X"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -2173,16 +2184,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -4.5
-offset_top = -11.5
-offset_right = 4.5
-offset_bottom = 11.5
+offset_left = -6.5
+offset_top = -26.0
+offset_right = 6.5
+offset_bottom = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1e-05, 1)
 pivot_offset = Vector2(4, 11)
 theme_override_colors/font_color = Color(0.711331, 0, 0.0661291, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 32
 text = "x"
 
 [node name="Panel3" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
@@ -2193,13 +2204,19 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jbvwl")
 [node name="Mult" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel3"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -26.0
+offset_right = 30.0
+offset_bottom = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 32
 text = "1.0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -2215,7 +2232,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "8888888"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -2365,7 +2382,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_l0gw7")
 script = ExtResource("34_rwa0e")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer"]
-custom_minimum_size = Vector2(844, 568)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -2381,13 +2397,12 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer"]
-custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -2450,7 +2465,8 @@ text = "ui_bag_viewer_gems"
 
 [node name="List" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-columns = 16
+theme_override_constants/h_separation = 10
+columns = 10
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 visible = false
@@ -2466,19 +2482,18 @@ columns = 24
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
 
 [node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_comfirm"
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/BagViewer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
@@ -2526,6 +2541,7 @@ metadata/_tab_index = 0
 [node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "ui_tutorial_page1"
 fit_content = true
@@ -2541,6 +2557,7 @@ metadata/_tab_index = 1
 [node name="Text" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/TabContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "ui_tutorial_page2"
 fit_content = true
@@ -2560,14 +2577,16 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ppx11")
+text = " "
 icon = ExtResource("75_ppx11")
 expand_icon = true
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Tutorial/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ovcoh")
 text = "ui_close"
 
@@ -2576,8 +2595,10 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1yv1y")
-icon = ExtResource("54_eldhe")
+text = " "
+icon = ExtResource("88_sn1fb")
 expand_icon = true
 
 [node name="Elements" type="TextureRect" parent="SubViewportContainer/SubViewport/Canvas/Tutorial"]
@@ -2614,12 +2635,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_n5t1e")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer"]
 layout_mode = 2
-theme_override_constants/separation = 0
+theme_override_constants/separation = 8
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "ui_options_title"
 
 [node name="TabContainer" type="TabContainer" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer"]
@@ -2644,11 +2665,13 @@ columns = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_language"
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 selected = 0
 item_count = 2
 popup/item_0/text = "English"
@@ -2658,11 +2681,13 @@ popup/item_1/id = 1
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_game_speed"
 
 [node name="OptionButton2" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 selected = 1
 item_count = 4
 popup/item_0/text = "0.5"
@@ -2676,29 +2701,33 @@ popup/item_3/id = 3
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_performance_mode"
 
 [node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_invincible"
 
 [node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_command_line"
 
 [node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Game/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_hwh0u")
 
 [node name="Video" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer"]
@@ -2718,21 +2747,25 @@ columns = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_display_monitor"
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 item_count = 1
 popup/item_0/id = 0
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_window_mode"
 
 [node name="OptionButton2" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 item_count = 3
 popup/item_0/text = "ui_options_windowed"
 popup/item_0/id = 0
@@ -2744,15 +2777,18 @@ popup/item_2/id = 2
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 visible = false
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_resolution"
 
 [node name="OptionButton3" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Video/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 disabled = true
 text = "Apply"
 
@@ -2773,6 +2809,7 @@ columns = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Graphics/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_crt"
 
 [node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Graphics/GridContainer"]
@@ -2797,6 +2834,7 @@ columns = 2
 
 [node name="Labe" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Audio/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_sfx_volume"
 
 [node name="HSlider" type="HSlider" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Audio/GridContainer"]
@@ -2808,6 +2846,7 @@ step = 0.01
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Audio/GridContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "ui_options_music_volume"
 
 [node name="HSlider2" type="HSlider" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer/TabContainer/Audio/GridContainer"]
@@ -2819,7 +2858,6 @@ step = 0.01
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Options/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_styles/focus = SubResource("StyleBoxEmpty_av48c")
 text = "ui_close"
 
 [node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]

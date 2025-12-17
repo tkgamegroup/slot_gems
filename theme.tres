@@ -1,7 +1,10 @@
-[gd_resource type="Theme" load_steps=24 format=3 uid="uid://lm57pm3v4aq7"]
+[gd_resource type="Theme" load_steps=30 format=3 uid="uid://lm57pm3v4aq7"]
 
+[ext_resource type="Texture2D" uid="uid://srhk7v1lpvjr" path="res://images/checked.png" id="1_110ce"]
 [ext_resource type="FontFile" uid="uid://cp78tjuwu7qrs" path="res://fonts/Baloo2_Bold.ttf" id="1_cjfk0"]
+[ext_resource type="Texture2D" uid="uid://csw2ujy7ca20i" path="res://images/unchecked.png" id="2_05tig"]
 [ext_resource type="FontFile" uid="uid://vm58fvt8waip" path="res://fonts/Baloo2.ttf" id="2_vj6dk"]
+[ext_resource type="Texture2D" uid="uid://1sv7liij36k7" path="res://images/slider.png" id="3_05tig"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1x85"]
 content_margin_top = 0.0
@@ -84,6 +87,15 @@ bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mihib"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wdt2l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_504p6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ttqs8"]
+content_margin_top = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.36282945, 0.36282948, 0.36282933, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndmpe"]
 bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 expand_margin_left = 4.0
@@ -153,12 +165,20 @@ Button/styles/focus = SubResource("StyleBoxEmpty_e1x85")
 Button/styles/hover = SubResource("StyleBoxFlat_cjfk0")
 Button/styles/normal = SubResource("StyleBoxFlat_05tig")
 Button/styles/pressed = SubResource("StyleBoxFlat_vj6dk")
+CheckBox/icons/checked = ExtResource("1_110ce")
+CheckBox/icons/unchecked = ExtResource("2_05tig")
 CheckBox/styles/focus = SubResource("StyleBoxEmpty_05tig")
 CheckBox/styles/hover = SubResource("StyleBoxFlat_1rmny")
 CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_110ce")
 CheckBox/styles/normal = SubResource("StyleBoxEmpty_1rmny")
 CheckBox/styles/pressed = SubResource("StyleBoxEmpty_mihib")
 HBoxContainer/constants/separation = 4
+HSlider/icons/grabber = ExtResource("3_05tig")
+HSlider/icons/grabber_disabled = ExtResource("3_05tig")
+HSlider/icons/grabber_highlight = ExtResource("3_05tig")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_wdt2l")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_504p6")
+HSlider/styles/slider = SubResource("StyleBoxFlat_ttqs8")
 OptionButton/styles/disabled = SubResource("StyleBoxFlat_ndmpe")
 OptionButton/styles/hover = SubResource("StyleBoxFlat_0ceoj")
 OptionButton/styles/normal = SubResource("StyleBoxFlat_6q1gq")
@@ -175,7 +195,7 @@ TabContainer/colors/font_hovered_color = Color(1, 1, 1, 1)
 TabContainer/colors/font_selected_color = Color(0.657, 0.79065, 0.9, 1)
 TabContainer/colors/font_unselected_color = Color(1, 1, 1, 1)
 TabContainer/constants/tab_separation = 48
-TabContainer/font_sizes/font_size = 24
+TabContainer/font_sizes/font_size = 28
 TabContainer/styles/panel = SubResource("StyleBoxEmpty_cjfk0")
 TabContainer/styles/tab_focus = SubResource("StyleBoxEmpty_vj6dk")
 TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_6cw85")

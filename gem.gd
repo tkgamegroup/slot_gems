@@ -512,14 +512,14 @@ func setup(n : String):
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
 			var pos = Board.get_pos(coord)
 			var coords : Array[Vector2i] = []
+			var cands = []
+			for c in Board.offset_ring(coord, 1):
+				if Board.is_valid(c) && !cands.has(c):
+					cands.append(c)
+			for c in Board.offset_ring(coord, 2):
+				if Board.is_valid(c) && !cands.has(c):
+					cands.append(c)
 			for i in 2:
-				var cands = []
-				for c in Board.offset_ring(coord, 1):
-					if Board.is_valid(c) && !coords.has(c):
-						cands.append(c)
-				for c in Board.offset_ring(coord, 2):
-					if Board.is_valid(c) && !coords.has(c):
-						cands.append(c)
 				if !cands.is_empty():
 					var arr = []
 					for c in SMath.pick_n_random(cands, 2, App.game_rng):
@@ -529,12 +529,13 @@ func setup(n : String):
 					for t in arr:
 						var sp = Sprite2D.new()
 						sp.texture = SEffect.fireball_image
+						sp.scale = Vector2(2.0, 2.0)
 						sp.position = pos
 						sp.z_index = 3
 						Board.ui.overlay.add_child(sp)
 						t.third = sp
 						tween.parallel()
-						SAnimation.quadratic_curve_to(tween, sp, t.second, Vector2(0.5, 0.5), 0.4 * App.speed)
+						tween.tween_property(sp, "position", t.second, 0.4 * App.speed).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 					tween.tween_callback(func():
 						App.add_combo()
 						for t in arr:

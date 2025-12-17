@@ -26,7 +26,7 @@ func clear():
 func create_bar():
 	var bar = ColorRect.new()
 	bar.size = Vector2(24, 4)
-	bar.position = Vector2((C.SPRITE_SZ - bar.size.x) * 0.5, C.SPRITE_SZ)
+	bar.position = Vector2((C.SPRITE_SZ - bar.size.x) * 0.5, C.SPRITE_SZ + 2)
 	bar.color = Color(0.7, 0.7, 0.7, 1.0)
 	bar.hide()
 	return bar
@@ -55,7 +55,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		select_callback = _select_callback
 	for g in App.gems:
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ + 4)
+		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ + 8)
 		ctrl.mouse_entered.connect(func():
 			SSound.se_select.play()
 			STooltip.show(ctrl, 0, g.get_tooltip())

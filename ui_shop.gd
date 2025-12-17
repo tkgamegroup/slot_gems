@@ -41,7 +41,7 @@ func buy_randomly():
 			return item.buy()
 	return false
 
-const items_pool = ["Flag", "Bomb", "C4", "Rainbow", "Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst"]
+const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "Bomb", "C4", "Rainbow", "Orange", "IaiCut", "Lightning", "Volcano", "PolishingPowder"]
 const relics_pool = ["ExplosionScience", "HighExplosives", "MobiusStrip", "Premeditation", "PentagramPower", "PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfPalm", "PaintingOfStarfish", "HalfPriceCoupon"]
 
 func refresh(tween : Tween = null):
