@@ -312,6 +312,7 @@ t_Greed_effect,Penniless,身无分文
 item_name_SinEnvy,Sin Envy,罪·嫉妒
 item_desc_SinEnvy,w_aura: Score and Mult getting from Gems decrease by 25%.,w_aura：获取自宝石的分数跟倍率减少25%。
 t_Envy_effect,Dispel,消除
+relic,Relic,遗物
 relic_name_ExplosionScience,Explosion Science,爆炸科学
 relic_desc_ExplosionScience,Explosion w_range +{range_increase} but w_power -{power_decrease}.,爆炸w_range+{range_increase}但是w_power-{power_decrease}。
 relic_name_HighExplosives,High Explosives,高爆炸药

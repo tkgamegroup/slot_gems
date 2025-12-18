@@ -28,6 +28,7 @@ func enter():
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	rewards = 0
+	button.modulate.a = 0.0
 	button.disabled = true
 	
 	tween.tween_callback(func():
@@ -62,6 +63,7 @@ func enter():
 	tween.tween_interval(0.2)
 	tween.tween_callback(func():
 		App.save_to_file()
+		button.modulate.a = 1.0
 		button.disabled = false
 	)
 	button_text.text = "%s[img]res://images/coin.png[/img]" % (tr("ui_settlement_cash_out") % rewards)

@@ -1,5 +1,6 @@
 extends Control
 
+@onready var cate_lb = $VBoxContainer/Category
 @onready var content : Control = $VBoxContainer/Content
 @onready var buy_button = $VBoxContainer/Buy
 @onready var price_lb = $VBoxContainer/Price
@@ -148,8 +149,10 @@ func buy(tween : Tween = null):
 
 func _ready() -> void:
 	if cate == "gem":
+		cate_lb.text = tr("gem")
+		cate_lb.show()
 		var ctrl = Control.new()
-		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ) + Vector2(16, 16)
+		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
 		var ui = gem_ui.instantiate()
 		ui.update(object)
 		ctrl.add_child(ui)
@@ -164,20 +167,21 @@ func _ready() -> void:
 		if quantity > 1:
 			var lb = Label.new()
 			lb.text = "x%d" % quantity
-			lb.position = Vector2(40, 40)
+			lb.position = Vector2(40, 48)
 			lb.add_theme_color_override("font_shadow_color", Color.BLACK)
 			lb.add_theme_color_override("font_outline_color", Color.BLACK)
 			lb.add_theme_constant_override("shadow_offset_x", 2)
 			lb.add_theme_constant_override("shadow_offset_y", 2)
 			lb.add_theme_constant_override("outline_size", 1)
 			ctrl.add_child(lb)
-		ui.position = Vector2(8, 8)
 	elif cate == "pattern":
 		var ui = pattern_ui.instantiate()
 		ui.setup(object, true)
 		ui.mouse_filter = Control.MOUSE_FILTER_PASS
 		content.add_child(ui)
 	elif cate == "relic":
+		cate_lb.text = tr("relic")
+		cate_lb.show()
 		var ui = relic_ui.instantiate()
 		ui.setup(object)
 		ui.mouse_filter = Control.MOUSE_FILTER_PASS
