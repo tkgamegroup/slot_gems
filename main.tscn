@@ -2479,7 +2479,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jcxqu")
 script = ExtResource("80_f1p13")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(800, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
