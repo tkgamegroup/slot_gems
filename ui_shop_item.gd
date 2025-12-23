@@ -123,10 +123,11 @@ func buy(tween : Tween = null):
 		)
 		tween.tween_property(ui, "elastic", 1.0, 0.4)
 	elif cate == "upgrade_board":
+		var new_size = App.board_size + 1
 		tween.tween_callback(func():
-			App.board_size += 1
+			App.board_size = new_size
 		)
-		Board.resize(App.board_size + 1, tween)
+		Board.resize(new_size, tween)
 		tween.tween_interval(1.5)
 	elif cate == "increase_swaps":
 		tween.tween_callback(func():

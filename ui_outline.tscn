@@ -1,8 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://1uswtjs0af28"]
 
-[ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/hex-o.png" id="1_qasoe"]
+[ext_resource type="Texture2D" uid="uid://c7qagfwhfqrs3" path="res://images/hex-dent.png" id="1_qasoe"]
 
-[node name="Outline" type="Sprite2D"]
-modulate = Color(0.51718444, 0.5171845, 0.51718444, 1)
+[node name="Node2D" type="Node2D"]
+
+[node name="Outline" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 0.19607843)
+position = Vector2(-4, -4)
 texture = ExtResource("1_qasoe")
 centered = false

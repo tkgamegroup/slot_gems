@@ -1,4 +1,4 @@
-extends Object
+extends Node
 
 const SPRITE_SZ : int = 72
 const BOARD_TILE_SZ : int = SPRITE_SZ

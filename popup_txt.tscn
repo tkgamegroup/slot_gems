@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dnklw0t0do4yn"]
+[gd_scene load_steps=2 format=3 uid="uid://dnklw0t0do4yn"]
+
+[ext_resource type="FontVariation" uid="uid://bgc333n8f0dkw" path="res://fonts/Baloo2_number.tres" id="1_46ph2"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -14,4 +16,5 @@ grow_vertical = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("1_46ph2")
 theme_override_font_sizes/font_size = 24

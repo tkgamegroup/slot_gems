@@ -162,9 +162,6 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	var sub1 = App.game_tweens.create_tween()
 	var sub2 = App.game_tweens.create_tween()
 	sub1.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-	sub1.tween_callback(func():
-		App.refresh_cluster_rounds()
-	)
 	sub2.parallel().tween_property(App.status_bar_ui.round_text, "modulate:a", 0.0, 0.3)
 	sub2.parallel().tween_property(App.status_bar_ui.round_target, "modulate:a", 0.0, 0.3)
 	sub2.tween_callback(func():

@@ -347,7 +347,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "C4":
 		type = None
@@ -363,7 +363,7 @@ func setup(n : String):
 				tween.tween_callback(func():
 					Board.activate(self, HostType.Gem, 0, coord, reason, source)
 				)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "Rainbow":
 		type = ColorWild
@@ -389,7 +389,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var targets = []
 			for c in Board.offset_neighbors(coord):
 				var g = Board.get_gem_at(c)
@@ -418,7 +418,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var cc = Board.offset_to_cube(coord)
 			var arr = [0, 1, 2]
 			var coords : Array[Vector2i] = []
@@ -468,7 +468,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var targets = Board.filter(func(gem : Gem, item : Item):
 				return gem && gem.name == "Lightning"
 			)
@@ -509,7 +509,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : AnimatedSprite2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var pos = Board.get_pos(coord)
 			var coords : Array[Vector2i] = []
 			var cands = []

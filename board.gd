@@ -382,13 +382,11 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			eliminate(trigger_targets, tween, reason, source, false)
 
 func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
-	var sp : AnimatedSprite2D = null
+	var sp : Node2D = null
 	if type == HostType.Gem:
 		var gem : Gem = host
 		gem.active = true
 		sp = active_effect_pb.instantiate()
-		sp.sprite_frames = Gem.gem_frames
-		sp.frame = 0
 		sp.position = get_pos(c)
 		sp.z_index = 6
 		sp.get_child(1).text = "%d" % active_serial
@@ -402,6 +400,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		sp.z_index = 6
 		sp.get_child(1).text = "%d" % active_serial
 		App.game_overlay.add_child(sp)
+	
 	var ae = ActiveEffect.new()
 	ae.host = host
 	ae.type = type
@@ -409,6 +408,11 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	ae.coord = c
 	ae.sp = sp
 	active_effects.append(ae)
+	
+	sp.scale = Vector2(0.0, 0.0)
+	var tween = App.game_tweens.create_tween()
+	tween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.15 * App.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	
 	active_serial += 1
 	for h in event_listeners:
 		h.host.on_event.call(Event.ItemActivated, null, ae)
@@ -416,6 +420,19 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 
 func process_active_effect(ae : ActiveEffect):
 	var tween = App.game_tweens.create_tween()
+	var text = ae.sp.get_child(1)
+	for t in 3:
+		tween.tween_callback(func():
+			text.modulate.a = 0.0
+		)
+		tween.tween_interval(0.05 * App.speed)
+		tween.tween_callback(func():
+			text.modulate.a = 1.0
+		)
+		tween.tween_interval(0.05 * App.speed)
+	tween.tween_callback(func():
+		ae.sp.hide()
+	)
 	if ae.type == HostType.Gem:
 		var gem : Gem = ae.host
 		if gem.on_active.is_valid():
@@ -476,6 +493,8 @@ func setup(_hf_cy : int):
 	update_gem_quantity_limit()
 
 func resize(_hf_cy : int, tween : Tween):
+	if !tween:
+		tween = App.game_tweens.create_tween()
 	var old_cells = cells.duplicate()
 	var old_cell_uis = []
 	var old_outline_uis = []

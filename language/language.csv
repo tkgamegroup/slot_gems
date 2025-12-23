@@ -108,8 +108,9 @@ tt_orange_base_score,Orange gems' base score,橙色宝石基础分数
 tt_green_base_score,Green gems' base score,绿色宝石基础分数
 tt_blue_base_score,Blue gems' base score,蓝色宝石基础分数
 tt_magenta_base_score,Magenta gems' base score,品红色宝石基础分数
-ui_game_round,Round %d (Reward: %d[img width=16]res://images/coin.png[/img]),回合 %d（奖励：%d[img width=16]res://images/coin.png[/img]）
-ui_game_target_score,Score at lease %d.,最少达到 %d 分。
+ui_stage,Stage,关卡
+ui_game_round,Round %d,回合 %d
+ui_game_round_target,Score at lease %d to earn [img width]res://images/coin.png[/img]%d.,最少达到 %d 分来获得[img width]res://images/coin.png[/img]%d。
 ui_game_board_size,BS,棋盘
 tt_game_board_size_title,Board Size,棋盘大小
 tt_game_board_size_content,"The horizontal cells would be Board Size x6, the vertical cells would be Board Size x2.",横向的格子数将会是 棋盘大小 x6，纵向的格子数将会是 棋盘大小 x2。
@@ -117,6 +118,7 @@ ui_game_hand,H,手牌
 tt_game_hand_title,Hand,手牌
 tt_game_hand_content,Max Grabs: %d,最大抓取数: %d
 tt_game_coins_title,Your Coins,你的金币
+tt_game_info_title,Run Info,此局信息
 tt_game_bag_title,Your Bag,你的包
 tt_game_gem_number,Number Of Gems,宝石数量
 tt_game_upgrade_number_and_min_number,Minimum number of gems required to upgrade Board Size: %d\nMinimum number of gems: %d,升级棋盘大小所需最少宝石数量：%d\n最少宝石数量：%d

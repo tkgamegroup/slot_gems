@@ -13,7 +13,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 6
+const version_patch : int = 7
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -38,6 +38,7 @@ const UiGameOver = preload("res://ui_game_over.gd")
 const UiSettlement = preload("res://ui_settlement.gd")
 const UiUpgrade = preload("res://ui_upgrade.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
+const UiRunInfo = preload("res://ui_run_info.gd")
 const UiBagViewer = preload("res://ui_bag_viewer.gd")
 const UiTutorial = preload("res://ui_tutorial.gd")
 const gem_ui = preload("res://ui_gem.tscn")
@@ -73,6 +74,7 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/Canvas/Dialog
 @onready var options_ui : UiOptions = $/root/Main/SubViewportContainer/SubViewport/Canvas/Options
 @onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/Canvas/Collections
+@onready var run_info_ui : UiRunInfo = $/root/Main/SubViewportContainer/SubViewport/Canvas/RunInfo
 @onready var bag_viewer_ui : UiBagViewer = $/root/Main/SubViewportContainer/SubViewport/Canvas/BagViewer
 @onready var tutorial_ui : UiTutorial = $/root/Main/SubViewportContainer/SubViewport/Canvas/Tutorial
 @onready var in_game_menu_ui : UiInGameMenu = $/root/Main/SubViewportContainer/SubViewport/Canvas/InGameMenu
@@ -443,7 +445,7 @@ func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0
 var add_score_dir : int = 1
 func add_score(value : int, pos : Vector2):
 	value = int(value * gain_scaler)
-	pos += Vector2(randf() * 4.0 - 2.0, randf() * 4.0 - 2.0)
+	pos += Vector2(randf() * 6.0 - 3.0, randf() * 6.0 - 3.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
@@ -456,7 +458,7 @@ func add_score(value : int, pos : Vector2):
 	
 	var tween = App.create_tween()
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
-	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 5, 0.2 * speed)
+	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * speed)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_callback(func():
 		lb.hide()
@@ -646,38 +648,34 @@ func process_command_line(cl : String):
 			var t = tokens[i]
 			if t.length() >= 2 && t[0] == '"' && t[t.length() - 1] == '"':
 				tokens[i] = t.substr(1, t.length() - 2)
-		if cmd == "test_matching":
-			var tokens2 = tokens[1].split(",")
-			var coord = Vector2i(int(tokens2[0]), int(tokens2[1]))
-			for p in App.patterns:
-				p.match_with(coord)
-		elif cmd == "win":
+		if cmd == "win":
 			App.win()
 		elif cmd == "lose":
 			App.lose()
-		elif cmd == "shop":
+		elif cmd == "shopping":
 			App.shop_ui.enter()
-		elif cmd == "swap":
-			App.swaps += int(tokens[1])
+		elif cmd == "swaps":
+			App.swaps = int(tokens[1])
+		elif cmd == "board_size":
+			var size = int(tokens[1])
+			App.board_size = size
+			Board.resize(size, null)
 		elif cmd == "gold":
 			App.coins += int(tokens[1])
-		elif cmd == "ai":
+		elif cmd == "add_gem":
 			var num = 1
 			var tt = tokens[1]
 			if tt.is_valid_int():
 				num = int(tt)
 				tt = tokens[2]
 			for j in num:
-				var i = Item.new()
-				i.setup(tt)
-				App.add_item(i)
-		elif cmd == "ar":
+				var g = Gem.new()
+				g.setup(tt)
+				App.add_gem(g)
+		elif cmd == "add_relic":
 			var r = Relic.new()
 			r.setup(tokens[1])
 			App.add_relic(r)
-		elif cmd == "dhg":
-			var idx = int(tokens[1])
-			delete_gem(Hand.grabs[idx], Hand.ui.get_slot(idx).gem_ui)
 		elif cmd == "backup":
 			DirAccess.copy_absolute("user://save1.json", "res://save_%s.txt" % SUtils.get_formated_datetime())
 		elif cmd == "restore":
@@ -731,6 +729,8 @@ func process_command_line(cl : String):
 				elif t == "-es":
 					enable_shopping = true
 			STest.start_test(mode, round_count, task_count, "", saving, additional_patterns, additional_relics, additional_enchants, true, enable_shopping)
+		elif cmd == "paint_board":
+			Painting.set_board_to_painting("")
 
 func get_round_score(lv : int):
 	if lv <= 10:
@@ -901,77 +901,78 @@ func start_game(saving : String = ""):
 			r.setup("Libra")
 			add_relic(r)
 		
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
+			g.setup("Bomb")
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		for i in 64:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneStarfish
@@ -1014,7 +1015,6 @@ func start_game(saving : String = ""):
 		status_bar_ui.round_target.modulate.a = 1.0
 		load_from_file(saving)
 		history.init()
-		refresh_cluster_rounds()
 	
 	status_bar_ui.board_size_text.show_change = true
 	status_bar_ui.hand_text.show_change = true
@@ -1044,11 +1044,8 @@ func exit_game():
 	App.control_ui.exit()
 	App.game_ui.hide()
 
-func get_round_title(lv : int, reward : int):
-	return tr("ui_game_round") % [lv, reward]
-
-func get_round_desc(target : int, curses : Array[Curse] = []):
-	var ret = tr("ui_game_target_score") % target
+func get_round_desc(target : int, reward : int, curses : Array[Curse] = []):
+	var ret = tr("ui_game_round_target") % [target, reward]
 	if !curses.is_empty():
 		var cates = {}
 		for c in curses:
@@ -1064,59 +1061,12 @@ func get_round_desc(target : int, curses : Array[Curse] = []):
 	return ret
 
 func update_round_text(round : int, target : int = -1, reward : int = -1, curses : Array[Curse] = []):
-	status_bar_ui.round_text.text = tr("ui_game_round") % [round, reward]
+	status_bar_ui.round_text.text = tr("ui_game_round") % round
 	if target == -1:
 		target = get_round_score(round)
 	if reward == -1:
 		reward = get_round_reward(round)
-	status_bar_ui.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(target, curses), true, true)
-
-var cluster_round_tween : Tween = null
-
-func change_cluster_round_img(target : int, frame : int):
-	var sp = status_bar_ui.cluster_round_sps[target]
-	if frame == 2:
-		if sp.frame != 2:
-			if cluster_round_tween:
-				cluster_round_tween.custom_step(100.0)
-			cluster_round_tween = App.create_tween()
-			cluster_round_tween.tween_property(sp, "scale", Vector2(0.8, 0.8), 0.2)
-			cluster_round_tween.tween_callback(func():
-				sp.frame = 2
-			)
-			cluster_round_tween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.1)
-			cluster_round_tween.tween_callback(func():
-				cluster_round_tween = null
-			)
-	else:
-		sp.frame = frame
-
-func refresh_cluster_rounds():
-	if settlement_ui.visible:
-		var r0 = int((round - 1) / 3) * 3
-		for i in 3:
-			if r0 + i + 1 <= round:
-				change_cluster_round_img(i, 2)
-			else:
-				change_cluster_round_img(i, 0)
-	elif shop_ui.visible:
-		var r0 = int(round / 3) * 3
-		for i in 3:
-			if r0 + i + 1 <= round:
-				change_cluster_round_img(i, 2)
-			elif r0 + i + 1 == round + 1:
-				change_cluster_round_img(i, 1)
-			else:
-				change_cluster_round_img(i, 0)
-	else:
-		var r0 = int((round - 1) / 3) * 3
-		for i in 3:
-			if r0 + i + 1 < round:
-				change_cluster_round_img(i, 2)
-			elif r0 + i + 1 == round:
-				change_cluster_round_img(i, 1)
-			else:
-				change_cluster_round_img(i, 0)
+	status_bar_ui.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(target, reward, curses), true, true)
 
 #const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
 const curse_types = ["red_no_score", "orange_no_score", "green_no_score", "blue_no_score", "magenta_no_score", "wave_no_score", "palm_no_score", "starfish_no_score"]
@@ -1166,7 +1116,6 @@ func next_round(tween : Tween = null):
 			cc.type = c.type
 			current_curses.append(cc)
 		update_round_text(round, target_score, reward, current_curses)
-		refresh_cluster_rounds()
 		
 		rolls = rolls_per_round
 		swaps = swaps_per_round
@@ -1234,7 +1183,6 @@ func win():
 	round_end()
 	stage = Stage.Settlement
 	settlement_ui.enter()
-	refresh_cluster_rounds()
 
 func lose():
 	round_end()
@@ -1854,7 +1802,7 @@ func _ready() -> void:
 				end_busy()
 	)
 	command_line_edit.text_submitted.connect(func(cl : String):
-		App.process_command_line(cl)
+		process_command_line(cl)
 		command_line_edit.clear()
 		command_line_edit.hide()
 	)
@@ -1876,4 +1824,6 @@ func _process(delta: float) -> void:
 		screen_shake_strength = lerp(screen_shake_strength, 0.0, 5.0 * delta)
 		screen_shake_noise_coord += 30.0 * delta
 		screen_offset = lerp(screen_offset, (mouse_pos - subviewport.size * 0.5) * 0.007, 0.05)
-		canvas.offset = screen_offset + Vector2(screen_shake_noise.get_noise_2d(17.0, screen_shake_noise_coord), screen_shake_noise.get_noise_2d(93.0, screen_shake_noise_coord)) * screen_shake_strength
+		var off = screen_offset + Vector2(screen_shake_noise.get_noise_2d(17.0, screen_shake_noise_coord), screen_shake_noise.get_noise_2d(93.0, screen_shake_noise_coord)) * screen_shake_strength
+		canvas.offset = off
+		#background.material.set_shader_parameter("offset", Vector2(off.x * 2.0 / resolution.x, off.y * 2.0 / resolution.y))

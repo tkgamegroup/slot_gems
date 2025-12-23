@@ -1,4 +1,4 @@
-[gd_scene load_steps=177 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=182 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -70,6 +70,7 @@
 [ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
 [ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/hex-o.png" id="45_53bls"]
 [ext_resource type="PackedScene" uid="uid://bfk7153owjlg0" path="res://float_text.tscn" id="51_lwnsi"]
+[ext_resource type="Material" uid="uid://22qk8hl212ut" path="res://materials/glass.tres" id="51_yvsr8"]
 [ext_resource type="Material" uid="uid://b201cc3gjqdpo" path="res://materials/dissolve256_mat.tres" id="52_41lik"]
 [ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://ui_hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
@@ -77,12 +78,12 @@
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
 [ext_resource type="Script" uid="uid://coxa0ciyuwmpa" path="res://top_bar.gd" id="57_c2n8d"]
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
+[ext_resource type="Shader" uid="uid://o1ju8mkiyhu1" path="res://materials/glass.gdshader" id="59_vieuh"]
 [ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/orange.png" id="63_f1p13"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
 [ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/magenta.png" id="64_4obbf"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="Shader" uid="uid://bptjtflv2v5ak" path="res://materials/perspective.gdshader" id="64_jbvwl"]
-[ext_resource type="SpriteFrames" uid="uid://ce4mcwrcnqlca" path="res://images/dot.tres" id="64_ovcoh"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="67_jbvwl"]
@@ -93,9 +94,11 @@
 [ext_resource type="Texture2D" uid="uid://m6bdw8xllrnw" path="res://images/tutorial/elements_en.png" id="74_4obbf"]
 [ext_resource type="Texture2D" uid="uid://bbh7xqdxi817y" path="res://images/left.png" id="75_ppx11"]
 [ext_resource type="Texture2D" uid="uid://xisl1nrbb2ei" path="res://images/spotlight.png" id="78_41lik"]
+[ext_resource type="Texture2D" uid="uid://7f33pujopttn" path="res://images/info.png" id="78_yjja3"]
 [ext_resource type="Script" uid="uid://caypb4y5bf3py" path="res://ui_tutorial.gd" id="80_f1p13"]
 [ext_resource type="Script" uid="uid://cv7nxdr7kyb51" path="res://rich_text_tt.gd" id="87_sn1fb"]
 [ext_resource type="Texture2D" uid="uid://dfg6sxc03r2og" path="res://images/right.png" id="88_sn1fb"]
+[ext_resource type="Script" uid="uid://c0pl81cive81s" path="res://ui_run_info.gd" id="88_yjja3"]
 [ext_resource type="Script" uid="uid://wa74t8m4uwaa" path="res://ui_upgrade.gd" id="94_sn1fb"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
@@ -162,15 +165,14 @@ shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_htgcl"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
-border_width_bottom = 12
 border_color = Color(0.2775277, 0.27752778, 0.27752754, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-expand_margin_left = 50.0
+expand_margin_left = 30.0
 expand_margin_top = 20.0
-expand_margin_right = 50.0
+expand_margin_right = 30.0
 expand_margin_bottom = 20.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l0gw7"]
@@ -231,9 +233,22 @@ expand_margin_bottom = 16.0
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_birbe"]
 vertical = true
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_inymm"]
+shader = ExtResource("59_vieuh")
+shader_parameter/blur = 4.00000019
+shader_parameter/warp_intensity = 0.025
+shader_parameter/strength_x = 15.0
+shader_parameter/strength_y = 15.0
+shader_parameter/offset_x = 0.0
+shader_parameter/offset_y = 0.0
+shader_parameter/corner_radius = 24.00000114
+shader_parameter/edge_smoothness = 1.0
+shader_parameter/tint = Color(0.654902, 0.84705883, 0.9019608, 0.5882353)
+shader_parameter/edge_highlight = Color(1, 1, 1, 0.5254902)
+shader_parameter/edge_width = 10.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fepj7"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
-border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
@@ -363,7 +378,6 @@ expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yh34"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
-border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
@@ -387,8 +401,6 @@ vertical = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylmsd"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
-border_width_right = 6
-border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -400,8 +412,6 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pnuwf"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
-border_width_left = 6
-border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -487,6 +497,17 @@ expand_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
 bg_color = Color(1, 1, 1, 0.14901961)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m74q3"]
+bg_color = Color(0.56356424, 0.649551, 0.67108095, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcxqu"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
@@ -1043,6 +1064,7 @@ grow_vertical = 0
 theme_override_constants/margin_bottom = 200
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer"]
+material = ExtResource("51_yvsr8")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_htgcl")
@@ -1104,6 +1126,7 @@ size = Vector2i(1920, 1080)
 render_target_update_mode = 0
 
 [node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
+visible = false
 offset_right = 480.0
 offset_bottom = 250.0
 mouse_filter = 2
@@ -1235,6 +1258,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2"]
+material = SubResource("ShaderMaterial_inymm")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fepj7")
 
@@ -1277,7 +1301,10 @@ size_flags_vertical = 4
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/shadow_outline_size = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.39215687)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.39215687)
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 22
 text = "ui_game_swaps"
 
@@ -1475,6 +1502,7 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 96
 
 [node name="TopBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer"]
+material = ExtResource("51_yvsr8")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5yh34")
 script = ExtResource("57_c2n8d")
@@ -1484,6 +1512,7 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Node2D" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
+visible = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/Node2D"]
 offset_right = 40.0
@@ -1564,10 +1593,9 @@ texture = ExtResource("78_41lik")
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
 
 [node name="StatusBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -1596,7 +1624,7 @@ mouse_filter = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 3
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 1
 
@@ -1605,127 +1633,93 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
-alignment = 1
+size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-theme_override_constants/separation = -8
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-mouse_filter = 0
-theme_override_constants/separation = -8
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
-mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control"]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_mieac")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer" instance=ExtResource("31_uatky")]
-layout_mode = 2
-font_size = 28
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control" instance=ExtResource("31_uatky")]
+layout_mode = 1
+offset_top = 8.0
+offset_bottom = 44.0
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-mouse_filter = 0
-theme_override_constants/separation = -8
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2"]
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
-mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control2"]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("63_f1p13")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2" instance=ExtResource("31_uatky")]
-layout_mode = 2
-font_size = 28
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control2" instance=ExtResource("31_uatky")]
+layout_mode = 1
+offset_top = 8.0
+offset_bottom = 44.0
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control2/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-mouse_filter = 0
-theme_override_constants/separation = -8
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3"]
+[node name="Control3" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
-mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control3"]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("6_1pecc")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3" instance=ExtResource("31_uatky")]
-layout_mode = 2
-font_size = 28
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control3" instance=ExtResource("31_uatky")]
+layout_mode = 1
+offset_top = 8.0
+offset_bottom = 44.0
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control3/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-theme_override_constants/separation = -8
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
-layout_mode = 2
-mouse_filter = 0
-theme_override_constants/separation = -8
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer"]
+[node name="Control4" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
-mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control4"]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("7_lex75")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer" instance=ExtResource("31_uatky")]
-layout_mode = 2
-font_size = 28
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control4" instance=ExtResource("31_uatky")]
+layout_mode = 1
+offset_top = 8.0
+offset_bottom = 44.0
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control4/NumberText" index="0"]
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2"]
-layout_mode = 2
-mouse_filter = 0
-theme_override_constants/separation = -8
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2"]
+[node name="Control5" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
-mouse_filter = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control5"]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("64_4obbf")
 centered = false
 
-[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2" instance=ExtResource("31_uatky")]
-layout_mode = 2
-font_size = 28
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control5" instance=ExtResource("31_uatky")]
+layout_mode = 1
+offset_top = 8.0
+offset_bottom = 44.0
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control5/NumberText" index="0"]
 text = "0"
 
 [node name="VSeparator4" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
@@ -1765,50 +1759,16 @@ justification_flags = 0
 meta_underlined = false
 script = ExtResource("87_sn1fb")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/separation = 0
-
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control"]
-position = Vector2(8, 8)
-sprite_frames = ExtResource("64_ovcoh")
-
-[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control2"]
-position = Vector2(8, 8)
-sprite_frames = ExtResource("64_ovcoh")
-
-[node name="Control3" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer4/HBoxContainer2/Control3"]
-position = Vector2(8, 8)
-sprite_frames = ExtResource("64_ovcoh")
-
 [node name="VSeparator3" type="VSeparator" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_wy5fy")
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
@@ -1816,23 +1776,23 @@ theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 text = "ui_game_board_size"
 
-[node name="BoardSize" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer" instance=ExtResource("31_uatky")]
+[node name="BoardSize" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4" instance=ExtResource("31_uatky")]
 layout_mode = 2
 size_flags_vertical = 4
 font_size = 28
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer/BoardSize" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/BoardSize" index="0"]
 text = "0"
 font_size = 36
 
-[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer/BoardSize/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/BoardSize/Panel/ChangeBG" index="0"]
 text = "0"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer4"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer5"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
@@ -1840,16 +1800,16 @@ theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 text = "ui_game_hand"
 
-[node name="Hand" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer4" instance=ExtResource("31_uatky")]
+[node name="Hand" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer5" instance=ExtResource("31_uatky")]
 layout_mode = 2
 size_flags_vertical = 4
 font_size = 28
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer4/Hand" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer5/Hand" index="0"]
 text = "0"
 font_size = 36
 
-[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer4/Hand/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer5/Hand/Panel/ChangeBG" index="0"]
 text = "0"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer"]
@@ -1885,25 +1845,23 @@ theme_override_styles/separator = SubResource("StyleBoxLine_jbvwl")
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+[node name="Info" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gtaia")
+icon = ExtResource("78_yjja3")
+icon_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(48, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
+theme_override_constants/separation = 16
 
-[node name="Bag" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -8.0
-offset_top = -8.5
-offset_right = 8.0
-offset_bottom = 8.5
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Bag" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/HBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/align_to_largest_stylebox = 0
@@ -1911,24 +1869,20 @@ theme_override_font_sizes/font_size = 11
 icon = ExtResource("30_fg5n8")
 icon_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_filter = 2
-theme_override_constants/separation = 56
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 0
 theme_override_font_sizes/font_size = 18
 text = "0"
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/Control/VBoxContainer"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 0
@@ -1968,6 +1922,7 @@ theme_override_constants/margin_left = 30
 theme_override_constants/margin_bottom = 96
 
 [node name="RelicsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/Control/MarginContainer"]
+material = ExtResource("51_yvsr8")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ylmsd")
 script = ExtResource("64_c2n8d")
@@ -2026,6 +1981,7 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 96
 
 [node name="PatternsBar" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/Control/MarginContainer2"]
+material = ExtResource("51_yvsr8")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pnuwf")
 script = ExtResource("64_x2fcq")
@@ -2468,6 +2424,141 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
+[node name="RunInfo" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l0gw7")
+script = ExtResource("88_yjja3")
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -422.0
+offset_top = -284.0
+offset_right = 422.0
+offset_bottom = 284.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rycwm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+
+[node name="TabContainer" type="TabContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Stage" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_m74q3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
+theme_override_font_sizes/font_size = 22
+text = "Round 1"
+
+[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="PanelContainer2" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_m74q3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
+theme_override_font_sizes/font_size = 22
+text = "Round 2"
+
+[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="PanelContainer3" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_m74q3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
+theme_override_font_sizes/font_size = 22
+text = "Round 3"
+
+[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
+text = "ui_close"
+
 [node name="Tutorial" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false
 anchors_preset = 15
@@ -2870,7 +2961,7 @@ theme_override_font_sizes/font_size = 36
 
 [node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/h_separation = 16
+theme_override_constants/h_separation = 64
 columns = 2
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
@@ -2880,6 +2971,7 @@ text = "ui_game_over_max_match"
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_font_sizes/font_size = 28
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
@@ -2889,6 +2981,7 @@ text = "ui_game_over_swaps"
 
 [node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_font_sizes/font_size = 28
 
 [node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
@@ -2898,6 +2991,7 @@ text = "ui_game_over_round"
 
 [node name="Label6" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_font_sizes/font_size = 28
 
 [node name="Label7" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
@@ -2907,6 +3001,7 @@ text = "ui_game_over_seed"
 
 [node name="Label8" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_font_sizes/font_size = 28
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver/PanelContainer/VBoxContainer"]
@@ -3171,14 +3266,20 @@ theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_auto_place_items"
 
-[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_win"
 
-[node name="Button7" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer"]
+[node name="Button7" type="Button" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ahpju")
 text = "ui_in_game_menu_lose"
@@ -3353,19 +3454,19 @@ mouse_filter = 2
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp2"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp3"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/NumberText/Text"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer2/NumberText/Text"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer3/NumberText/Text"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer/NumberText/Text"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2/HBoxContainer2/HBoxContainer2/NumberText/Text"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer/BoardSize"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer/BoardSize/Text"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer4/Hand"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer3/HBoxContainer4/Hand/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control/NumberText/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control2/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control2/NumberText/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control3/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control3/NumberText/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control4/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control4/NumberText/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control5/NumberText"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer/Control5/NumberText/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/BoardSize"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer4/BoardSize/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer5/Hand"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer5/Hand/Text"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/HBoxContainer2/Coins/Text"]

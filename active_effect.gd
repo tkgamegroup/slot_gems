@@ -6,7 +6,7 @@ var host
 var type : int
 var coord : Vector2i
 var effect_index : int
-var sp : AnimatedSprite2D
+var sp : Node2D
 
 func process(b : Board, tween : Tween):
 	host.on_active.call(b, coord, effect_index, tween, sp)

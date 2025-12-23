@@ -3,13 +3,13 @@
 [ext_resource type="Texture2D" uid="uid://qklr3t0jr6y7" path="res://images/active.png" id="1_uulgu"]
 
 [sub_resource type="Curve" id="Curve_uw5uu"]
-_data = [Vector2(0.00580271, 0.306001), 0.0, 0.0, 0, 0, Vector2(1, 0.153185), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0.82022476), 0.0, 0.0, 0, 0, Vector2(1, 0.153185), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_vhvdw"]
 colors = PackedColorArray(1, 1, 1, 0.72549, 1, 1, 1, 0)
 
-[node name="ActiveItem" type="AnimatedSprite2D"]
+[node name="ActiveItem" type="Node2D"]
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 texture_filter = 1
@@ -23,11 +23,19 @@ scale_amount_curve = SubResource("Curve_uw5uu")
 color_ramp = SubResource("Gradient_vhvdw")
 
 [node name="Label" type="Label" parent="."]
-custom_minimum_size = Vector2(25, 17)
-offset_left = -8.0
-offset_top = -8.0
-offset_right = 17.0
-offset_bottom = 9.0
-theme_override_colors/font_color = Color(0.588235, 0.588235, 0.862745, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 12
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.5
+offset_top = -15.0
+offset_right = 5.5
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.588235, 0.588235, 0.862745, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 18
+text = "0"

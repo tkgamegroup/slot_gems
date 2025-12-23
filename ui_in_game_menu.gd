@@ -6,8 +6,8 @@ extends Control
 @onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
 @onready var quit_to_desktop_button : Button = $PanelContainer/VBoxContainer/Button4
 @onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button5
-@onready var win_button : Button = $PanelContainer/VBoxContainer/Button6
-@onready var lose_button : Button = $PanelContainer/VBoxContainer/Button7
+@onready var win_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button6
+@onready var lose_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button7
 
 func enter():
 	SSound.music_less_clear()
