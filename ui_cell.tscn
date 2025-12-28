@@ -16,6 +16,8 @@ script = ExtResource("1_c8dfl")
 
 [node name="Gem" parent="." instance=ExtResource("2_sxxmi")]
 layout_mode = 0
+offset_right = 72.0
+offset_bottom = 72.0
 
 [node name="Pinned" type="Sprite2D" parent="."]
 visible = false

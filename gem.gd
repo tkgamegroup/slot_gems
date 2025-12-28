@@ -11,6 +11,8 @@ enum
 	ColorGreen,
 	ColorBlue,
 	ColorMagenta,
+	ColorWhite,
+	ColorBlack,
 	ColorWild,
 	ColorRedOrange,
 	ColorRedGreen,
@@ -81,6 +83,8 @@ static func type_name(t : int):
 		ColorGreen: return "Green"
 		ColorBlue: return "Blue"
 		ColorMagenta: return "Magenta"
+		ColorWhite: return "White"
+		ColorBlack: return "Black"
 		ColorWild: return "Wild"
 		ColorAny: return "Any"
 	return ""
@@ -93,6 +97,8 @@ static func type_display_name(t : int):
 		ColorGreen: return App.tr("gem_green")
 		ColorBlue: return App.tr("gem_blue")
 		ColorMagenta: return App.tr("gem_magenta")
+		ColorWhite: return App.tr("gem_white")
+		ColorBlack: return App.tr("gem_black")
 		ColorWild: return "w_wild"
 		ColorRedOrange: return App.tr("gem_red") + "&" + App.tr("gem_orange")
 		ColorAny: return App.tr("gem_any")
@@ -106,8 +112,11 @@ static func name_to_type(s : String):
 		"Green": return ColorGreen
 		"Blue": return ColorBlue
 		"Magenta": return ColorMagenta
+		"White": return ColorWhite
+		"Black": return ColorBlack
 		"Wild": return ColorWild
 		"Any": return ColorAny
+	return None
 
 static func type_color(t : int) -> Color:
 	match t:
@@ -117,16 +126,20 @@ static func type_color(t : int) -> Color:
 		ColorGreen: return Color(0.61, 0.75, 0.25)
 		ColorBlue: return Color(0.56, 0.87, 0.96)
 		ColorMagenta: return Color(0.88, 0.20, 0.80)
+		ColorWhite: return Color(0.99, 0.99, 0.99)
+		ColorBlack: return Color(0.27, 0.27, 0.27)
 	return Color.WHITE
 
 static func type_img(t : int):
 	match t:
-		None: return "res://images/colorless.png"
-		ColorRed: return "res://images/red.png"
-		ColorOrange: return "res://images/orange.png"
-		ColorGreen: return "res://images/green.png"
-		ColorBlue: return "res://images/blue.png"
-		ColorMagenta: return "res://images/magenta.png"
+		None: return "res://images/gem_colorless.png"
+		ColorRed: return "res://images/gem_red.png"
+		ColorOrange: return "res://images/gem_orange.png"
+		ColorGreen: return "res://images/gem_green.png"
+		ColorBlue: return "res://images/gem_blue.png"
+		ColorMagenta: return "res://images/gem_magenta.png"
+		ColorWhite: return "res://images/gem_white.png"
+		ColorBlack: return "res://images/gem_black.png"
 	return ""
 
 static func color_combo_contains(combo : int, v : int):
@@ -264,7 +277,7 @@ func setup(n : String):
 	if name == "Ruby":
 		type = ColorRed
 		rune = None
-		image_id = 9
+		image_id = 11
 		category = "Gem"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -275,7 +288,7 @@ func setup(n : String):
 	elif name == "Heliodor":
 		type = ColorOrange
 		rune = None
-		image_id = 10
+		image_id = 12
 		category = "Gem"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -286,7 +299,7 @@ func setup(n : String):
 	elif name == "Emerald":
 		type = ColorGreen
 		rune = None
-		image_id = 11
+		image_id = 13
 		category = "Gem"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -297,7 +310,7 @@ func setup(n : String):
 	elif name == "Sapphire":
 		type = ColorBlue
 		rune = None
-		image_id = 12
+		image_id = 14
 		category = "Gem"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -308,7 +321,7 @@ func setup(n : String):
 	elif name == "Amethyst":
 		type = ColorMagenta
 		rune = None
-		image_id = 13
+		image_id = 15
 		category = "Gem"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -319,7 +332,7 @@ func setup(n : String):
 	elif name == "Flag":
 		type = None
 		rune = None
-		image_id = 14
+		image_id = 16
 		price = 2
 		extra["value"] = 10
 		on_event = func(event : int, tween : Tween, data):
@@ -337,7 +350,7 @@ func setup(n : String):
 		type = None
 		rune = None
 		base_score = 0
-		image_id = 15
+		image_id = 17
 		category = "Bomb"
 		trigger = true
 		price = 2
@@ -353,7 +366,7 @@ func setup(n : String):
 		type = None
 		rune = None
 		base_score = 0
-		image_id = 16
+		image_id = 18
 		category = "Bomb"
 		price = 3
 		power = 50
@@ -368,7 +381,7 @@ func setup(n : String):
 	elif name == "Rainbow":
 		type = ColorWild
 		rune = None
-		image_id = 17
+		image_id = 19
 		category = "Normal"
 		price = 2
 		extra["value"] = 1.5
@@ -382,7 +395,7 @@ func setup(n : String):
 		type = ColorOrange
 		rune = None
 		base_score = 0
-		image_id = 18
+		image_id = 20
 		category = "Normal"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -410,7 +423,7 @@ func setup(n : String):
 	elif name == "IaiCut":
 		type = None
 		rune = None
-		image_id = 19
+		image_id = 21
 		category = "Normal"
 		trigger = true
 		price = 5
@@ -460,7 +473,7 @@ func setup(n : String):
 	elif name == "Lightning":
 		type = ColorOrange
 		rune = None
-		image_id = 20
+		image_id = 22
 		category = "Normal"
 		price = 5
 		power = 3
@@ -502,7 +515,7 @@ func setup(n : String):
 	elif name == "Volcano":
 		type = ColorRedOrange
 		rune = None
-		image_id = 21
+		image_id = 23
 		category = "Normal"
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -547,7 +560,7 @@ func setup(n : String):
 		type = None
 		rune = None
 		base_score = 0
-		image_id = 22
+		image_id = 24
 		category = "Normal"
 		price = 5
 		on_event = func(event : int, tween : Tween, data):

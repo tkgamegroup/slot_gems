@@ -73,23 +73,25 @@ func add_cell(c : Vector2i):
 	cell.position = pos
 	cells_root.add_child(cell)
 
-func update_rect(even_bs : bool, do_set : bool = true):
+func get_panel_rect(even : bool, border : bool = true):
 	tilemap.clear()
 	for y in Board.cy:
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
 	var used = tilemap.get_used_rect()
-	var p = tilemap.map_to_local(used.position) - Vector2(C.BOARD_TILE_SZ * 0.75, C.BOARD_TILE_SZ * 1.5)
-	var s = tilemap.map_to_local(used.end) - p
-	if even_bs:
+	var p = tilemap.map_to_local(used.position) - Vector2(C.BOARD_TILE_SZ * 0.5, C.BOARD_TILE_SZ * 1.0)
+	var s = tilemap.map_to_local(used.end) - p - Vector2(C.BOARD_TILE_SZ * 0.25, C.BOARD_TILE_SZ * 0.5)
+	if border:
+		p -= Vector2(C.BOARD_TILE_SZ * 0.25, C.BOARD_TILE_SZ * 0.5)
+		s += Vector2(C.BOARD_TILE_SZ * 0.5, C.BOARD_TILE_SZ * 1.0)
+	if even:
 		p.y += C.BOARD_TILE_SZ * 0.5
-	if do_set:
-		panel.position = p
-		panel.size = s
 	return Rect2(p, s)
 
 func enter(tween : Tween = null, trans : bool = true):
-	update_rect(App.board_size % 2 == 0)
+	var r = get_panel_rect(App.board_size % 2 == 0)
+	panel.position = r.position
+	panel.size = r.size
 	
 	if trans:
 		if !tween:

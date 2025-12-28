@@ -85,6 +85,10 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var command_line_edit : LineEdit = $/root/Main/SubViewportContainer/SubViewport/Canvas/CommandLine
 @onready var blocker_ui : Control = $/root/Main/SubViewportContainer/SubViewport/Canvas/Blocker
 
+const resolution : Vector2i = Vector2i(1920, 1080)
+var mouse_pos : Vector2
+var screen_offset : Vector2
+
 var stage : int = Stage.Deploy
 var game_rng : RandomNumberGenerator = RandomNumberGenerator.new()
 var round_rng : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -163,6 +167,7 @@ var reward : int
 var current_curses : Array[Curse]
 var round_curses : Array[Array]
 var no_score_marks : Dictionary[int, Array]
+
 var base_score_tween : Tween = null
 var base_score : int:
 	set(v):
@@ -183,7 +188,9 @@ var base_score : int:
 				base_score_tween = null
 			base_score = v
 			calculator_bar_ui.base_score_text.text = "%d" % base_score
+
 var staging_scores : Array[Pair]
+
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
@@ -207,9 +214,11 @@ var combos : int = 0:
 				combos_tween = null
 			combos = v
 			calculator_bar_ui.combos_text.text = "%dX" % combos
+
 const one_over_log1_5 = 1.0 / log(1.5)
 func mult_from_combos(combos : int):
 	return log((combos + 1) * 1.0) * one_over_log1_5
+
 var gain_scaler : float = 1.0
 var score_mult_tween : Tween = null
 var score_mult : float = 1.0:
@@ -231,18 +240,21 @@ var score_mult : float = 1.0:
 				score_mult_tween = null
 			score_mult = v
 			calculator_bar_ui.mult_text.text = "%.1f" % score_mult
-var game_over_mark : String = ""
+
 var coins : int = 10:
 	set(v):
 		coins = v
 		status_bar_ui.coins_text.set_value(coins)
-var buffs : Array[Buff]
-var history : History = History.new()
 
+var buffs : Array[Buff]
 var modifiers : Dictionary
+var game_over_mark : String = ""
+
+var history : History = History.new()
 
 var base_speed : float = 1.0
 var speed : float = 1.0 / base_speed
+
 const FillingTimesToShow = 10
 const FillingTimesToWin = 60
 var filling_times : int = 0:
@@ -268,7 +280,10 @@ var filling_times : int = 0:
 					control_ui.filling_times_tween = null
 				)
 
-const resolution : Vector2i = Vector2i(1920, 1080)
+var hovering_coord : Vector2i = Vector2i(-1, -1)
+var paint_mode : bool = false
+var paint_brush : int = Gem.None
+
 var crt_mode : bool = true:
 	set(v):
 		if crt_mode != v:
@@ -280,8 +295,6 @@ var crt_mode : bool = true:
 var screen_shake_strength : float = 0.0
 var screen_shake_noise : Noise
 var screen_shake_noise_coord : float
-var mouse_pos : Vector2
-var screen_offset : Vector2
 var performance_mode : bool = false:
 	set(v):
 		if performance_mode != v:
@@ -729,8 +742,69 @@ func process_command_line(cl : String):
 				elif t == "-es":
 					enable_shopping = true
 			STest.start_test(mode, round_count, task_count, "", saving, additional_patterns, additional_relics, additional_enchants, true, enable_shopping)
-		elif cmd == "paint_board":
-			Painting.set_board_to_painting("")
+		elif cmd == "paint":
+			var t1 = tokens[1]
+			if t1 == "cell":
+				var x = tokens[2].substr(0, 3)
+				var y = tokens[2].substr(3, 6)
+				Board.effect_change_color(Vector2i(int(x), int(y)), Gem.name_to_type(tokens[3]), Gem.None, null)
+			elif t1 == "clear":
+				var color = Gem.name_to_type(tokens[2])
+				var tween = App.game_tweens.create_tween()
+				var delay = 0.0
+				for y in Board.cy:
+					for x in Board.cx:
+						var sub = App.game_tweens.create_tween()
+						sub.tween_interval(delay)
+						Board.effect_change_color(Vector2i(x, y), color, Gem.None, sub)
+						tween.tween_subtween(sub)
+						tween.parallel()
+						delay += 0.01
+			elif t1 == "mode":
+				if tokens[2] == "on":
+					paint_mode = true
+				elif tokens[2] == "off":
+					paint_mode = false
+			elif t1 == "brush":
+				paint_brush = Gem.name_to_type(tokens[2])
+			elif t1 == "save":
+				var name = tokens[2]
+				if !DirAccess.dir_exists_absolute("res://paintings"):
+					DirAccess.make_dir_absolute("res://paintings")
+				var content = "%d" % board_size
+				for y in Board.cy:
+					content += "\n"
+					for x in Board.cx:
+						var g = Board.get_gem_at(Vector2i(x, y))
+						if g && g.name == "":
+							content += "%d " % g.type
+						else:
+							content += "%d " % Gem.None
+				var file = FileAccess.open("res://paintings/%s.txt" % name, FileAccess.WRITE)
+				file.store_string(content)
+				file.close()
+			elif t1 == "load":
+				var name = tokens[2]
+				var file = FileAccess.open("res://paintings/%s.txt" % name, FileAccess.READ)
+				if file:
+					var size_line = file.get_line().trim_prefix(" ").trim_suffix(" ")
+					if int(size_line) == board_size:
+						var tween = App.game_tweens.create_tween()
+						var delay = 0.0
+						for y in Board.cy:
+							var values = file.get_line().split(" ")
+							for x in Board.cx:
+								var g = Board.get_gem_at(Vector2i(x, y))
+								if g && g.name == "":
+									var sub = App.game_tweens.create_tween()
+									sub.tween_interval(delay)
+									Board.effect_change_color(Vector2i(x, y), int(values[x]), Gem.None, sub)
+									tween.tween_subtween(sub)
+									tween.parallel()
+									delay += 0.01
+					file.close()
+			elif t1 == "image":
+				Painting.set_board_to_image("")
 
 func get_round_score(lv : int):
 	if lv <= 10:
@@ -774,9 +848,6 @@ func set_lang(lang : String):
 		update_round_text(round)
 	if options_ui.visible:
 		options_ui.lang_changed()
-
-func set_fullscreen(v : bool):
-	pass
 
 func begin_busy():
 	control_ui.roll_button.disabled = true
@@ -861,7 +932,7 @@ func start_game(saving : String = ""):
 		gain_scaler = 1.0
 		combos = 0
 		round = 0
-		board_size = 3
+		board_size = 5
 		rolls_per_round = 0
 		swaps_per_round = 5
 		plays_per_round = 0
@@ -905,7 +976,6 @@ func start_game(saving : String = ""):
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
-			g.setup("Bomb")
 			add_gem(g)
 		for i in 64:
 			var g = Gem.new()
@@ -1684,11 +1754,27 @@ func _unhandled_input(event: InputEvent) -> void:
 				command_line_edit.visible = !command_line_edit.visible
 				if command_line_edit.visible:
 					command_line_edit.grab_focus()
+			if paint_mode:
+				if event.keycode == KEY_1:
+					paint_brush = Gem.ColorRed
+				elif event.keycode == KEY_2:
+					paint_brush = Gem.ColorOrange
+				elif event.keycode == KEY_3:
+					paint_brush = Gem.ColorGreen
+				elif event.keycode == KEY_4:
+					paint_brush = Gem.ColorBlue
+				elif event.keycode == KEY_5:
+					paint_brush = Gem.ColorMagenta
+				elif event.keycode == KEY_6:
+					paint_brush = Gem.ColorWhite
+				elif event.keycode == KEY_7:
+					paint_brush = Gem.ColorBlack
 	elif event is InputEventMouseMotion:
 		if Board.ui.visible:
 			var c = Board.ui.hover_coord(true)
 			if Board.is_valid(c):
 				var cc = Board.offset_to_cube(c)
+				hovering_coord = c
 				control_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
 				var contents : Array[Pair] = []
 				var cell = Board.get_cell(c)
@@ -1716,8 +1802,14 @@ func _unhandled_input(event: InputEvent) -> void:
 								dir = 2
 						STooltip.show(cell_ui, dir, contents)
 			else:
+				hovering_coord = Vector2i(-1, -1)
 				control_ui.debug_text.text = ""
 				STooltip.close()
+	elif event is InputEventMouseButton:
+		if event.is_pressed():
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if hovering_coord.x != -1 && hovering_coord.y != -1 && paint_brush != Gem.None:
+					Board.effect_change_color(hovering_coord, paint_brush, Gem.None, null)
 
 func _ready() -> void:
 	randomize()

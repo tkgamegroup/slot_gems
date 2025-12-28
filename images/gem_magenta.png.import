@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2tmb13dkcpb8"
-path="res://.godot/imported/magenta.png-bbdd323a371c2c49f002aa67d06b7a08.ctex"
+path="res://.godot/imported/gem_magenta.png-19868e1ce0eac3c8725e72122ece3ad9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/magenta.png"
-dest_files=["res://.godot/imported/magenta.png-bbdd323a371c2c49f002aa67d06b7a08.ctex"]
+source_file="res://images/gem_magenta.png"
+dest_files=["res://.godot/imported/gem_magenta.png-19868e1ce0eac3c8725e72122ece3ad9.ctex"]
 
 [params]
 

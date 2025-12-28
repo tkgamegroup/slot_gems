@@ -512,7 +512,7 @@ func resize(_hf_cy : int, tween : Tween):
 	for cell in old_cells:
 		cell.coord = cell.coord + offset
 	cells.clear()
-	var rect = ui.update_rect(_hf_cy % 2 == 0, false)
+	var rect = ui.get_panel_rect(_hf_cy % 2 == 0)
 	tween.tween_property(ui.panel, "position", rect.position, 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 	tween.parallel().tween_property(ui.panel, "size", rect.size, 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 	var hcx = cx / 2
@@ -727,11 +727,38 @@ func matching():
 		App.speed *= 0.98
 		App.speed = max(0.05, App.speed)
 
+func effect_change_color(coord : Vector2i, new_color : int, new_rune : int, tween : Tween):
+	var gem = get_gem_at(coord)
+	if !gem:
+		return
+	if gem.name != "":
+		return
+	if gem.type == new_color && gem.rune == new_rune:
+		return
+	var outer_tween = (tween != null)
+	if !tween:
+		tween = App.game_tweens.create_tween()
+		tween.tween_callback(App.begin_busy)
+	var ui = ui.get_cell(coord)
+	tween.tween_property(ui.gem_ui, "angle", Vector2(0.0, 90.0), 0.25 * App.speed)
+	tween.tween_callback(func():
+		gem.type = new_color
+		gem.rune = new_rune
+		ui.gem_ui.update(gem)
+		ui.gem_ui.angle.y = 270.0
+	)
+	tween.tween_property(ui.gem_ui, "angle", Vector2(0.0, 360.0), 0.25 * App.speed)
+	tween.tween_callback(func():
+		ui.gem_ui.angle.y = 0.0
+	)
+	if !outer_tween:
+		tween.tween_callback(App.end_busy)
+
 func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null, source = null):
 	var outer_tween = (tween != null)
 	if !tween:
 		tween = App.game_tweens.create_tween()
-		App.begin_busy()
+		tween.tween_callback(App.begin_busy)
 	var target_pos = get_pos(target_coord)
 	if cast_pos != target_pos:
 		tween.tween_callback(func():

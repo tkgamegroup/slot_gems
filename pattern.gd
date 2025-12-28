@@ -159,7 +159,7 @@ func get_tooltip():
 			content += "Recipe %d:\n" % i
 		for j in r.size():
 			var v = r[j]
-			content += "%s - " % char(ord('A') + j)
+			content += "%s - " % char(65 + j)
 			if v >= Gem.ColorFirst && v <= Gem.ColorAny:
 				content += "%s\n" % Gem.type_display_name(v)
 			elif v >= Gem.RuneFirst && v <= Gem.RuneAny:

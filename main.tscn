@@ -5,12 +5,12 @@
 [ext_resource type="Shader" uid="uid://bmnxc3eesmaag" path="res://materials/crt.gdshader" id="4_8t4hj"]
 [ext_resource type="AudioStream" uid="uid://vjqrtptu17gb" path="res://sounds/select.wav" id="4_fvcw6"]
 [ext_resource type="AudioStream" uid="uid://b2o1cfcq5mnt6" path="res://sounds/click.wav" id="4_j3q78"]
-[ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/red.png" id="4_mieac"]
+[ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/gem_red.png" id="4_mieac"]
 [ext_resource type="AudioStream" uid="uid://cdbsvo83ubsau" path="res://sounds/board_setup.wav" id="5_43hdn"]
-[ext_resource type="Texture2D" uid="uid://do6b6cyshhe7t" path="res://images/green.png" id="6_1pecc"]
+[ext_resource type="Texture2D" uid="uid://do6b6cyshhe7t" path="res://images/gem_green.png" id="6_1pecc"]
 [ext_resource type="AudioStream" uid="uid://cppphhvtr7mif" path="res://sounds/roll.wav" id="6_5xeb6"]
 [ext_resource type="AudioStream" uid="uid://d0vbvx1gvhi4t" path="res://sounds/slot_button.wav" id="7_17ivb"]
-[ext_resource type="Texture2D" uid="uid://vtgmwfo14dwb" path="res://images/blue.png" id="7_lex75"]
+[ext_resource type="Texture2D" uid="uid://vtgmwfo14dwb" path="res://images/gem_blue.png" id="7_lex75"]
 [ext_resource type="AudioStream" uid="uid://dlhp0bbwk311u" path="res://sounds/tom.wav" id="8_30oiv"]
 [ext_resource type="AudioStream" uid="uid://b00rjgk5valep" path="res://sounds/coins.wav" id="9_6w1lu"]
 [ext_resource type="AudioStream" uid="uid://cmj7s22kwg5l4" path="res://sounds/zap.wav" id="9_di110"]
@@ -79,9 +79,9 @@
 [ext_resource type="Script" uid="uid://coxa0ciyuwmpa" path="res://top_bar.gd" id="57_c2n8d"]
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Shader" uid="uid://o1ju8mkiyhu1" path="res://materials/glass.gdshader" id="59_vieuh"]
-[ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/orange.png" id="63_f1p13"]
+[ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/gem_orange.png" id="63_f1p13"]
 [ext_resource type="Texture2D" uid="uid://cohtomi3t832x" path="res://images/coin.png" id="63_yshj5"]
-[ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/magenta.png" id="64_4obbf"]
+[ext_resource type="Texture2D" uid="uid://d2tmb13dkcpb8" path="res://images/gem_magenta.png" id="64_4obbf"]
 [ext_resource type="Script" uid="uid://drd3pgq243eje" path="res://ui_relics_bar.gd" id="64_c2n8d"]
 [ext_resource type="Shader" uid="uid://bptjtflv2v5ak" path="res://materials/perspective.gdshader" id="64_jbvwl"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
@@ -196,16 +196,7 @@ sources/1 = SubResource("TileSetAtlasSource_34ol3")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
-border_width_bottom = 12
 border_color = Color(0.2784314, 0.2784314, 0.2784314, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-expand_margin_left = 16.0
-expand_margin_top = 16.0
-expand_margin_right = 16.0
-expand_margin_bottom = 16.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yjja3"]
 shader = ExtResource("64_jbvwl")
@@ -1300,11 +1291,7 @@ size_flags_vertical = 4
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.39215687)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.39215687)
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 1
+theme_override_colors/font_color = Color(0.5850627, 0.58506185, 0.585062, 1)
 theme_override_font_sizes/font_size = 22
 text = "ui_game_swaps"
 

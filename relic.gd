@@ -16,8 +16,6 @@ var on_active : Callable
 
 var ui : UiRelic = null
 
-static var relic_names : Array[String] = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon", "RockBottom", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
-
 func setup(n : String):
 	name = n
 	if name == "ExplosionScience":
