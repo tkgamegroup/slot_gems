@@ -49,8 +49,23 @@ func setup(n : String):
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, -1, -1)])
 		recipes.append([Gem.RunePalm, Gem.RuneWave])
 
-func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int = Gem.None):
-	var base_c = Board.offset_to_cube(off)
+func all_coords() -> Array[Vector3i]:
+	var ret : Array[Vector3i] = []
+	for g in coord_groups:
+		for c in g:
+			ret.append(c)
+	return ret
+
+func contains_coord(off : Vector2i, coord : Vector2i) -> bool:
+	var c_off = Board.offset_to_cube(off)
+	var cc = Board.offset_to_cube(coord)
+	for c in all_coords():
+		if cc == c_off + c:
+			return true
+	return false
+
+func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int = Gem.None, external_map : Dictionary = {}):
+	var c_off = Board.offset_to_cube(off)
 	var matcheds : Array[Vector2i] = []
 	var mismatcheds : Array[Vector2i] = []
 	var checkeds : Array[Vector2i] = []
@@ -61,7 +76,7 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 			var colors = []
 			var runes = []
 			for c in group:
-				var oc = Board.format_coord(Board.cube_to_offset(base_c + c))
+				var oc = Board.format_coord(Board.cube_to_offset(c_off + c))
 				var cell = Board.get_cell(oc)
 				if !cell || cell.frozen:
 					return [] as Array[Vector2i]
@@ -69,8 +84,13 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 				if !g || g.active:
 					return [] as Array[Vector2i]
 				coords.append(oc)
-				colors.append(g.type)
-				runes.append(g.rune)
+				if external_map.is_empty():
+					colors.append(g.type)
+					runes.append(g.rune)
+				else:
+					var item = external_map[oc]
+					colors.append(item.type)
+					runes.append(item.rune)
 			var val = r[i]
 			if val >= Gem.ColorFirst && val <= Gem.ColorAny:
 				for j in coords.size():

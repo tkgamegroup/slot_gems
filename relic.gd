@@ -497,7 +497,7 @@ func setup(n : String):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			tween.tween_callback(func():
-				App.float_text(tr("t_Libra_effect"), ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 1.0, 1.0, 1.0), 22)
+				App.float_text(tr("t_Libra_effect"), ui.get_global_rect().get_center() + Vector2(84, 0))
 				var v = App.base_score + App.score_mult
 				v = ceil(v / 2.0)
 				App.base_score = int(v)
@@ -589,7 +589,7 @@ func setup(n : String):
 					#	tween.tween_callback(func():
 					#		var amount = extra["amount"]
 					#		SSound.se_coin.play()
-					#		App.float_text("+%dG" % amount, ui.get_global_rect().get_center() + Vector2(84, 0), Color(1.0, 0.84, 0.0), 22)
+					#		App.float_text("[img]res://images/coin.png[/img][color=FFAA00]+%d[/color]" % amount, ui.get_global_rect().get_center() + Vector2(84, 0))
 					#		App.coins += amount
 					#	)
 					#	tween.tween_interval(0.5 * App.speed)
@@ -632,7 +632,7 @@ func setup(n : String):
 					for c in targets:
 						var g = Board.get_gem_at(c)
 						if g:
-							App.float_text("+%d" % value, Board.get_pos(c), Color(0.7, 0.3, 0.9, 1.0), 22)
+							App.float_text("[color=AA75DD]+%d" % value, Board.get_pos(c))
 							g.base_score += value
 							ok = true
 					if ok:

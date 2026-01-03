@@ -25,12 +25,12 @@ func find_missing_ones(check_color : int, check_rune : int):
 			for p in App.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), check_color, check_rune)
 				if !res.is_empty():
-					var found = false
+					var added = false
 					for m in matchings:
 						if m[0] == res[0]:
-							found = true
+							added = true
 							break
-					if !found:
+					if !added:
 						matchings.append(res)
 
 func show():

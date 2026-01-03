@@ -113,7 +113,7 @@ static func apply_curses():
 						cs[i].created_sin.extra["value"] = v
 			"curse_sloth":
 				for c in cs:
-					App.float_text(App.tr("tt_cell_in_mist"), Board.get_pos(c.coord), Color(1.0, 1.0, 1.0), 22)
+					App.float_text(App.tr("tt_cell_in_mist"), Board.get_pos(c.coord))
 					Board.set_in_mist(c.coord, true)
 			"curse_wrath":
 				for c in cs:
@@ -123,7 +123,7 @@ static func apply_curses():
 					c.add_sin("SinEnvy")
 			"curse_pride":
 				for c in cs:
-					App.float_text(App.tr("tt_cell_nullified"), Board.get_pos(c.coord), Color(1.0, 1.0, 1.0), 22)
+					App.float_text(App.tr("tt_cell_nullified"), Board.get_pos(c.coord))
 					Board.set_nullified(c.coord, true)
 
 func add_sin(n : String):

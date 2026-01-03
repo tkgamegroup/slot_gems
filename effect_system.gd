@@ -63,7 +63,6 @@ func add_slash(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	sp.position = pos
 	sp.sprite_frames = slash_frames
 	sp.speed_scale = 0.25 / duration
-	var dist = p0.distance_to(p1) + C.BOARD_TILE_SZ * 2.0
 	sp.rotation = (p1 - p0).angle()
 	sp.play("default")
 	sp.z_index = z_index

@@ -6,11 +6,13 @@ var ui : UiHand = null
 
 var grabs : Array[Gem]
 
-func add_gem(gem : Gem, pos : int = -1):
+func add_gem(gem : Gem, pos : int = -1, no_ui : bool = false):
 	if pos == -1:
 		pos = grabs.size()
 	gem.coord = Vector2i(pos, -1)
 	grabs.insert(pos, gem)
+	if no_ui:
+		return null
 	return ui.add_slot(gem, pos)
 
 func draw(to_the_end : bool = true):
@@ -31,6 +33,8 @@ func erase(idx : int, release_gem : bool = true):
 	if release_gem:
 		App.release_gem(g)
 	grabs.erase(g)
+	for i in grabs.size():
+		grabs[i].coord = Vector2i(i, -1)
 	
 	ui.remove_slot(idx)
 	return g

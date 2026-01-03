@@ -62,6 +62,7 @@ var base_score : int = 4
 var bonus_score : int = 0
 var score_mult : float = 1.0
 var trigger : bool = false
+var consumable : bool = false
 var eliminated : bool = false
 var active : bool = false
 var coord : Vector2i = Vector2i(-1, -1)
@@ -263,6 +264,8 @@ func get_tooltip():
 		content += "\nw_power: %d" % power
 	if trigger:
 		content += "\nw_trigger"
+	if consumable:
+		content += "\nw_consumable"
 	if name != "":
 		content += "\n" + tr("item_desc_" + name).format(extra)
 	ret.append(Pair.new(title, content))
@@ -283,7 +286,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				App.change_modifier("red_bouns_i", 1)
-				App.float_text("%s +1" % tr("gem_red"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.float_text("[color=FFBB00]%s +1[/color]" % tr("gem_red"), Board.get_pos(coord))
 			)
 	elif name == "Heliodor":
 		type = ColorOrange
@@ -294,7 +297,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				App.change_modifier("orange_bouns_i", 1)
-				App.float_text("%s +1" % tr("gem_orange"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.float_text("[color=FFBB00]%s +1[/color]" % tr("gem_orange"), Board.get_pos(coord))
 			)
 	elif name == "Emerald":
 		type = ColorGreen
@@ -305,7 +308,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				App.change_modifier("green_bouns_i", 1)
-				App.float_text("%s +1" % tr("gem_green"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.float_text("[color=FFBB00]%s +1[/color]" % tr("gem_green"), Board.get_pos(coord))
 			)
 	elif name == "Sapphire":
 		type = ColorBlue
@@ -316,7 +319,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				App.change_modifier("blue_bouns_i", 1)
-				App.float_text("%s +1" % tr("gem_blue"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.float_text("[color=FFBB00]%s +1[/color]" % tr("gem_blue"), Board.get_pos(coord))
 			)
 	elif name == "Amethyst":
 		type = ColorMagenta
@@ -327,7 +330,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				App.change_modifier("magenta_bouns_i", 1)
-				App.float_text("%s +1" % tr("gem_magenta"), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.float_text("[color=FFBB00]%s +1[/color]" % tr("gem_magenta"), Board.get_pos(coord))
 			)
 	elif name == "Flag":
 		type = None
@@ -346,11 +349,23 @@ func setup(n : String):
 		on_aura = func(g : Gem):
 			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value"]}, Buff.Duration.OnBoard)
 			b.caster = self
+	elif name == "Coin":
+		type = ColorOrange
+		rune = None
+		base_score = 0
+		image_id = 17
+		category = "Normal"
+		price = 2
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				App.coins += 1
+				App.float_text("[img]res://images/coin.png[/img][color=FFBB00]+1[/color]", Board.get_pos(coord))
+			)
 	elif name == "Bomb":
 		type = None
 		rune = None
 		base_score = 0
-		image_id = 17
+		image_id = 18
 		category = "Bomb"
 		trigger = true
 		price = 2
@@ -366,7 +381,7 @@ func setup(n : String):
 		type = None
 		rune = None
 		base_score = 0
-		image_id = 18
+		image_id = 19
 		category = "Bomb"
 		price = 3
 		power = 50
@@ -381,7 +396,7 @@ func setup(n : String):
 	elif name == "Rainbow":
 		type = ColorWild
 		rune = None
-		image_id = 19
+		image_id = 20
 		category = "Normal"
 		price = 2
 		extra["value"] = 1.5
@@ -389,13 +404,13 @@ func setup(n : String):
 			tween.tween_callback(func():
 				var v = extra["value"]
 				Buff.create(App, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":v}, Buff.Duration.ThisMatching)
-				App.float_text("%d%%" % int(App.gain_scaler * 100.0), Board.get_pos(coord), Color(1.0, 0.84, 0.0))
+				App.float_text("[color=FFBB00]%d%%[/color]" % int(App.gain_scaler * 100.0), Board.get_pos(coord))
 			)
 	elif name == "Orange":
 		type = ColorOrange
 		rune = None
 		base_score = 0
-		image_id = 20
+		image_id = 21
 		category = "Normal"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -423,7 +438,7 @@ func setup(n : String):
 	elif name == "IaiCut":
 		type = None
 		rune = None
-		image_id = 21
+		image_id = 22
 		category = "Normal"
 		trigger = true
 		price = 5
@@ -473,7 +488,7 @@ func setup(n : String):
 	elif name == "Lightning":
 		type = ColorOrange
 		rune = None
-		image_id = 22
+		image_id = 23
 		category = "Normal"
 		price = 5
 		power = 3
@@ -512,10 +527,113 @@ func setup(n : String):
 								Board.score_at(c, power)
 				)
 				Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
+	elif name == "EnergyDrink":
+		type = ColorGreen
+		rune = None
+		image_id = 24
+		category = "Normal"
+		consumable = true
+		price = 1
+		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
+			tween.tween_callback(func():
+				App.swaps += 1
+				App.float_text("%s[color=20F020]+1[/color]" % tr("ui_game_swaps"), Board.get_pos(coord))
+			)
+	elif name == "Badge":
+		type = ColorRed
+		rune = None
+		image_id = 25
+		category = "Normal"
+		price = 2
+		on_event = func(event : int, tween : Tween, data):
+			match event:
+				Event.GainGem:
+					if data == self:
+						App.event_listeners.append(Hook.new(Event.BeforeScoreCalculating, self, HostType.Gem, false))
+				Event.LostGem:
+					if data == self:
+						for l in App.event_listeners:
+							if l.host == self:
+								App.event_listeners.erase(l)
+								break
+				Event.BeforeScoreCalculating:
+					if coord.x != -1 && coord.y == -1:
+						tween.tween_callback(func():
+							App.add_score(100, Hand.ui.get_pos(coord.x))
+						)
+						tween.tween_interval(0.5 * App.speed)
+						return true
+					return false
+	elif name == "Magnet":
+		type = ColorRed
+		rune = None
+		image_id = 26
+		category = "Normal"
+		price = 2
+		on_event = func(event : int, tween : Tween, data):
+			match event: 
+				Event.BeforeMatching:
+					var first_magnet = Board.find_gem("Magnet")
+					var map = first_magnet.extra.get_or_add("map", {})
+					if map.is_empty():
+						for y in Board.cy:
+							for x in Board.cx:
+								var c = Vector2i(x, y)
+								var g = Board.get_gem_at(c)
+								if g:
+									map[c] = {"type":g.type,"rune":g.rune}
+								else:
+									map[c] = {"type":Gem.None,"rune":Gem.None}
+						
+					var ok = false
+					for p in App.patterns:
+						var cc = Board.offset_to_cube(coord)
+						for c in p.all_coords():
+							if !p.match_with(Board.cube_to_offset(cc - c), Gem.None, Gem.None, map).is_empty():
+								ok = true
+								break
+					if !ok:
+						var target = Vector2i(-1, -1)
+						for y in Board.cy:
+							for x in Board.cx:
+								for p in App.patterns:
+									var c = Vector2i(x, y)
+									if !p.contains_coord(c, coord):
+										var res : Array[Vector2i] = p.match_with(c, type, rune, map)
+										if !res.is_empty():
+											target = res[0]
+											break
+								if target.x != -1:
+									break
+							if target.x != -1:
+								break
+						if target.x == -1:
+							var cands = []
+							for y in Board.cy:
+								for x in Board.cx:
+									var c = Vector2i(x, y)
+									var g = Board.get_gem_at(c)
+									if g && g.type != type:
+										for cc in Board.offset_neighbors(c):
+											var g2 = Board.get_gem_at(cc)
+											if g2 && g2.type == type:
+												cands.append(c)
+							if !cands.is_empty():
+								target = SMath.pick_random(cands, App.game_rng)
+						if target.x != -1 && target.y != -1:
+							var temp = map[coord]
+							map[coord] = map[target]
+							map[target] = temp
+							Board.effect_swap(coord, target, tween)
+							tween.tween_callback(func():
+								first_magnet.extra.erase("map")
+							)
+							return true
+			return false
 	elif name == "Volcano":
 		type = ColorRedOrange
 		rune = None
-		image_id = 23
+		image_id = 27
 		category = "Normal"
 		price = 5
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -560,7 +678,7 @@ func setup(n : String):
 		type = None
 		rune = None
 		base_score = 0
-		image_id = 24
+		image_id = 28
 		category = "Normal"
 		price = 5
 		on_event = func(event : int, tween : Tween, data):

@@ -20,6 +20,8 @@ w_active,Active,激活
 w_active_desc,Stack and process one by one when the matching stops.,堆叠起来并在匹配停止时一个接一个地处理。
 w_trigger,Trigger,触发
 w_trigger_desc,Eliminate self when a pattern matched next to.,当旁边有图案匹配时，消除自身。
+w_consumable,Consumable,消耗品
+w_consumable_desc,Remove when eliminated.,被消除时移除。
 w_place,Place,放置
 w_place_desc,Effect when the this Item is placed into the board. ,当此道具被放置到棋盘时的效果。
 w_quick,Quick,快速
@@ -295,6 +297,8 @@ item_name_StrengthPotion,Strength Potion,力量药水
 item_desc_StrengthPotion,w_quick: Target Item +10 w_power until the end of level.,w_quick：使目标道具直到关卡结束前获得+10w_power。
 item_name_EchoTotem,Echo Totem,回音图腾
 item_desc_EchoTotem,w_aura: All Item's repeat number +1.,
+item_name_EnergyDrink,Energy Drink,能量饮料
+item_desc_EnergyDrink,Eliminate: Swaps +1.,消除：交换次数+1。
 item_name_Volcano,Volcano,火山
 item_desc_Volcano,Eliminate: (w_active) Eliminate 2 random cells in 2 w_range. Repeat 2 times.,消除：(w_active)消除2w_range内的2个随机格子。重复2次。
 item_name_Orange,Orange,橙子

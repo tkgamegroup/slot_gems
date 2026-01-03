@@ -231,6 +231,14 @@ func filter2(cb : Callable) -> Array[Vector2i]:
 			ret.append(cell.coord)
 	return ret
 
+func find_gem(n : String) -> Gem:
+	for y in cy:
+		for x in cx:
+			var g = get_gem_at(Vector2i(x, y))
+			if g && g.name == n:
+				return g
+	return null
+
 func get_active_effects_at(c : Vector2i):
 	var ret = []
 	for ae in active_effects:
@@ -238,7 +246,7 @@ func get_active_effects_at(c : Vector2i):
 			ret.append(ae)
 	return ret
 
-func score_at(c : Vector2i, additional_score : int = 0, additional_mult : float = 0.0, mult : float = 1.0):
+func score_at(c : Vector2i, additional_score : int = 0, mult : float = 1.0):
 	var cell = get_cell(c)
 	if cell.nullified:
 		mult = 0.0
@@ -558,38 +566,28 @@ func clear_consumed():
 			var c = Vector2i(x, y)
 			var s = get_state_at(c)
 			if s == Cell.State.Consumed:
+				var g = get_gem_at(c)
+				var sub = App.game_tweens.create_tween()
+				sub.tween_callback(func():
+					set_gem_at(c, null)
+					set_state_at(c, Cell.State.Normal)
+				)
+				if g.consumable:
+					sub.tween_callback(func():
+						App.remove_gem(g)
+					)
 				if !App.performance_mode:
-					var g = get_gem_at(c)
-					if g:
-						var sub = App.game_tweens.create_tween()
+					if g && g.name == "":
 						sub.tween_callback(func():
 							#SSound.se_break.play()
-							set_gem_at(c, null)
-							set_state_at(c, Cell.State.Normal)
 							var tex = Gem.gem_frames.get_frame_texture("default", g.type - Gem.ColorFirst + 1)
 							SEffect.add_break_pieces(get_pos(c), Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, ui.overlay)
 						)
 						sub.tween_interval(0.4 * App.speed)
-						tween.parallel().tween_subtween(sub)
-				else:
-					tween.tween_callback(func():
-						set_gem_at(c, null)
-						set_state_at(c, Cell.State.Normal)
-					)
+				tween.parallel().tween_subtween(sub)
 	tween.tween_callback(fill_blanks)
 
-var filling_tween : Tween = null
-func fill_blanks():
-	if filling_tween:
-		return
-	filling_tween = App.game_tweens.create_tween()
-	
-	if App.gems.size() < Board.curr_min_gem_num:
-		App.game_over_mark = "not_enough_gems"
-		App.lose()
-		return
-	
-	var collect_tween = App.game_tweens.create_tween()
+func collect_scores(tween : Tween):
 	var staging_idx = 0
 	if !App.staging_scores.is_empty():
 		App.staging_scores.shuffle()
@@ -609,10 +607,25 @@ func fill_blanks():
 			)
 			sub.tween_callback(s.first.queue_free)
 			if staging_idx > 0:
-				collect_tween.parallel()
-			collect_tween.tween_subtween(sub)
+				tween.parallel()
+			tween.tween_subtween(sub)
 			staging_idx += 1
 		App.staging_scores.clear()
+	return tween
+
+var filling_tween : Tween = null
+func fill_blanks():
+	if filling_tween:
+		return
+	filling_tween = App.game_tweens.create_tween()
+	
+	if App.gems.size() < Board.curr_min_gem_num:
+		App.game_over_mark = "not_enough_gems"
+		App.lose()
+		return
+	
+	var collect_tween = App.game_tweens.create_tween()
+	collect_scores(collect_tween)
 	
 	var down_tween = App.game_tweens.create_tween()
 	for x in cx:
@@ -684,10 +697,10 @@ func on_combo():
 	for h in event_listeners:
 		h.host.on_event.call(Event.Combo, null, null)
 
-func matching():
-	var matched_num = 0
+func matching_proc():
 	var tween = App.game_tweens.create_tween()
 	
+	var matched_num = 0
 	for y in cy:
 		for x in cx:
 			for p in App.patterns:
@@ -701,7 +714,7 @@ func matching():
 						SSound.se_bubble_pop.play()
 						App.add_combo()
 						for c in res:
-							score_at(c, 0, 0.0, p.mult)
+							score_at(c, 0, p.mult)
 					)
 					matched_num += 1
 					
@@ -712,7 +725,7 @@ func matching():
 					tween.tween_subtween(sub)
 					
 					App.speed *= 0.98
-					App.speed = max(0.05, App.speed)
+					App.speed = max(0.2, App.speed)
 	if App.game_over_mark == "":
 		if matched_num == 0:
 			tween.tween_callback(func():
@@ -725,7 +738,66 @@ func matching():
 		else:
 			tween.tween_callback(clear_consumed)
 		App.speed *= 0.98
-		App.speed = max(0.05, App.speed)
+		App.speed = max(0.2, App.speed)
+
+func matching():
+	var tween = App.game_tweens.create_tween()
+	
+	var preprocess = false
+	for h in event_listeners:
+		if h.host.on_event.call(Event.BeforeMatching, tween, null):
+			preprocess = true
+	if preprocess:
+		tween.tween_callback(matching_proc)
+	else:
+		matching_proc()
+
+func effect_swap(coord1 : Vector2i, coord2 : Vector2i, tween : Tween):
+	var outer_tween = (tween != null)
+	if !tween:
+		tween = App.game_tweens.create_tween()
+		tween.tween_callback(App.begin_busy)
+	var pos1 = get_pos(coord1) - Vector2(C.SPRITE_SZ, C.SPRITE_SZ) * 0.5
+	var pos2 = get_pos(coord2) - Vector2(C.SPRITE_SZ, C.SPRITE_SZ) * 0.5
+	var dist = pos2.distance_to(pos1)
+	var t = dist / (C.SPRITE_SZ * 24.0)
+	var dir = (pos2 - pos1).normalized()
+	var sec = SUtils.hex_section(rad_to_deg(dir.angle()))
+	dir = Vector2.from_angle(deg_to_rad(sec * 60.0 + 30.0))
+	var gem_ui1 = ui.get_cell(coord1).gem_ui
+	var gem_ui2 = ui.get_cell(coord2).gem_ui
+	var sub1 = App.game_tweens.create_tween()
+	var sub2 = App.game_tweens.create_tween()
+	sub1.tween_callback(func():
+		gem_ui1.z_index = 10
+	)
+	sub1.tween_property(gem_ui1, "global_position", pos2 - dir * C.SPRITE_SZ * 0.5, t * App.speed)
+	sub1.tween_interval(0.15 * App.speed)
+	sub1.tween_property(gem_ui1, "global_position", pos2, 0.15 * App.speed)
+	sub1.tween_callback(func():
+		gem_ui1.z_index = 0
+	)
+	sub2.tween_callback(func():
+		gem_ui2.z_index = 10
+	)
+	sub2.tween_interval(t * App.speed)
+	sub2.tween_property(gem_ui2, "angle", SUtils.hex_quadrant(sec) * Vector2(75.0, 30.0), 0.07 * App.speed)
+	sub2.parallel().tween_property(gem_ui2, "global_position", pos2 + dir * C.SPRITE_SZ * 0.5, 0.07 * App.speed)
+	sub2.tween_property(gem_ui2, "angle", Vector2(0.0, 0.0), 0.07 * App.speed)
+	sub2.tween_property(gem_ui2, "global_position", pos1, t * App.speed)
+	sub2.tween_callback(func():
+		gem_ui2.z_index = 0
+	)
+	tween.tween_subtween(sub1)
+	tween.parallel().tween_subtween(sub2)
+	tween.tween_callback(func():
+		var g1 = set_gem_at(coord1, null)
+		var g2 = set_gem_at(coord2, null)
+		set_gem_at(coord1, g2)
+		set_gem_at(coord2, g1)
+	)
+	if !outer_tween:
+		tween.tween_callback(App.end_busy)
 
 func effect_change_color(coord : Vector2i, new_color : int, new_rune : int, tween : Tween):
 	var gem = get_gem_at(coord)
@@ -739,17 +811,17 @@ func effect_change_color(coord : Vector2i, new_color : int, new_rune : int, twee
 	if !tween:
 		tween = App.game_tweens.create_tween()
 		tween.tween_callback(App.begin_busy)
-	var ui = ui.get_cell(coord)
-	tween.tween_property(ui.gem_ui, "angle", Vector2(0.0, 90.0), 0.25 * App.speed)
+	var cell_ui = ui.get_cell(coord)
+	tween.tween_property(cell_ui.gem_ui, "angle", Vector2(0.0, 90.0), 0.25 * App.speed)
 	tween.tween_callback(func():
 		gem.type = new_color
 		gem.rune = new_rune
-		ui.gem_ui.update(gem)
-		ui.gem_ui.angle.y = 270.0
+		cell_ui.gem_ui.update(gem)
+		cell_ui.gem_ui.angle.y = 270.0
 	)
-	tween.tween_property(ui.gem_ui, "angle", Vector2(0.0, 360.0), 0.25 * App.speed)
+	tween.tween_property(cell_ui.gem_ui, "angle", Vector2(0.0, 360.0), 0.25 * App.speed)
 	tween.tween_callback(func():
-		ui.gem_ui.angle.y = 0.0
+		cell_ui.gem_ui.angle.y = 0.0
 	)
 	if !outer_tween:
 		tween.tween_callback(App.end_busy)

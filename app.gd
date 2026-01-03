@@ -439,14 +439,12 @@ func add_combo():
 	Board.on_combo()
 	Buff.remove_by_id_list(self, buffs_to_clear)
 
-func float_text(txt : String, pos : Vector2, color : Color = Color(1.0, 1.0, 1.0, 1.0), font_size : int = 16):
+func float_text(txt : String, pos : Vector2):
 	pos += Vector2(randf() * 10.0 - 5.0, randf() * 10.0 - 5.0)
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
-	var lb : Label = ui.get_child(0)
+	var lb : RichTextLabel = ui.get_child(0)
 	lb.text = txt
-	lb.add_theme_color_override("font_color", color)
-	lb.add_theme_font_size_override("font_size", font_size)
 	ui.z_index = 4
 	Board.ui.overlay.add_child(ui)
 	var tween = App.create_tween()
@@ -462,10 +460,10 @@ func add_score(value : int, pos : Vector2):
 	var ui = popup_txt_pb.instantiate()
 	ui.position = pos
 	ui.scale = Vector2(1.5, 1.5)
-	var lb : Label = ui.get_child(0)
+	var lb : RichTextLabel = ui.get_child(0)
 	lb.text = "%d" % value
 	ui.z_index = 8
-	Board.ui.overlay.add_child(ui)
+	game_overlay.add_child(ui)
 	
 	staging_scores.append(Pair.new(ui, value))
 	
@@ -587,7 +585,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	var hf_sz = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 	App.begin_busy()
 	slot1.elastic = -1.0
-	var slot2 = Hand.add_gem(g2)
+	var slot2 = Hand.ui.add_slot(g2)
 	slot2.global_position = cell_pos - hf_sz
 	slot2.elastic = -1.0
 	tween.tween_callback(func():
@@ -597,34 +595,18 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	tween.tween_callback(func():
 		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, null)
+		App.get_gem(g2)
+		Hand.add_gem(g2, -1, true)
 	)
 	var sub1 = App.game_tweens.create_tween()
 	var sub2 = App.game_tweens.create_tween()
 	var dir = mpos - cell_pos
-	var a = 0.0
-	var sec = 0
-	if reason == "undo":
-		a = 90.0
-		sec = 1
-	else:
-		a = rad_to_deg(dir.angle())
-		if a < 0.0:
-			a += 360.0
-		sec = int(a / 60.0)
-		a = sec * 60.0 + 30.0
-	dir = Vector2.from_angle(deg_to_rad(a))
+	var sec = 1 if reason == "undo" else SUtils.hex_section(rad_to_deg(dir.angle()))
+	dir = Vector2.from_angle(deg_to_rad(sec * 60.0 + 30.0))
 	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz + dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz, 0.2)
 	sub2.tween_interval(0.1)
-	var rot = Vector2(0.0, 0.0)
-	match sec:
-		0: rot = Vector2(-75.0, 30.0)
-		1: rot = Vector2(-75.0, 0.0)
-		2: rot = Vector2(-75.0, -30.0)
-		3: rot = Vector2(75.0, -30.0)
-		4: rot = Vector2(75.0, 0.0)
-		5: rot = Vector2(75.0, 30.0)
-	sub2.tween_property(slot2.gem_ui, "angle", rot, 0.07)
+	sub2.tween_property(slot2.gem_ui, "angle", SUtils.hex_quadrant(sec) * Vector2(75.0, 30.0), 0.07)
 	sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	sub2.parallel().tween_property(slot2.gem_ui, "angle", Vector2(0.0, 0.0), 0.07)
 	sub2.tween_property(slot2, "elastic", 1.0, 0.2).from(0.0)
@@ -637,6 +619,9 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 		control_ui.update_preview()
 		App.end_busy()
 	)
+
+static func read_coord(s : String):
+	return Vector2i(int(s.substr(0, 3)), int(s.substr(3, 6)))
 
 func process_command_line(cl : String):
 	var tokens = []
@@ -689,6 +674,10 @@ func process_command_line(cl : String):
 			var r = Relic.new()
 			r.setup(tokens[1])
 			App.add_relic(r)
+		elif cmd == "swap":
+			var coord1 = read_coord(tokens[1])
+			var coord2 = read_coord(tokens[2])
+			Board.effect_swap(coord1, coord2, null)
 		elif cmd == "backup":
 			DirAccess.copy_absolute("user://save1.json", "res://save_%s.txt" % SUtils.get_formated_datetime())
 		elif cmd == "restore":
@@ -745,9 +734,7 @@ func process_command_line(cl : String):
 		elif cmd == "paint":
 			var t1 = tokens[1]
 			if t1 == "cell":
-				var x = tokens[2].substr(0, 3)
-				var y = tokens[2].substr(3, 6)
-				Board.effect_change_color(Vector2i(int(x), int(y)), Gem.name_to_type(tokens[3]), Gem.None, null)
+				Board.effect_change_color(read_coord(tokens[2]), Gem.name_to_type(tokens[3]), Gem.None, null)
 			elif t1 == "clear":
 				var color = Gem.name_to_type(tokens[2])
 				var tween = App.game_tweens.create_tween()
@@ -932,7 +919,7 @@ func start_game(saving : String = ""):
 		gain_scaler = 1.0
 		combos = 0
 		round = 0
-		board_size = 5
+		board_size = 3
 		rolls_per_round = 0
 		swaps_per_round = 5
 		plays_per_round = 0
@@ -972,77 +959,77 @@ func start_game(saving : String = ""):
 			r.setup("Libra")
 			add_relic(r)
 		
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 64:
+		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneStarfish
@@ -1095,10 +1082,10 @@ func exit_game():
 	for t in get_tree().get_processed_tweens():
 		t.kill()
 	for n in Board.ui.underlay.get_children():
-		game_overlay.remove_child(n)
+		Board.ui.underlay.remove_child(n)
 		n.queue_free()
 	for n in Board.ui.overlay.get_children():
-		game_overlay.remove_child(n)
+		Board.ui.overlay.remove_child(n)
 		n.queue_free()
 	for n in game_overlay.get_children():
 		game_overlay.remove_child(n)

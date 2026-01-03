@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=26 format=3 uid="uid://baf3431damatq"]
+[gd_resource type="SpriteFrames" load_steps=30 format=3 uid="uid://baf3431damatq"]
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_7rmke"]
 [ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/gem_red.png" id="2_c6tv1"]
@@ -20,11 +20,15 @@
 [ext_resource type="Texture2D" uid="uid://bpbwgcoq21dfi" path="res://images/items/bomb.png" id="16_33ova"]
 [ext_resource type="Texture2D" uid="uid://ck2hcbsdrppb0" path="res://images/items/c4.png" id="17_3d1gq"]
 [ext_resource type="Texture2D" uid="uid://cjlf2mtfw5vvs" path="res://images/items/rainbow.png" id="18_cjxlm"]
+[ext_resource type="Texture2D" uid="uid://j5h665p0cdaq" path="res://images/items/coin.png" id="18_jnp01"]
 [ext_resource type="Texture2D" uid="uid://dsg7rlnqly7rv" path="res://images/items/orange.png" id="19_2hlxw"]
 [ext_resource type="Texture2D" uid="uid://b5sxnv8vfemc4" path="res://images/items/lightning.png" id="20_c6tv1"]
 [ext_resource type="Texture2D" uid="uid://c1sbuytw6e6ow" path="res://images/items/iai_cut.png" id="21_3d1gq"]
 [ext_resource type="Texture2D" uid="uid://cr36ev5ajj30o" path="res://images/items/polishing_powder.png" id="21_33ova"]
 [ext_resource type="Texture2D" uid="uid://btpt25u6agnw4" path="res://images/items/volcano.png" id="22_cjxlm"]
+[ext_resource type="Texture2D" uid="uid://b2a76pm54pip4" path="res://images/items/energy_drink.png" id="25_8kcmm"]
+[ext_resource type="Texture2D" uid="uid://dqklrfpu5mpwv" path="res://images/items/badge.png" id="26_646tq"]
+[ext_resource type="Texture2D" uid="uid://c8uxxafh66nc6" path="res://images/items/magnet.png" id="26_xj60r"]
 
 [resource]
 animations = [{
@@ -81,6 +85,9 @@ animations = [{
 "texture": ExtResource("15_l5us7")
 }, {
 "duration": 1.0,
+"texture": ExtResource("18_jnp01")
+}, {
+"duration": 1.0,
 "texture": ExtResource("16_33ova")
 }, {
 "duration": 1.0,
@@ -97,6 +104,15 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("20_c6tv1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_8kcmm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_646tq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_xj60r")
 }, {
 "duration": 1.0,
 "texture": ExtResource("22_cjxlm")

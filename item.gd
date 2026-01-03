@@ -127,7 +127,7 @@ func setup(n : String):
 				tween.tween_callback(func():
 					for c in coords:
 						var v = App.game_rng.randi_range(0, 3)
-						App.float_text("%dG" % v, Board.get_pos(c), Color(0.9, 0.75, 0.25))
+						App.float_text("[img]res://images/coin.png[/img][color=FFAA00]+%d[/color]" % v, Board.get_pos(c))
 						App.coins += v
 				)
 	elif name == "Minefield":
@@ -624,7 +624,7 @@ func setup(n : String):
 					var g = Board.get_gem_at(c)
 					if g:
 						var v = App.gem_add_base_score(g, -1)
-						App.float_text("%d" % v, Board.get_pos(c), Color(0.8, 0.1, 0.0))
+						App.float_text("[color=BB2500]%d[/color]" % v, Board.get_pos(c))
 			)
 	elif name == "Magician":
 		image_id = 32
@@ -690,7 +690,7 @@ func setup(n : String):
 				for c in coords:
 					var g = Board.get_gem_at(c)
 					if g:
-						App.float_text("+1", Board.get_pos(c), Color(0.1, 0.8, 0.0))
+						App.float_text("[color=FFBB00]+1[/color]", Board.get_pos(c))
 						g.base_score += 1
 			)
 	elif name == "Mage":
@@ -734,17 +734,17 @@ func setup(n : String):
 						for p in App.staging_scores:
 							generated_score += p.second
 						var pos = Board.get_pos(coord)
-						App.float_text(tr("t_Lust_effect1"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+						App.float_text(tr("t_Lust_effect1"), Board.get_pos(coord))
 						App.add_score(generated_score, pos)
 					)
 				1:
 					tween.tween_callback(func():
-						App.float_text(tr("t_Lust_effect2"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+						App.float_text(tr("t_Lust_effect2"), Board.get_pos(coord))
 						Buff.create(App, Buff.Type.ValueModifier, {"target":"gain_scaler","set":0.0}, Buff.Duration.ThisRound)
 					)
 				2:
 					tween.tween_callback(func():
-						App.float_text(tr("t_Lust_effect3"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+						App.float_text(tr("t_Lust_effect3"), Board.get_pos(coord))
 						App.game_over_mark = "lust_dead"
 					)
 			Curse.lust_triggered += 1
@@ -783,7 +783,7 @@ func setup(n : String):
 					return i && i.name == "SinGreed"
 				).size()
 				if num_greed == 1:
-					App.float_text(tr("t_Greed_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+					App.float_text(tr("t_Greed_effect"), Board.get_pos(coord))
 					App.coins = 0
 			)
 	elif name == "SinEnvy":
@@ -801,7 +801,7 @@ func setup(n : String):
 						#Board.remove_aura(self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				App.float_text(tr("t_Envy_effect"), Board.get_pos(coord), Color(1.0, 1.0, 1.0))
+				App.float_text(tr("t_Envy_effect"), Board.get_pos(coord))
 			)
 		on_aura = func(g : Gem):
 			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"score_mult","add":-0.25}, Buff.Duration.OnBoard)

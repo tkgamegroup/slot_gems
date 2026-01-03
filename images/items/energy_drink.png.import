@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8uxxafh66nc6"
-path="res://.godot/imported/magnet.png-58e09c9d8c9a2df8f5960684ce486f9b.ctex"
+uid="uid://b2a76pm54pip4"
+path="res://.godot/imported/energy_drink.png-751ddba8efa732a90e54c96308b80a2b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/items/magnet.png"
-dest_files=["res://.godot/imported/magnet.png-58e09c9d8c9a2df8f5960684ce486f9b.ctex"]
+source_file="res://images/items/energy_drink.png"
+dest_files=["res://.godot/imported/energy_drink.png-751ddba8efa732a90e54c96308b80a2b.ctex"]
 
 [params]
 

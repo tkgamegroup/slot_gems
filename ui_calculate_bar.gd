@@ -25,13 +25,9 @@ func appear():
 	
 	self.show()
 
-func calculate():
-	if App.base_score == 0:
-		disappear()
-		finished.emit()
-		return
-	
+func calculate_proc():
 	var tween = App.game_tweens.create_tween()
+	Board.collect_scores(tween)
 	tween.tween_interval(0.3)
 	
 	var result = {}
@@ -78,6 +74,22 @@ func calculate():
 		disappear()
 		finished.emit()
 	)
+
+func calculate():
+	if App.base_score == 0:
+		disappear()
+		finished.emit()
+		return
+	
+	var tween = App.game_tweens.create_tween()
+	var preprocess = false
+	for h in App.event_listeners:
+		if h.host.on_event.call(Event.BeforeScoreCalculating, tween, null):
+			preprocess = true
+	if preprocess:
+		tween.tween_callback(calculate_proc)
+	else:
+		calculate_proc()
 
 func disappear():
 	calculated_text.hide()
