@@ -1129,6 +1129,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_yysqy")
 
 [node name="Cells" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
 
+[node name="EntangledLines" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
+
 [node name="Overlay" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
 
 [node name="Hover" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
@@ -1177,7 +1179,7 @@ layout_mode = 2
 theme_override_constants/separation = 32
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(444, 185)
+custom_minimum_size = Vector2(444, 221)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0

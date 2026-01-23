@@ -11,7 +11,6 @@ enum Mode
 
 enum TaskSteps
 {
-	ToRoll,
 	ToMatch,
 	GetResult,
 	ToShop
@@ -19,9 +18,6 @@ enum TaskSteps
 
 var filename : String
 var saving : String
-var additional_patterns : Array
-var additional_relics : Array
-var additional_enchants : Array
 var mode : int
 var task_count : int
 var task_round_count : int
@@ -111,16 +107,8 @@ func has_matched_pattern():
 
 func start_game():
 	App.start_game(saving)
-	for n in additional_patterns:
-		var p = Pattern.new()
-		p.setup(n)
-		App.add_pattern(p)
-	for n in additional_relics:
-		var r = Relic.new()
-		r.setup(n)
-		App.add_relic(r)
 
-func start_test(_mode : int, _round_count : int, _task_count : int, fn : String = "", _saving : String = "", _additional_patterns : Array = [], _additional_relics : Array = [], _additional_enchants : Array = [], invincible : bool = true, _enable_shopping : bool = false):
+func start_test(_mode : int, _round_count : int, _task_count : int, fn : String = "", _saving : String = "", invincible : bool = true, _enable_shopping : bool = false):
 	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
 	App.performance_mode = true
 	App.base_speed = 4.0
@@ -130,7 +118,7 @@ func start_test(_mode : int, _round_count : int, _task_count : int, fn : String 
 	task_count = _task_count
 	task_round_count = _round_count
 	task_index = 0
-	step = TaskSteps.ToRoll
+	step = TaskSteps.ToMatch
 	
 	records.append(TaskRecord.new())
 	
@@ -143,9 +131,6 @@ func start_test(_mode : int, _round_count : int, _task_count : int, fn : String 
 		filename = fn
 	
 	saving = _saving
-	additional_patterns = _additional_patterns
-	additional_relics = _additional_relics
-	additional_enchants = _additional_enchants
 	App.invincible = invincible
 	enable_shopping = _enable_shopping
 	
@@ -160,7 +145,7 @@ func start_test(_mode : int, _round_count : int, _task_count : int, fn : String 
 
 func time_out():
 	if App.stage == App.Stage.Deploy || App.stage >= App.Stage.Settlement:
-		if step == TaskSteps.ToRoll:
+		if step == TaskSteps.ToMatch:
 			if App.settlement_ui.visible || App.game_over_ui.visible:
 				var curr_task = records.back()
 				if curr_task.rounds.size() == task_round_count || App.game_over_ui.visible:
@@ -242,24 +227,10 @@ func time_out():
 				
 				App.settlement_ui.hide()
 				App.game_over_ui.hide()
-			else:
-				step = TaskSteps.ToMatch
-		elif step == TaskSteps.ToMatch:
-			#if Hand.grabs.size() < App.max_hand_grabs && App.rolls >= App.plays:
-			#	step = TaskSteps.ToMatch
-			#else:
-				#if !has_matched_pattern() && App.rolls >= App.plays:
-				#	step = TaskSteps.ToMatch
-				#elif App.plays > 0:
-					var curr_task = records.back()
-					if curr_task.rounds.size() == 1:
-						for ec in additional_enchants:
-							var g = Hand.grabs.pick_random()
-							App.enchant_gem(g, ec)
-					auto_swap_gems()
-					#auto_place_items()
-					step = TaskSteps.GetResult
-					App.play()
+			
+			auto_swap_gems()
+			step = TaskSteps.GetResult
+			App.play()
 		elif step == TaskSteps.GetResult:
 			var his = App.history
 			var curr_round : RoundRecord = records.back().rounds.back()
@@ -273,7 +244,7 @@ func time_out():
 			curr_round.relic_effects += his.relic_effects
 			curr_round.actives += his.last_matching_actives
 			curr_round.matchings.append(MatchingRecord.new())
-			step = TaskSteps.ToRoll
+			step = TaskSteps.ToMatch
 			if his.last_matching_score == 0 && !App.settlement_ui.visible:
 				App.lose()
 		elif step == TaskSteps.ToShop:
@@ -281,7 +252,7 @@ func time_out():
 				for i in 5:
 					App.shop_ui.buy_randomly()
 				App.shop_ui.exit()
-				step = TaskSteps.ToRoll
+				step = TaskSteps.ToMatch
 				write_game_status()
 
 func get_missing_one_places() -> Dictionary[int, Array]:
@@ -348,168 +319,6 @@ func auto_swap_gems():
 						Hand.erase(Hand.find(g))
 						Hand.swap(SMath.pick_and_remove(arr), g, true)
 						changed = true
-
-'''
-func auto_place_items():
-	if !Hand.grabs.is_empty():
-		var cx = Board.cx
-		var cy = Board.cy
-		var center = Vector2i(cx / 2, cy / 2)
-		var item_uis = []
-		for i in Hand.grabs.size():
-			var ui = Hand.ui.get_slot(i)
-			item_uis.append(ui)
-		var missing_one_places : Array[Array] = get_missing_one_places()
-		SMath.remove_if(item_uis, func(ui):
-			var item = ui.item
-			if item.name.begins_with("DyeRed"):
-				var arr = missing_one_places[Gem.ColorRed - 1]
-				if !arr.is_empty():
-					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
-						return true
-			elif item.name.begins_with("DyeOrange"):
-				var arr = missing_one_places[Gem.ColorOrange - 1]
-				if !arr.is_empty():
-					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
-						return true
-			elif item.name.begins_with("DyeGreen"):
-				var arr = missing_one_places[Gem.ColorGreen - 1]
-				if !arr.is_empty():
-					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
-						return true
-			elif item.name.begins_with("DyeBlue"):
-				var arr = missing_one_places[Gem.ColorBlue - 1]
-				if !arr.is_empty():
-					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
-						return true
-			elif item.name.begins_with("DyeMagenta"):
-				var arr = missing_one_places[Gem.ColorMagenta - 1]
-				if !arr.is_empty():
-					if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
-						return true
-			elif item.name == "ColorPalette":
-				for arr in missing_one_places:
-					if !arr.is_empty():
-						if Hand.ui.place_item(ui, SMath.pick_and_remove(arr)):
-							return true
-			return false
-		)
-		var activater_places : Array[Vector2i] = []
-		var central_activater_places : Array[Vector2i] = []
-		for y in cy:
-			for x in cx:
-				var c = Vector2i(x, y)
-				for p in App.patterns:
-					var res : Array[Vector2i] = p.match_with(c)
-					for cc in res:
-						activater_places.append(cc)
-						central_activater_places.append(cc)
-		central_activater_places.sort_custom(func(c1, c2):
-			return Board.offset_distance(c1, center) < Board.offset_distance(c2, center)
-		)
-		var aura_places = []
-		for y in cy:
-			for x in cx:
-				var c = Vector2i(x, y)
-				if !activater_places.has(c):
-					aura_places.append(c)
-		SMath.remove_if(item_uis, func(ui):
-			var item = ui.item
-			if item.on_process.is_valid():
-				if item.name == "C4" || item.name == "ChainBomb" || item.name == "Lightning":
-					return false
-				if !central_activater_places.is_empty():
-					var c = central_activater_places.front()
-					if Hand.ui.place_item(ui, c):
-						central_activater_places.pop_front()
-						activater_places.erase(c)
-						return true
-			return false
-		)
-		SMath.remove_if(item_uis, func(ui):
-			var item = ui.item
-			if item.on_process.is_valid():
-				if item.name == "C4" || item.name == "ChainBomb":
-					var bomb_places = []
-					for y in Board.cy:
-						for x in Board.cx:
-							var c = Vector2i(x, y)
-							var i = Board.get_item_at(c)
-							if i && i.category == "Bomb":
-								for cc in Board.offset_neighbors(c):
-									if !Board.get_item_at(cc) && !activater_places.has(cc):
-										bomb_places.append(cc)
-					if !bomb_places.is_empty():
-						var c = bomb_places[0]
-						if Hand.ui.place_item(ui, c):
-							return true
-					elif item.name == "ChainBomb":
-						if !central_activater_places.is_empty():
-							var c = central_activater_places.front()
-							if Hand.ui.place_item(ui, c):
-								central_activater_places.pop_front()
-								activater_places.erase(c)
-								return true
-				elif item.name == "Lightning":
-					var coords = Board.filter(func(gem : Gem, item : Item):
-						return item && item.name == "Lightning"
-					)
-					if !coords.is_empty():
-						var dist = 0
-						var coord = Vector2i(-1, -1)
-						for y in Board.cy:
-							for x in Board.cx:
-								var c = Vector2i(x, y)
-								if !Board.get_item_at(c):
-									var d = 0
-									for cc in coords:
-										d += Board.offset_distance(c, cc)
-									if d > dist:
-										coord = c
-										dist = d
-						if coord.x != -1 && coord.y != -1:
-							if !Board.get_item_at(coord):
-								if Hand.ui.place_item(ui, coord):
-									central_activater_places.erase(coord)
-									activater_places.erase(coord)
-									return true
-					else:
-						if !central_activater_places.is_empty():
-							var c = central_activater_places.back()
-							if Hand.ui.place_item(ui, c):
-								central_activater_places.pop_back()
-								activater_places.erase(c)
-								return true
-			return false
-		)
-		SMath.remove_if(item_uis, func(ui):
-			var item = ui.item
-			if item.description.find("[b]Aura[/b]") != -1:
-				if !aura_places.is_empty():
-					if Hand.ui.place_item(ui, SMath.pick_and_remove(aura_places)):
-						aura_places.pop_front()
-						return true
-			return false
-		)
-		SMath.remove_if(item_uis, func(ui):
-			var item = ui.item
-			if item.on_eliminate.is_valid():
-				if item.name == "Rainbow" || item.name == "Fire":
-					var c = activater_places[0]
-					if Hand.ui.place_item(ui, c):
-						activater_places.pop_front()
-						central_activater_places.erase(c)
-						return true
-				else:
-					if !central_activater_places.is_empty():
-						var c = central_activater_places.front()
-						if Hand.ui.place_item(ui, c):
-							central_activater_places.pop_front()
-							activater_places.erase(c)
-							return true
-			return false
-		)
-'''
 
 func _ready() -> void:
 	timer.timeout.connect(time_out)

@@ -10,6 +10,7 @@ const outline_pb = preload("res://ui_outline.tscn")
 @onready var outlines_root : Node2D = $SubViewport/Outlines
 @onready var underlay : Node2D = $SubViewport/Underlay
 @onready var cells_root : Node2D = $SubViewport/Cells
+@onready var entangled_lines : Node2D = $SubViewport/EntangledLines
 @onready var overlay : Node2D = $SubViewport/Overlay
 @onready var hover_ui : Sprite2D = $Hover
 

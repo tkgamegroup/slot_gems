@@ -6,8 +6,6 @@ enum
 {
 	RoundBegan,
 	RoundEnded,
-	RollingFinished,
-	FillingFinished,
 	BeforeMatching,
 	MatchingFinished,
 	BeforeScoreCalculating,

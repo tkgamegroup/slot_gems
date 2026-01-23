@@ -176,6 +176,8 @@ func _ready() -> void:
 			lb.add_theme_constant_override("outline_size", 1)
 			ctrl.add_child(lb)
 	elif cate == "pattern":
+		cate_lb.text = tr("pattern")
+		cate_lb.show()
 		var ui = pattern_ui.instantiate()
 		ui.setup(object, true)
 		ui.mouse_filter = Control.MOUSE_FILTER_PASS

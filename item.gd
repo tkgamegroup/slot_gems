@@ -26,63 +26,13 @@ var on_aura : Callable
 var on_mount : Callable
 var on_event : Callable
 
-static func get_image_path(name : String):
-	var temp = Item.new()
-	temp.setup(name)
-	return Gem.item_frames.get_frame_texture("default", temp.image_id).resource_path
-
 static var s_id : int = 0
 
 func setup(n : String):
 	id = s_id
 	s_id += 1
 	name = n
-	if name == "DyeRed":
-		image_id = 1
-		price = 1
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorRed}, Buff.Duration.OnBoard)
-				return true
-			return false
-	elif name == "DyeOrange":
-		image_id = 2
-		price = 1
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorOrange}, Buff.Duration.OnBoard)
-				return true
-			return false
-	elif name == "DyeGreen":
-		image_id = 3
-		price = 1
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorGreen}, Buff.Duration.OnBoard)
-				return true
-			return false
-	elif name == "DyeBlue":
-		image_id = 4
-		price = 1
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorBlue}, Buff.Duration.ThisRound)
-				return true
-			return false
-	elif name == "DyeMagenta":
-		image_id = 5
-		price = 1
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorMagenta}, Buff.Duration.OnBoard)
-				return true
-			return false
-	elif name == "Pin":
+	if name == "Pin":
 		image_id = 6
 		on_quick = func(coord : Vector2i):
 			var coords = [coord]
@@ -229,34 +179,6 @@ func setup(n : String):
 					Board.score_at(c)
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "ColorPalette":
-		image_id = 13
-		category = "Normal"
-		price = 4
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g && g.type != Gem.ColorWild:
-				var cands = Board.filter(func(gem : Gem, item : Item):
-					if gem && gem.type != Gem.ColorWild:
-						return true
-					return false
-				)
-				if !cands.is_empty():
-					var pos = Board.get_pos(coord)
-					var targets = SMath.pick_n_random(cands, 3, App.game_rng) 
-					for c in targets:
-						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.ThisRound)
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.ThisRound)
-				return true
-			return false
-	elif name == "Fire":
-		image_id = 14
-		category = "Normal"
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				#Board.set_state_at(coord, Cell.State.Burning)
-				SSound.se_start_buring.play()
-			)
 	elif name == "BlackHole":
 		image_id = 15
 		category = "Normal"
@@ -330,18 +252,6 @@ func setup(n : String):
 							Board.score_at(c)
 			)
 			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
-	elif name == "Chloroplast":
-		image_id = 17
-		category = "Normal"
-		price = 5
-		on_quick = func(coord : Vector2i):
-			var g = Board.get_gem_at(coord)
-			if g && g.type != Gem.None:
-				Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.None}, Buff.Duration.ThisRound)
-				for i in 2:
-					App.Hand.draw()
-				return true
-			return false
 	elif name == "Dog":
 		image_id = 18
 		category = "Animal"
@@ -581,132 +491,6 @@ func setup(n : String):
 			tween.tween_callback(func():
 				App.add_score(extra["value"], Board.get_pos(coord))
 			)
-	elif name == "Magnet":
-		image_id = 29
-		category = "Normal"
-		on_event = func(event : int, tween : Tween, data):
-			if event == Event.ItemActivated:
-				var sp = data.third
-				SAnimation.move_to(tween, sp, Board.get_pos(coord), 0.3)
-				data.second = coord
-	elif name == "Idol":
-		image_id = 31
-		category = "Character"
-		extra["value"] = 3
-		on_event = func(event : int, tween : Tween, data):
-			var value = extra["value"]
-			match event: 
-				Event.GemEntered:
-					extra["buff_ids"].append(Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
-				Event.ItemEntered:
-					extra["buff_ids"].clear()
-					if data == self:
-						for y in Board.cy:
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
-								if g:
-									extra["buff_ids"].append(Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
-				Event.ItemLeft:
-					if data == self:
-						for y in Board.cy:
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
-								if g:
-									Buff.remove_by_id_list(g, extra["buff_ids"])
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			var coords : Array[Vector2i] = []
-			coords.append(coord)
-			for c in Board.offset_neighbors(coord):
-				coords.append(c)
-			tween.tween_interval(0.5 * App.speed)
-			tween.tween_callback(func():
-				for c in coords:
-					var g = Board.get_gem_at(c)
-					if g:
-						var v = App.gem_add_base_score(g, -1)
-						App.float_text("[color=BB2500]%d[/color]" % v, Board.get_pos(c))
-			)
-	elif name == "Magician":
-		image_id = 32
-		price = 1
-		category = "Character"
-		extra["number"] = 5
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
-			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			var cands = Board.filter(func(gem : Gem, item : Item):
-				if gem && gem.type != Gem.ColorWild:
-					return true
-				return false
-			)
-			if !cands.is_empty():
-				var pos = Board.get_pos(coord)
-				var targets = SMath.pick_n_random(cands, extra["number"], App.game_rng) 
-				tween.tween_callback(func():
-					for c in targets:
-						SEffect.add_leading_line(pos, Board.get_pos(c))
-				)
-				tween.tween_interval(0.3)
-				tween.tween_callback(func():
-					for c in targets:
-						Buff.create(Board.get_gem_at(c), Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.OnBoard)
-					if !targets.is_empty():
-						SSound.se_vibra.play()
-				)
-	elif name == "Merchant":
-		image_id = 33
-	elif name == "Princess":
-		image_id = 33
-		category = "Character"
-		extra["value"] = 7
-		on_event = func(event : int, tween : Tween, data):
-			var value = extra["value"]
-			match event: 
-				Event.GemEntered:
-					extra["buff_ids"].append(Buff.create(data, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
-				Event.ItemEntered:
-					extra["buff_ids"].clear()
-					if data == self:
-						for y in Board.cy:
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
-								if g:
-									extra["buff_ids"].append(Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":value}, Buff.Duration.OnBoard))
-				Event.ItemLeft:
-					if data == self:
-						for y in Board.cy:
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
-								if g:
-									Buff.remove_by_id_list(g, extra["buff_ids"])
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			var coords : Array[Vector2i] = []
-			coords.append(coord)
-			for c in Board.offset_neighbors(coord):
-				coords.append(c)
-			tween.tween_callback(func():
-				for c in coords:
-					var g = Board.get_gem_at(c)
-					if g:
-						App.float_text("[color=FFBB00]+1[/color]", Board.get_pos(c))
-						g.base_score += 1
-			)
-	elif name == "Mage":
-		image_id = 34
-		category = "Character"
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
-			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			tween.tween_callback(func():
-				for c in Board.offset_neighbors(coord):
-					var g = Board.get_gem_at(c)
-					if g:
-						Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.ThisRound)
-			)
 	elif name == "StrengthPotion":
 		image_id = 40
 		category = "Normal"
@@ -719,10 +503,6 @@ func setup(n : String):
 				return true
 			'''
 			return false
-	elif name == "EchoTotem":
-		image_id = 41
-		category = "Normal"
-		price = 4
 	elif name == "SinLust":
 		image_id = 42
 		price = 0

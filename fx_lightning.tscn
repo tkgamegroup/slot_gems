@@ -5,7 +5,7 @@
 
 [sub_resource type="Gradient" id="Gradient_0ijmk"]
 offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0)
+colors = PackedColorArray(0, 0, 0, 0, 0.69411767, 0.9019608, 0.96862745, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_tr7wf"]
 gradient = SubResource("Gradient_0ijmk")
@@ -16,8 +16,8 @@ gradient = SubResource("Gradient_0ijmk")
 noise_type = 3
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_odb1y"]
-color_ramp = SubResource("Gradient_5whjb")
 noise = SubResource("FastNoiseLite_36p8l")
+color_ramp = SubResource("Gradient_5whjb")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kiqf0"]
 resource_local_to_scene = true

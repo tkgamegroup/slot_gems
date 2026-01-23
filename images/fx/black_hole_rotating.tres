@@ -1,0 +1,32 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://bb72aohd1my8i"]
+
+[ext_resource type="Texture2D" uid="uid://dbo33fmbc458m" path="res://images/fx/black_hole_rotating.png" id="1_n5w4a"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bp2pn"]
+atlas = ExtResource("1_n5w4a")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_na3sc"]
+atlas = ExtResource("1_n5w4a")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x1170"]
+atlas = ExtResource("1_n5w4a")
+region = Rect2(128, 0, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bp2pn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_na3sc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x1170")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]

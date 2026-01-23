@@ -6,8 +6,6 @@ const shop_item_pb = preload("res://ui_shop_item.tscn")
 @onready var list : Control = $PanelContainer/VBoxContainer/HBoxContainer
 @onready var button : Button = $PanelContainer/VBoxContainer/Button
 
-const patterns_pool = ["\\", "|", "/", "Y", "C", "O", "√", "X", "Island"]
-
 var selected = null
 
 func setup_item_listener(ui : Control):
@@ -39,40 +37,13 @@ func enter():
 	var tween = App.game_tweens.create_tween()
 	tween.tween_property(panel, "modulate:a", 1.0, 0.3)
 	
-	var ops1 = []
-	if App.patterns.size() < App.MaxPatterns:
-		ops1.append("P")
-	if App.board_size < 6:
-		ops1.append("B")
-	match SMath.pick_random(ops1, App.shop_rng):
-		"P":
-			var patterns_pool2 = []
-			for n in patterns_pool:
-				var has = false
-				for p in App.patterns:
-					if p.name == n:
-						has = true
-						break
-				if !has:
-					patterns_pool2.append(n)
-			for i in 1:
-				tween.tween_interval(0.04)
-				tween.tween_callback(func():
-					var ui = shop_item_pb.instantiate()
-					var pattern = Pattern.new()
-					pattern.setup(SMath.pick_random(patterns_pool2, App.shop_rng))
-					ui.setup("pattern", pattern, pattern.price, 1, true)
-					list.add_child(ui)
-					setup_item_listener(ui)
-				)
-		"B":
-			tween.tween_interval(0.04)
-			tween.tween_callback(func():
-				var ui = shop_item_pb.instantiate()
-				ui.setup("upgrade_board", null, 15, 1, true)
-				list.add_child(ui)
-				setup_item_listener(ui)
-			)
+	tween.tween_interval(0.04)
+	tween.tween_callback(func():
+		var ui = shop_item_pb.instantiate()
+		ui.setup("upgrade_board", null, 15, 1, true)
+		list.add_child(ui)
+		setup_item_listener(ui)
+	)
 	tween.tween_interval(0.04)
 	tween.tween_callback(func():
 		var ui = shop_item_pb.instantiate()

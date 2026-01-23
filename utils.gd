@@ -35,18 +35,40 @@ static func replacing_gem_tag(text : String, with_color : bool, with_url : bool,
 static func replacing_number_tag(text : String, with_color : bool) -> String:
 	var ret = ""
 	var regex = RegEx.new()
-	regex.compile(r"\[n_([0-9]+)\]")
+	regex.compile(r"\[n([0-9]+)?_([0-9]+)\]")
+	var last_end = 0
+	var matches = regex.search_all(text)
+	for m in matches:
+		var base = m.get_string(1)
+		var start = m.get_start()
+		var end = m.get_end()
+		ret += text.substr(last_end, start - last_end)
+		var value = m.get_string(2)
+		if base != "" && base != "1":
+			value = "%.*f" % [base.length() - 1, float(int(value)) / float(int(base))]
+		if with_color:
+			ret += "[color=cyan]%s[/color]" % value
+		else:
+			ret += "%s" % value
+		last_end = end
+	ret += text.substr(last_end)
+	return ret
+
+static func replacing_conditioning_line_tag(text : String) -> String:
+	var ret = ""
+	var regex = RegEx.new()
+	regex.compile(r"\[c_([0-9]+)\]")
 	var last_end = 0
 	var matches = regex.search_all(text)
 	for m in matches:
 		var start = m.get_start()
 		var end = m.get_end()
+		var line_end = text.find("\n", end)
 		ret += text.substr(last_end, start - last_end)
-		var value = m.get_string(1)
-		if with_color:
-			ret += "[color=cyan]%s[/color]" % value
-		else:
-			ret += "%s" % value
+		var condition = m.get_string(1)
+		if int(condition) == 0:
+			if line_end != -1:
+				end = line_end + 1
 		last_end = end
 	ret += text.substr(last_end)
 	return ret
@@ -56,6 +78,7 @@ static func format_text(text : String, with_color : bool, with_url : bool, used_
 	var ret = ""
 	ret = replacing_gem_tag(text, with_color, with_url, used_gems)
 	ret = replacing_number_tag(ret, with_color)
+	ret = replacing_conditioning_line_tag(ret)
 	
 	for w in words:
 		if text.find(w) != -1:
@@ -68,6 +91,13 @@ static func format_text(text : String, with_color : bool, with_url : bool, used_
 				ret = ret.replace(w, App.tr(w))
 			used_words.append(w)
 	
+	return ret
+
+static func save_dictionary(d : Dictionary):
+	var ret = {}
+	for k in d:
+		if k.ends_with("_i") || k.ends_with("_f") || k.ends_with("_2i"):
+			ret[k] = d[k]
 	return ret
 
 static func read_dictionary(d : Dictionary):
@@ -97,6 +127,18 @@ static func calc_value_with_modifiers(obj : Object, target : String, sub_attr : 
 		obj[target] = v
 	else:
 		obj[sub_attr][target] = v
+
+static func calc_repeat_count(v : int):
+	var save_chance = App.modifiers["not_consume_repeat_count_chance_i"]
+	if save_chance == 0:
+		return v
+	for i in 64:
+		if v >= 64:
+			break
+		if (App.game_rng.randf() * 100) < save_chance:
+			break
+		v += 1
+	return v
 
 static func hex_section(a : float):
 	if a < 0.0:

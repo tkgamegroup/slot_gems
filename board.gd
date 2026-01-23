@@ -41,9 +41,9 @@ var active_effects : Array[ActiveEffect] = []
 var active_serial : int = 0
 var event_listeners : Array[Hook]
 
-signal rolling_finished
 signal filling_finished
 signal matching_finished
+signal clearing_finished
 
 # odd-q vertical layout shoves odd columns down
 # even-q vertical layout shoves even columns down
@@ -178,6 +178,7 @@ func set_gem_at(c : Vector2i, g : Gem):
 	cell.gem = g
 	if g:
 		g.coord = c
+		g.eliminated = false
 		g.board_stamp = App.round
 		for a in auras:
 			if a.on_aura.is_valid():
@@ -377,17 +378,32 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 			var g = get_gem_at(c)
 			if g && !g.active:
 				set_state_at(c, Cell.State.Consumed)
+				if g.name == "":
+					ui.get_cell(c).gem_ui.break_into_pieces()
 	)
+	var extra_targets : Array[Vector2i] = []
+	for c in coords:
+		var g = get_gem_at(c)
+		if g:
+			var eg = App.find_entangled_group(g)
+			if eg:
+				for g2 in eg.gems:
+					if g2 != g && g2.coord.x != -1 && g2.coord.y != -1 && !g2.eliminated:
+						if !extra_targets.has(g2.coord):
+							extra_targets.append(g2.coord)
 	if first:
-		var trigger_targets : Array[Vector2i] = []
 		for c in coords:
 			for cc in offset_neighbors(c):
-				if !coords.has(cc) && !trigger_targets.has(cc):
+				if !coords.has(cc) && !extra_targets.has(cc):
 					var g = get_gem_at(cc)
 					if g && g.trigger:
-						trigger_targets.append(cc)
-		if !trigger_targets.is_empty():
-			eliminate(trigger_targets, tween, reason, source, false)
+						extra_targets.append(cc)
+	if !extra_targets.is_empty():
+		tween.tween_callback(func():
+			for c in extra_targets:
+				score_at(c, 0)
+		)
+		eliminate(extra_targets, tween, reason, source, false)
 
 func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
 	var sp : Node2D = null
@@ -412,8 +428,9 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	var ae = ActiveEffect.new()
 	ae.host = host
 	ae.type = type
-	ae.effect_index = effect_index
 	ae.coord = c
+	ae.effect_index = effect_index
+	ae.times += App.modifiers["additional_active_times_i"]
 	ae.sp = sp
 	active_effects.append(ae)
 	
@@ -439,21 +456,28 @@ func process_active_effect(ae : ActiveEffect):
 		)
 		tween.tween_interval(0.05 * App.speed)
 	tween.tween_callback(func():
-		ae.sp.hide()
+		text.modulate.a = 0.0
 	)
 	if ae.type == HostType.Gem:
 		var gem : Gem = ae.host
 		if gem.on_active.is_valid():
 			gem.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
-		gem.active = false
-		set_gem_at(gem.coord, null)
+		tween.tween_callback(func():
+			if ae.times == 1:
+				gem.active = false
+				set_gem_at(gem.coord, null)
+		)
 	elif ae.type == HostType.Relic:
 		var relic : Relic = ae.host
 		if relic.on_active.is_valid():
 			relic.on_active.call(ae.effect_index, ae.coord, tween)
 	tween.tween_callback(func():
-		active_effects.remove_at(0)
-		ae.sp.queue_free()
+		if ae.times == 1:
+			active_effects.remove_at(0)
+			ae.sp.queue_free()
+		else:
+			ae.times -= 1
+			text.text = "R"
 	)
 	tween.tween_callback(clear_consumed)
 
@@ -580,12 +604,13 @@ func clear_consumed():
 					if g && g.name == "":
 						sub.tween_callback(func():
 							#SSound.se_break.play()
-							var tex = Gem.gem_frames.get_frame_texture("default", g.type - Gem.ColorFirst + 1)
-							SEffect.add_break_pieces(get_pos(c), Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, ui.overlay)
+							ui.get_cell(c).gem_ui.move_pieces()
 						)
 						sub.tween_interval(0.4 * App.speed)
 				tween.parallel().tween_subtween(sub)
-	tween.tween_callback(fill_blanks)
+	tween.tween_callback(func():
+		clearing_finished.emit()
+	)
 
 func collect_scores(tween : Tween):
 	var staging_idx = 0
@@ -678,7 +703,7 @@ func fill_blanks():
 			t *= 0.2
 			sub.tween_property(cell_ui, "position", end_pos, t * App.speed).from(start_pos).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 			sub.tween_callback(func():
-				SSound.se_bubble_pop3.play()
+				#SSound.se_bubble_pop3.play()
 				App.screen_shake_strength = 40.0 * t
 			)
 			subx.parallel().tween_subtween(sub)
@@ -742,11 +767,16 @@ func matching_proc():
 
 func matching():
 	var tween = App.game_tweens.create_tween()
-	
 	var preprocess = false
+	var delay = 0.0
 	for h in event_listeners:
-		if h.host.on_event.call(Event.BeforeMatching, tween, null):
+		var sub = App.game_tweens.create_tween()
+		sub.tween_interval(delay * App.speed)
+		if h.host.on_event.call(Event.BeforeMatching, sub, null):
 			preprocess = true
+			tween.parallel()
+			tween.tween_subtween(sub)
+			delay += 0.2
 	if preprocess:
 		tween.tween_callback(matching_proc)
 	else:
@@ -838,8 +868,8 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		)
 		tween.tween_interval(0.15 * App.speed)
 	var coords : Array[Vector2i] = []
-	var r = range + App.modifiers["explode_range_i"]
-	var p = power + App.modifiers["explode_power_i"]
+	var r = range
+	var p = power
 	var fx_sz = Vector2(64.0, 64.0)
 	if r < 1:
 		fx_sz *= 0.5
@@ -901,7 +931,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 				
 				var sp = AnimatedSprite2D.new()
 				sp.position = App.status_bar_ui.bag_button.get_global_rect().get_center()
-				sp.sprite_frames = Gem.item_frames
+				sp.sprite_frames = Gem.gem_frames
 				sp.frame = items[i].image_id
 				sp.z_index = 4
 				ui.overlay.add_child(sp)

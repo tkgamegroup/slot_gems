@@ -1,12 +1,12 @@
 extends Node
 
-const explosion_frames : SpriteFrames = preload("res://images/explosion.tres")
-const big_explosion_frames : SpriteFrames = preload("res://images/big_explosion.tres")
-const black_hole_rotating_frames : SpriteFrames = preload("res://images/black_hole_rotating.tres")
-const white_hole_injection_frames : SpriteFrames = preload("res://images/white_hole_injection.tres")
-const slash_frames : SpriteFrames = preload("res://images/slash.tres")
+const explosion_frames : SpriteFrames = preload("res://images/fx/explosion.tres")
+const big_explosion_frames : SpriteFrames = preload("res://images/fx/big_explosion.tres")
+const black_hole_rotating_frames : SpriteFrames = preload("res://images/fx/black_hole_rotating.tres")
+const white_hole_injection_frames : SpriteFrames = preload("res://images/fx/white_hole_injection.tres")
+const slash_frames : SpriteFrames = preload("res://images/fx/slash.tres")
 const splash_pb = preload("res://splash.tscn")
-const fireball_image : Texture = preload("res://images/fireball.png")
+const fireball_image : Texture = preload("res://images/fx/fireball.png")
 const distortion = preload("res://fx_distortion.tscn")
 const lightning = preload("res://fx_lightning.tscn")
 const leading_line_pb = preload("res://leading_line.tscn")
@@ -14,6 +14,7 @@ const leading_line_pb = preload("res://leading_line.tscn")
 func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width = 8.0):
 	var l = SEffect.leading_line_pb.instantiate()
 	l.setup(p0, p1, 0.3, duration, width)
+	
 	l.z_index = 3
 	Board.ui.overlay.add_child(l)
 
@@ -89,7 +90,7 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	var fx = lightning.instantiate()
 	fx.position = pos
 	var dist = p0.distance_to(p1)
-	fx.scale = Vector2(dist, dist)
+	fx.scale = Vector2(200.0, dist)
 	fx.rotation = (p1 - p0).angle() - PI * 0.5
 	fx.z_index = z_index
 	var tween = App.game_tweens.create_tween()
@@ -98,7 +99,7 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	SSound.se_lightning_connect.play()
 	return fx
 
-func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, num_extra_points : int = 8):
+func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, duration : float, num_extra_points : int = 8) -> Array[Tween]:
 	var points = []
 	points.append(Vector2(0, 0))
 	points.append(Vector2(size.x, 0))
@@ -107,6 +108,7 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 	for i in num_extra_points:
 		points.append(Vector2(randf() * size.x, randf() * size.y))
 	var indices = Geometry2D.triangulate_delaunay(points)
+	var tweens : Array[Tween] = []
 	for i in range(0, indices.size(), 3):
 		var poly = Polygon2D.new()
 		var verts = []
@@ -128,9 +130,11 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 		parent.add_child(poly)
 		poly.position = pos
 		var tween = App.game_tweens.create_tween()
-		tween.tween_property(poly, "position", pos + d * 105.0 + Vector2(randf_range(-20.0, +20.0), 50.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(poly, "position", pos + d * 105.0 + Vector2(randf_range(-20.0, +20.0), 50.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_callback(poly.queue_free)
+		tweens.append(tween)
+	return tweens
 
 func add_black_hole_rotating(pos : Vector2, size : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()

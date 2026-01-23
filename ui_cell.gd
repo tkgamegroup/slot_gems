@@ -1,6 +1,8 @@
 extends Control
 
-@onready var gem_ui = $Gem
+const UiGem = preload("res://ui_gem.gd")
+
+@onready var gem_ui : UiGem = $Gem
 @onready var pinned : Sprite2D = $Pinned
 @onready var frozen : Sprite2D = $Frozen
 @onready var nullified : Node2D = $Nullified

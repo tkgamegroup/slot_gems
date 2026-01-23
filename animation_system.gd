@@ -30,7 +30,7 @@ func quadratic_curve_to(tween : Tween, target, p2 : Vector2, ctrl1 : Vector2, du
 		var v = d.p2 - d.p0
 		d.p1 = d.p0 + v * ctrl1.x + SMath.vert(v) * ctrl1.y
 	)
-	tween.parallel().tween_method(func(t):
+	tween.tween_method(func(t):
 		target.global_position = SMath.quadratic_bezier(d.p0, d.p1, d.p2, t)
 	, 0.0, 1.0, duration)
 	return tween
@@ -44,9 +44,25 @@ func cubic_curve_to(tween : Tween, target, p3 : Vector2, ctrl1 : Vector2, ctrl2 
 		d.p1 = d.p0 + v * ctrl1.x + SMath.vert(v) * ctrl1.y
 		d.p2 = d.p0 + v * ctrl2.x + SMath.vert(v) * ctrl2.y
 	)
-	tween.parallel().tween_method(func(t):
+	tween.tween_method(func(t):
 		target.global_position = SMath.cubic_bezier(d.p0, d.p1, d.p2, d.p3, t)
 	, 0.0, 1.0, duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	return tween
+
+func parabola_3d(tween : Tween, target, p1 : Vector2, p2 : Vector2, duration : float, g : float = 10000.0):
+	var d = {}
+	d.pos = Vector3(p1.x, 0.0, p1.y)
+	d.vxz = (p2 - p1) / duration
+	d.vy = g * duration * 0.5
+	d.g = g
+	d.t = 0.0
+	tween.tween_method(func(t):
+		var delta = t - d.t
+		d.t = t
+		d.pos += Vector3(d.vxz.x, d.vy, d.vxz.y) * delta
+		d.vy += delta * -d.g
+		target.global_position = Vector2(d.pos.x, d.pos.z - d.pos.y * 0.3)
+	, 0.0, duration, duration)
 	return tween
 
 func jump(tween : Tween, target, height : float, duration : float, cb : Callable = Callable(), do_scale : bool = true, do_translate : bool = true):

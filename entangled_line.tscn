@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://db3jxkku5hjhf"]
+
+[ext_resource type="Shader" uid="uid://dwqimvv3eh32t" path="res://materials/entangled_line.gdshader" id="1_dnjb0"]
+[ext_resource type="Script" uid="uid://dkg2rdjhj0h7j" path="res://entangled_line.gd" id="1_qfsd0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qfsd0"]
+resource_local_to_scene = true
+shader = ExtResource("1_dnjb0")
+shader_parameter/alpha = 0.0
+
+[node name="EntangledLine" type="Node2D"]
+script = ExtResource("1_qfsd0")
+
+[node name="Line2D" type="Line2D" parent="."]
+material = SubResource("ShaderMaterial_qfsd0")
+points = PackedVector2Array(0, 0, 200, 100)
+width = 50.0
+texture_mode = 2

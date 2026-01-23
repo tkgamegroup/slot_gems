@@ -120,11 +120,11 @@ func _ready() -> void:
 					var bid = Buff.create(gem, Buff.Type.ChangeRune, {"rune":Gem.RuneOmni}, Buff.Duration.Eternal)
 					Buff.create(gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, Buff.Duration.Eternal)
 			elif type == "w_delete":
-				App.delete_gem(gem, gem_ui, "craft_slot")
+				App.delete_gem(null, gem, gem_ui, "craft_slot")
 				gem = null
 				App.shop_ui.delete_price += App.shop_ui.delete_price_increase
 			elif type == "w_duplicate":
-				App.duplicate_gem(gem, gem_ui, "craft_slot")
+				App.duplicate_gem(null, gem, gem_ui, "craft_slot")
 		)
 		if type == "w_enchant":
 			tween.tween_interval(0.3)

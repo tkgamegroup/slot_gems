@@ -42,7 +42,9 @@ func buy_randomly():
 	return false
 
 const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "Coin", "Bomb", "C4", "Rainbow", "Orange", "IaiCut", "Lightning", "EnergyDrink", "Badge", "Magnet", "Volcano", "PolishingPowder"]
-const relics_pool = ["ExplosionScience", "HighExplosives", "MobiusStrip", "Premeditation", "PentagramPower", "PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfPalm", "PaintingOfStarfish", "HalfPriceCoupon"]
+const relics_pool = ["PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfPalm", "PaintingOfStarfish", "Amplifier", "Recorder", "GhostAmmo", "Multicast", "MobiusStrip", "Premeditation", "PentagramPower", "HalfPriceCoupon"]
+
+const patterns_pool = ["\\", "|", "/", "O", "√", "X", "Island"]
 
 func refresh(tween : Tween = null):
 	if !tween:
@@ -54,6 +56,33 @@ func refresh(tween : Tween = null):
 	
 	clear()
 	
+	var relics_pool2 = []
+	var explode_ability = false
+	for g in App.gems:
+		if g.category == "Bomb":
+			explode_ability = true
+			break
+	for n in relics_pool:
+		var has = false
+		if !explode_ability:
+			if n == "":
+				continue
+		for r in App.relics:
+			if r.name == n:
+				has = true
+				break
+		if !has:
+			relics_pool2.append(n)
+	var patterns_pool2 = []
+	for n in patterns_pool:
+		var has = false
+		for p in App.patterns:
+			if p.name == n:
+				has = true
+				break
+		if !has:
+			patterns_pool2.append(n)
+			
 	for i in 3:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
@@ -95,32 +124,27 @@ func refresh(tween : Tween = null):
 			ui.setup("gem", gem, price, quantity)
 			list1.add_child(ui)
 		)
-	var relics_pool2 = []
-	var explode_ability = false
-	for g in App.gems:
-		if g.category == "Bomb":
-			explode_ability = true
+	for i in 2:
+		if relics_pool2.is_empty() && patterns_pool2.is_empty():
 			break
-	for n in relics_pool:
-		var has = false
-		if !explode_ability:
-			if n == "ExplosionScience" || n == "HighExplosives":
-				continue
-		for r in App.relics:
-			if r.name == n:
-				has = true
-				break
-		if !has:
-			relics_pool2.append(n)
-	for i in min(2, relics_pool2.size()):
-		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var ui = shop_item_pb.instantiate()
-			var relic = Relic.new()
-			relic.setup(SMath.pick_and_remove(relics_pool2, App.shop_rng))
-			ui.setup("relic", relic, relic.price)
-			list1.add_child(ui)
-		)
+		if App.shop_rng.randf() > 0.3 && !relics_pool2.is_empty():
+			tween.tween_interval(0.04)
+			tween.tween_callback(func():
+				var ui = shop_item_pb.instantiate()
+				var relic = Relic.new()
+				relic.setup(SMath.pick_and_remove(relics_pool2, App.shop_rng))
+				ui.setup("relic", relic, relic.price)
+				list1.add_child(ui)
+			)
+		elif !patterns_pool2.is_empty():
+			tween.tween_interval(0.04)
+			tween.tween_callback(func():
+				var ui = shop_item_pb.instantiate()
+				var pattern = Pattern.new()
+				pattern.setup(SMath.pick_random(patterns_pool2, App.shop_rng))
+				ui.setup("pattern", pattern, pattern.price)
+				list1.add_child(ui)
+			)
 	for i in 3:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():

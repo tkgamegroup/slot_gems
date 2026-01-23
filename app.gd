@@ -13,7 +13,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 7
+const version_patch : int = 8
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -47,7 +47,7 @@ const trail_pb = preload("res://trail.tscn")
 const craft_slot_pb = preload("res://craft_slot.tscn")
 const shop_item_pb = preload("res://ui_shop_item.tscn")
 const settlement_item_pb = preload("res://ui_settlement_item.tscn")
-const mask_shader = preload("res://materials/mask.gdshader")
+const entangled_line_pb = preload("res://entangled_line.tscn")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
 const activate_cursor = preload("res://images/magic_stick.png")
@@ -154,6 +154,7 @@ var board_size : int = 3:
 var patterns : Array[Pattern]
 var gems : Array[Gem]
 var bag_gems : Array[Gem] = []
+var entangled_groups : Array[EntangledGroup] = []
 var items : Array[Item]
 var relics : Array[Relic]
 var event_listeners : Array[Hook]
@@ -177,7 +178,7 @@ var base_score : int:
 				base_score_tween.custom_step(100.0)
 			calculator_bar_ui.base_score_text.position.y = 4
 			calculator_bar_ui.base_score_text.text = "%d" % v
-			base_score_tween = App.create_tween()
+			base_score_tween = create_tween()
 			base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2 * App.speed)
 			base_score_tween.tween_callback(func():
 				base_score_tween = null
@@ -201,8 +202,8 @@ var combos : int = 0:
 				combos_tween = null
 			if calculator_bar_ui.visible:
 				calculator_bar_ui.combos_text.position.y = 0
-				combos_tween = App.create_tween()
-				SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * App.speed, func():
+				combos_tween = create_tween()
+				SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * speed, func():
 					calculator_bar_ui.combos_text.text = "%dX" % v
 				)
 				combos_tween.tween_callback(func():
@@ -229,8 +230,8 @@ var score_mult : float = 1.0:
 				score_mult_tween.custom_step(100.0)
 			calculator_bar_ui.mult_text.position.y = 4
 			calculator_bar_ui.mult_text.text = "%.1f" % v
-			score_mult_tween = App.create_tween()
-			score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * App.speed)
+			score_mult_tween = create_tween()
+			score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * speed)
 			score_mult_tween.tween_callback(func():
 				score_mult_tween = null
 			)
@@ -255,24 +256,22 @@ var history : History = History.new()
 var base_speed : float = 1.0
 var speed : float = 1.0 / base_speed
 
-const FillingTimesToShow = 10
-const FillingTimesToWin = 60
 var filling_times : int = 0:
 	set(v):
 		filling_times = v
-		if filling_times >= FillingTimesToShow:
+		if filling_times >= C.REFILL_TIMES_TO_SHOW:
 			if !control_ui.filling_times_text_container.visible:
 				control_ui.filling_times_text_container.show()
 				control_ui.filling_times_text_container.pivot_offset = control_ui.filling_times_text_container.size * 0.5
 				control_ui.filling_times_text_container.scale = Vector2(0.0, 0.0)
-				var tween = App.create_tween()
+				var tween = create_tween()
 				tween.tween_property(control_ui.filling_times_text_container, "scale", Vector2(1.0, 1.0), 0.15).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 			if control_ui.filling_times_tween:
 				control_ui.filling_times_tween.custom_step(100.0)
 				control_ui.filling_times_tween = null
 			if control_ui.filling_times_text_container.visible:
 				control_ui.filling_times_text.position.y = 0
-				control_ui.filling_times_tween = App.create_tween()
+				control_ui.filling_times_tween = create_tween()
 				SAnimation.jump(control_ui.filling_times_tween, control_ui.filling_times_text, -0.0, 0.25 * App.speed, func():
 					control_ui.filling_times_text.text = "%d" % filling_times
 				)
@@ -327,6 +326,12 @@ func remove_gem(g : Gem, boardcast : bool = true):
 	bag_gems.erase(g)
 	gems.erase(g)
 	
+	var eg = find_entangled_group(g)
+	if eg:
+		eg.gems.erase(g)
+		if eg.gems.size() <= 1:
+			entangled_groups.erase(eg)
+	
 	if boardcast:
 		if g.on_event.is_valid():
 			g.on_event.call(Event.LostGem, null, g)
@@ -347,6 +352,7 @@ func get_gem(g : Gem = null) -> Gem:
 func release_gem(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
+	g.bag_stamp = round
 	Buff.clear(g, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.OnBoard])
 	bag_gems.append(g)
 
@@ -354,6 +360,12 @@ func sort_gems():
 	gems.sort_custom(func(a, b):
 		return a.get_rank() < b.get_rank()
 	)
+
+func find_entangled_group(g : Gem):
+	for gp in entangled_groups:
+		if gp.gems.has(g):
+			return gp
+	return null
 
 func on_modifier_changed(name):
 	if name == "base_combo_i":
@@ -447,7 +459,7 @@ func float_text(txt : String, pos : Vector2):
 	lb.text = txt
 	ui.z_index = 4
 	Board.ui.overlay.add_child(ui)
-	var tween = App.create_tween()
+	var tween = create_tween()
 	tween.tween_property(ui, "position", pos - Vector2(0, 20), 0.5)
 	tween.tween_callback(func():
 		ui.queue_free()
@@ -467,7 +479,7 @@ func add_score(value : int, pos : Vector2):
 	
 	staging_scores.append(Pair.new(ui, value))
 	
-	var tween = App.create_tween()
+	var tween = create_tween()
 	tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
 	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * speed)
 	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
@@ -486,7 +498,7 @@ func float_status_text(s : String, col : Color):
 	control_ui.status_text.add_theme_color_override("font_color", col)
 	if status_tween:
 		status_tween.kill()
-	status_tween = App.create_tween()
+	status_tween = create_tween()
 	status_tween.tween_method(func(t):
 		parent.rotation_degrees = sin(t * PI * 10.0) * t * 10.0
 	, 1.0, 0.0, 1.0)
@@ -497,30 +509,27 @@ func float_status_text(s : String, col : Color):
 		status_tween = null
 	)
 
-func create_gem_ui(g : Gem, pos : Vector2, need_trail : bool = false):
+func create_gem_ui(g : Gem, pos : Vector2):
 	var ui = gem_ui.instantiate()
 	ui.update(g)
 	ui.global_position = pos
-	if need_trail:
-		var trail = trail_pb.instantiate()
-		trail.setup(10.0, Gem.type_color(g.type))
-		ui.add_child(trail)
-	App.game_overlay.add_child(ui)
+	game_overlay.add_child(ui)
 	return ui
 
-func delete_gem(g : Gem, ui, from : String = "hand"):
+func delete_gem(tween : Tween, g : Gem, ui, from : String = "hand"):
 	var old_coord = g.coord
 	SSound.se_trash.play()
 	ui.dissolve(0.5)
-	var tween = App.game_tweens.create_tween()
+	if !tween:
+		tween = game_tweens.create_tween()
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		if from == "hand":
 			Hand.erase(Hand.find(g))
 		remove_gem(g)
-		if App.gems.size() < Board.curr_min_gem_num:
-			App.game_over_mark = "not_enough_gems"
-			App.lose()
+		if gems.size() < Board.curr_min_gem_num:
+			game_over_mark = "not_enough_gems"
+			lose()
 		else:
 			if from == "hand" || from == "craft_slot":
 				Hand.draw(false)
@@ -548,12 +557,13 @@ func copy_gem(src : Gem, dst : Gem):
 		new_b.data = b.data.duplicate(true)
 		dst.buffs.append(new_b)
 
-func duplicate_gem(g : Gem, ui, from : String = "hand"):
+func duplicate_gem(tween : Tween, g : Gem, ui, from : String = "hand"):
 	SSound.se_enchant.play()
 	var new_ui = create_gem_ui(g, ui.global_position)
 	if from == "hand":
 		new_ui.position += Vector2(16.0, 16.0)
-	var tween = App.game_tweens.create_tween()
+	if !tween:
+		tween = App.game_tweens.create_tween()
 	tween.tween_property(new_ui, "position", new_ui.position + Vector2(0.0, -40.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	tween.tween_callback(func():
 		new_ui.add_child(trail_pb.instantiate())
@@ -576,14 +586,60 @@ func enchant_gem(g : Gem, type : String):
 		bid = Buff.create(g, Buff.Type.ValueModifier, {"target":"score_mult","mult":2.0}, Buff.Duration.Eternal)
 	Buff.create(g, Buff.Type.Enchant, {"type":type,"bid":bid}, Buff.Duration.Eternal)
 
+func entangle_gems(g1 : Gem, g2 : Gem):
+	var gp1 = find_entangled_group(g1)
+	var gp2 = find_entangled_group(g2)
+	if gp1 == null && gp2 == null:
+		var new_gp = EntangledGroup.new()
+		new_gp.gems.append(g1)
+		new_gp.gems.append(g2)
+		entangled_groups.append(new_gp)
+	elif gp1 == null && gp2 != null:
+		gp2.gems.append(g1)
+	elif gp1 != null && gp2 == null:
+		gp1.gems.append(g2)
+	elif gp1 != gp2:
+		for g in gp2.gems:
+			gp1.gems.append(g)
+		entangled_groups.erase(gp2)
+
+func show_entangled_lines():
+	var old_nodes = []
+	for n in Board.ui.entangled_lines.get_children():
+		old_nodes.append(n)
+	for eg in entangled_groups:
+		var num = eg.gems.size()
+		for i in num - 1:
+			for j in range(i + 1, num):
+				var g1 = eg.gems[i]
+				var g2 = eg.gems[j]
+				if g1.coord.x != -1 && g1.coord.y != -1 && g2.coord.x != -1 && g2.coord.y != -1:
+					var already_has = false
+					for n in old_nodes:
+						if n.coord1 == g1.coord && n.coord2 == g2.coord:
+							old_nodes.erase(n)
+							already_has = true
+							break
+					if !already_has:
+						var line = entangled_line_pb.instantiate()
+						line.setup(g1.coord, g2.coord)
+						Board.ui.entangled_lines.add_child(line)
+	for n in old_nodes:
+		n.disappear()
+
+func hide_entangled_lines():
+	for n in Board.ui.entangled_lines.get_children():
+		Board.ui.entangled_lines.remove_child(n)
+		n.disappear()
+
 func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "swap"):
-	var tween = App.game_tweens.create_tween()
+	var tween = game_tweens.create_tween()
 	var g1 = slot1.gem
 	var g2 = Board.get_gem_at(coord)
 	var cell_pos = Board.get_pos(coord)
 	var mpos = get_viewport().get_mouse_position()
 	var hf_sz = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
-	App.begin_busy()
+	begin_busy()
 	slot1.elastic = -1.0
 	var slot2 = Hand.ui.add_slot(g2)
 	slot2.global_position = cell_pos - hf_sz
@@ -595,11 +651,11 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	tween.tween_callback(func():
 		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, null)
-		App.get_gem(g2)
+		get_gem(g2)
 		Hand.add_gem(g2, -1, true)
 	)
-	var sub1 = App.game_tweens.create_tween()
-	var sub2 = App.game_tweens.create_tween()
+	var sub1 = game_tweens.create_tween()
+	var sub2 = game_tweens.create_tween()
 	var dir = mpos - cell_pos
 	var sec = 1 if reason == "undo" else SUtils.hex_section(rad_to_deg(dir.angle()))
 	dir = Vector2.from_angle(deg_to_rad(sec * 60.0 + 30.0))
@@ -617,7 +673,25 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 		Board.set_gem_at(coord, g1)
 		Hand.erase(slot1.get_index(), false)
 		control_ui.update_preview()
-		App.end_busy()
+		end_busy()
+	)
+
+func add_new_gem_from(tween : Tween, g : Gem, coord : Vector2i):
+	var pos = Board.get_pos(coord) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+	var ui = create_gem_ui(g, pos)
+	ui.hide()
+	if !tween:
+		tween = game_tweens.create_tween()
+	tween.tween_callback(func():
+		ui.show()
+	)
+	tween.tween_property(ui, "scale", Vector2(0.75, 0.75), 0.4 * speed)
+	tween.parallel()
+	SAnimation.cubic_curve_to(tween, ui, status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5 * speed)
+	tween.tween_callback(func():
+		add_gem(g)
+		sort_gems()
+		ui.queue_free()
 	)
 
 static func read_coord(s : String):
@@ -687,9 +761,6 @@ func process_command_line(cl : String):
 			var round_count = 1
 			var task_count = 1
 			var saving = ""
-			var additional_patterns = []
-			var additional_relics = []
-			var additional_enchants = []
 			var enable_shopping = false
 			for i in range(1, tokens.size()):
 				var t = tokens[i]
@@ -705,32 +776,9 @@ func process_command_line(cl : String):
 				elif t == "-s":
 					saving = tokens[i + 1]
 					i += 1
-				elif t == "-ap":
-					var num = 1
-					var tt = tokens[i + 1]
-					i += 1
-					if tt.is_valid_int():
-						num = int(tt)
-						tt = tokens[i + 1]
-						i += 1
-					for j in num:
-						additional_patterns.append(tt)
-				elif t == "-ar":
-					var num = 1
-					var tt = tokens[i + 1]
-					i += 1
-					if tt.is_valid_int():
-						num = int(tt)
-						tt = tokens[i + 1]
-						i += 1
-					for j in num:
-						additional_relics.append(tt)
-				elif t == "-ae":
-					additional_enchants.append(tokens[i + 1])
-					i += 1
 				elif t == "-es":
 					enable_shopping = true
-			STest.start_test(mode, round_count, task_count, "", saving, additional_patterns, additional_relics, additional_enchants, true, enable_shopping)
+			STest.start_test(mode, round_count, task_count, "", saving, true, enable_shopping)
 		elif cmd == "paint":
 			var t1 = tokens[1]
 			if t1 == "cell":
@@ -848,6 +896,8 @@ func end_busy():
 			control_ui.roll_button.disabled = false
 		control_ui.play_button.disabled = false
 	Hand.ui.disabled = false
+	if Board.ui.visible:
+		show_entangled_lines()
 
 func begin_transition(tween : Tween):
 	blocker_ui.show()
@@ -859,7 +909,7 @@ func end_transition(tween : Tween):
 	tween.tween_callback(func():
 		match randi() % 2:
 			0: 
-				trans_sp.sprite_frames = Gem.item_frames
+				trans_sp.sprite_frames = Gem.gem_frames
 				trans_sp.frame = randi_range(1, 41)
 			1: 
 				trans_sp.sprite_frames = Relic.relic_frames
@@ -896,8 +946,9 @@ func start_game(saving : String = ""):
 	modifiers["played_i"] = 0
 	modifiers["base_combo_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
-	modifiers["explode_range_i"] = 0
-	modifiers["explode_power_i"] = 0
+	modifiers["additional_active_times_i"] = 0
+	modifiers["not_consume_repeat_count_chance_i"] = 0
+	modifiers["additional_targets_i"] = 0
 	modifiers["half_price_i"] = 0
 	
 	status_bar_ui.board_size_text.show_change = false
@@ -954,16 +1005,21 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 0:
+		for i in 1:
 			var r = Relic.new()
-			r.setup("Libra")
+			r.setup("Multicast")
 			add_relic(r)
 		
+		var g1 = Gem.new()
+		g1.type = Gem.ColorRed
+		g1.rune = Gem.RuneWave
+		add_gem(g1)
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
 			add_gem(g)
+			entangle_gems(g1, g)
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
@@ -1232,6 +1288,7 @@ func round_end():
 	Buff.clear(self, [Buff.Duration.ThisRound])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisRound])
+	hide_entangled_lines()
 	for h in event_listeners:
 		if h.event == Event.RoundEnded:
 			h.host.on_event.call(Event.RoundEnded, null, null)
@@ -1245,6 +1302,23 @@ func lose():
 	round_end()
 	stage = Stage.GameOver
 	game_over_ui.enter()
+
+func calc_game_state():
+	if game_over_mark != "":
+		lose()
+	else:
+		if swaps == 0 && score < target_score:
+			if invincible:
+				win()
+			else:
+				game_over_mark = "not_reach_score"
+				lose()
+		elif score >= target_score:
+			win()
+		else:
+			control_ui.update_preview()
+			control_ui.expected_score_panel.show()
+			end_busy()
 
 func roll():
 	#if rolls > 0:
@@ -1294,7 +1368,7 @@ func save_to_file(name : String = "1"):
 		d["uid"] = b.uid
 		d["type"] = b.type
 		d["duration"] = b.duration
-		d["data"] = b.data.duplicate(true)
+		d["data"] = SUtils.save_dictionary(b.data)
 	var save_hook = func(h : Hook, d : Dictionary):
 		d["event"] = h.event
 		d["host_type"] = h.host_type
@@ -1356,7 +1430,7 @@ func save_to_file(name : String = "1"):
 		save_hook.call(h, hook)
 		game_event_listeners.append(hook)
 	data["event_listeners"] = game_event_listeners
-	data["modifiers"] = App.modifiers.duplicate()
+	data["modifiers"] = SUtils.save_dictionary(App.modifiers) 
 	var board_event_listeners = []
 	for h in Board.event_listeners:
 		var hook = {}
@@ -1383,6 +1457,7 @@ func save_to_file(name : String = "1"):
 			save_buff.call(b, buff)
 			buffs.append(buff)
 		gem["buffs"] = buffs
+		gem["extra"] = SUtils.save_dictionary(g.extra)
 		gems.append(gem)
 	data["gems"] = gems
 	var bag_gems = []
@@ -1403,7 +1478,7 @@ func save_to_file(name : String = "1"):
 	for r in App.relics:
 		var relic = {}
 		relic["name"] = r.name
-		relic["extra"] = r.extra.duplicate()
+		relic["extra"] = SUtils.save_dictionary(r.extra)
 		relics.append(relic)
 	data["relics"] = relics
 	var hand = []
@@ -1589,6 +1664,7 @@ func load_from_file(name : String = "1"):
 		var buffs = gem["buffs"]
 		for buff in buffs:
 			load_buff.call(buff, g)
+		g.extra = SUtils.read_dictionary(gem["extra"])
 		add_gem(g, false)
 	var bag_gems = data["bag_gems"]
 	for idx in bag_gems:
@@ -1721,6 +1797,14 @@ func _input(event: InputEvent) -> void:
 				pass
 	elif event is InputEventMouseMotion:
 		mouse_pos = event.position
+		if Board && Board.ui.visible:
+			var c = Board.ui.hover_coord()
+			var cc = c + Vector2i(Board.cx / 2, Board.cy / 2) - C.BOARD_CENTER
+			if Board.is_valid(cc):
+				Board.ui.hover_ui.show()
+				Board.ui.hover_ui.position = Board.ui.get_pos(c)
+			else:
+				Board.ui.hover_ui.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -1811,32 +1895,20 @@ func _ready() -> void:
 		no_score_marks[Gem.RuneFirst + i].push_front(false)
 	
 	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
-	Board.rolling_finished.connect(func():
-		var processed = false
-		for h in event_listeners:
-			if h.event == Event.RollingFinished:
-				processed = h.host.on_event.call(Event.RollingFinished, null, null)
-				if processed:
-					break
-		if !processed:
-			pass
+	Board.clearing_finished.connect(func():
+		hide_entangled_lines()
+		Board.fill_blanks()
 	)
 	Board.filling_finished.connect(func():
-		var processed = false
-		for h in event_listeners:
-			if h.event == Event.FillingFinished:
-				processed = h.host.on_event.call(Event.FillingFinished, null, null)
-				if processed:
-					break
-		if !processed:
-			if modifiers["played_i"] > 0:
-				filling_times += 1
-				if filling_times >= FillingTimesToWin:
-					win()
-				else:
-					Board.matching()
+		show_entangled_lines()
+		if modifiers["played_i"] > 0:
+			filling_times += 1
+			if filling_times >= C.REFILL_TIMES_TO_STOP:
+				calc_game_state()
 			else:
-				control_ui.update_preview()
+				Board.matching()
+		else:
+			control_ui.update_preview()
 	)
 	Board.matching_finished.connect(func():
 		var processed = false
@@ -1863,22 +1935,8 @@ func _ready() -> void:
 				var g = Board.get_gem_at(c)
 				if g:
 					Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
-		
-		if game_over_mark != "":
-			lose()
-		else:
-			if swaps == 0 && score < target_score:
-				if invincible:
-					win()
-				else:
-					game_over_mark = "not_reach_score"
-					lose()
-			elif score >= target_score:
-				win()
-			else:
-				control_ui.update_preview()
-				control_ui.expected_score_panel.show()
-				end_busy()
+					
+		calc_game_state()
 	)
 	command_line_edit.text_submitted.connect(func(cl : String):
 		process_command_line(cl)

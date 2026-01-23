@@ -83,9 +83,15 @@ func calculate():
 	
 	var tween = App.game_tweens.create_tween()
 	var preprocess = false
+	var delay = 0.0
 	for h in App.event_listeners:
-		if h.host.on_event.call(Event.BeforeScoreCalculating, tween, null):
+		var sub = App.game_tweens.create_tween()
+		sub.tween_interval(delay * App.speed)
+		if h.host.on_event.call(Event.BeforeScoreCalculating, sub, null):
+			tween.parallel()
+			tween.tween_subtween(sub)
 			preprocess = true
+			delay += 0.2
 	if preprocess:
 		tween.tween_callback(calculate_proc)
 	else:

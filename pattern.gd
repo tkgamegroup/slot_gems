@@ -31,19 +31,20 @@ func setup(n : String):
 		recipes.append([Gem.ColorAny])
 	elif name == "Y":
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(1, 1, -2), Vector3i(2, -1, -1)])
-		recipes.append([Gem.ColorAny])
+		recipes.append([Gem.RuneAny])
 	elif name == "C":
 		coord_groups.append([Vector3i(1, -1, 0), Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 1, -2)])
-		recipes.append([Gem.ColorAny])
+		recipes.append([Gem.RuneAny])
 	elif name == "O":
 		coord_groups.append([Vector3i(1, -1, 0), Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 1, -2), Vector3i(2, -1, -1), Vector3i(2, 0, -2)])
 		recipes.append([Gem.ColorAny])
+		recipes.append([Gem.RuneAny])
 	elif name == "√":
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 0, -1), Vector3i(2, -1, -1), Vector3i(3, -2, -1)])
-		recipes.append([Gem.ColorAny])
+		recipes.append([Gem.RuneAny])
 	elif name == "X":
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, 0, -2), Vector3i(2, -1, -1), Vector3i(0, 1, -1)])
-		recipes.append([Gem.ColorAny])
+		recipes.append([Gem.RuneAny])
 	elif name == "Island":
 		coord_groups.append([Vector3i(1, -1, 0)])
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, -1, -1)])

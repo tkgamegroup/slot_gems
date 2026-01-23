@@ -32,15 +32,6 @@ func enter():
 	var tween = App.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
-	var items = ["DyeRed", "DyeOrange", "DyeGreen", "DyeBlue", "DyeMagenta", "Pin", "Flag", "Bomb", "C4", "Minefield", "ColorPalette", "Chloroplast", "Dog", "Cat", "HotDog", "Rainbow", "Idol", "Magician", "Ruby", "Citrine", "Emerald", "Sapphire", "Tourmaline", "Volcano"]
-	'''
-	for n in items:
-		var i = Item.new()
-		i.setup(n)
-		var ui = item_ui.instantiate()
-		ui.setup(i)
-		item_list.add_child(ui)
-	'''
 	var patterns = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
 	for n in patterns:
 		var p = Pattern.new()
