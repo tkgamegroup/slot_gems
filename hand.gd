@@ -20,7 +20,7 @@ func draw(to_the_end : bool = true):
 		return null
 	if grabs.size() >= App.max_hand_grabs:
 		return null
-	var gem : Gem = App.get_gem()
+	var gem : Gem = App.take_out_gem_from_bag()
 	var slot = add_gem(gem, -1 if to_the_end else 0)
 	slot.position.y = 50
 	return slot
@@ -28,10 +28,8 @@ func draw(to_the_end : bool = true):
 func find(g : Gem):
 	return grabs.find(g)
 
-func erase(idx : int, release_gem : bool = true):
+func erase(idx : int):
 	var g = grabs[idx]
-	if release_gem:
-		App.release_gem(g)
 	grabs.erase(g)
 	for i in grabs.size():
 		grabs[i].coord = Vector2i(i, -1)
@@ -41,23 +39,12 @@ func erase(idx : int, release_gem : bool = true):
 
 func clear():
 	for g in grabs:
-		App.release_gem(g)
+		App.put_back_gem_to_bag(g)
 	grabs.clear()
 	
 	ui.clear()
 
-func swap(coord : Vector2i, gem : Gem, immediately : bool = false):
+func swap(coord : Vector2i, gem : Gem):
 	var og = Board.set_gem_at(coord, null)
-	if immediately:
-		Board.set_gem_at(coord, gem)
-		add_gem(og)
-	else:
-		var pos = Board.get_pos(coord) - Vector2(16, 24)
-		var slot = add_gem(og)
-		slot.elastic = -1.0
-		var tween = App.game_tweens.create_tween()
-		tween.tween_property(slot, "global_position", pos + Vector2(0.0, -48.0), 0.3).from(pos)
-		tween.tween_property(slot, "elastic", 1.0, 0.3).from(0.0)
-		tween.tween_callback(func():
-			Board.set_gem_at(coord, gem)
-		)
+	Board.set_gem_at(coord, gem)
+	add_gem(og)

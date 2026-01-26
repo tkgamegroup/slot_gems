@@ -17,6 +17,14 @@ var quantity : int
 var no_button : bool
 var selected : bool = false
 
+var disabled : bool = false:
+	set(v):
+		disabled = v
+		if v:
+			buy_button.disabled = true
+		else:
+			buy_button.disabled = false
+
 func select():
 	if !selected:
 		selected = true
@@ -73,7 +81,7 @@ func buy(tween : Tween = null):
 		tween = App.game_tweens.create_tween()
 	tween.tween_callback(func():
 		self.hide()
-		buy_button.disabled = true
+		App.shop_ui.disabled = true
 		
 		if price != 0:
 			SSound.se_coin.play()
@@ -90,18 +98,36 @@ func buy(tween : Tween = null):
 		)
 		
 		tween.tween_property(ui, "global_position", self.global_position - Vector2(0.0, 100.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tween.tween_property(ui, "scale", Vector2(0.5, 0.5), 0.4)
-		tween.parallel()
-		SAnimation.cubic_curve_to(tween, ui, App.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5)
-		tween.tween_callback(func():
-			var original = object as Gem
-			for i in quantity:
-				var gem = Gem.new()
-				App.copy_gem(original, gem)
-				App.add_gem(gem)
-			App.sort_gems()
-			ui.queue_free()
-		)
+		var to_bag = true
+		if quantity == 1:
+			for s in App.shop_ui.staging_slots:
+				if s.slot.gem == null:
+					s.slot.disabled = false
+					SAnimation.quadratic_curve_to(tween, ui, s.global_position + Vector2(6, 6), Vector2(0.5, 0.2), 0.4)
+					tween.tween_property(ui, "global_position", s.global_position, 0.5)
+					tween.tween_callback(func():
+						var gem = object as Gem
+						App.add_gem(gem)
+						ui.queue_free()
+						
+						App.take_out_gem_from_bag(gem)
+						s.slot.load_gem(gem)
+					)
+					to_bag = false
+					break
+		if to_bag:
+			tween.tween_property(ui, "scale", Vector2(0.7, 0.7), 0.4)
+			tween.parallel()
+			SAnimation.quadratic_curve_to(tween, ui, App.status_bar_ui.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
+			tween.tween_callback(func():
+				var original = object as Gem
+				for i in quantity:
+					var gem = Gem.new()
+					App.copy_gem(original, gem)
+					App.add_gem(gem)
+				App.sort_gems()
+				ui.queue_free()
+			)
 	elif cate == "relic":
 		App.add_relic(object)
 		var ui = App.relics_bar_ui.get_ui(-1)
@@ -142,8 +168,9 @@ func buy(tween : Tween = null):
 		)
 		tween.tween_interval(0.5)
 	tween.tween_callback(func():
-		self.queue_free()
+		App.shop_ui.disabled = false
 		App.save_to_file()
+		self.queue_free()
 	)
 	
 	return true

@@ -174,7 +174,7 @@ func set_gem_at(c : Vector2i, g : Gem):
 		SMath.remove_if(event_listeners, func(h : Hook):
 			return h.host == og
 		)
-		App.release_gem(og)
+		App.put_back_gem_to_bag(og)
 	cell.gem = g
 	if g:
 		g.coord = c
@@ -221,14 +221,7 @@ func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
 func filter(cb : Callable) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
 	for cell in cells:
-		if cb.call(cell.gem, null):
-			ret.append(cell.coord)
-	return ret
-
-func filter2(cb : Callable) -> Array[Vector2i]:
-	var ret : Array[Vector2i] = []
-	for cell in cells:
-		if cb.call(cell):
+		if cb.call(cell.gem):
 			ret.append(cell.coord)
 	return ret
 
@@ -391,6 +384,9 @@ func eliminate(_coords : Array[Vector2i], tween : Tween, reason : ActiveReason, 
 					if g2 != g && g2.coord.x != -1 && g2.coord.y != -1 && !g2.eliminated:
 						if !extra_targets.has(g2.coord):
 							extra_targets.append(g2.coord)
+						var el = ui.find_entangled_line(g, g2)
+						if el:
+							el.flash()
 	if first:
 		for c in coords:
 			for cc in offset_neighbors(c):
@@ -461,7 +457,7 @@ func process_active_effect(ae : ActiveEffect):
 	if ae.type == HostType.Gem:
 		var gem : Gem = ae.host
 		if gem.on_active.is_valid():
-			gem.on_active.call(ae.effect_index, ae.coord, tween, ae.sp)
+			gem.on_active.call(ae.effect_index, ae.coord, tween)
 		tween.tween_callback(func():
 			if ae.times == 1:
 				gem.active = false
@@ -576,7 +572,7 @@ func resize(_hf_cy : int, tween : Tween):
 				sub.tween_property(outline_ui, "modulate:a", 1.0, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 				sub.parallel().tween_property(outline_ui, "position", pos, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 				sub.tween_callback(func():
-					set_gem_at(c, App.get_gem())
+					set_gem_at(c, App.take_out_gem_from_bag())
 				)
 				sub.tween_property(cell_ui, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 				tween.tween_subtween(sub)
@@ -681,7 +677,7 @@ func fill_blanks():
 			var end_pos = get_pos(c) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 			if cc.y < 0:
 				sub.tween_callback(func():
-					var g = App.get_gem()
+					var g = App.take_out_gem_from_bag()
 					set_gem_at(c, g)
 				)
 			else:
@@ -692,7 +688,7 @@ func fill_blanks():
 				sub.tween_callback(func():
 					var og = set_gem_at(cc, null)
 					if og:
-						og = App.get_gem(og)
+						og = App.take_out_gem_from_bag(og)
 					set_gem_at(c, og)
 				)
 			if cc.y < 0:
@@ -868,7 +864,7 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		)
 		tween.tween_interval(0.15 * App.speed)
 	var coords : Array[Vector2i] = []
-	var r = range
+	var r = range + App.modifiers["extra_range_i"]
 	var p = power
 	var fx_sz = Vector2(64.0, 64.0)
 	if r < 1:

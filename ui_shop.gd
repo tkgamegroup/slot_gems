@@ -1,13 +1,19 @@
 extends Control
 
 const shop_item_pb = preload("res://ui_shop_item.tscn")
-const craft_slot_pb = preload("res://craft_slot.tscn")
+const craft_slot_pb = preload("res://ui_craft_slot.tscn")
+const entangle_slots_pb = preload("res://ui_entangle_slots.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
+const staging_slot_ui = preload("res://ui_staging_slot.gd")
 
 @onready var list1 : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer
 @onready var list2 : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer2
 @onready var refresh_button : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton
 @onready var exit_button : Button = $SubViewport/Panel/HBoxContainer/VBoxContainer2/Button
+@onready var staging_slot1 : staging_slot_ui = $SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot
+@onready var staging_slot2 : staging_slot_ui = $SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot2
+@onready var staging_slot3 : staging_slot_ui = $SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot3
+@onready var staging_slots = [staging_slot1, staging_slot2, staging_slot3]
 
 const expand_board_base_price : int = 15
 var expand_board_price : int
@@ -17,6 +23,39 @@ var refresh_price : int
 const refresh_price_increase : int = 1
 var delete_price : int
 const delete_price_increase : int = 1
+
+var disabled : bool = false:
+	set(v):
+		disabled = v
+		if v:
+			Hand.ui.disabled = true
+			refresh_button.disabled = true
+			exit_button.disabled = true
+			for n in list1.get_children():
+				n.disabled = true
+			for n in list2.get_children():
+				n.disabled = true
+		else:
+			Hand.ui.disabled = false
+			refresh_button.disabled = false
+			exit_button.disabled = false
+			for n in list1.get_children():
+				n.disabled = false
+			for n in list2.get_children():
+				n.disabled = false
+
+func release_stagings():
+	var has = false
+	for s in staging_slots:
+		if s.slot.gem:
+			s.slot.unload_gem()
+			has = true
+	for n in list2.get_children():
+		if n.slot.gem:
+			n.slot.unload_gem()
+			has = true
+		n.disabled = true
+	return has
 
 func clear():
 	for n in list1.get_children():
@@ -50,9 +89,7 @@ func refresh(tween : Tween = null):
 	if !tween:
 		tween = App.game_tweens.create_tween()
 	
-	App.control_ui.play_button.disabled = true
-	Hand.ui.disabled = true
-	refresh_button.disabled = true
+	self.disabled = true
 	
 	clear()
 	
@@ -145,31 +182,67 @@ func refresh(tween : Tween = null):
 				ui.setup("pattern", pattern, pattern.price)
 				list1.add_child(ui)
 			)
+	var slots = 3
 	for i in 3:
+		if slots <= 0:
+			break
 		tween.tween_interval(0.04)
-		tween.tween_callback(func():
-			var ui = craft_slot_pb.instantiate()
-			if App.shop_rng.randf() >= 0.4:
-				if App.shop_rng.randf() >= 0.5:
-					ui.setup("w_enchant", "w_enchant_charming", 1)
-				else:
-					ui.setup("w_enchant", "w_enchant_sharp", 1)
+		if App.shop_rng.randf() >= 0.4:
+			if slots >= 2 && App.shop_rng.randf() >= 0.9:
+				tween.tween_callback(func():
+					var ui = entangle_slots_pb.instantiate()
+					ui.setup(3)
+					list2.add_child(ui)
+				)
+				slots -= 2
 			else:
-				if App.shop_rng.randf() >= 0.1:
-					if App.shop_rng.randf() >= 0.5:
-						ui.setup("w_delete", "", delete_price)
-					else:
-						ui.setup("w_duplicate", "", 4)
+				if App.shop_rng.randf() >= 0.5:
+					tween.tween_callback(func():
+						var ui = craft_slot_pb.instantiate()
+						ui.setup("w_enchant", "w_enchant_charming", 2)
+						list2.add_child(ui)
+					)
+					slots -= 1
 				else:
-					if App.shop_rng.randf() >= 0.5:
+					tween.tween_callback(func():
+						var ui = craft_slot_pb.instantiate()
+						ui.setup("w_enchant", "w_enchant_sharp", 2)
+						list2.add_child(ui)
+					)
+					slots -= 1
+		else:
+			if App.shop_rng.randf() >= 0.3:
+				if App.shop_rng.randf() >= 0.5:
+					tween.tween_callback(func():
+						var ui = craft_slot_pb.instantiate()
+						ui.setup("w_delete", "", delete_price)
+						list2.add_child(ui)
+					)
+					slots -= 1
+				else:
+					tween.tween_callback(func():
+						var ui = craft_slot_pb.instantiate()
+						ui.setup("w_duplicate", "", 4)
+						list2.add_child(ui)
+					)
+					slots -= 1
+			else:
+				if App.shop_rng.randf() >= 0.5:
+					tween.tween_callback(func():
+						var ui = craft_slot_pb.instantiate()
 						ui.setup("w_enchant", "w_wild", 6)
-					else:
+						list2.add_child(ui)
+					)
+					slots -= 1
+				else:
+					tween.tween_callback(func():
+						var ui = craft_slot_pb.instantiate()
 						ui.setup("w_enchant", "w_omni", 6)
-			list2.add_child(ui)
-		)
+						list2.add_child(ui)
+					)
+					slots -= 1
 	tween.tween_callback(func():
-		Hand.ui.disabled = false
-		refresh_button.disabled = false
+		self.disabled = false
 		App.save_to_file()
 	)
 	return tween
@@ -178,9 +251,14 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	if !tween:
 		tween = App.game_tweens.create_tween()
 	
+	self.disabled = true
+	
 	self.show()
 	self.material.set_shader_parameter("x_rot", -90.0)
 	
+	App.control_ui.play_button.disabled = true
+	for n in staging_slots:
+		n.disabled = true
 	App.stage = App.Stage.Shopping
 	
 	var sub1 = App.game_tweens.create_tween()
@@ -206,13 +284,19 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	
 	if do_refresh:
 		refresh(tween)
+	tween.tween_callback(func():
+		self.disabled = false
+	)
 	
 	return tween
 
 func exit(tween : Tween = null, trans : bool = true):
 	if trans:
+		disabled = true
 		if !tween:
 			tween = App.game_tweens.create_tween()
+		if release_stagings():
+			tween.tween_interval(0.4)
 		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 		tween.parallel().tween_property(App.background.material, "shader_parameter/color", Color(0.917, 0.921, 0.65), 0.8)
 		tween.parallel().tween_property(App.status_bar_ui.round_text, "modulate:a", 0.0, 0.3)
@@ -220,11 +304,13 @@ func exit(tween : Tween = null, trans : bool = true):
 		tween.tween_callback(func():
 			clear()
 			self.hide()
+			disabled = false
 		)
 		if !Board.ui.visible:
 			Board.ui.enter(tween, true)
 			App.next_round(tween)
 	else:
+		release_stagings()
 		clear()
 		self.hide()
 	return tween

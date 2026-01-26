@@ -1,10 +1,5 @@
 extends Control
 
-const UiCell = preload("res://ui_cell.gd")
-const UiHandSlot = preload("res://ui_hand_slot.gd")
-const cell_pb = preload("res://ui_cell.tscn")
-const outline_pb = preload("res://ui_outline.tscn")
-
 @onready var tilemap : TileMapLayer = $TileMapLayer
 @onready var panel : Panel = $SubViewport/Panel
 @onready var outlines_root : Node2D = $SubViewport/Outlines
@@ -13,6 +8,12 @@ const outline_pb = preload("res://ui_outline.tscn")
 @onready var entangled_lines : Node2D = $SubViewport/EntangledLines
 @onready var overlay : Node2D = $SubViewport/Overlay
 @onready var hover_ui : Sprite2D = $Hover
+
+const UiCell = preload("res://ui_cell.gd")
+const UiHandSlot = preload("res://ui_hand_slot.gd")
+const cell_pb = preload("res://ui_cell.tscn")
+const outline_pb = preload("res://ui_outline.tscn")
+const entangled_line_pb = preload("res://entangled_line.tscn")
 
 func game_coord(c : Vector2i):
 	return c + Vector2i(Board.cx, Board.cy) / 2 - C.BOARD_CENTER
@@ -113,6 +114,41 @@ func exit(tween : Tween):
 		self.hide()
 	)
 	return tween
+
+func show_entangled_lines():
+	var old_nodes = []
+	for n in Board.ui.entangled_lines.get_children():
+		old_nodes.append(n)
+	for eg in App.entangled_groups:
+		var num = eg.gems.size()
+		for i in num - 1:
+			for j in range(i + 1, num):
+				var g1 = eg.gems[i]
+				var g2 = eg.gems[j]
+				if g1.coord.x != -1 && g1.coord.y != -1 && g2.coord.x != -1 && g2.coord.y != -1:
+					var already_has = false
+					for n in old_nodes:
+						if n.coord1 == g1.coord && n.coord2 == g2.coord:
+							old_nodes.erase(n)
+							already_has = true
+							break
+					if !already_has:
+						var line = entangled_line_pb.instantiate()
+						line.setup(g1.coord, g2.coord)
+						Board.ui.entangled_lines.add_child(line)
+	for n in old_nodes:
+		n.disappear()
+
+func hide_entangled_lines():
+	for n in Board.ui.entangled_lines.get_children():
+		Board.ui.entangled_lines.remove_child(n)
+		n.disappear()
+
+func find_entangled_line(g1 : Gem, g2 : Gem):
+	for n in Board.ui.entangled_lines.get_children():
+		if (n.coord1 == g1.coord && n.coord2 == g2.coord) || (n.coord2 == g1.coord && n.coord1 == g2.coord):
+			return n
+	return null
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:

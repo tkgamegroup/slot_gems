@@ -24,7 +24,7 @@ func enter():
 	panel.modulate.a = 1.0
 	panel.show()
 	
-	var tween = App.game_tweens.create_tween()
+	var tween = App.get_tree().create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	rewards = 0

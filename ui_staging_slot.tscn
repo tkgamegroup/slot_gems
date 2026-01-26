@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://jx25i3eefmlt"]
+
+[ext_resource type="Script" uid="uid://bdabclqfshc0f" path="res://ui_staging_slot.gd" id="1_3le4o"]
+[ext_resource type="PackedScene" uid="uid://doi8xt0sm16fg" path="res://ui_gem_slot.tscn" id="2_3le4o"]
+
+[node name="StagingSlot" type="Control"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 84.0
+offset_bottom = 84.0
+script = ExtResource("1_3le4o")
+
+[node name="Slot" parent="." instance=ExtResource("2_3le4o")]
+layout_mode = 0

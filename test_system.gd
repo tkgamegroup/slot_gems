@@ -267,6 +267,11 @@ func get_missing_one_places() -> Dictionary[int, Array]:
 						ret[Gem.ColorFirst + i].append(res[0])
 	return ret
 
+func swap_gems(coord : Vector2i, gem : Gem):
+	var og = Board.set_gem_at(coord, null)
+	Board.set_gem_at(coord, gem)
+	Hand.add_gem(og)
+
 func auto_swap_gems():
 	var changed = true
 	while changed:
@@ -285,7 +290,7 @@ func auto_swap_gems():
 					if App.swaps > 0:
 						App.swaps -= 1
 						Hand.erase(Hand.find(g))
-						Hand.swap(SMath.pick_and_remove(arr), g, true)
+						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorOrange:
 				var arr = missing_one_places[Gem.ColorOrange]
@@ -293,7 +298,7 @@ func auto_swap_gems():
 					if App.swaps > 0:
 						App.swaps -= 1
 						Hand.erase(Hand.find(g))
-						Hand.swap(SMath.pick_and_remove(arr), g, true)
+						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorGreen:
 				var arr = missing_one_places[Gem.ColorGreen]
@@ -301,7 +306,7 @@ func auto_swap_gems():
 					if App.swaps > 0:
 						App.swaps -= 1
 						Hand.erase(Hand.find(g))
-						Hand.swap(SMath.pick_and_remove(arr), g, true)
+						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorBlue:
 				var arr = missing_one_places[Gem.ColorBlue]
@@ -309,7 +314,7 @@ func auto_swap_gems():
 					if App.swaps > 0:
 						App.swaps -= 1
 						Hand.erase(Hand.find(g))
-						Hand.swap(SMath.pick_and_remove(arr), g, true)
+						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorMagenta:
 				var arr = missing_one_places[Gem.ColorMagenta]
@@ -317,7 +322,7 @@ func auto_swap_gems():
 					if App.swaps > 0:
 						App.swaps -= 1
 						Hand.erase(Hand.find(g))
-						Hand.swap(SMath.pick_and_remove(arr), g, true)
+						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 
 func _ready() -> void:

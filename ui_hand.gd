@@ -38,7 +38,7 @@ func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
 					ui.rotation_degrees = 0.0
 					Drag.start("gem", ui, ui, func(target, extra):
 						if target && target != Board.ui:
-							Hand.erase(ui.get_index(), false)
+							Hand.erase(ui.get_index())
 					)
 	)
 	return ui

@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsrxhg4cfx2yu"]
+
+[ext_resource type="Script" uid="uid://csm20p44aimul" path="res://ui_entangle_slots.gd" id="1_3lccf"]
+[ext_resource type="Script" uid="uid://cv7nxdr7kyb51" path="res://rich_text_tt.gd" id="2_d1jea"]
+[ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="3_0gqb4"]
+[ext_resource type="PackedScene" uid="uid://doi8xt0sm16fg" path="res://ui_gem_slot.tscn" id="3_d1jea"]
+
+[node name="EntangleSlots" type="VBoxContainer"]
+offset_right = 172.0
+offset_bottom = 170.0
+theme_override_constants/separation = 8
+script = ExtResource("1_3lccf")
+
+[node name="Title" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+fit_content = true
+horizontal_alignment = 1
+meta_underlined = false
+script = ExtResource("2_d1jea")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Slot1" parent="HBoxContainer" instance=ExtResource("3_d1jea")]
+layout_mode = 2
+
+[node name="Slot2" parent="HBoxContainer" instance=ExtResource("3_d1jea")]
+layout_mode = 2
+
+[node name="Button" parent="." instance=ExtResource("3_0gqb4")]
+layout_mode = 2

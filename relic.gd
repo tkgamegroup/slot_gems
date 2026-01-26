@@ -132,45 +132,13 @@ func setup(n : String):
 						App.add_score(extra["value_i"], Board.get_pos(c))
 	elif name == "Amplifier":
 		image_id = 9
-		extra["increase_i"] = 1
 		on_event = func(event : int, tween : Tween, data):
-			var increase = extra["increase_i"]
-			if event == Event.GainGem:
-				var g = data as Gem
-				if g.extra.has("range_i"):
-					g.extra["range_i"] += increase
-			elif event == Event.GainRelic:
+			if event == Event.GainRelic:
 				if data == self:
-					var found = false
-					for l in App.event_listeners:
-						if l.host == self:
-							found = true
-							break
-					if !found:
-						App.event_listeners.append(Hook.new(Event.GainGem, self, HostType.Relic, false))
-						App.event_listeners.append(Hook.new(Event.GainRelic, self, HostType.Relic, false))
-						for g in App.gems:
-							if g.extra.has("range_i"):
-								g.extra["range_i"] += increase
-				else:
-					var r = data as Relic
-					if r.extra.has("range_i"):
-						r.extra["range_i"] += increase
+					App.set_modifier("extra_range_i", 1)
 			elif event == Event.LostRelic:
 				if data == self:
-					for g in App.gems:
-						if g.extra.has("range_i"):
-							g.extra["range_i"] -= increase
-					var ls = []
-					for l in App.event_listeners:
-						if l.host == self:
-							ls.append(l)
-					for l in ls:
-							App.event_listeners.erase(l)
-				else:
-					var r = data as Relic
-					if r.extra.has("range_i"):
-						r.extra["range_i"] -= increase
+					App.set_modifier("extra_range_i", 0)
 	elif name == "Recorder":
 		image_id = 10
 		price = 5
@@ -564,7 +532,7 @@ func setup(n : String):
 					#active_constellation(0, 3, 0, data["coords"], tween)
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			var cands = Board.filter(func(gem : Gem, item : Item):
+			var cands = Board.filter(func(gem : Gem):
 				return gem != null
 			)
 			if !cands.is_empty():  
@@ -607,7 +575,7 @@ func setup(n : String):
 					#active_constellation(0, 1, 2, data["coords"], tween)
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			var cands = Board.filter(func(gem : Gem, item : Item):
+			var cands = Board.filter(func(gem : Gem):
 				if gem && gem.type != Gem.ColorWild:
 					return true
 				return false

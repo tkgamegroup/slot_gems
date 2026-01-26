@@ -351,7 +351,7 @@ relic_desc_PaintingOfPalm,'+{value_i} score when eliminate a gem with Palm rune.
 relic_name_PaintingOfStarfish,The Starry Night,星夜
 relic_desc_PaintingOfStarfish,'+{value_i} score when eliminate a gem with Starfish rune.,消除带有海星符文的宝石时+{value_i} 分数。
 relic_name_Amplifier,Amplifier,增幅器
-relic_desc_Amplifier,The range of your items and relics increase [n_1]-ring.,你的物品与遗物的范围增加[n_1]环。
+relic_desc_Amplifier,Your range increase [n_1]-ring.,你的范围增加[n_1]环。
 relic_name_HighExplosives,High Explosives,高爆炸药
 relic_desc_HighExplosives,Explosion w_power +{value_i}.,爆炸w_power+{value_i}。
 relic_name_UniformBlasting,Uniform Blasting,均匀爆破

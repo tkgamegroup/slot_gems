@@ -1,4 +1,4 @@
-[gd_scene load_steps=182 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=183 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -77,6 +77,7 @@
 [ext_resource type="Texture2D" uid="uid://ed1myix0g4wq" path="res://images/hover.png" id="54_jbvwl"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
 [ext_resource type="Script" uid="uid://coxa0ciyuwmpa" path="res://top_bar.gd" id="57_c2n8d"]
+[ext_resource type="PackedScene" uid="uid://jx25i3eefmlt" path="res://ui_staging_slot.tscn" id="58_l0gw7"]
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
 [ext_resource type="Shader" uid="uid://o1ju8mkiyhu1" path="res://materials/glass.gdshader" id="59_vieuh"]
 [ext_resource type="Texture2D" uid="uid://dp2sfrlrtusfs" path="res://images/gem_orange.png" id="63_f1p13"]
@@ -1220,6 +1221,18 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 36
 text = "ui_shop_next_round"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="StagingSlot" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("58_l0gw7")]
+layout_mode = 2
+
+[node name="StagingSlot2" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("58_l0gw7")]
+layout_mode = 2
+
+[node name="StagingSlot3" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("58_l0gw7")]
+layout_mode = 2
 
 [node name="GameControl" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
 visible = false

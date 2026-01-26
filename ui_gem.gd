@@ -40,6 +40,8 @@ func update(g : Gem):
 		rune = g.rune
 		image_id = g.image_id
 		gem_kind = (g.category == "Gem")
+		charming = 0
+		sharp = 0
 		for enchant in Buff.find_all_typed(g, Buff.Type.Enchant):
 			var enchant_type = enchant.data["type"]
 			if enchant_type == "w_enchant_charming":

@@ -7,6 +7,8 @@
 resource_local_to_scene = true
 shader = ExtResource("1_dnjb0")
 shader_parameter/alpha = 0.0
+shader_parameter/offset = 0.0
+shader_parameter/sig = 0.0
 
 [node name="EntangledLine" type="Node2D"]
 script = ExtResource("1_qfsd0")

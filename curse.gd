@@ -38,7 +38,7 @@ static func pick_targets():
 				for i in n:
 					cs[i].coord = coords[i]
 		elif k == "curse_wrath":
-			var cands = Board.filter(func(g : Gem, i : Item):
+			var cands = Board.filter(func(g : Gem):
 				return g
 			)
 			if !cands.is_empty():
@@ -48,8 +48,8 @@ static func pick_targets():
 				for i in n:
 					cs[i].coord = coords[i]
 		elif k == "curse_lust" || k == "curse_envy" || k == "curse_gluttony" || k == "curse_greed":
-			var cands = Board.filter(func(g : Gem, i : Item):
-				return g && !i
+			var cands = Board.filter(func(g : Gem):
+				return g && !g.name == ""
 			)
 			if !cands.is_empty():
 				var cs = cates[k]

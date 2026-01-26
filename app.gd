@@ -13,7 +13,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 8
+const version_patch : int = 9
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -24,7 +24,7 @@ const UiTitle = preload("res://ui_title.gd")
 const UiControl = preload("res://ui_control.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiShopItem = preload("res://ui_shop_item.gd")
-const CraftSlot = preload("res://craft_slot.gd")
+const CraftSlot = preload("res://ui_craft_slot.gd")
 const UiStatusBar = preload("res://ui_status_bar.gd")
 const UiRelicsBar = preload("res://ui_relics_bar.gd")
 const UiPatternsBar = preload("res://ui_patterns_bar.gd")
@@ -44,10 +44,9 @@ const UiTutorial = preload("res://ui_tutorial.gd")
 const gem_ui = preload("res://ui_gem.tscn")
 const popup_txt_pb = preload("res://popup_txt.tscn")
 const trail_pb = preload("res://trail.tscn")
-const craft_slot_pb = preload("res://craft_slot.tscn")
+const craft_slot_pb = preload("res://ui_craft_slot.tscn")
 const shop_item_pb = preload("res://ui_shop_item.tscn")
 const settlement_item_pb = preload("res://ui_settlement_item.tscn")
-const entangled_line_pb = preload("res://entangled_line.tscn")
 const pointer_cursor = preload("res://images/pointer.png")
 const pin_cursor = preload("res://images/pin.png")
 const activate_cursor = preload("res://images/magic_stick.png")
@@ -341,7 +340,7 @@ func remove_gem(g : Gem, boardcast : bool = true):
 	
 	status_bar_ui.gem_count_text.text = "%d" % gems.size()
 
-func get_gem(g : Gem = null) -> Gem:
+func take_out_gem_from_bag(g : Gem = null) -> Gem:
 	if g:
 		bag_gems.erase(g)
 		return g
@@ -349,7 +348,7 @@ func get_gem(g : Gem = null) -> Gem:
 		return null
 	return SMath.pick_and_remove(bag_gems, App.game_rng)
 
-func release_gem(g : Gem):
+func put_back_gem_to_bag(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
 	g.bag_stamp = round
@@ -603,35 +602,6 @@ func entangle_gems(g1 : Gem, g2 : Gem):
 			gp1.gems.append(g)
 		entangled_groups.erase(gp2)
 
-func show_entangled_lines():
-	var old_nodes = []
-	for n in Board.ui.entangled_lines.get_children():
-		old_nodes.append(n)
-	for eg in entangled_groups:
-		var num = eg.gems.size()
-		for i in num - 1:
-			for j in range(i + 1, num):
-				var g1 = eg.gems[i]
-				var g2 = eg.gems[j]
-				if g1.coord.x != -1 && g1.coord.y != -1 && g2.coord.x != -1 && g2.coord.y != -1:
-					var already_has = false
-					for n in old_nodes:
-						if n.coord1 == g1.coord && n.coord2 == g2.coord:
-							old_nodes.erase(n)
-							already_has = true
-							break
-					if !already_has:
-						var line = entangled_line_pb.instantiate()
-						line.setup(g1.coord, g2.coord)
-						Board.ui.entangled_lines.add_child(line)
-	for n in old_nodes:
-		n.disappear()
-
-func hide_entangled_lines():
-	for n in Board.ui.entangled_lines.get_children():
-		Board.ui.entangled_lines.remove_child(n)
-		n.disappear()
-
 func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "swap"):
 	var tween = game_tweens.create_tween()
 	var g1 = slot1.gem
@@ -651,7 +621,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	tween.tween_callback(func():
 		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, null)
-		get_gem(g2)
+		take_out_gem_from_bag(g2)
 		Hand.add_gem(g2, -1, true)
 	)
 	var sub1 = game_tweens.create_tween()
@@ -671,7 +641,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	
 	tween.tween_callback(func():
 		Board.set_gem_at(coord, g1)
-		Hand.erase(slot1.get_index(), false)
+		Hand.erase(slot1.get_index())
 		control_ui.update_preview()
 		end_busy()
 	)
@@ -897,7 +867,7 @@ func end_busy():
 		control_ui.play_button.disabled = false
 	Hand.ui.disabled = false
 	if Board.ui.visible:
-		show_entangled_lines()
+		Board.ui.show_entangled_lines()
 
 func begin_transition(tween : Tween):
 	blocker_ui.show()
@@ -946,6 +916,7 @@ func start_game(saving : String = ""):
 	modifiers["played_i"] = 0
 	modifiers["base_combo_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
+	modifiers["extra_range_i"] = 0
 	modifiers["additional_active_times_i"] = 0
 	modifiers["not_consume_repeat_count_chance_i"] = 0
 	modifiers["additional_targets_i"] = 0
@@ -1288,7 +1259,7 @@ func round_end():
 	Buff.clear(self, [Buff.Duration.ThisRound])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisRound])
-	hide_entangled_lines()
+	Board.ui.hide_entangled_lines()
 	for h in event_listeners:
 		if h.event == Event.RoundEnded:
 			h.host.on_event.call(Event.RoundEnded, null, null)
@@ -1559,12 +1530,15 @@ func save_to_file(name : String = "1"):
 		data["shop_list1"] = list1
 		var list2 = []
 		for n in shop_ui.list2.get_children():
-			var ui = n as CraftSlot
-			var slot = {}
-			slot["type"] = ui.type
-			slot["thing"] = ui.thing
-			slot["price"] = ui.price
-			list2.append(slot)
+			if n is CraftSlot:
+				var ui = n as CraftSlot
+				var slot = {}
+				slot["type"] = ui.type
+				slot["thing"] = ui.thing
+				slot["price"] = ui.price
+				list2.append(slot)
+			else:
+				pass
 		data["shop_list2"] = list2
 	
 	var file = FileAccess.open("user://save%s.json" % name, FileAccess.WRITE)
@@ -1896,11 +1870,11 @@ func _ready() -> void:
 	
 	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
 	Board.clearing_finished.connect(func():
-		hide_entangled_lines()
+		Board.ui.hide_entangled_lines()
 		Board.fill_blanks()
 	)
 	Board.filling_finished.connect(func():
-		show_entangled_lines()
+		Board.ui.show_entangled_lines()
 		if modifiers["played_i"] > 0:
 			filling_times += 1
 			if filling_times >= C.REFILL_TIMES_TO_STOP:

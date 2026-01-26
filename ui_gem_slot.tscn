@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://doi8xt0sm16fg"]
+
+[ext_resource type="Script" uid="uid://wdnx841wood3" path="res://ui_gem_slot.gd" id="1_bf8w3"]
+[ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="1_qsvoc"]
+[ext_resource type="Texture2D" uid="uid://e4na8cwspcqj" path="res://images/slot_open.png" id="2_pele0"]
+[ext_resource type="Texture2D" uid="uid://bcsov5iskgy5q" path="res://images/slot_close.png" id="3_g7amj"]
+
+[sub_resource type="Gradient" id="Gradient_jf4wm"]
+offsets = PackedFloat32Array(0.819703, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_wbchi"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="Control" type="Control"]
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_bf8w3")
+
+[node name="UiGem" parent="." instance=ExtResource("1_qsvoc")]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 54.0
+offset_bottom = 54.0
+
+[node name="Open" type="TextureRect" parent="."]
+layout_mode = 1
+offset_right = 44.0
+offset_bottom = 44.0
+texture = ExtResource("2_pele0")
+
+[node name="Close" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+offset_right = 44.0
+offset_bottom = 44.0
+texture = ExtResource("3_g7amj")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(44, 44)
+emitting = false
+amount = 16
+lifetime = 2.0
+one_shot = true
+preprocess = 1.7
+explosiveness = 0.9
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 80.0
+initial_velocity_max = 80.0
+orbit_velocity_min = 1.0
+orbit_velocity_max = 1.0
+scale_amount_min = 3.0
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_jf4wm")
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="."]
+position = Vector2(44, 44)
+emitting = false
+amount = 20
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.9
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 200.0
+linear_accel_min = 20.0
+linear_accel_max = 20.0
+scale_amount_min = 3.0
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_wbchi")

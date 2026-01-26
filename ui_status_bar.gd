@@ -117,7 +117,7 @@ func _ready() -> void:
 		else:
 			pass
 			# trade
-			#App.release_gem(dragging.gem)
+			#App.put_back_gem_to_bag(dragging.gem)
 			#Hand.draw()
 	)
 	gem_count_text.mouse_entered.connect(func():

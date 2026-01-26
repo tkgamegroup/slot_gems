@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://bvxv5b6nmq63w"]
+
+[ext_resource type="Script" uid="uid://b5pwo17ho4uyi" path="res://ui_craft_slot.gd" id="1_rxl87"]
+[ext_resource type="Script" uid="uid://cv7nxdr7kyb51" path="res://rich_text_tt.gd" id="2_jfsum"]
+[ext_resource type="PackedScene" uid="uid://doi8xt0sm16fg" path="res://ui_gem_slot.tscn" id="3_u3j5k"]
+[ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="6_16ix3"]
+
+[node name="CraftSlot" type="VBoxContainer"]
+offset_right = 150.0
+offset_bottom = 178.0
+theme_override_constants/separation = 8
+script = ExtResource("1_rxl87")
+
+[node name="Title" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+fit_content = true
+horizontal_alignment = 1
+meta_underlined = false
+script = ExtResource("2_jfsum")
+
+[node name="Slot" parent="." instance=ExtResource("3_u3j5k")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="Button" parent="." instance=ExtResource("6_16ix3")]
+layout_mode = 2

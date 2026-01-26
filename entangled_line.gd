@@ -15,7 +15,9 @@ func disappear():
 	tween.tween_callback(queue_free)
 
 func flash():
-	pass
+	var tween = App.game_tweens.create_tween()
+	tween.tween_property(line.material, "shader_parameter/sig", 1.0, 0.1)
+	tween.tween_property(line.material, "shader_parameter/sig", 0.0, 0.2)
 
 func setup(_coord1 : Vector2i, _coord2 : Vector2i):
 	coord1 = _coord1
@@ -25,4 +27,5 @@ func _ready() -> void:
 	line.clear_points()
 	line.add_point(Board.get_pos(coord1))
 	line.add_point(Board.get_pos(coord2))
+	line.material.set_shader_parameter("offset", randf_range(0.0, 100.0))
 	appear()

@@ -381,7 +381,7 @@ func setup(n : String):
 					if data == self:
 						Board.remove_aura(self)
 		on_aura = func(g : Gem):
-			if Board.offset_distance(coord, g.coord) <= extra["range_i"]:
+			if Board.offset_distance(coord, g.coord) <= extra["range_i"] + App.modifiers["extra_range_i"]:
 				var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value_i"]}, Buff.Duration.OnBoard)
 				b.caster = self
 	elif name == "Coin":
@@ -410,7 +410,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range_i"], power, tween, self)
 	elif name == "C4":
 		type = None
@@ -426,7 +426,7 @@ func setup(n : String):
 				tween.tween_callback(func():
 					Board.activate(self, HostType.Gem, 0, coord, reason, source)
 				)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range_i"], power, tween, self)
 	elif name == "Rainbow":
 		type = ColorWild
@@ -452,7 +452,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cc = Board.offset_to_cube(coord)
 			var arr = [0, 1, 2]
 			var coords : Array[Vector2i] = []
@@ -502,8 +502,8 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			var targets = Board.filter(func(gem : Gem, item : Item):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
+			var targets = Board.filter(func(gem : Gem):
 				return gem && gem.name == "Lightning"
 			)
 			for ae in Board.active_effects:
@@ -659,7 +659,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cands = []
 			for c in Board.offset_neighbors(coord):
 				var g = Board.get_gem_at(c)
@@ -694,7 +694,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cands = []
 			for c in Board.offset_neighbors(coord):
 				var g = Board.get_gem_at(c)
@@ -970,16 +970,15 @@ func setup(n : String):
 			tween.tween_callback(func():
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
+		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var pos = Board.get_pos(coord)
 			var coords : Array[Vector2i] = []
 			var cands = []
-			for c in Board.offset_ring(coord, 1):
-				if Board.is_valid(c) && !cands.has(c):
-					cands.append(c)
-			for c in Board.offset_ring(coord, 2):
-				if Board.is_valid(c) && !cands.has(c):
-					cands.append(c)
+			var r = 1 + App.modifiers["extra_range_i"]
+			for i in r:
+				for c in Board.offset_ring(coord, r):
+					if Board.is_valid(c) && !cands.has(c):
+						cands.append(c)
 			var times = SUtils.calc_repeat_count(2)
 			for i in times:
 				if !cands.is_empty():

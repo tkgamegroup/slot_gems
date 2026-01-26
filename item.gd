@@ -258,8 +258,8 @@ func setup(n : String):
 		price = 4
 		extra["value"] = 375
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			var targets = Board.filter(func(gem : Gem, item : Item):
-				return item && item.category == "Animal"
+			var targets = Board.filter(func(gem : Gem):
+				return gem && gem.category == "Animal"
 			)
 			for ae in Board.active_effects:
 				if ae.host.category == "Animal":
@@ -307,8 +307,8 @@ func setup(n : String):
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			var targets = Board.filter(func(gem : Gem, item : Item):
-				if item && item.category == "Animal":
+			var targets = Board.filter(func(gem : Gem):
+				if gem && gem.category == "Animal":
 					return true
 				return false
 			)
@@ -421,8 +421,8 @@ func setup(n : String):
 				Board.activate(self, HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			var targets = Board.filter(func(gem : Gem, item : Item):
-				return item && item.category == "Food"
+			var targets = Board.filter(func(gem : Gem):
+				return gem && gem.category == "Food"
 			)
 			if !targets.is_empty():
 				var c = SMath.pick_random(targets, App.game_rng)
@@ -543,8 +543,8 @@ func setup(n : String):
 								App.event_listeners.erase(l)
 								break
 				Event.MatchingFinished:
-					var num_gluttony = Board.filter(func(g : Gem, i : Item):
-						return i && i.name == "SinGluttony"
+					var num_gluttony = Board.filter(func(g : Gem):
+						return g && g.name == "SinGluttony"
 					).size()
 					if App.combos < num_gluttony:
 						App.game_over_mark = "sin_gluttony"
@@ -559,8 +559,8 @@ func setup(n : String):
 				SSound.se_coin.play()
 				App.coins += extra["value"]
 				
-				var num_greed = Board.filter(func(g : Gem, i : Item):
-					return i && i.name == "SinGreed"
+				var num_greed = Board.filter(func(g : Gem):
+					return g && g.name == "SinGreed"
 				).size()
 				if num_greed == 1:
 					App.float_text(tr("t_Greed_effect"), Board.get_pos(coord))
