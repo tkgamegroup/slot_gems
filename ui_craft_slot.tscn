@@ -12,12 +12,12 @@ theme_override_constants/separation = 8
 script = ExtResource("1_rxl87")
 
 [node name="Title" type="RichTextLabel" parent="."]
-custom_minimum_size = Vector2(150, 32)
+custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
-fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 meta_underlined = false
 script = ExtResource("2_jfsum")
@@ -27,5 +27,9 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
-[node name="Button" parent="." instance=ExtResource("6_16ix3")]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_top = 4
+
+[node name="Button" parent="MarginContainer" instance=ExtResource("6_16ix3")]
 layout_mode = 2

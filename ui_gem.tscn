@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://s5ehr1388thk"]
+[gd_scene format=3 uid="uid://s5ehr1388thk"]
 
 [ext_resource type="Script" uid="uid://t4phq6vbt25s" path="res://ui_gem.gd" id="2_pbann"]
 [ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem_kind.gdshader" id="2_yval8"]
@@ -63,49 +63,49 @@ colors = PackedColorArray(0.75, 0.195, 0.195, 1, 0.7, 0.637467, 0.231, 1, 0.2249
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.132075, 0.191011), 0.0, 0.0, 0, 0, Vector2(0.698113, 0.191011), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 4
 
-[node name="UiGem" type="Control"]
+[node name="UiGem" type="Control" unique_id=1680301819]
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
 script = ExtResource("2_pbann")
 
-[node name="Pieces" type="Node2D" parent="."]
+[node name="Pieces" type="Node2D" parent="." unique_id=1451630777]
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1171889812]
 disable_3d = true
 transparent_bg = true
 canvas_item_default_texture_filter = 0
 size = Vector2i(72, 72)
 
-[node name="GemKind" type="AnimatedSprite2D" parent="SubViewport"]
+[node name="GemKind" type="AnimatedSprite2D" parent="SubViewport" unique_id=2137879395]
 material = SubResource("ShaderMaterial_3vjey")
 sprite_frames = ExtResource("5_xnwot")
 frame = 1
 centered = false
 
-[node name="Wild" type="AnimatedSprite2D" parent="SubViewport"]
+[node name="Wild" type="AnimatedSprite2D" parent="SubViewport" unique_id=210303211]
 visible = false
 material = SubResource("ShaderMaterial_gsthc")
 sprite_frames = ExtResource("5_xnwot")
 frame = 7
 centered = false
 
-[node name="Special" type="AnimatedSprite2D" parent="SubViewport"]
+[node name="Special" type="AnimatedSprite2D" parent="SubViewport" unique_id=2127961001]
 sprite_frames = ExtResource("5_xnwot")
 centered = false
 
-[node name="Rune" type="AnimatedSprite2D" parent="SubViewport"]
+[node name="Rune" type="AnimatedSprite2D" parent="SubViewport" unique_id=1691482234]
 modulate = Color(0, 0, 0, 0.6666667)
 sprite_frames = ExtResource("7_weldj")
 centered = false
 
-[node name="Display" type="Sprite2D" parent="."]
+[node name="Display" type="Sprite2D" parent="." unique_id=1767639450]
 material = SubResource("ShaderMaterial_xnwot")
 texture = SubResource("ViewportTexture_4lclw")
 centered = false
 
-[node name="Charming" type="CPUParticles2D" parent="."]
+[node name="Charming" type="CPUParticles2D" parent="." unique_id=1789038180]
 visible = false
 position = Vector2(24, 24)
 texture = ExtResource("5_ahfnj")
@@ -118,7 +118,7 @@ orbit_velocity_max = 0.1
 scale_amount_curve = SubResource("Curve_4lclw")
 color_initial_ramp = SubResource("Gradient_kq7wp")
 
-[node name="Sharp" type="CPUParticles2D" parent="."]
+[node name="Sharp" type="CPUParticles2D" parent="." unique_id=505498699]
 visible = false
 position = Vector2(24, 24)
 amount = 1

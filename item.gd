@@ -2,8 +2,6 @@ extends Object
 
 class_name Item
 
-const infected_pb = preload("res://infected.tscn")
-
 var id : int
 var name : String
 var image_id : int
@@ -157,14 +155,14 @@ func setup(n : String):
 						if !coords.has(cc):
 							var g = Board.get_gem_at(cc)
 							if g && g.type == color:
-								var sp = infected_pb.instantiate()
-								sp.position = Board.get_pos(cc)
-								sp.emitting = false
-								Board.ui.overlay.add_child(sp)
-								tween.tween_callback(func():
-									sp.emitting = true
-								)
-								sps.append(sp)
+								#var sp = infected_pb.instantiate()
+								#sp.position = Board.get_pos(cc)
+								#sp.emitting = false
+								#Board.ui.overlay.add_child(sp)
+								#tween.tween_callback(func():
+									#sp.emitting = true
+								#)
+								#sps.append(sp)
 								arr2.append(cc)
 								coords.append(cc)
 				arr.clear()

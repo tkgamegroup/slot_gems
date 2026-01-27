@@ -23,13 +23,13 @@ func enter():
 		r -= 1
 	r = int(r / 3) * 3 + 1
 	round1_title.text = tr("ui_game_round") % r
-	round1_desc.text = App.get_round_desc(App.get_round_score(r), App.get_round_reward(r), App.round_curses[r - 1] if !App.round_curses.is_empty() else ([] as Array[Curse]))
+	round1_desc.text = App.get_round_desc(r)
 	r += 1
 	round2_title.text = tr("ui_game_round") % r
-	round2_desc.text = App.get_round_desc(App.get_round_score(r), App.get_round_reward(r), App.round_curses[r - 1] if !App.round_curses.is_empty() else ([] as Array[Curse]))
+	round2_desc.text = App.get_round_desc(r)
 	r += 1
 	round3_title.text = tr("ui_game_round") % r
-	round3_desc.text = App.get_round_desc(App.get_round_score(r), App.get_round_reward(r), App.round_curses[r - 1] if !App.round_curses.is_empty() else ([] as Array[Curse]))
+	round3_desc.text = App.get_round_desc(r)
 
 func exit():
 	panel.hide()

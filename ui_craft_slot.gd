@@ -5,7 +5,7 @@ const UiSlot = preload("res://ui_gem_slot.gd")
 
 @onready var title_txt : RichTextLabel = $Title
 @onready var slot : UiSlot = $Slot
-@onready var button = $Button
+@onready var button = $MarginContainer/Button
 
 var type : String
 var thing : String

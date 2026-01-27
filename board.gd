@@ -509,8 +509,6 @@ func update_gem_quantity_limit():
 	App.status_bar_ui.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
 
 func setup(_hf_cy : int):
-	ui.tilemap.tile_set.tile_size = Vector2i(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ)
-	
 	clear()
 	
 	cy = _hf_cy * 2
@@ -916,8 +914,8 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 					return
 				items[i] = SMath.pick_random(cands, App.game_rng)
 			
-			var places = filter(func(g : Gem, i : Item):
-				return g && !i && get_active_effects_at(g.coord).is_empty()
+			var places = filter(func(g : Gem):
+				return g && g.name == "" && get_active_effects_at(g.coord).is_empty()
 			)
 			if places.is_empty():
 				target_coords.append(Vector2i(-1, -1))

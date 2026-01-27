@@ -192,7 +192,7 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_m0hyf"]
 tile_shape = 3
 tile_offset_axis = 1
-tile_size = Vector2i(48, 48)
+tile_size = Vector2i(72, 72)
 sources/1 = SubResource("TileSetAtlasSource_34ol3")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
@@ -1224,6 +1224,7 @@ text = "ui_shop_next_round"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="StagingSlot" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("58_l0gw7")]
 layout_mode = 2

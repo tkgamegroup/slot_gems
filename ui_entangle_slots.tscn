@@ -12,19 +12,19 @@ theme_override_constants/separation = 8
 script = ExtResource("1_3lccf")
 
 [node name="Title" type="RichTextLabel" parent="."]
-custom_minimum_size = Vector2(150, 32)
+custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/normal_font_size = 26
 bbcode_enabled = true
-fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 meta_underlined = false
 script = ExtResource("2_d1jea")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 32
 
 [node name="Slot1" parent="HBoxContainer" instance=ExtResource("3_d1jea")]
 layout_mode = 2
@@ -32,5 +32,9 @@ layout_mode = 2
 [node name="Slot2" parent="HBoxContainer" instance=ExtResource("3_d1jea")]
 layout_mode = 2
 
-[node name="Button" parent="." instance=ExtResource("3_0gqb4")]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_top = 4
+
+[node name="Button" parent="MarginContainer" instance=ExtResource("3_0gqb4")]
 layout_mode = 2

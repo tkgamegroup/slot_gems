@@ -13,7 +13,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 9
+const version_patch : int = 11
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -112,9 +112,6 @@ var next_roll_extra_draws : int = 0
 var max_hand_grabs : int:
 	set(v):
 		max_hand_grabs = v
-		if Hand.grabs.size() < max_hand_grabs:
-			for i in (max_hand_grabs - Hand.grabs.size()):
-				Hand.draw()
 		if Hand.ui:
 			Hand.ui.resize()
 			status_bar_ui.hand_text.set_value(App.max_hand_grabs)
@@ -154,7 +151,6 @@ var patterns : Array[Pattern]
 var gems : Array[Gem]
 var bag_gems : Array[Gem] = []
 var entangled_groups : Array[EntangledGroup] = []
-var items : Array[Item]
 var relics : Array[Relic]
 var event_listeners : Array[Hook]
 var round : int
@@ -811,21 +807,21 @@ func process_command_line(cl : String):
 			elif t1 == "image":
 				Painting.set_board_to_image("")
 
-func get_round_score(lv : int):
-	if lv <= 10:
-		return lv * (2 * 300 + (lv - 1) * 100) / 2
-	elif lv <= 20:
+func get_round_score(r : int):
+	if r <= 10:
+		return r * (2 * 300 + (r - 1) * 100) / 2
+	elif r <= 20:
 		var a = get_round_score(10)
-		var n = lv - 10
+		var n = r - 10
 		for i in n:
 			var x = lerp(0.1, 0.3, i / 9.0)
 			var c = lerp(1000, 10000, i / 9.0)
 			a = (1.0 + x) * a + c
 		a = int(a / 500) * 500
 		return a
-	elif lv <= 24:
+	elif r <= 24:
 		var a = get_round_score(20)
-		var n = lv - 10
+		var n = r - 10
 		for i in n:
 			var x = 0.5
 			var c = 30000
@@ -835,12 +831,12 @@ func get_round_score(lv : int):
 	else:
 		return 1000000000
 
-func get_round_reward(lv : int):
-	if lv % 3 == 0:
+func get_round_reward(r : int):
+	if r % 3 == 0:
 		return 10
-	elif lv % 3 == 1:
+	elif r % 3 == 1:
 		return 5
-	elif lv % 3 == 2:
+	elif r % 3 == 2:
 		return 7
 	return 0
 
@@ -899,7 +895,6 @@ func start_game(saving : String = ""):
 	relics_bar_ui.clear()
 	gems.clear()
 	bag_gems.clear()
-	items.clear()
 	
 	Board.clear()
 	Hand.clear()
@@ -951,7 +946,7 @@ func start_game(saving : String = ""):
 		activates_num_per_round = 0
 		grabs_num_per_round = 0
 		coins = 10
-		update_round_text(round, 0, 0)
+		update_round_text(round)
 		
 		for i in 1:
 			var p = Pattern.new()
@@ -976,21 +971,16 @@ func start_game(saving : String = ""):
 			add_pattern(p)
 		'''
 		
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Multicast")
 			add_relic(r)
 		
-		var g1 = Gem.new()
-		g1.type = Gem.ColorRed
-		g1.rune = Gem.RuneWave
-		add_gem(g1)
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
 			add_gem(g)
-			entangle_gems(g1, g)
 		for i in 16:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
@@ -1061,20 +1051,6 @@ func start_game(saving : String = ""):
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		'''
-		for i in 1:
-			var item = Item.new()
-			item.setup("Color Palette")
-			add_item(item)
-		for i in 1:
-			var item = Item.new()
-			item.setup("Minefield")
-			add_item(item)
-		for i in 7:
-			var item = Item.new()
-			item.setup("Bomb")
-			add_item(item)
-		'''
 	
 		Board.setup(board_size)
 		history.init()
@@ -1128,11 +1104,14 @@ func exit_game():
 	App.control_ui.exit()
 	App.game_ui.hide()
 
-func get_round_desc(target : int, reward : int, curses : Array[Curse] = []):
-	var ret = tr("ui_game_round_target") % [target, reward]
-	if !curses.is_empty():
+func get_round_desc(r : int):
+	var t = target_score if r == round else get_round_score(r)
+	var rw = reward if r == round else get_round_reward(r)
+	var ret = tr("ui_game_round_target") % [t, rw]
+	var cs = current_curses if r == round else round_curses[r - 1]
+	if !cs.is_empty():
 		var cates = {}
-		for c in curses:
+		for c in cs:
 			if cates.has(c.type):
 				cates[c.type] += 1
 			else:
@@ -1144,13 +1123,9 @@ func get_round_desc(target : int, reward : int, curses : Array[Curse] = []):
 		ret += " %s" % text
 	return ret
 
-func update_round_text(round : int, target : int = -1, reward : int = -1, curses : Array[Curse] = []):
-	status_bar_ui.round_text.text = tr("ui_game_round") % round
-	if target == -1:
-		target = get_round_score(round)
-	if reward == -1:
-		reward = get_round_reward(round)
-	status_bar_ui.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(target, reward, curses), true, true)
+func update_round_text(r : int):
+	status_bar_ui.round_text.text = tr("ui_game_round") % r
+	status_bar_ui.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(r), true, true)
 
 #const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
 const curse_types = ["red_no_score", "orange_no_score", "green_no_score", "blue_no_score", "magenta_no_score", "wave_no_score", "palm_no_score", "starfish_no_score"]
@@ -1190,7 +1165,7 @@ func next_round(tween : Tween = null):
 	tween.tween_callback(func():
 		score = 0
 		round += 1
-		target_score = get_round_score(round) * 1
+		target_score = get_round_score(round)
 		reward = get_round_reward(round)
 		game_over_mark = ""
 		history.round_reset()
@@ -1199,7 +1174,7 @@ func next_round(tween : Tween = null):
 			var cc = Curse.new()
 			cc.type = c.type
 			current_curses.append(cc)
-		update_round_text(round, target_score, reward, current_curses)
+		update_round_text(round)
 		
 		rolls = rolls_per_round
 		swaps = swaps_per_round
@@ -1609,7 +1584,7 @@ func load_from_file(name : String = "1"):
 		App.round_curses.append(lc)
 	App.combos = int(data["combos"])
 	App.score_mult = data["score_mult"]
-	update_round_text(round, target_score, reward, App.current_curses)
+	update_round_text(round)
 	var game_buffs = data["buffs"]
 	for buff in game_buffs:
 		load_buff.call(buff, App)
@@ -1676,7 +1651,7 @@ func load_from_file(name : String = "1"):
 		var coord = str_to_var("Vector2i" + cell["coord"])
 		var c = Board.add_cell(coord)
 		var ui = Board.ui.get_cell(coord)
-		var gem_idx = cell["gem"]
+		var gem_idx = int(cell["gem"])
 		if gem_idx != -1:
 			var g = App.gems[gem_idx]
 			c.gem = g
@@ -1846,6 +1821,8 @@ func _unhandled_input(event: InputEvent) -> void:
 							else:
 								dir = 2
 						STooltip.show(cell_ui, dir, contents)
+				else:
+					STooltip.close()
 			else:
 				hovering_coord = Vector2i(-1, -1)
 				control_ui.debug_text.text = ""

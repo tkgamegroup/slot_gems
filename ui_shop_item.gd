@@ -165,6 +165,9 @@ func buy(tween : Tween = null):
 	elif cate == "increase_hand_size":
 		tween.tween_callback(func():
 			App.max_hand_grabs += 1
+			if Hand.grabs.size() < App.max_hand_grabs:
+				for i in (App.max_hand_grabs - Hand.grabs.size()):
+					Hand.draw()
 		)
 		tween.tween_interval(0.5)
 	tween.tween_callback(func():

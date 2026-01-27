@@ -1003,7 +1003,7 @@ func setup(n : String):
 							Board.score_at(t.first)
 							t.second.queue_free()
 					)
-					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+					Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
 	elif name == "PolishingPowder":
 		type = None
 		rune = None
