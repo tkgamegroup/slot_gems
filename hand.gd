@@ -16,11 +16,11 @@ func add_gem(gem : Gem, pos : int = -1, no_ui : bool = false):
 	return ui.add_slot(gem, pos)
 
 func draw(to_the_end : bool = true):
-	if App.bag_gems.is_empty():
+	if G.bag_gems.is_empty():
 		return null
-	if grabs.size() >= App.max_hand_grabs:
+	if grabs.size() >= G.max_hand_grabs:
 		return null
-	var gem : Gem = App.take_out_gem_from_bag()
+	var gem : Gem = G.take_out_gem_from_bag()
 	var slot = add_gem(gem, -1 if to_the_end else 0)
 	slot.position.y = 50
 	return slot
@@ -39,7 +39,7 @@ func erase(idx : int):
 
 func clear():
 	for g in grabs:
-		App.put_back_gem_to_bag(g)
+		G.put_back_gem_to_bag(g)
 	grabs.clear()
 	
 	ui.clear()

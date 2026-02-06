@@ -153,7 +153,7 @@ func add_exp(v : int):
 		ui.exp_bar.max_value = max_exp
 		ui.exp_bar.value = exp
 		ui.tilemap.position = Vector2(0, -5)
-		var tween = App.game_tweens.create_tween()
+		var tween = G.game_tweens.create_tween()
 		tween.tween_property(ui.tilemap, "position", Vector2(0, 0), 0.2)
 		if lv > old_lv:
 			var ctrl = Control.new()
@@ -164,7 +164,7 @@ func add_exp(v : int):
 			ui.add_child(ctrl)
 			ctrl.position = ui.get_rect().size * 0.5
 			lb.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
-			var tween2 = App.game_tweens.create_tween()
+			var tween2 = G.game_tweens.create_tween()
 			tween2.tween_property(lb, "modulate:a", 1.0, 0.3)
 			tween2.tween_interval(1.0)
 			tween2.tween_callback(lb.queue_free)

@@ -91,13 +91,13 @@ func get_panel_rect(even : bool, border : bool = true):
 	return Rect2(p, s)
 
 func enter(tween : Tween = null, trans : bool = true):
-	var r = get_panel_rect(App.board_size % 2 == 0)
+	var r = get_panel_rect(G.board_size % 2 == 0)
 	panel.position = r.position
 	panel.size = r.size
 	
 	if trans:
 		if !tween:
-			tween = App.game_tweens.create_tween()
+			tween = G.game_tweens.create_tween()
 		tween.tween_callback(func():
 			self.material.set_shader_parameter("x_rot", -90.0)
 			self.show()
@@ -119,7 +119,7 @@ func show_entangled_lines():
 	var old_nodes = []
 	for n in Board.ui.entangled_lines.get_children():
 		old_nodes.append(n)
-	for eg in App.entangled_groups:
+	for eg in G.entangled_groups:
 		var num = eg.gems.size()
 		for i in num - 1:
 			for j in range(i + 1, num):
@@ -169,28 +169,28 @@ func _ready() -> void:
 		elif ev == "peek_exited":
 			pass
 		else:
-			if App.swaps > 0:
+			if G.swaps > 0:
 				var slot1 = payload as UiHandSlot
 				var coord = extra["coord"]
 				var g2 = Board.get_gem_at(coord)
 				if Board.get_cell(coord).in_mist:
 					SSound.se_error.play()
-					App.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
+					G.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
 					return false
 				'''
 				var i = Board.get_item_at(coord)
 				if i && (i.name == "SinLust" || i.name == "SinGluttony" || i.name == "SinGreed" || i.name == "SinWrath" || i.name == "SinEnvy"):
 					SSound.se_error.play()
-					App.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
+					G.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
 					return false
 				'''
-				App.swaps -= 1
+				G.swaps -= 1
 				
-				App.swap_hand_and_board(slot1, coord)
-				App.action_stack.append(Pair.new(coord, g2))
-				App.control_ui.undo_button.disabled = false
+				G.swap_hand_and_board(slot1, coord)
+				G.action_stack.append(Pair.new(coord, g2))
+				G.control_ui.undo_button.disabled = false
 				return true
 			else:
-				App.control_ui.swaps_text.hint()
+				G.control_ui.swaps_text.hint()
 		return false
 	)

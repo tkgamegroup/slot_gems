@@ -36,7 +36,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 	self.show()
 	panel.show()
 	
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	if _select_num == 0:
@@ -53,7 +53,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		comfirm_button.disabled = false
 		select_num = _select_num
 		select_callback = _select_callback
-	for g in App.gems:
+	for g in G.gems:
 		var ctrl = Control.new()
 		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ + 8)
 		ctrl.mouse_entered.connect(func():
@@ -95,7 +95,7 @@ func exit():
 	clear()
 	
 	self.self_modulate.a = 1.0
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
@@ -108,7 +108,7 @@ func _ready() -> void:
 	)
 	comfirm_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
+		G.screen_shake_strength = 8.0
 		exit()
 		select_callback.call(selecteds)
 	)

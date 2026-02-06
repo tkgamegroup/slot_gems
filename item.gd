@@ -36,7 +36,7 @@ func setup(n : String):
 			var coords = [coord]
 			for y in Board.cy:
 				for x in Board.cx:
-					for p in App.patterns:
+					for p in G.patterns:
 						var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 						if res.has(coord):
 							for c in res:
@@ -56,7 +56,7 @@ func setup(n : String):
 					Buff.create(self, Buff.Type.ValueModifier, {"target":"power","set":i.power + 2})
 					Buff.create(self, Buff.Type.ValueModifier, {"target":"range","sub_attr":"extra","set":i.extra["range"] + 1})
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
@@ -66,17 +66,17 @@ func setup(n : String):
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			if App.coins >= 6:
-				App.coins -= 6
+			if G.coins >= 6:
+				G.coins -= 6
 				var coords = Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 				tween.tween_callback(func():
 					for c in coords:
-						var v = App.game_rng.randi_range(0, 3)
-						App.float_text("[img]res://images/coin.png[/img][color=FFAA00]+%d[/color]" % v, Board.get_pos(c))
-						App.coins += v
+						var v = G.game_rng.randi_range(0, 3)
+						G.float_text("[img]res://images/coin.png[/img][color=FFAA00]+%d[/color]" % v, Board.get_pos(c))
+						G.coins += v
 				)
 	elif name == "Minefield":
 		image_id = 42
@@ -88,12 +88,12 @@ func setup(n : String):
 			for i in setup_range + 1:
 				for c in Board.offset_ring(coord, i):
 					if Board.is_valid(c):
-						Board.get_cell(c).event_listeners.append(Hook.new(Event.Eliminated, self, HostType.Gem, true))
+						SUtils.add_event_listener(Board.get_cell(c), C.Event.Eliminated, self, C.HostType.Gem, true)
 						coords.append(c)
 			return true
 		on_event = func(event : int, tween : Tween, data):
-			if event == Event.Eliminated:
-				Board.activate(self, HostType.Gem, 0, data, Board.ActiveReason.Item, self)
+			if event == C.Event.Eliminated:
+				Board.activate(self, C.HostType.Gem, 0, data, Board.ActiveReason.Item, self)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "EchoStone":
@@ -101,12 +101,12 @@ func setup(n : String):
 		category = "Normal"
 		extra["range"] = 1
 		on_event = func(event : int, tween : Tween, data):
-			if event == Event.Exploded:
-				Board.activate(self, HostType.Gem, 0, coord, Board.ActiveReason.Item, self)
+			if event == C.Event.Exploded:
+				Board.activate(self, C.HostType.Gem, 0, coord, Board.ActiveReason.Item, self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if reason == Board.ActiveReason.Item && source.category == "Bomb":
 				tween.tween_callback(func():
-					Board.activate(self, HostType.Gem, 1, coord, reason, source)
+					Board.activate(self, C.HostType.Gem, 1, coord, reason, source)
 				)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			if effect_index == 0:
@@ -115,8 +115,8 @@ func setup(n : String):
 					if Board.is_valid(c):
 						places.append(c)
 				tween.tween_callback(func():
-					App.add_combo()
-					Board.score_at(SMath.pick_random(places, App.game_rng))
+					G.add_combo()
+					Board.score_at(SMath.pick_random(places, G.game_rng))
 				)
 				Board.eliminate([coord], tween, Board.ActiveReason.Item, self)
 			elif effect_index == 1:
@@ -132,16 +132,16 @@ func setup(n : String):
 					if Board.is_valid(c) && !Board.get_item_at(c):
 						places.append(c)
 				if !places.is_empty():
-					places = SMath.pick_n_random(places, 2, App.game_rng)
+					places = SMath.pick_n_random(places, 2, G.game_rng)
 					for c in places:
 						var new_item = Item.new()
 						new_item.setup("Virus")
-						App.items.append(new_item)
+						G.items.append(new_item)
 						Board.set_item_at(c, new_item)
 				'''
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var color = Board.get_gem_at(coord).type
@@ -167,12 +167,12 @@ func setup(n : String):
 								coords.append(cc)
 				arr.clear()
 				arr.append_array(arr2)
-				tween.tween_interval(0.4 * App.speed)
+				tween.tween_interval(0.4 * G.speed)
 			tween.tween_callback(func():
 				for sp in sps:
 					sp.queue_free()
 				
-				App.add_combo()
+				G.add_combo()
 				for c in coords:
 					Board.score_at(c)
 			)
@@ -182,7 +182,7 @@ func setup(n : String):
 		category = "Normal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			if Board.active_effects.back().host == self:
@@ -199,7 +199,7 @@ func setup(n : String):
 					for c in coords:
 						var ui = Board.ui.get_cell(c).gem
 						var data = {"ui":ui,"vel":SMath.tangent2(Board.get_pos(c) - pos).normalized() * 1.4}
-						var tween2 = App.game_tweens.create_tween()
+						var tween2 = G.game_tweens.create_tween()
 						tween2.tween_method(func(t):
 							var d = pos.distance_to(data.ui.global_position)
 							if d < 64.0:
@@ -212,7 +212,7 @@ func setup(n : String):
 				)
 				tween.tween_interval(3.0)
 				tween.tween_callback(func():
-						App.add_combo()
+						G.add_combo()
 						for c in coords:
 							if Board.is_valid(c):
 								Board.score_at(c)
@@ -224,7 +224,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if Board.active_effects.is_empty():
 				tween.tween_callback(func():
-					Board.activate(self, HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 				)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var coords : Array[Vector2i] = []
@@ -244,7 +244,7 @@ func setup(n : String):
 						ui.scale = Vector2(0.0, 0.0).max(ui.scale - Vector2(0.1, 0.1))
 			, 0.0, 1200.0, 3.0)
 			tween.tween_callback(func():
-					App.add_combo()
+					G.add_combo()
 					for c in coords:
 						if Board.is_valid(c):
 							Board.score_at(c)
@@ -263,7 +263,7 @@ func setup(n : String):
 				if ae.host.category == "Animal":
 					targets.append(ae.host)
 			tween.tween_callback(func():
-				App.add_score(extra["value"] * targets.size(), Board.get_pos(coord))
+				G.add_score(extra["value"] * targets.size(), Board.get_pos(coord))
 			)
 	elif name == "Cat":
 		image_id = 19
@@ -272,7 +272,7 @@ func setup(n : String):
 		extra["repeat"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var coords : Array[Vector2i] = []
@@ -287,12 +287,12 @@ func setup(n : String):
 					if Board.is_valid(c) && !coords.has(c):
 						cands.append(c)
 				if !cands.is_empty():
-					var c = SMath.pick_random(cands, App.game_rng)
+					var c = SMath.pick_random(cands, G.game_rng)
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * App.speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.speed)
 					coords.append(c)
 					tween.tween_callback(func():
-						App.add_combo()
+						G.add_combo()
 						Board.score_at(c)
 					)
 					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
@@ -302,7 +302,7 @@ func setup(n : String):
 		category = "Animal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var targets = Board.filter(func(gem : Gem):
@@ -330,7 +330,7 @@ func setup(n : String):
 		extra["repeat"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var coords : Array[Vector2i] = []
@@ -345,12 +345,12 @@ func setup(n : String):
 					if Board.is_valid(c) && !coords.has(c):
 						cands.append(c)
 				if !cands.is_empty():
-					var c = SMath.pick_random(cands, App.game_rng)
+					var c = SMath.pick_random(cands, G.game_rng)
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * App.speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.speed)
 					coords.append(c)
 					tween.tween_callback(func():
-						App.add_combo()
+						G.add_combo()
 						Board.score_at(c)
 						'''
 						var item = Board.get_item_at(c)
@@ -365,12 +365,12 @@ func setup(n : String):
 							sp.frame = image_id
 							sp.z_index = 3
 							Board.ui.overlay.add_child(sp)
-							var tween2 = App.game_tweens.create_tween()
-							SAnimation.cubic_curve_to(tween2, sp, App.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+							var tween2 = G.game_tweens.create_tween()
+							SAnimation.cubic_curve_to(tween2, sp, G.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 							tween2.tween_callback(func():
 								var new_item = Item.new()
 								new_item.setup("Rabbit")
-								App.add_item(new_item)
+								G.add_item(new_item)
 							)
 						'''
 					)
@@ -383,14 +383,14 @@ func setup(n : String):
 		on_place = func(coord : Vector2i, reason : int):
 			if reason == Board.PlaceReason.FromBag:
 				var cands = []
-				for i in App.items:
+				for i in G.items:
 					if i.coord.x == -1 && i.coord.y == -1 && i.category == "Animal":
 						cands.append(i)
 				if !cands.is_empty():
-					var item = SMath.pick_random(cands, App.game_rng)
-					var tween = App.game_tweens.create_tween()
+					var item = SMath.pick_random(cands, G.game_rng)
+					var tween = G.game_tweens.create_tween()
 					tween.tween_callback(func():
-						SEffect.add_leading_line(Board.get_pos(coord), App.status_bar_ui.bag_button.get_global_rect().get_center())
+						SEffect.add_leading_line(Board.get_pos(coord), G.status_bar_ui.bag_button.get_global_rect().get_center())
 					)
 					tween.tween_interval(0.3)
 					Board.effect_place_items_from_bag([item], tween)
@@ -400,14 +400,14 @@ func setup(n : String):
 		category = "Animal"
 		on_place = func(coord : Vector2i, reason : int):
 			var cands = []
-			for i in App.items:
+			for i in G.items:
 				if i.coord.x == -1 && i.coord.y == -1 && i.category == "Animal":
 					cands.append(i)
 			if !cands.is_empty():
-				var item = SMath.pick_random(cands, App.game_rng)
-				var tween = App.game_tweens.create_tween()
+				var item = SMath.pick_random(cands, G.game_rng)
+				var tween = G.game_tweens.create_tween()
 				tween.tween_callback(func():
-					SEffect.add_leading_line(Board.get_pos(coord), App.status_bar_ui.bag_button.get_global_rect().get_center())
+					SEffect.add_leading_line(Board.get_pos(coord), G.status_bar_ui.bag_button.get_global_rect().get_center())
 				)
 				tween.tween_interval(0.3)
 				Board.effect_place_items_from_bag([item], tween)
@@ -416,22 +416,22 @@ func setup(n : String):
 		category = "Animal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var targets = Board.filter(func(gem : Gem):
 				return gem && gem.category == "Food"
 			)
 			if !targets.is_empty():
-				var c = SMath.pick_random(targets, App.game_rng)
+				var c = SMath.pick_random(targets, G.game_rng)
 				'''
 				var i = Board.get_item_at(c)
 				var score = i.extra["score"]
 				var pos = Board.get_pos(c)
-				SAnimation.move_to(tween, item_ui, pos, 0.4 * App.speed)
+				SAnimation.move_to(tween, item_ui, pos, 0.4 * G.speed)
 				tween.tween_callback(func():
-					App.add_combo()
-					App.add_score(score, pos)
+					G.add_combo()
+					G.add_score(score, pos)
 				)
 				Board.item_moved(self, tween, coord, c)
 				'''
@@ -444,19 +444,19 @@ func setup(n : String):
 			if mounted.name == "Idol":
 				var c = coord
 				Board.set_item_at(c, null)
-				App.release_item(mounted)
+				G.release_item(mounted)
 				var new_item = Item.new()
 				new_item.setup("Princess")
-				App.items.append(new_item)
+				G.items.append(new_item)
 				Board.set_item_at(c, new_item)
 				return false
 			elif mounted.name == "Magician":
 				var c = coord
 				Board.set_item_at(c, null)
-				App.release_item(mounted)
+				G.release_item(mounted)
 				var new_item = Item.new()
 				new_item.setup("Mage")
-				App.items.append(new_item)
+				G.items.append(new_item)
 				Board.set_item_at(c, new_item)
 				return false
 			'''
@@ -466,7 +466,7 @@ func setup(n : String):
 		category = "Animal"
 		mountable = "Animal"
 		on_event = func(event : int, tween : Tween, data):
-			if event == Event.ItemMoved && tween:
+			if event == C.Event.ItemMoved && tween:
 				if data["item"] == mounted:
 					var coords : Array[Vector2i] = []
 					var p0 = data["from"]
@@ -475,7 +475,7 @@ func setup(n : String):
 						var cc = Board.cube_to_offset(c)
 						coords.append(cc)
 					tween.tween_callback(func():
-						App.add_combo()
+						G.add_combo()
 						for c in coords:
 							if Board.is_valid(c):
 								Board.score_at(c)
@@ -487,7 +487,7 @@ func setup(n : String):
 		extra["value"] = 625
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				App.add_score(extra["value"], Board.get_pos(coord))
+				G.add_score(extra["value"], Board.get_pos(coord))
 			)
 	elif name == "StrengthPotion":
 		image_id = 40
@@ -509,21 +509,21 @@ func setup(n : String):
 				0:
 					tween.tween_callback(func():
 						var generated_score = 0
-						for p in App.staging_scores:
+						for p in G.staging_scores:
 							generated_score += p.second
 						var pos = Board.get_pos(coord)
-						App.float_text(tr("t_Lust_effect1"), Board.get_pos(coord))
-						App.add_score(generated_score, pos)
+						G.float_text(tr("str_Lust_effect1"), Board.get_pos(coord))
+						G.add_score(generated_score, pos)
 					)
 				1:
 					tween.tween_callback(func():
-						App.float_text(tr("t_Lust_effect2"), Board.get_pos(coord))
-						Buff.create(App, Buff.Type.ValueModifier, {"target":"gain_scaler","set":0.0}, Buff.Duration.ThisRound)
+						G.float_text(tr("str_Lust_effect2"), Board.get_pos(coord))
+						Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","set":0.0}, Buff.Duration.ThisRound)
 					)
 				2:
 					tween.tween_callback(func():
-						App.float_text(tr("t_Lust_effect3"), Board.get_pos(coord))
-						App.game_over_mark = "lust_dead"
+						G.float_text(tr("str_Lust_effect3"), Board.get_pos(coord))
+						G.game_over_mark = "lust_dead"
 					)
 			Curse.lust_triggered += 1
 	elif name == "SinGluttony":
@@ -531,22 +531,19 @@ func setup(n : String):
 		price = 0
 		on_event = func(event : int, tween : Tween, data):
 			match event: 
-				Event.ItemEntered:
+				C.Event.GemEntered:
 					if data == self:
-						App.event_listeners.append(Hook.new(Event.MatchingFinished, self, HostType.Gem, false))
-				Event.ItemLeft:
+						SUtils.add_event_listener(G, C.Event.MatchingFinished, self, C.HostType.Gem)
+				C.Event.GemLeft:
 					if data == self:
-						for l in App.event_listeners:
-							if l.host == self:
-								App.event_listeners.erase(l)
-								break
-				Event.MatchingFinished:
+						SUtils.remove_event_listeners(G, self)
+				C.Event.MatchingFinished:
 					var num_gluttony = Board.filter(func(g : Gem):
 						return g && g.name == "SinGluttony"
 					).size()
-					if App.combos < num_gluttony:
-						App.game_over_mark = "sin_gluttony"
-						App.lose()
+					if G.combos < num_gluttony:
+						G.game_over_mark = "sin_gluttony"
+						G.lose()
 						return true
 	elif name == "SinGreed":
 		image_id = 44
@@ -555,31 +552,31 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
 				SSound.se_coin.play()
-				App.coins += extra["value"]
+				G.coins += extra["value"]
 				
 				var num_greed = Board.filter(func(g : Gem):
 					return g && g.name == "SinGreed"
 				).size()
 				if num_greed == 1:
-					App.float_text(tr("t_Greed_effect"), Board.get_pos(coord))
-					App.coins = 0
+					G.float_text(tr("str_Greed_effect"), Board.get_pos(coord))
+					G.coins = 0
 			)
 	elif name == "SinEnvy":
 		image_id = 45
 		price = 0
 		on_event = func(event : int, tween : Tween, data):
 			match event: 
-				Event.ItemEntered:
+				C.Event.GemEntered:
 					if data == self:
 						pass
 						#Board.add_aura(self)
-				Event.ItemLeft:
+				C.Event.GemLeft:
 					if data == self:
 						pass
 						#Board.remove_aura(self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				App.float_text(tr("t_Envy_effect"), Board.get_pos(coord))
+				G.float_text(tr("str_Envy_effect"), Board.get_pos(coord))
 			)
 		on_aura = func(g : Gem):
 			var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"score_mult","add":-0.25}, Buff.Duration.OnBoard)

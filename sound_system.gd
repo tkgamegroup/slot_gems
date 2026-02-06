@@ -46,7 +46,7 @@ func music_less_clear():
 	if music_eq_tween:
 		music_eq_tween.kill()
 		music_eq_tween = null
-	music_eq_tween = App.create_tween()
+	music_eq_tween = G.create_tween()
 	music_eq_tween.tween_method(func(t : float):
 		music_eq.set_band_gain_db(2, -30.0 * t)
 		music_eq.set_band_gain_db(3, -30.0 * t)
@@ -58,7 +58,7 @@ func music_more_clear():
 	if music_eq_tween:
 		music_eq_tween.kill()
 		music_eq_tween = null
-	music_eq_tween = App.create_tween()
+	music_eq_tween = G.create_tween()
 	music_eq_tween.tween_method(func(t : float):
 		music_eq.set_band_gain_db(2, -30.0 * t)
 		music_eq.set_band_gain_db(3, -30.0 * t)
@@ -76,7 +76,7 @@ func _ready() -> void:
 	se_marimba_scale.append($/root/Main/SFX/Marimba7)
 	se_marimba_scale.append($/root/Main/SFX/Marimba8)
 	music.finished.connect(func():
-		var tween = App.create_tween()
+		var tween = G.create_tween()
 		tween.tween_interval(1.0)
 		tween.tween_callback(func():
 			music.play()

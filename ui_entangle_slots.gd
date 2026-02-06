@@ -48,15 +48,15 @@ func _ready() -> void:
 	button.button.pressed.connect(func():
 		if !slot1.gem || !slot2.gem:
 			return
-		if App.coins < price:
-			App.status_bar_ui.coins_text.hint()
+		if G.coins < price:
+			G.status_bar_ui.coins_text.hint()
 			return
 		
-		App.shop_ui.disabled = true
-		App.coins -= price
+		G.shop_ui.disabled = true
+		G.coins -= price
 		SSound.se_coin.play()
 		
-		var tween = App.game_tweens.create_tween()
+		var tween = G.game_tweens.create_tween()
 		tween.tween_interval(0.2)
 		tween.tween_callback(func():
 			slot1.particles1.emitting = true
@@ -70,7 +70,7 @@ func _ready() -> void:
 		)
 		tween.tween_interval(0.4)
 		tween.tween_callback(func():
-			App.entangle_gems(slot1.gem, slot2.gem)
+			G.entangle_gems(slot1.gem, slot2.gem)
 		)
 		tween.tween_callback(func():
 			slot1.unload_gem()
@@ -78,8 +78,8 @@ func _ready() -> void:
 		)
 		tween.tween_property(self, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.tween_callback(func():
-			App.shop_ui.disabled = false
-			App.save_to_file()
+			G.shop_ui.disabled = false
+			G.save_to_file()
 			self.queue_free()
 		)
 	)

@@ -39,7 +39,7 @@ func add_ui(p : Pattern):
 				drag_pos = event.position
 				ui.z_index = 1
 	)
-	number_text.text = "(%d/%d)" % [list.get_child_count(), App.MaxPatterns]
+	number_text.text = "(%d/%d)" % [list.get_child_count(), G.MaxPatterns]
 
 func clear():
 	if list:
@@ -47,7 +47,7 @@ func clear():
 			list.remove_child(n)
 			n.queue_free()
 		list.custom_minimum_size = Vector2(item_w, 0)
-		number_text.text = "(%d/%d)" % [list.get_child_count(), App.MaxPatterns]
+		number_text.text = "(%d/%d)" % [list.get_child_count(), G.MaxPatterns]
 
 func get_pos(idx : int):
 	if idx == -1:
@@ -80,9 +80,9 @@ func _process(delta: float) -> void:
 					nidx = i
 					break
 			if nidx != -1 && nidx != oidx:
-				var t = App.patterns[oidx]
-				App.patterns[oidx] = App.patterns[nidx]
-				App.patterns[nidx] = t
+				var t = G.patterns[oidx]
+				G.patterns[oidx] = G.patterns[nidx]
+				G.patterns[nidx] = t
 				list.move_child(dragging, nidx)
 	
 	float_island.update(delta)

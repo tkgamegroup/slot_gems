@@ -42,14 +42,14 @@ func add_ui(r : Relic):
 				elif event.button_index == MOUSE_BUTTON_RIGHT:
 					var menu = ctx_menu_pb.instantiate()
 					menu.open(event.global_position, int(r.price / 2))
-					App.canvas.add_child(menu)
+					G.canvas.add_child(menu)
 					menu.on_sell.connect(func():
 						SSound.se_coin.play()
-						App.coins += menu.sell_price
-						App.remove_relic(r)
+						G.coins += menu.sell_price
+						G.remove_relic(r)
 					)
 	)
-	number_text.text = "(%d/%d)" % [list.get_child_count(), App.MaxRelics]
+	number_text.text = "(%d/%d)" % [list.get_child_count(), G.MaxRelics]
 
 func remove_ui(r : Relic):
 	list.remove_child(r.ui)
@@ -62,7 +62,7 @@ func clear():
 			list.remove_child(n)
 			n.queue_free()
 		list.custom_minimum_size = Vector2(item_w, 0)
-		number_text.text = "(%d/%d)" % [list.get_child_count(), App.MaxRelics]
+		number_text.text = "(%d/%d)" % [list.get_child_count(), G.MaxRelics]
 
 func get_pos(idx : int):
 	if idx == -1:
@@ -95,9 +95,9 @@ func _process(delta: float) -> void:
 					nidx = i
 					break
 			if nidx != -1 && nidx != oidx:
-				var t = App.relics[oidx]
-				App.relics[oidx] = App.relics[nidx]
-				App.relics[nidx] = t
+				var t = G.relics[oidx]
+				G.relics[oidx] = G.relics[nidx]
+				G.relics[nidx] = t
 				list.move_child(dragging, nidx)
 	
 	float_island.update(delta)

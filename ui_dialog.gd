@@ -22,13 +22,13 @@ func open(_title : String, _content : String, yes_action : Callable, no_action :
 	self.show()
 	panel.show()
 	
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 
 func exit():
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()

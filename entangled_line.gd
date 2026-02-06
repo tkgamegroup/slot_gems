@@ -6,16 +6,16 @@ var coord1 : Vector2i
 var coord2 : Vector2i
 
 func appear():
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(line.material, "shader_parameter/alpha", 1.0, 0.3)
 
 func disappear():
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(line.material, "shader_parameter/alpha", 0.0, 0.3)
 	tween.tween_callback(queue_free)
 
 func flash():
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(line.material, "shader_parameter/sig", 1.0, 0.1)
 	tween.tween_property(line.material, "shader_parameter/sig", 0.0, 0.2)
 

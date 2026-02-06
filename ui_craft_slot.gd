@@ -44,26 +44,26 @@ func _ready() -> void:
 	button.button.pressed.connect(func():
 		if !slot.gem:
 			return
-		if App.coins < price:
-			App.status_bar_ui.coins_text.hint()
+		if G.coins < price:
+			G.status_bar_ui.coins_text.hint()
 			return
 		if type == "w_enchant":
 			var es = Buff.find_all_typed(slot.gem, Buff.Type.Enchant)
 			if es.size() >= 2:
 				SSound.se_error.play()
-				App.banner_ui.show_tip(tr("wr_enchant_quantity_limit"), "", 1.0)
+				G.banner_ui.show_tip(tr("wr_enchant_quantity_limit"), "", 1.0)
 				return
 		if type == "w_delete":
-			if App.gems.size() - 1 < Board.curr_min_gem_num:
+			if G.gems.size() - 1 < Board.curr_min_gem_num:
 				SSound.se_error.play()
-				App.banner_ui.show_tip(tr("wr_delete_gem_count_limit") % Board.curr_min_gem_num, "", 1.0)
+				G.banner_ui.show_tip(tr("wr_delete_gem_count_limit") % Board.curr_min_gem_num, "", 1.0)
 				return
 		
-		App.shop_ui.disabled = true
-		App.coins -= price
+		G.shop_ui.disabled = true
+		G.coins -= price
 		SSound.se_coin.play()
 		
-		var tween = App.game_tweens.create_tween()
+		var tween = G.game_tweens.create_tween()
 		tween.tween_interval(0.2)
 		var sp : AnimatedSprite2D = null
 		if type == "w_enchant":
@@ -79,9 +79,9 @@ func _ready() -> void:
 		tween.tween_callback(func():
 			if type == "w_enchant":
 				if thing == "w_enchant_charming":
-					App.enchant_gem(slot.gem, "w_enchant_charming")
+					G.enchant_gem(slot.gem, "w_enchant_charming")
 				elif thing == "w_enchant_sharp":
-					App.enchant_gem(slot.gem, "w_enchant_sharp")
+					G.enchant_gem(slot.gem, "w_enchant_sharp")
 				elif thing == "w_wild":
 					var bid = Buff.create(slot.gem, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.Eternal)
 					Buff.create(slot.gem, Buff.Type.Enchant, {"type":"w_wild","bid":bid}, Buff.Duration.Eternal)
@@ -89,11 +89,11 @@ func _ready() -> void:
 					var bid = Buff.create(slot.gem, Buff.Type.ChangeRune, {"rune":Gem.RuneOmni}, Buff.Duration.Eternal)
 					Buff.create(slot.gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, Buff.Duration.Eternal)
 			elif type == "w_delete":
-				App.delete_gem(null, slot.gem, slot.gem_ui, "craft_slot")
+				G.delete_gem(null, slot.gem, slot.gem_ui, "craft_slot")
 				slot.gem = null
-				App.shop_ui.delete_price += App.shop_ui.delete_price_increase
+				G.shop_ui.delete_price += G.shop_ui.delete_price_increase
 			elif type == "w_duplicate":
-				App.duplicate_gem(null, slot.gem, slot.gem_ui, "craft_slot")
+				G.duplicate_gem(null, slot.gem, slot.gem_ui, "craft_slot")
 		)
 		if type == "w_enchant":
 			tween.tween_interval(0.3)
@@ -106,8 +106,8 @@ func _ready() -> void:
 		)
 		tween.tween_property(self, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.tween_callback(func():
-			App.shop_ui.disabled = false
-			App.save_to_file()
+			G.shop_ui.disabled = false
+			G.save_to_file()
 			self.queue_free()
 		)
 	)

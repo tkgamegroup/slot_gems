@@ -15,27 +15,27 @@ func enter():
 	self.show()
 	panel.show()
 	
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
-	var r = App.round
-	if !App.shop_ui.visible:
+	var r = G.round
+	if !G.shop_ui.visible:
 		r -= 1
 	r = int(r / 3) * 3 + 1
 	round1_title.text = tr("ui_game_round") % r
-	round1_desc.text = App.get_round_desc(r)
+	round1_desc.text = G.get_round_desc(r)
 	r += 1
 	round2_title.text = tr("ui_game_round") % r
-	round2_desc.text = App.get_round_desc(r)
+	round2_desc.text = G.get_round_desc(r)
 	r += 1
 	round3_title.text = tr("ui_game_round") % r
-	round3_desc.text = App.get_round_desc(r)
+	round3_desc.text = G.get_round_desc(r)
 
 func exit():
 	panel.hide()
 	
 	self.self_modulate.a = 1.0
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()

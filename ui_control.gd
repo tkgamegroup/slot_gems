@@ -4,8 +4,6 @@ const NumberText = preload("res://number_text.gd")
 const UiProp = preload("res://ui_prop.gd")
 
 @onready var panel : Control = $MarginContainer2/HBoxContainer2/Panel
-@onready var roll_button : Button = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Roll
-@onready var rolls_text : Label = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Rolls
 @onready var swaps_text : NumberText = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps
 @onready var play_button  : Button = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play
 @onready var plays_text : Label = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2/Plays
@@ -47,32 +45,17 @@ func update_preview():
 		for c in m:
 			var g = Board.get_gem_at(c)
 			if g && g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
-				if !App.no_score_marks[g.type].front() && !App.no_score_marks[g.rune].front():
+				if !G.no_score_marks[g.type].front() && !G.no_score_marks[g.rune].front():
 					base += g.get_score()
-	expected_score_text.text = "%d" % int(base * App.mult_from_combos(combos) * mult)
+	expected_score_text.text = "%d" % int(base * G.mult_from_combos(combos) * mult)
 
 func _ready() -> void:
-	roll_button.pressed.connect(func():
-		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
-		roll_button.disabled = true
-		App.roll()
-	)
-	roll_button.mouse_entered.connect(func():
-		var desc = tr("tt_game_roll_content")
-		if App.next_roll_extra_draws > 0:
-			desc += "\nDraw %d extra item(s)." % App.next_roll_extra_draws
-		STooltip.show(roll_button, 1, [Pair.new(tr("tt_game_roll_title"), desc)])
-	)
-	roll_button.mouse_exited.connect(func():
-		STooltip.close()
-	)
 	play_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
+		G.screen_shake_strength = 8.0
 		play_button.disabled = true
 		play_button.mouse_exited.emit()
-		App.play()
+		G.play()
 	)
 	play_button.mouse_entered.connect(func():
 		if !play_button.disabled:
@@ -86,29 +69,29 @@ func _ready() -> void:
 	)
 	pin_ui.button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
-		App.set_props(App.Props.Pin)
+		G.screen_shake_strength = 8.0
+		G.set_props(G.Props.Pin)
 	)
 	activate_ui.button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
-		App.set_props(App.Props.Activate)
+		G.screen_shake_strength = 8.0
+		G.set_props(G.Props.Activate)
 	)
 	grab_ui.button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
-		App.set_props(App.Props.Grab)
+		G.screen_shake_strength = 8.0
+		G.set_props(G.Props.Grab)
 	)
 	undo_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
-		if !App.action_stack.is_empty():
-			App.swaps += 1
+		G.screen_shake_strength = 8.0
+		if !G.action_stack.is_empty():
+			G.swaps += 1
 			
-			var p = App.action_stack.back()
-			App.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first, "undo")
-			App.action_stack.pop_back()
-			if App.action_stack.is_empty():
+			var p = G.action_stack.back()
+			G.swap_hand_and_board(Hand.ui.get_slot(Hand.find(p.second)), p.first, "undo")
+			G.action_stack.pop_back()
+			if G.action_stack.is_empty():
 				undo_button.disabled = true
 	)
 	filling_times_text_container.mouse_entered.connect(func():
@@ -119,7 +102,7 @@ func _ready() -> void:
 	)
 
 func _process(delta: float) -> void:
-	if !App.performance_mode:
+	if !G.performance_mode:
 		shake_coord += delta * PI
 		position.y = sin(shake_coord) * shake_strength
 		shake_strength *= 0.9

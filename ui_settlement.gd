@@ -19,12 +19,14 @@ func enter():
 	SSound.se_well_done.play()
 	STooltip.close()
 	
+	clear()
+	
 	self.self_modulate.a = 0.0
 	self.show()
 	panel.modulate.a = 1.0
 	panel.show()
 	
-	var tween = App.get_tree().create_tween()
+	var tween = G.get_tree().create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	rewards = 0
@@ -38,69 +40,65 @@ func enter():
 	tween.tween_callback(func():
 		var ui_s = item_pb.instantiate()
 		ui_s.name_str = tr("ui_settlement_round_rewards")
-		ui_s.value_str = "%d[img]res://images/coin.png[/img]" % App.reward
+		ui_s.value_str = "%d[img]res://images/coin.png[/img]" % G.reward
 		list.add_child(ui_s)
 	)
-	rewards += App.reward
-	if App.swaps > 0:
+	rewards += G.reward
+	if G.swaps > 0:
 		tween.tween_interval(0.2)
 		tween.tween_callback(func():
 			var ui_s = item_pb.instantiate()
 			ui_s.name_str = tr("ui_settlement_swap_rewards")
-			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % App.swaps
+			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % G.swaps
 			list.add_child(ui_s)
 		)
-		rewards += App.swaps
-	if App.coins >= 10:
+		rewards += G.swaps
+	if G.coins >= 10:
 		tween.tween_interval(0.2)
 		tween.tween_callback(func():
 			var ui_s = item_pb.instantiate()
 			ui_s.name_str = tr("ui_settlement_interest")
-			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % int(App.coins / 10)
+			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % int(G.coins / 10)
 			list.add_child(ui_s)
 		)
-		rewards += int(App.coins / 10)
+		rewards += int(G.coins / 10)
 	tween.tween_interval(0.2)
 	tween.tween_callback(func():
-		App.save_to_file()
+		G.save_to_file()
 		button.modulate.a = 1.0
 		button.disabled = false
 	)
 	button_text.text = "%s[img]res://images/coin.png[/img]" % (tr("ui_settlement_cash_out") % rewards)
 
 func exit(trans : bool = true):
-	App.coins += rewards
+	G.coins += rewards
 	
 	clear()
 	
-	if App.round % 3 == 0:
+	if G.round % 3 == 0:
 		if trans:
 			panel.modulate.a = 1.0
-			var tween = App.game_tweens.create_tween()
+			var tween = G.game_tweens.create_tween()
 			tween.tween_property(panel, "modulate:a", 0.0, 0.3)
 			tween.tween_callback(func():
-				clear()
 				self.hide()
-				App.upgrade_ui.enter()
+				G.upgrade_ui.enter()
 			)
 		else:
-			clear()
 			self.hide()
 	else:
 		if trans:
 			panel.hide()
 			self.self_modulate.a = 1.0
 			
-			var tween = App.game_tweens.create_tween()
+			var tween = G.game_tweens.create_tween()
 			tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 			tween.tween_callback(func():
-				clear()
 				self.hide()
 			)
 			Board.ui.exit(tween)
-			App.shop_ui.enter(tween)
+			G.shop_ui.enter(tween)
 		else:
-			clear()
 			self.hide()
 
 func _ready() -> void:

@@ -34,7 +34,7 @@ func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
 				if !disabled:
 					STooltip.close()
 					SSound.se_drag_item.play()
-					App.control_ui.start_shake(4.0, 1.5)
+					G.control_ui.start_shake(4.0, 1.5)
 					ui.rotation_degrees = 0.0
 					Drag.start("gem", ui, ui, func(target, extra):
 						if target && target != Board.ui:
@@ -57,7 +57,7 @@ func clear():
 		n.queue_free()
 
 func resize():
-	var n = max(App.max_hand_grabs, 5)
+	var n = max(G.max_hand_grabs, 5)
 	custom_minimum_size = Vector2(item_w * n + gap * (n - 1), 48)
 	size = Vector2(0.0, 0.0)
 
@@ -89,7 +89,7 @@ func _process(delta: float) -> void:
 			var p1 = Vector2(x_off, y)
 			ui.position = lerp(p0, p1, 0.2 * ui.elastic)
 			if (p0 - ui.position).length() > 50.0 && (ui.position - p1).length() < 300.0:
-				App.control_ui.start_shake(4.0, 0.5)
+				G.control_ui.start_shake(4.0, 0.5)
 			ui.rotation_degrees = (sin(x_off * 0.05 + tt / 20.0)) * 3.0
 		if !(i == drag_idx && !drag_on_hand):
 			x_off += item_w + gap

@@ -82,7 +82,7 @@ func update(g : Gem):
 			sharp_fx.hide()
 
 func dissolve(duration : float):
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(display.material, "shader_parameter/dissolve", 0.0, duration)
 	tween.tween_callback(func():
 		self.hide()
@@ -94,9 +94,9 @@ func break_into_pieces():
 			gem_kind_sp.hide()
 			var tex = Gem.gem_frames.get_frame_texture("default", type - Gem.ColorFirst + 1)
 			pieces_root.z_index = 0
-			pieces_tweens = SEffect.add_break_pieces(Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, pieces_root, 0.5 * App.speed)
+			pieces_tweens = SEffect.add_break_pieces(Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, pieces_root, 0.5 * G.speed)
 			for t in pieces_tweens:
-				t.custom_step(0.005 * App.speed)
+				t.custom_step(0.005 * G.speed)
 				t.pause()
 
 func move_pieces():

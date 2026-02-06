@@ -29,7 +29,7 @@ func enter():
 	self.show()
 	panel.show()
 	
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	var patterns = ["\\", "I", "/", "Y", "C", "O", "√", "X"]
@@ -52,7 +52,7 @@ func exit():
 	clear()
 	
 	self.self_modulate.a = 1.0
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
@@ -61,6 +61,6 @@ func exit():
 func _ready() -> void:
 	close_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
+		G.screen_shake_strength = 8.0
 		exit()
 	)

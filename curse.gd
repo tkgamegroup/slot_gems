@@ -11,7 +11,7 @@ static var lust_triggered = 0
 
 static func pick_targets():
 	var cates = {}
-	for c in App.current_curses:
+	for c in G.current_curses:
 		if cates.has(c.type):
 			cates[c.type].append(c)
 		else:
@@ -24,7 +24,7 @@ static func pick_targets():
 			if !cands.is_empty():
 				var cs = cates[k]
 				var n = min(cs.size(), cands.size())
-				var coords = SMath.pick_n_random(cands, n, App.game_rng)
+				var coords = SMath.pick_n_random(cands, n, G.game_rng)
 				for i in n:
 					cs[i].coord = coords[i]
 		elif k == "curse_sloth":
@@ -34,7 +34,7 @@ static func pick_targets():
 			if !cands.is_empty():
 				var cs = cates[k]
 				var n = min(cs.size(), cands.size())
-				var coords = SMath.pick_n_random(cands, n, App.game_rng)
+				var coords = SMath.pick_n_random(cands, n, G.game_rng)
 				for i in n:
 					cs[i].coord = coords[i]
 		elif k == "curse_wrath":
@@ -44,7 +44,7 @@ static func pick_targets():
 			if !cands.is_empty():
 				var cs = cates[k]
 				var n = min(cs.size(), cands.size())
-				var coords = SMath.pick_n_random(cands, n, App.game_rng)
+				var coords = SMath.pick_n_random(cands, n, G.game_rng)
 				for i in n:
 					cs[i].coord = coords[i]
 		elif k == "curse_lust" || k == "curse_envy" || k == "curse_gluttony" || k == "curse_greed":
@@ -54,7 +54,7 @@ static func pick_targets():
 			if !cands.is_empty():
 				var cs = cates[k]
 				var n = min(cs.size(), cands.size())
-				var coords = SMath.pick_n_random(cands, n, App.game_rng)
+				var coords = SMath.pick_n_random(cands, n, G.game_rng)
 				if k == "curse_lust":
 					if n >= 2:
 						for i in n:
@@ -69,7 +69,7 @@ static func pick_targets():
 
 static func apply_curses():
 	var cates = {}
-	for c in App.current_curses:
+	for c in G.current_curses:
 		if cates.has(c.type):
 			cates[c.type].append(c)
 		else:
@@ -78,21 +78,21 @@ static func apply_curses():
 		var cs = cates[k]
 		match k:
 			"curse_red_no_score":
-				App.no_score_marks[Gem.ColorRed].push_front(true)
+				G.no_score_marks[Gem.ColorRed].push_front(true)
 			"curse_orange_no_score":
-				App.no_score_marks[Gem.ColorOrange].push_front(true)
+				G.no_score_marks[Gem.ColorOrange].push_front(true)
 			"curse_green_no_score":
-				App.no_score_marks[Gem.ColorGreen].push_front(true)
+				G.no_score_marks[Gem.ColorGreen].push_front(true)
 			"curse_blue_no_score":
-				App.no_score_marks[Gem.ColorBlue].push_front(true)
+				G.no_score_marks[Gem.ColorBlue].push_front(true)
 			"curse_magenta_no_score":
-				App.no_score_marks[Gem.ColorMagenta].push_front(true)
+				G.no_score_marks[Gem.ColorMagenta].push_front(true)
 			"curse_wave_no_score":
-				App.no_score_marks[Gem.RuneWave].push_front(true)
+				G.no_score_marks[Gem.RuneWave].push_front(true)
 			"curse_palm_no_score":
-				App.no_score_marks[Gem.RunePalm].push_front(true)
+				G.no_score_marks[Gem.RunePalm].push_front(true)
 			"curse_starfish_no_score":
-				App.no_score_marks[Gem.RuneStarfish].push_front(true)
+				G.no_score_marks[Gem.RuneStarfish].push_front(true)
 			"curse_lust":
 				for c in cs:
 					c.add_sin("SinLust")
@@ -106,24 +106,24 @@ static func apply_curses():
 					if c.afflicted_gem:
 						n += 1
 				if n >= 2:
-					var v = int((App.coins + 5) / n) + 1
-					App.coins = 0
+					var v = int((G.coins + 5) / n) + 1
+					G.coins = 0
 					for i in n:
 						cs[i].add_sin("SinGreed")
 						cs[i].created_sin.extra["value"] = v
 			"curse_sloth":
 				for c in cs:
-					App.float_text(App.tr("tt_cell_in_mist"), Board.get_pos(c.coord))
+					G.float_text(G.tr("tt_cell_in_mist"), Board.get_pos(c.coord))
 					Board.set_in_mist(c.coord, true)
 			"curse_wrath":
 				for c in cs:
-					App.delete_gem(null, Board.get_gem_at(c.coord), Board.ui.get_cell(c.coord).gem_ui, "board")
+					G.delete_gem(null, Board.get_gem_at(c.coord), Board.ui.get_cell(c.coord).gem_ui, "board")
 			"curse_envy":
 				for c in cs:
 					c.add_sin("SinEnvy")
 			"curse_pride":
 				for c in cs:
-					App.float_text(App.tr("tt_cell_nullified"), Board.get_pos(c.coord))
+					G.float_text(G.tr("tt_cell_nullified"), Board.get_pos(c.coord))
 					Board.set_nullified(c.coord, true)
 
 func add_sin(n : String):
@@ -132,7 +132,7 @@ func add_sin(n : String):
 		b.caster = self
 		created_sin = Item.new()
 		created_sin.setup(n)
-		#App.items.append(created_sin)
+		#G.items.append(created_sin)
 		#Board.set_item_at(afflicted_gem.coord, created_sin)
 
 func remove_sin():
@@ -146,21 +146,21 @@ func remove_sin():
 func remove():
 	match type:
 		"curse_red_no_score":
-			App.no_score_marks[Gem.ColorRed].pop_front()
+			G.no_score_marks[Gem.ColorRed].pop_front()
 		"curse_orange_no_score":
-			App.no_score_marks[Gem.ColorOrange].pop_front()
+			G.no_score_marks[Gem.ColorOrange].pop_front()
 		"curse_green_no_score":
-			App.no_score_marks[Gem.ColorGreen].pop_front()
+			G.no_score_marks[Gem.ColorGreen].pop_front()
 		"curse_blue_no_score":
-			App.no_score_marks[Gem.ColorBlue].pop_front()
+			G.no_score_marks[Gem.ColorBlue].pop_front()
 		"curse_magenta_no_score":
-			App.no_score_marks[Gem.ColorMagenta].pop_front()
+			G.no_score_marks[Gem.ColorMagenta].pop_front()
 		"curse_wave_no_score":
-			App.no_score_marks[Gem.RuneWave].pop_front()
+			G.no_score_marks[Gem.RuneWave].pop_front()
 		"curse_palm_no_score":
-			App.no_score_marks[Gem.RunePalm].pop_front()
+			G.no_score_marks[Gem.RunePalm].pop_front()
 		"curse_starfish_no_score":
-			App.no_score_marks[Gem.RuneStarfish].pop_front()
+			G.no_score_marks[Gem.RuneStarfish].pop_front()
 		"curse_lust":
 			remove_sin()
 		"curse_gluttony":

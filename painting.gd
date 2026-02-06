@@ -24,8 +24,8 @@ static func set_board_to_image(name : String):
 	var img_data = img.get_data()
 	var cx = Board.cx
 	var cy = Board.cy
-	var rect = Board.ui.get_panel_rect(App.board_size % 2 == 0, false)
-	var tween = App.game_tweens.create_tween()
+	var rect = Board.ui.get_panel_rect(G.board_size % 2 == 0, false)
+	var tween = G.game_tweens.create_tween()
 	var delay = 0.0
 	for y in cy:
 		for x in cx:
@@ -37,7 +37,7 @@ static func set_board_to_image(name : String):
 			var g = img_data[idx + 1]
 			var b = img_data[idx + 2]
 			var type = closest_color(Color(r / 255.0, g / 255.0, b / 255.0))
-			var sub = App.game_tweens.create_tween()
+			var sub = G.game_tweens.create_tween()
 			sub.tween_interval(delay)
 			Board.effect_change_color(c, type, Gem.None, sub)
 			tween.tween_subtween(sub)

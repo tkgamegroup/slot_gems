@@ -32,18 +32,18 @@ func enter():
 	self.show()
 	self.modulate.a = 0.0
 	
-	App.game_tweens.process_mode = Node.PROCESS_MODE_DISABLED
+	G.game_tweens.process_mode = Node.PROCESS_MODE_DISABLED
 	
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.3)
 	
 func exit():
 	self.modulate.a = 1.0
-	var tween = App.create_tween()
+	var tween = G.create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
-		App.game_tweens.process_mode = Node.PROCESS_MODE_INHERIT
+		G.game_tweens.process_mode = Node.PROCESS_MODE_INHERIT
 	)
 
 func _ready() -> void:

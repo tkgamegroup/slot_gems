@@ -22,11 +22,11 @@ static func replacing_gem_tag(text : String, with_color : bool, with_url : bool,
 		var gem_name = m.get_string(1)
 		if with_color:
 			if with_url:
-				ret += " [color=cyan][url=gem_%s]%s[/url][/color]" % [gem_name, App.tr("gem_name_" + gem_name)]
+				ret += " [color=cyan][url=gem_%s]%s[/url][/color]" % [gem_name, G.tr("gem_name_" + gem_name)]
 			else:
-				ret += " [color=cyan]%s[/color]" % App.tr("gem_name_" + gem_name)
+				ret += " [color=cyan]%s[/color]" % G.tr("gem_name_" + gem_name)
 		else:
-			ret += " " + App.tr("gem_name_" + gem_name)
+			ret += " " + G.tr("gem_name_" + gem_name)
 		used_gems.append(gem_name)
 		last_end = end
 	ret += text.substr(last_end)
@@ -84,11 +84,11 @@ static func format_text(text : String, with_color : bool, with_url : bool, used_
 		if text.find(w) != -1:
 			if with_color:
 				if with_url:
-					ret = ret.replace(w, "[url=%s][color=cyan]%s[/color][/url]" % [w, App.tr(w)])
+					ret = ret.replace(w, "[url=%s][color=cyan]%s[/color][/url]" % [w, G.tr(w)])
 				else:
-					ret = ret.replace(w, "[color=cyan]%s[/color]" % App.tr(w))
+					ret = ret.replace(w, "[color=cyan]%s[/color]" % G.tr(w))
 			else:
-				ret = ret.replace(w, App.tr(w))
+				ret = ret.replace(w, G.tr(w))
 			used_words.append(w)
 	
 	return ret
@@ -113,6 +113,14 @@ static func read_dictionary(d : Dictionary):
 			ret[k] = d[k]
 	return ret
 
+static func add_event_listener(target, event : int, host, host_type : int, once : bool = false):
+	target.event_listeners.append(Hook.new(event, host, host_type, once))
+
+static func remove_event_listeners(target, host):
+	for i in range(target.event_listeners.size() - 1, -1, -1):
+		if target.event_listeners[i].host == host:
+			target.event_listeners.remove_at(i)
+
 static func calc_value_with_modifiers(obj : Object, target : String, sub_attr : String = ""):
 	var v = 0
 	for b in obj.buffs:
@@ -129,13 +137,13 @@ static func calc_value_with_modifiers(obj : Object, target : String, sub_attr : 
 		obj[sub_attr][target] = v
 
 static func calc_repeat_count(v : int):
-	var save_chance = App.modifiers["not_consume_repeat_count_chance_i"]
+	var save_chance = G.modifiers["not_consume_repeat_count_chance_i"]
 	if save_chance == 0:
 		return v
 	for i in 64:
 		if v >= 64:
 			break
-		if (App.game_rng.randf() * 100) < save_chance:
+		if (G.game_rng.randf() * 100) < save_chance:
 			break
 		v += 1
 	return v

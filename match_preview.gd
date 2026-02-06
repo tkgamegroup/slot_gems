@@ -13,7 +13,7 @@ func find_all_matchings():
 	matchings.clear()
 	for y in Board.cy:
 		for x in Board.cx:
-			for p in App.patterns:
+			for p in G.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
 					matchings.append(res)
@@ -22,7 +22,7 @@ func find_missing_ones(check_color : int, check_rune : int):
 	matchings.clear()
 	for y in Board.cy:
 		for x in Board.cx:
-			for p in App.patterns:
+			for p in G.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), check_color, check_rune)
 				if !res.is_empty():
 					var added = false
@@ -41,7 +41,7 @@ func show():
 	if tween:
 		tween.kill()
 		tween = null
-	tween = App.game_tweens.create_tween()
+	tween = G.game_tweens.create_tween()
 	var idx = 0
 	for res in matchings:
 		var gs = []
@@ -76,7 +76,7 @@ func show():
 			l.modulate.a = 0.0
 			l.scale = Vector2(2.0, 2.0)
 			l.position = c
-			var subtween = App.game_tweens.create_tween()
+			var subtween = G.game_tweens.create_tween()
 			subtween.tween_interval(0.05 * idx)
 			subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
 			subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)

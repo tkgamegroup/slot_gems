@@ -18,12 +18,12 @@ func _ready() -> void:
 			slot.gem = null
 	)
 	slot.on_unload.connect(func(gem : Gem):
-		var ui = App.create_gem_ui(gem, slot.global_position)
-		var tween = App.game_tweens.create_tween()
-		SAnimation.quadratic_curve_to(tween, ui, App.status_bar_ui.bag_button.global_position, Vector2(0.5, 0.2), 0.5)
+		var ui = G.create_gem_ui(gem, slot.global_position)
+		var tween = G.game_tweens.create_tween()
+		SAnimation.quadratic_curve_to(tween, ui, G.status_bar_ui.bag_button.global_position, Vector2(0.5, 0.2), 0.5)
 		tween.tween_callback(func():
-			App.put_back_gem_to_bag(gem)
-			App.sort_gems()
+			G.put_back_gem_to_bag(gem)
+			G.sort_gems()
 			ui.queue_free()
 		)
 	)

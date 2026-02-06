@@ -1,39 +1,40 @@
 extends Node
 
 @onready var timer : Timer = $/root/Main/TestTimer
-@onready var label : Label = $/root/Main/SubViewportContainer/SubViewport/Canvas/TestingText
-
-enum Mode
-{
-	AverageScore,
-	RealPlay
-}
+@onready var testing_label : Label = $/root/Main/SubViewportContainer/SubViewport/Canvas/Testing
 
 enum TaskSteps
 {
-	ToMatch,
-	GetResult,
-	ToShop
+	Standby,
+	Play,
+	GetResult
 }
 
 var filename : String
-var saving : String
-var mode : int
-var task_count : int
-var task_round_count : int
-var task_index : int:
-	set(v):
-		task_index = v
-		label.text = "Testing %d/%d" % [task_index + 1, task_count]
-var step : int
-var enable_shopping : bool = false
-var records : Array[TaskRecord]
+var samples : int = 1000
+var sample_idx : int
+var groups : int = 1
+var group_idx : int
+var use_save : bool = false
+var random_seed : bool = false
+var overwrite_target_score : int = -1
+var reroll : bool = false
 var testing : bool = false
+var step : int
+var score : int
+var variables : Array[Dictionary]
+var listen_events : Array[Dictionary]
+var on_event : Callable
+
+func format_filename():
+	if groups > 1:
+		return "%s_g%d.csv" % [filename, group_idx]
+	return "%s.csv" % filename
 
 static var file : FileAccess = null
 func begin_write():
 	if !filename.is_empty():
-		file = FileAccess.open(filename, FileAccess.READ_WRITE)
+		file = FileAccess.open(format_filename(), FileAccess.READ_WRITE)
 		file.seek_end()
 	else:
 		file = null
@@ -47,25 +48,18 @@ func write(s : String):
 	else:
 		print(s)
 
-func write_round(r : RoundRecord):
-	write("Round Score: %d, Round Combos: %d, Round Relic Effects: %d" % [r.score, r.combos, r.relic_effects])
-
-func write_matching(idx : int, m : MatchingRecord):
-	write("Matching %d: %d Score, %d Combos, %d Relic Effects" % [idx, m.score, m.combos, m.relic_effects])
-
 func write_game_status():
 	var cx = Board.cx
 	var cy = Board.cy
 	begin_write()
-	write("========Game Status========")
-	write("Board Size: %dx%d(%d cells)" % [cx, cy, cx * cy])
+	write("#Board Size: %dx%d(%d cells)" % [cx, cy, cx * cy])
 	var red_num = 0
 	var orange_num = 0
 	var green_num = 0
 	var blue_num = 0
 	var magenta_num = 0
 	var wild_num = 0
-	for g in App.gems:
+	for g in G.gems:
 		match g.type:
 			Gem.ColorRed: red_num += 1
 			Gem.ColorOrange: orange_num += 1
@@ -73,194 +67,189 @@ func write_game_status():
 			Gem.ColorBlue: blue_num += 1
 			Gem.ColorMagenta: magenta_num += 1
 			Gem.ColorWild: wild_num += 1
-	write("Red: %d, Orange: %d, Green: %d, Blue: %d, Magenta: %d, Wild: %d" % [red_num, orange_num, green_num, blue_num, magenta_num, wild_num])
-	var items_str = ""
-	for i in App.items:
-		if !items_str.is_empty():
-			items_str += ", "
-		items_str += i.name
-	write("Items: %s" % items_str)
+	write("#Red: %d, Orange: %d, Green: %d, Blue: %d, Magenta: %d, Wild: %d" % [red_num, orange_num, green_num, blue_num, magenta_num, wild_num])
 	var patterns_str = ""
-	for p in App.patterns:
+	for p in G.patterns:
 		if !patterns_str.is_empty():
 			patterns_str += ", "
 		patterns_str += p.name
-	write("Patterns: %s" % patterns_str)
+	write("#Patterns: %s" % patterns_str)
 	var relics_str = ""
-	for r in App.relics:
+	for r in G.relics:
 		if !relics_str.is_empty():
 			relics_str += ", "
 		relics_str += r.name
-	write("Relics: %s" % relics_str)
-	write("Rolls: %d" % App.rolls_per_round)
-	write("Matches: %d" % App.plays_per_round)
+	write("#Relics: %s" % relics_str)
+	write("#Swaps: %d" % G.swaps_per_round)
 	end_write()
+
+func read_result(fn : String):
+	var result = {}
+	var columns = []
+	var n = 0
+	var file = FileAccess.open(fn, FileAccess.READ)
+	while !file.eof_reached():
+		var line = file.get_csv_line()
+		if !line[0].is_empty() && line[0][0] != "#":
+			if columns.is_empty():
+				columns = line
+				for i in line.size():
+					result[columns[i]] = 0.0
+			else:
+				for i in line.size():
+					result[columns[i]] += float(line[i])
+				n += 1
+	for i in columns.size():
+		result[columns[i]] = result[columns[i]] / n
+	return result
+
+func load_config():
+	var config = ConfigFile.new()
+	if config.load("res://tests/config.ini") == OK:
+		samples = config.get_value("", "samples")
+		groups = config.get_value("", "groups")
+		use_save = config.get_value("", "use_save")
+		reroll = config.get_value("", "reroll")
+		variables = config.get_value("", "variables")
+		listen_events = config.get_value("", "listen_events")
+
+func save_config():
+	var config = ConfigFile.new()
+	config.set_value("", "samples", samples)
+	config.set_value("", "groups", groups)
+	config.set_value("", "use_save", use_save)
+	config.set_value("", "reroll", reroll)
+	config.set_value("", "variables", variables)
+	config.set_value("", "listen_events", listen_events)
+	config.save("res://tests/config.ini")
 
 func has_matched_pattern():
 	for y in Board.cy:
 		for x in Board.cx:
-			for p in App.patterns:
+			for p in G.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
 					return true
 	return false
 
-func start_game():
-	App.start_game(saving)
+func add_listen_event(ev : int):
+	listen_events.append({"event":ev,"times":0})
 
-func start_test(_mode : int, _round_count : int, _task_count : int, fn : String = "", _saving : String = "", invincible : bool = true, _enable_shopping : bool = false):
+func remove_listen_event(ev : int):
+	for d in listen_events:
+		if d.event == ev:
+			listen_events.erase(d)
+			break
+
+func add_variable(name : String, base : int, step : int):
+	variables.append({"name":name,"base":base,"step":step})
+
+func reset():
+	G.start_game("1" if use_save else "")
+	for v in variables:
+		G[v.name] = v.base + v.step * group_idx
+	if random_seed || reroll:
+		G.random_seeds()
+	if overwrite_target_score != -1:
+		G.target_score = overwrite_target_score
+	if reroll:
+		for y in Board.cy:
+			for x in Board.cx:
+				Board.set_gem_at(Vector2i(x, y), null)
+		var hands = Hand.grabs.size()
+		Hand.clear()
+		for y in Board.cy:
+			for x in Board.cx:
+				Board.set_gem_at(Vector2i(x, y), G.take_out_gem_from_bag())
+		for i in hands:
+			Hand.draw()
+	score = 0
+	for d in listen_events:
+		d.times = 0
+	SUtils.add_event_listener(Board, C.Event.Any, self, C.HostType.Other)
+	
+	testing_label.text = "%d/%d %d/%d" % [sample_idx + 1, samples, group_idx + 1, groups]
+
+func start(fn : String = ""):
 	AudioServer.set_bus_volume_db(SSound.se_bus_index, linear_to_db(0))
-	App.performance_mode = true
-	App.base_speed = 4.0
-	App.speed = 1.0 / App.base_speed
+	G.performance_mode = true
+	G.base_speed = 4.0
+	G.speed = 1.0 / G.base_speed
 	
-	mode = _mode
-	task_count = _task_count
-	task_round_count = _round_count
-	task_index = 0
-	step = TaskSteps.ToMatch
+	random_seed = false
+	overwrite_target_score = 9999999
+	reroll = false
 	
-	records.append(TaskRecord.new())
+	sample_idx = -1
+	group_idx = 0
 	
-	if fn.is_empty():
-		filename = "res://test_%s.txt" % SUtils.get_formated_datetime()
-		FileAccess.open(filename, FileAccess.WRITE)
-	elif fn == "console":
-		fn = ""
-	else:
-		filename = fn
+	filename = "res://tests/%s" % SUtils.get_formated_datetime() if fn.is_empty() else fn
 	
-	saving = _saving
-	App.invincible = invincible
-	enable_shopping = _enable_shopping
-	
-	if App.title_ui.visible:
-		App.title_ui.hide()
-	start_game()
-	
-	write_game_status()
+	step = TaskSteps.Standby
 	timer.start()
 	testing = true
-	label.show()
+	
+	if G.title_ui.visible:
+		G.title_ui.hide()
+
+func stop():
+	timer.stop()
+	SUtils.remove_event_listeners(Board, self)
+	testing_label.text = ""
+	testing = false
 
 func time_out():
-	if App.stage == App.Stage.Deploy || App.stage >= App.Stage.Settlement:
-		if step == TaskSteps.ToMatch:
-			if App.settlement_ui.visible || App.game_over_ui.visible:
-				var curr_task = records.back()
-				if curr_task.rounds.size() == task_round_count || App.game_over_ui.visible:
-					for r in curr_task.rounds:
-						r.matchings.pop_back()
-					
-					if mode == Mode.AverageScore:
-						begin_write()
-						write("======Task %d======" % task_index)
-						for i in curr_task.rounds.size():
-							var r = curr_task.rounds[i]
-							write("====Round %d====" % (i + 1))
-							write_round(r)
-							for j in r.matchings.size():
-								write_matching(j, r.matchings[j])
-						write("======Statics For %d Task(s)======" % (task_index + 1))
-						var head_str = ""
-						for i in task_round_count:
-							head_str += "\tRound %d" % (i + 1)
-						write(head_str)
-						var max_matching_num = 0
-						var avg_line = "Avg\t"
-						for i in task_round_count:
-							var score = 0
-							var combos = 0
-							var relic_effects = 0
-							for rc in records:
-								var r = rc.rounds[i]
-								max_matching_num = max(max_matching_num, r.matchings.size())
-								score += r.score
-								combos += r.combos
-								relic_effects += r.relic_effects
-							avg_line += "%.1f,%.2f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size(), float(relic_effects) / records.size()]
-						write(avg_line)
-						for j in max_matching_num:
-							var line = "Matching %d\t" % j
-							for i in task_round_count:
-								var score = 0
-								var combos = 0
-								var relic_effects = 0
-								for rc in records:
-									if rc.rounds.size() <= i:
-										continue
-									var r = rc.rounds[i]
-									if r.matchings.size() <= j:
-										continue
-									var m = r.matchings[j]
-									score += m.score
-									combos += m.combos
-									relic_effects += m.relic_effects
-								line += "%.1f,%.2f,%.2f\t" % [float(score) / records.size(), float(combos) / records.size(), float(relic_effects) / records.size()]
-							write(line)
-						end_write()
-					
-					task_index += 1
-					if task_index == task_count:
-						timer.stop()
-						testing = false
-						label.hide()
-					else:
-						records.append(TaskRecord.new())
-						start_game()
+	if G.stage == G.Stage.Deploy || G.stage >= G.Stage.GameOver:
+		if step == TaskSteps.Standby:
+			sample_idx += 1
+			if sample_idx == samples:
+				group_idx += 1
+				if group_idx == groups:
+					stop()
+					return
 				else:
-					if mode == Mode.RealPlay:
-						begin_write()
-						write("======Round %d======" % curr_task.rounds.size())
-						var r = curr_task.rounds.back()
-						write_round(r)
-						for j in r.matchings.size():
-							write_matching(j, r.matchings[j])
-						end_write()
-					
-					curr_task.rounds.append(RoundRecord.new())
-					if !enable_shopping:
-						App.next_round()
-					else:
-						step = TaskSteps.ToShop
-						App.settlement_ui.exit()
-				
-				App.settlement_ui.hide()
-				App.game_over_ui.hide()
-			
+					sample_idx = 0
+			reset()
+			if sample_idx == 0:
+				FileAccess.open(format_filename(), FileAccess.WRITE).close()
+				#write_game_status()
+				begin_write()
+				var line = "Score"
+				for d in listen_events:
+					line += ",%s" % C.Event.find_key(d.event)
+				write(line)
+				end_write()
+			step = TaskSteps.Play
+		elif step == TaskSteps.Play:
 			auto_swap_gems()
 			step = TaskSteps.GetResult
-			App.play()
+			G.play()
 		elif step == TaskSteps.GetResult:
-			var his = App.history
-			var curr_round : RoundRecord = records.back().rounds.back()
-			var curr_record : MatchingRecord = curr_round.matchings.back()
-			curr_record.score = his.last_matching_score
-			curr_record.combos = his.last_matching_combos
-			curr_record.relic_effects = his.relic_effects
-			curr_record.actives = his.last_matching_actives
-			curr_round.score += his.last_matching_score
-			curr_round.combos += his.last_matching_combos
-			curr_round.relic_effects += his.relic_effects
-			curr_round.actives += his.last_matching_actives
-			curr_round.matchings.append(MatchingRecord.new())
-			step = TaskSteps.ToMatch
-			if his.last_matching_score == 0 && !App.settlement_ui.visible:
-				App.lose()
-		elif step == TaskSteps.ToShop:
-			if App.shop_ui.visible:
-				for i in 5:
-					App.shop_ui.buy_randomly()
-				App.shop_ui.exit()
-				step = TaskSteps.ToMatch
-				write_game_status()
+			if G.settlement_ui.visible:
+				G.settlement_ui.exit(false)
+			if G.game_over_ui.visible:
+				G.game_over_ui.exit(false)
+			if G.shop_ui.visible:
+				G.shop_ui.exit(null, false)
+			
+			begin_write()
+			var line = "%d" % score
+			for d in listen_events:
+				line += ",%d" % d.times
+			write(line)
+			end_write()
+			
+			step = TaskSteps.Standby
+			SUtils.remove_event_listeners(Board, self)
 
 func get_missing_one_places() -> Dictionary[int, Array]:
 	var ret : Dictionary[int, Array]
+	for i in Gem.ColorCount:
+		ret[Gem.ColorFirst + i] = []
 	for y in Board.cy:
 		for x in Board.cx:
 			var c = Vector2i(x, y)
-			for p in App.patterns:
+			for p in G.patterns:
 				for i in Gem.ColorCount:
 					var res : Array[Vector2i] = p.match_with(c, Gem.ColorFirst + i)
 					if !res.is_empty():
@@ -268,6 +257,7 @@ func get_missing_one_places() -> Dictionary[int, Array]:
 	return ret
 
 func swap_gems(coord : Vector2i, gem : Gem):
+	Hand.erase(Hand.find(gem))
 	var og = Board.set_gem_at(coord, null)
 	Board.set_gem_at(coord, gem)
 	Hand.add_gem(og)
@@ -287,43 +277,43 @@ func auto_swap_gems():
 			if g.type == Gem.ColorRed:
 				var arr = missing_one_places[Gem.ColorRed]
 				if !arr.is_empty():
-					if App.swaps > 0:
-						App.swaps -= 1
-						Hand.erase(Hand.find(g))
+					if G.swaps > 0:
+						G.swaps -= 1
 						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorOrange:
 				var arr = missing_one_places[Gem.ColorOrange]
 				if !arr.is_empty():
-					if App.swaps > 0:
-						App.swaps -= 1
-						Hand.erase(Hand.find(g))
+					if G.swaps > 0:
+						G.swaps -= 1
 						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorGreen:
 				var arr = missing_one_places[Gem.ColorGreen]
 				if !arr.is_empty():
-					if App.swaps > 0:
-						App.swaps -= 1
-						Hand.erase(Hand.find(g))
+					if G.swaps > 0:
+						G.swaps -= 1
 						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorBlue:
 				var arr = missing_one_places[Gem.ColorBlue]
 				if !arr.is_empty():
-					if App.swaps > 0:
-						App.swaps -= 1
-						Hand.erase(Hand.find(g))
+					if G.swaps > 0:
+						G.swaps -= 1
 						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 			elif g.type == Gem.ColorMagenta:
 				var arr = missing_one_places[Gem.ColorMagenta]
 				if !arr.is_empty():
-					if App.swaps > 0:
-						App.swaps -= 1
-						Hand.erase(Hand.find(g))
+					if G.swaps > 0:
+						G.swaps -= 1
 						swap_gems(SMath.pick_and_remove(arr), g)
 						changed = true
 
 func _ready() -> void:
+	load_config()
+	on_event = func(event : int, tween : Tween, data):
+		for d in listen_events:
+			if event == d.event:
+				d.times += 1
 	timer.timeout.connect(time_out)

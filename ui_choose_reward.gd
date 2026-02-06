@@ -13,9 +13,9 @@ var callback : Callable
 
 func choose(idx : int):
 	SSound.se_click.play()
-	App.screen_shake_strength = 8.0
+	G.screen_shake_strength = 8.0
 	buttons_list.hide()
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	var n = reward_list.get_child_count()
 	for i in n:
 		if i != idx:
@@ -43,7 +43,7 @@ func enter(rewards : Array, _callback : Callable):
 	self.show()
 	panel.show()
 	
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	buttons_list.show()
@@ -64,7 +64,7 @@ func enter(rewards : Array, _callback : Callable):
 func exit():
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()
@@ -73,13 +73,13 @@ func exit():
 func _ready() -> void:
 	hide_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
+		G.screen_shake_strength = 8.0
 	)
 	reroll_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
+		G.screen_shake_strength = 8.0
 	)
 	skip_button.pressed.connect(func():
 		SSound.se_click.play()
-		App.screen_shake_strength = 8.0
+		G.screen_shake_strength = 8.0
 	)

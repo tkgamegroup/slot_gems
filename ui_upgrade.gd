@@ -32,9 +32,9 @@ func enter():
 	panel.show()
 	button.disabled = true
 	
-	App.stage = App.Stage.Upgrade
+	G.stage = G.Stage.Upgrade
 	
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(panel, "modulate:a", 1.0, 0.3)
 	
 	tween.tween_interval(0.04)
@@ -67,13 +67,13 @@ func enter():
 	)
 	tween.tween_interval(0.04)
 	tween.tween_callback(func():
-		App.save_to_file()
+		G.save_to_file()
 		button.disabled = false
 	)
 
 func exit(trans : bool = true):
 	if trans:
-		var tween = App.game_tweens.create_tween()
+		var tween = G.game_tweens.create_tween()
 		tween.tween_callback(func():
 			panel.hide()
 			self.self_modulate.a = 1.0
@@ -91,7 +91,7 @@ func exit(trans : bool = true):
 				clear()
 			)
 			Board.ui.exit(tween)
-			App.shop_ui.enter(tween)
+			G.shop_ui.enter(tween)
 	else:
 		clear()
 		self.hide()

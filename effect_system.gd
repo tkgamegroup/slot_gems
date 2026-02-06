@@ -26,11 +26,11 @@ func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : floa
 	sp.scale = size / 32.0
 	sp.play("default")
 	sp.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
 	SSound.se_explode.play()
-	App.screen_shake_strength = 18.0 * sp.scale.x
+	G.screen_shake_strength = 18.0 * sp.scale.x
 	return sp
 	
 func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : float):
@@ -41,7 +41,7 @@ func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : 
 	sp.scale = size / 64.0
 	sp.play("default")
 	sp.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
 	SSound.se_explode.play()
@@ -53,7 +53,7 @@ func add_distortion(pos : Vector2, size : Vector2, z_index : int, duration : flo
 	fx.scale = size * 2.0
 	fx.z_index = z_index
 	Board.ui.overlay.add_child(fx)
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_property(fx.material, "shader_parameter/radius", 0.5, duration).from(0.0).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(fx.queue_free)
 	return fx
@@ -67,7 +67,7 @@ func add_slash(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	sp.rotation = (p1 - p0).angle()
 	sp.play("default")
 	sp.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
 	return sp
@@ -80,7 +80,7 @@ func add_splash(p0 : Vector2, p1 : Vector2, color : Color, z_index : int, durati
 	sp.lifetime = duration
 	sp.emitting = true
 	sp.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)
 	return sp
@@ -93,7 +93,7 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	fx.scale = Vector2(200.0, dist)
 	fx.rotation = (p1 - p0).angle() - PI * 0.5
 	fx.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(fx.queue_free)
 	SSound.se_lightning_connect.play()
@@ -129,7 +129,7 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 		poly.texture = texture
 		parent.add_child(poly)
 		poly.position = pos
-		var tween = App.game_tweens.create_tween()
+		var tween = G.game_tweens.create_tween()
 		tween.tween_property(poly, "position", pos + d * 105.0 + Vector2(randf_range(-20.0, +20.0), 50.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_callback(poly.queue_free)
@@ -143,7 +143,7 @@ func add_black_hole_rotating(pos : Vector2, size : Vector2, z_index : int, durat
 	sp.scale = size / 64.0
 	sp.play("default")
 	sp.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration - 0.5)
 	tween.tween_property(sp, "scale", Vector2(0, 0), 0.5)
 	tween.tween_callback(sp.queue_free)
@@ -156,7 +156,7 @@ func add_white_hole_injection(pos : Vector2, size : Vector2, z_index : int, dura
 	sp.scale = size / 64.0
 	sp.play("default")
 	sp.z_index = z_index
-	var tween = App.game_tweens.create_tween()
+	var tween = G.game_tweens.create_tween()
 	tween.tween_interval(duration - 0.5)
 	tween.tween_property(sp, "scale", Vector2(0, 0), 0.5)
 	tween.tween_callback(sp.queue_free)

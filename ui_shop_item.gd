@@ -43,7 +43,7 @@ func setup(_cate : String, _object, _price : int, _quantity : int = 1, _no_butto
 	no_button = _no_button
 
 func refresh_price():
-	if App.modifiers["half_price_i"] > 0:
+	if G.modifiers["half_price_i"] > 0:
 		price = int(original_price * 0.5)
 	else:
 		price = original_price
@@ -64,53 +64,53 @@ func refresh_price():
 		buy_button.text.text = text
 
 func buy(tween : Tween = null):
-	if App.coins < price:
-		App.status_bar_ui.coins_text.hint()
+	if G.coins < price:
+		G.status_bar_ui.coins_text.hint()
 		return false
-	if cate == "relic" && App.relics.size() >= 5:
+	if cate == "relic" && G.relics.size() >= 5:
 		SSound.se_error.play()
-		App.banner_ui.show_tip(tr("wr_relics_count_limit") % App.MaxRelics, "", 1.0)
+		G.banner_ui.show_tip(tr("wr_relics_count_limit") % G.MaxRelics, "", 1.0)
 		return false
 	if cate == "upgrade_board":
-		if App.gems.size() < Board.next_min_gem_num:
+		if G.gems.size() < Board.next_min_gem_num:
 			SSound.se_error.play()
-			App.banner_ui.show_tip(tr("ui_upgrade_board_insufficient_quantity_title"), tr("ui_upgrade_board_insufficient_quantity_content") % Board.next_min_gem_num, 1.0)
+			G.banner_ui.show_tip(tr("ui_upgrade_board_insufficient_quantity_title"), tr("ui_upgrade_board_insufficient_quantity_content") % Board.next_min_gem_num, 1.0)
 			return false
 	
 	if !tween:
-		tween = App.game_tweens.create_tween()
+		tween = G.game_tweens.create_tween()
 	tween.tween_callback(func():
 		self.hide()
-		App.shop_ui.disabled = true
+		G.shop_ui.disabled = true
 		
 		if price != 0:
 			SSound.se_coin.play()
 			if original_price > 0:
-				App.coins -= price
+				G.coins -= price
 			else:
-				App.coins += price
+				G.coins += price
 	)
 	if cate == "gem":
 		var ui = content.get_child(0)
 		tween.tween_callback(func():
-			ui.reparent(App.game_overlay)
+			ui.reparent(G.game_overlay)
 			ui.position = self.global_position
 		)
 		
 		tween.tween_property(ui, "global_position", self.global_position - Vector2(0.0, 100.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		var to_bag = true
 		if quantity == 1:
-			for s in App.shop_ui.staging_slots:
+			for s in G.shop_ui.staging_slots:
 				if s.slot.gem == null:
 					s.slot.disabled = false
 					SAnimation.quadratic_curve_to(tween, ui, s.global_position + Vector2(6, 6), Vector2(0.5, 0.2), 0.4)
 					tween.tween_property(ui, "global_position", s.global_position, 0.5)
 					tween.tween_callback(func():
 						var gem = object as Gem
-						App.add_gem(gem)
+						G.add_gem(gem)
 						ui.queue_free()
 						
-						App.take_out_gem_from_bag(gem)
+						G.take_out_gem_from_bag(gem)
 						s.slot.load_gem(gem)
 					)
 					to_bag = false
@@ -118,19 +118,19 @@ func buy(tween : Tween = null):
 		if to_bag:
 			tween.tween_property(ui, "scale", Vector2(0.7, 0.7), 0.4)
 			tween.parallel()
-			SAnimation.quadratic_curve_to(tween, ui, App.status_bar_ui.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
+			SAnimation.quadratic_curve_to(tween, ui, G.status_bar_ui.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
 			tween.tween_callback(func():
 				var original = object as Gem
 				for i in quantity:
 					var gem = Gem.new()
-					App.copy_gem(original, gem)
-					App.add_gem(gem)
-				App.sort_gems()
+					G.copy_gem(original, gem)
+					G.add_gem(gem)
+				G.sort_gems()
 				ui.queue_free()
 			)
 	elif cate == "relic":
-		App.add_relic(object)
-		var ui = App.relics_bar_ui.get_ui(-1)
+		G.add_relic(object)
+		var ui = G.relics_bar_ui.get_ui(-1)
 		ui.hide()
 		tween.tween_callback(func():
 			ui.show()
@@ -139,8 +139,8 @@ func buy(tween : Tween = null):
 		)
 		tween.tween_property(ui, "elastic", 1.0, 0.4)
 	elif cate == "pattern":
-		App.add_pattern(object)
-		var ui = App.patterns_bar_ui.get_ui(-1)
+		G.add_pattern(object)
+		var ui = G.patterns_bar_ui.get_ui(-1)
 		ui.hide()
 		tween.tween_callback(func():
 			ui.show()
@@ -149,30 +149,30 @@ func buy(tween : Tween = null):
 		)
 		tween.tween_property(ui, "elastic", 1.0, 0.4)
 	elif cate == "upgrade_board":
-		var new_size = App.board_size + 1
+		var new_size = G.board_size + 1
 		tween.tween_callback(func():
-			App.board_size = new_size
+			G.board_size = new_size
 		)
 		Board.resize(new_size, tween)
 		tween.tween_interval(1.5)
 	elif cate == "increase_swaps":
 		tween.tween_callback(func():
-			App.swaps_per_round += 1
-			if App.swaps < App.swaps_per_round:
-				App.swaps = App.swaps_per_round
+			G.swaps_per_round += 1
+			if G.swaps < G.swaps_per_round:
+				G.swaps = G.swaps_per_round
 		)
 		tween.tween_interval(0.5)
 	elif cate == "increase_hand_size":
 		tween.tween_callback(func():
-			App.max_hand_grabs += 1
-			if Hand.grabs.size() < App.max_hand_grabs:
-				for i in (App.max_hand_grabs - Hand.grabs.size()):
+			G.max_hand_grabs += 1
+			if Hand.grabs.size() < G.max_hand_grabs:
+				for i in (G.max_hand_grabs - Hand.grabs.size()):
 					Hand.draw()
 		)
 		tween.tween_interval(0.5)
 	tween.tween_callback(func():
-		App.shop_ui.disabled = false
-		App.save_to_file()
+		G.shop_ui.disabled = false
+		G.save_to_file()
 		self.queue_free()
 	)
 	
