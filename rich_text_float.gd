@@ -1,4 +1,5 @@
 extends RichTextEffect
+
 class_name RichTextFloat
 
 var bbcode = "float"

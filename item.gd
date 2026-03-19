@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 
 class_name Item
 
@@ -199,7 +199,7 @@ func setup(n : String):
 					for c in coords:
 						var ui = Board.ui.get_cell(c).gem
 						var data = {"ui":ui,"vel":SMath.tangent2(Board.get_pos(c) - pos).normalized() * 1.4}
-						var tween2 = G.game_tweens.create_tween()
+						var tween2 = G.create_game_tween()
 						tween2.tween_method(func(t):
 							var d = pos.distance_to(data.ui.global_position)
 							if d < 64.0:
@@ -365,8 +365,8 @@ func setup(n : String):
 							sp.frame = image_id
 							sp.z_index = 3
 							Board.ui.overlay.add_child(sp)
-							var tween2 = G.game_tweens.create_tween()
-							SAnimation.cubic_curve_to(tween2, sp, G.status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
+							var tween2 = G.create_game_tween()
+							SAnimation.cubic_curve_to(tween2, sp, G.game_ui.status_bar.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.4)
 							tween2.tween_callback(func():
 								var new_item = Item.new()
 								new_item.setup("Rabbit")
@@ -388,9 +388,9 @@ func setup(n : String):
 						cands.append(i)
 				if !cands.is_empty():
 					var item = SMath.pick_random(cands, G.game_rng)
-					var tween = G.game_tweens.create_tween()
+					var tween = G.create_game_tween()
 					tween.tween_callback(func():
-						SEffect.add_leading_line(Board.get_pos(coord), G.status_bar_ui.bag_button.get_global_rect().get_center())
+						SEffect.add_leading_line(Board.get_pos(coord), G.game_ui.status_bar.bag_button.get_global_rect().get_center())
 					)
 					tween.tween_interval(0.3)
 					Board.effect_place_items_from_bag([item], tween)
@@ -405,9 +405,9 @@ func setup(n : String):
 					cands.append(i)
 			if !cands.is_empty():
 				var item = SMath.pick_random(cands, G.game_rng)
-				var tween = G.game_tweens.create_tween()
+				var tween = G.create_game_tween()
 				tween.tween_callback(func():
-					SEffect.add_leading_line(Board.get_pos(coord), G.status_bar_ui.bag_button.get_global_rect().get_center())
+					SEffect.add_leading_line(Board.get_pos(coord), G.game_ui.status_bar.bag_button.get_global_rect().get_center())
 				)
 				tween.tween_interval(0.3)
 				Board.effect_place_items_from_bag([item], tween)

@@ -1,13 +1,13 @@
 extends Control
 
-@onready var tilemap : TileMapLayer = $TileMapLayer
-@onready var panel : Panel = $SubViewport/Panel
-@onready var outlines_root : Node2D = $SubViewport/Outlines
-@onready var underlay : Node2D = $SubViewport/Underlay
-@onready var cells_root : Node2D = $SubViewport/Cells
-@onready var entangled_lines : Node2D = $SubViewport/EntangledLines
-@onready var overlay : Node2D = $SubViewport/Overlay
-@onready var hover_ui : Sprite2D = $Hover
+@export var tilemap : TileMapLayer
+@export var panel : Panel
+@export var outlines_root : Node2D
+@export var underlay : Node2D
+@export var cells_root : Node2D
+@export var entangled_lines : Node2D
+@export var overlay : Node2D
+@export var hover_ui : Sprite2D
 
 const UiCell = preload("res://ui_cell.gd")
 const UiHandSlot = preload("res://ui_hand_slot.gd")
@@ -97,7 +97,7 @@ func enter(tween : Tween = null, trans : bool = true):
 	
 	if trans:
 		if !tween:
-			tween = G.game_tweens.create_tween()
+			tween = G.create_game_tween()
 		tween.tween_callback(func():
 			self.material.set_shader_parameter("x_rot", -90.0)
 			self.show()

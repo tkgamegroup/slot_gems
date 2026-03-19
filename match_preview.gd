@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 
 class_name MatchPreview
 
@@ -41,7 +41,7 @@ func show():
 	if tween:
 		tween.kill()
 		tween = null
-	tween = G.game_tweens.create_tween()
+	tween = G.create_game_tween()
 	var idx = 0
 	for res in matchings:
 		var gs = []
@@ -76,7 +76,7 @@ func show():
 			l.modulate.a = 0.0
 			l.scale = Vector2(2.0, 2.0)
 			l.position = c
-			var subtween = G.game_tweens.create_tween()
+			var subtween = G.create_game_tween()
 			subtween.tween_interval(0.05 * idx)
 			subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
 			subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)

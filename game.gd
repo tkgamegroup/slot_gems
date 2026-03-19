@@ -14,7 +14,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 12
+const version_patch : int = 14
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -26,9 +26,7 @@ const UiControl = preload("res://ui_control.gd")
 const UiShop = preload("res://ui_shop.gd")
 const UiShopItem = preload("res://ui_shop_item.gd")
 const CraftSlot = preload("res://ui_craft_slot.gd")
-const UiStatusBar = preload("res://ui_status_bar.gd")
-const UiRelicsBar = preload("res://ui_relics_bar.gd")
-const UiPatternsBar = preload("res://ui_patterns_bar.gd")
+const UiGame = preload("res://ui_game.gd")
 const UiCalculatorBar = preload("res://ui_calculate_bar.gd")
 const UiBanner = preload("res://banner.gd")
 const UiDialog = preload("res://ui_dialog.gd")
@@ -64,11 +62,7 @@ const grab_cursor = preload("res://images/grab.png")
 @onready var title_ui : UiTitle = $/root/Main/SubViewportContainer/SubViewport/Canvas/Title
 @onready var control_ui : UiControl = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl
 @onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/Canvas/Shop
-@onready var game_ui : Control = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI
-@onready var game_overlay : Control = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI/Overlay
-@onready var status_bar_ui : UiStatusBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
-@onready var relics_bar_ui : UiRelicsBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/Control/MarginContainer/RelicsBar
-@onready var patterns_bar_ui : UiPatternsBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/Control/MarginContainer2/PatternsBar
+@onready var game_ui : UiGame = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI
 @onready var calculator_bar_ui : UiCalculatorBar = $/root/Main/SubViewportContainer/SubViewport/Canvas/CalculateBar
 @onready var banner_ui : UiBanner = $/root/Main/SubViewportContainer/SubViewport/Canvas/Banner
 @onready var dialog_ui : UiDialog = $/root/Main/SubViewportContainer/SubViewport/Canvas/Dialog
@@ -98,66 +92,72 @@ var shop_rng : RandomNumberGenerator = RandomNumberGenerator.new()
 var swaps : int:
 	set(v):
 		swaps = v
-		control_ui.swaps_text.set_value(swaps)
+		if !(STest.testing && STest.headless):
+			control_ui.swaps_text.set_value(swaps)
 var swaps_per_round : int
 var plays : int:
 	set(v):
 		plays = v
-		control_ui.plays_text.text = "%d" % plays
+		if !(STest.testing && STest.headless):
+			control_ui.plays_text.text = "%d" % plays
 var plays_per_round : int
 var draws_per_roll : int
 var next_roll_extra_draws : int = 0
 var max_hand_grabs : int:
 	set(v):
 		max_hand_grabs = v
-		if Hand.ui:
-			Hand.ui.resize()
-			status_bar_ui.hand_text.set_value(max_hand_grabs)
+		if !(STest.testing && STest.headless):
+			if Hand.ui:
+				Hand.ui.resize()
+				game_ui.status_bar.hand_text.set_value(max_hand_grabs)
 var pins_num : int:
 	set(v):
 		pins_num = v
-		if pins_num > 0:
-			control_ui.pin_ui.show()
-			control_ui.pin_ui.num.text = "%d" % pins_num
-		else:
-			control_ui.pin_ui.hide()
+		if !(STest.testing && STest.headless):
+			if pins_num > 0:
+				control_ui.pin_ui.show()
+				control_ui.pin_ui.num.text = "%d" % pins_num
+			else:
+				control_ui.pin_ui.hide()
 var pins_num_per_round : int
 var activates_num : int:
 	set(v):
 		activates_num = v
-		if activates_num > 0:
-			control_ui.activate_ui.show()
-			control_ui.activate_ui.num.text = "%d" % activates_num
-		else:
-			control_ui.activate_ui.hide()
+		if !(STest.testing && STest.headless):
+			if activates_num > 0:
+				control_ui.activate_ui.show()
+				control_ui.activate_ui.num.text = "%d" % activates_num
+			else:
+				control_ui.activate_ui.hide()
 var activates_num_per_round : int
 var grabs_num : int = 5:
 	set(v):
 		grabs_num = v
-		if grabs_num > 0:
-			control_ui.grab_ui.show()
-			control_ui.grab_ui.num.text = "%d" % grabs_num
-		else:
-			control_ui.grab_ui.hide()
+		if !(STest.testing && STest.headless):
+			if grabs_num > 0:
+				control_ui.grab_ui.show()
+				control_ui.grab_ui.num.text = "%d" % grabs_num
+			else:
+				control_ui.grab_ui.hide()
 var grabs_num_per_round : int
 var action_stack : Array[Pair]
 var board_size : int = 3:
 	set(v):
 		board_size = v
-		status_bar_ui.board_size_text.set_value(board_size)
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.board_size_text.set_value(board_size)
 var patterns : Array[Pattern]
 var gems : Array[Gem]
 var bag_gems : Array[Gem] = []
 var entangled_groups : Array[EntangledGroup] = []
 var relics : Array[Relic]
 var event_listeners : Array[Hook]
-var round : int
+var current_round : int
 var score : int:
 	set(v):
 		score = v
-		status_bar_ui.score_text.text = "%d" % score
-		if STest.testing:
-			STest.score = score
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.score_text.text = "%d" % score
 var target_score : int
 var reward : int
 var current_curses : Array[Curse]
@@ -167,80 +167,90 @@ var no_score_marks : Dictionary[int, Array]
 var base_score_tween : Tween = null
 var base_score : int:
 	set(v):
-		if v > base_score:
-			base_score = v
-			if base_score_tween:
-				base_score_tween.custom_step(100.0)
-			calculator_bar_ui.base_score_text.position.y = 4
-			calculator_bar_ui.base_score_text.text = "%d" % v
-			base_score_tween = game_tweens.create_tween()
-			base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2 * speed)
-			base_score_tween.tween_callback(func():
-				base_score_tween = null
-			)
+		if !(STest.testing && STest.headless):
+			if v > base_score:
+				base_score = v
+				if base_score_tween:
+					base_score_tween.custom_step(100.0)
+				calculator_bar_ui.base_score_text.position.y = 4
+				calculator_bar_ui.base_score_text.text = "%d" % v
+				base_score_tween = create_game_tween()
+				base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2 * speed)
+				base_score_tween.tween_callback(func():
+					base_score_tween = null
+				)
+			else:
+				if base_score_tween:
+					base_score_tween.kill()
+					base_score_tween = null
+				base_score = v
+				calculator_bar_ui.base_score_text.text = "%d" % base_score
 		else:
-			if base_score_tween:
-				base_score_tween.kill()
-				base_score_tween = null
 			base_score = v
-			calculator_bar_ui.base_score_text.text = "%d" % base_score
 
 var staging_scores : Array[Pair]
 
 var combos_tween : Tween
 var combos : int = 0:
 	set(v):
-		if v > combos:
-			combos = v
-			if combos_tween:
-				combos_tween.custom_step(100.0)
-				combos_tween = null
-			if calculator_bar_ui.visible:
-				calculator_bar_ui.combos_text.position.y = 0
-				combos_tween = game_tweens.create_tween()
-				SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * speed, func():
-					calculator_bar_ui.combos_text.text = "%dX" % v
-				)
-				combos_tween.tween_callback(func():
+		if !(STest.testing && STest.headless):
+			if v > combos:
+				combos = v
+				if combos_tween:
+					combos_tween.custom_step(100.0)
 					combos_tween = null
-				)
+				if calculator_bar_ui.visible:
+					calculator_bar_ui.combos_text.position.y = 0
+					combos_tween = create_game_tween()
+					SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * speed, func():
+						calculator_bar_ui.combos_text.text = "%dX" % v
+					)
+					combos_tween.tween_callback(func():
+						combos_tween = null
+					)
+			else:
+				if combos_tween:
+					combos_tween.kill()
+					combos_tween = null
+				combos = v
+				calculator_bar_ui.combos_text.text = "%dX" % combos
 		else:
-			if combos_tween:
-				combos_tween.kill()
-				combos_tween = null
 			combos = v
-			calculator_bar_ui.combos_text.text = "%dX" % combos
 
-const one_over_log1_5 = 1.0 / log(1.5)
+const combos_to_mult_parm = 1.0 / log(2.0)
 func mult_from_combos(combos : int):
-	return log((combos + 1) * 1.0) * one_over_log1_5
+	return log((combos + 1) * 1.0) * combos_to_mult_parm
 
 var gain_scaler : float = 1.0
 var score_mult_tween : Tween = null
 var score_mult : float = 1.0:
 	set(v):
-		if v > score_mult:
-			score_mult = v
-			if score_mult_tween:
-				score_mult_tween.custom_step(100.0)
-			calculator_bar_ui.mult_text.position.y = 4
-			calculator_bar_ui.mult_text.text = "%.1f" % v
-			score_mult_tween = game_tweens.create_tween()
-			score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * speed)
-			score_mult_tween.tween_callback(func():
-				score_mult_tween = null
-			)
+		if !(STest.testing && STest.headless):
+			if v > score_mult:
+				score_mult = v
+				if score_mult_tween:
+					score_mult_tween.custom_step(100.0)
+				calculator_bar_ui.mult_text.position.y = 4
+				calculator_bar_ui.mult_text.text = "%.1f" % v
+				score_mult_tween = create_game_tween()
+				score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * speed)
+				score_mult_tween.tween_callback(func():
+					score_mult_tween = null
+				)
+			else:
+				if score_mult_tween:
+					score_mult_tween.kill()
+					score_mult_tween = null
+				score_mult = v
+				calculator_bar_ui.mult_text.text = "%.1f" % score_mult
 		else:
-			if score_mult_tween:
-				score_mult_tween.kill()
-				score_mult_tween = null
 			score_mult = v
-			calculator_bar_ui.mult_text.text = "%.1f" % score_mult
 
 var coins : int = 10:
 	set(v):
 		coins = v
-		status_bar_ui.coins_text.set_value(coins)
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.coins_text.set_value(coins)
 
 var buffs : Array[Buff]
 var modifiers : Dictionary
@@ -254,25 +264,26 @@ var speed : float = 1.0 / base_speed
 var filling_times : int = 0:
 	set(v):
 		filling_times = v
-		if filling_times >= C.REFILL_TIMES_TO_SHOW:
-			if !control_ui.filling_times_text_container.visible:
-				control_ui.filling_times_text_container.show()
-				control_ui.filling_times_text_container.pivot_offset = control_ui.filling_times_text_container.size * 0.5
-				control_ui.filling_times_text_container.scale = Vector2(0.0, 0.0)
-				var tween = game_tweens.create_tween()
-				tween.tween_property(control_ui.filling_times_text_container, "scale", Vector2(1.0, 1.0), 0.15).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-			if control_ui.filling_times_tween:
-				control_ui.filling_times_tween.custom_step(100.0)
-				control_ui.filling_times_tween = null
-			if control_ui.filling_times_text_container.visible:
-				control_ui.filling_times_text.position.y = 0
-				control_ui.filling_times_tween = game_tweens.create_tween()
-				SAnimation.jump(control_ui.filling_times_tween, control_ui.filling_times_text, -0.0, 0.25 * speed, func():
-					control_ui.filling_times_text.text = "%d" % filling_times
-				)
-				control_ui.filling_times_tween.tween_callback(func():
+		if !(STest.testing && STest.headless):
+			if filling_times >= C.REFILL_TIMES_TO_SHOW:
+				if !control_ui.filling_times_container.visible:
+					control_ui.filling_times_container.show()
+					control_ui.filling_times_container.pivot_offset = control_ui.filling_times_container.size * 0.5
+					control_ui.filling_times_container.scale = Vector2(0.0, 0.0)
+					var tween = create_game_tween()
+					tween.tween_property(control_ui.filling_times_container, "scale", Vector2(1.0, 1.0), 0.15).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+				if control_ui.filling_times_tween:
+					control_ui.filling_times_tween.custom_step(100.0)
 					control_ui.filling_times_tween = null
-				)
+				if control_ui.filling_times_container.visible:
+					control_ui.filling_times_text.position.y = 0
+					control_ui.filling_times_tween = create_game_tween()
+					SAnimation.jump(control_ui.filling_times_tween, control_ui.filling_times_text, -0.0, 0.25 * speed, func():
+						control_ui.filling_times_text.text = "%d" % filling_times
+					)
+					control_ui.filling_times_tween.tween_callback(func():
+						control_ui.filling_times_tween = null
+					)
 
 var hovering_coord : Vector2i = Vector2i(-1, -1)
 var paint_mode : bool = false
@@ -317,9 +328,10 @@ func add_gem(g : Gem):
 	
 	gems.append(g)
 	bag_gems.append(g)
-	g.bag_stamp = round
+	g.bag_stamp = current_round
 	
-	status_bar_ui.gem_count_text.text = "%d" % gems.size()
+	if !(STest.testing && STest.headless):
+		game_ui.status_bar.gem_count_text.text = "%d" % gems.size()
 
 func remove_gem(g : Gem):
 	bag_gems.erase(g)
@@ -337,9 +349,10 @@ func remove_gem(g : Gem):
 		if h.event == C.Event.LostGem || h.event == C.Event.Any:
 			h.host.on_event.call(C.Event.LostGem, null, g)
 	
-	status_bar_ui.gem_count_text.text = "%d" % gems.size()
+	if !(STest.testing && STest.headless):
+		game_ui.status_bar.gem_count_text.text = "%d" % gems.size()
 
-func take_out_gem_from_bag(g : Gem = null) -> Gem:
+func take_from_bag(g : Gem = null) -> Gem:
 	if g:
 		bag_gems.erase(g)
 		return g
@@ -347,10 +360,10 @@ func take_out_gem_from_bag(g : Gem = null) -> Gem:
 		return null
 	return SMath.pick_and_remove(bag_gems, game_rng)
 
-func put_back_gem_to_bag(g : Gem):
+func put_to_bag(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
-	g.bag_stamp = round
+	g.bag_stamp = current_round
 	Buff.clear(g, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.OnBoard])
 	bag_gems.append(g)
 
@@ -369,15 +382,20 @@ func on_modifier_changed(name):
 	if name == "base_combo_i":
 		combos = max(combos, modifiers["base_combo_i"])
 	elif name == "red_bouns_i":
-		status_bar_ui.red_bouns_text.set_value(modifiers["red_bouns_i"])
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.red_bouns_text.set_value(modifiers["red_bouns_i"])
 	elif name == "orange_bouns_i":
-		status_bar_ui.orange_bouns_text.set_value(modifiers["orange_bouns_i"])
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.orange_bouns_text.set_value(modifiers["orange_bouns_i"])
 	elif name == "green_bouns_i":
-		status_bar_ui.green_bouns_text.set_value(modifiers["green_bouns_i"])
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.green_bouns_text.set_value(modifiers["green_bouns_i"])
 	elif name == "blue_bouns_i":
-		status_bar_ui.blue_bouns_text.set_value(modifiers["blue_bouns_i"])
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.blue_bouns_text.set_value(modifiers["blue_bouns_i"])
 	elif name == "magenta_bouns_i":
-		status_bar_ui.magenta_bouns_text.set_value(modifiers["magenta_bouns_i"])
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.magenta_bouns_text.set_value(modifiers["magenta_bouns_i"])
 	for h in event_listeners:
 		if h.event == C.Event.ModifierChanged || h.event == C.Event.Any:
 			h.host.on_event.call(C.Event.ModifierChanged, null, {"name":name,"value":modifiers[name]})
@@ -410,7 +428,8 @@ func add_pattern(p : Pattern):
 			h.host.on_event.call(C.Event.GainPattern, null, p)
 	
 	patterns.append(p)
-	patterns_bar_ui.add_ui(p)
+	if !(STest.testing && STest.headless):
+		game_ui.patterns_bar.add_ui(p)
 
 func add_relic(r : Relic):
 	if r.on_event.is_valid():
@@ -420,11 +439,12 @@ func add_relic(r : Relic):
 			h.host.on_event.call(C.Event.GainRelic, null, r)
 	
 	relics.append(r)
-	relics_bar_ui.add_ui(r)
+	if !(STest.testing && STest.headless):
+		game_ui.relics_bar.add_ui(r)
 
 func remove_relic(r : Relic):
 	relics.erase(r)
-	relics_bar_ui.remove_ui(r)
+	game_ui.relics_bar.remove_ui(r)
 	
 	if r.on_event.is_valid():
 		r.on_event.call(C.Event.LostRelic, null, r)
@@ -447,6 +467,11 @@ func add_combo():
 	Board.on_combo()
 	Buff.remove_by_id_list(self, buffs_to_clear)
 
+func create_game_tween():
+	if !(STest.testing && STest.headless):
+		return game_tweens.create_tween()
+	return null
+
 func float_text(txt : String, pos : Vector2):
 	pos += Vector2(randf() * 10.0 - 5.0, randf() * 10.0 - 5.0)
 	var ui = popup_txt_pb.instantiate()
@@ -463,30 +488,30 @@ func float_text(txt : String, pos : Vector2):
 
 var add_score_dir : int = 1
 func add_score(value : int, pos : Vector2):
-	value = int(value * gain_scaler)
-	if STest.testing:
-		base_score += value
-		return
-	pos += Vector2(randf() * 6.0 - 3.0, randf() * 6.0 - 3.0)
-	var ui = popup_txt_pb.instantiate()
-	ui.position = pos
-	ui.scale = Vector2(1.5, 1.5)
-	var lb : RichTextLabel = ui.get_child(0)
-	lb.text = "%d" % value
-	ui.z_index = 8
-	game_overlay.add_child(ui)
+	value = round(value * gain_scaler)
+	if !(STest.testing && STest.headless):
+		var ui = popup_txt_pb.instantiate()
+		pos += Vector2(randf() * 6.0 - 3.0, randf() * 6.0 - 3.0)
+		ui.position = pos
+		ui.scale = Vector2(1.5, 1.5)
+		var lb : RichTextLabel = ui.get_child(0)
+		lb.text = "%d" % value
+		ui.z_index = 8
+		game_ui.game_overlay.add_child(ui)
 	
-	staging_scores.append(Pair.new(ui, value))
+		staging_scores.append(Pair.new(ui, value))
+		
+		var tween = ui.create_tween()
+		tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
+		tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * speed)
+		tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+		tween.tween_callback(func():
+			lb.hide()
+		)
 	
-	var tween = ui.create_tween()
-	tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
-	tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * speed)
-	tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_callback(func():
-		lb.hide()
-	)
-	
-	add_score_dir *= -1
+		add_score_dir *= -1
+	else:
+		staging_scores.append(Pair.new(null, value))
 
 var status_tween : Tween
 func float_status_text(s : String, col : Color):
@@ -497,7 +522,7 @@ func float_status_text(s : String, col : Color):
 	control_ui.status_text.add_theme_color_override("font_color", col)
 	if status_tween:
 		status_tween.kill()
-	status_tween = game_tweens.create_tween()
+	status_tween = create_game_tween()
 	status_tween.tween_method(func(t):
 		parent.rotation_degrees = sin(t * PI * 10.0) * t * 10.0
 	, 1.0, 0.0, 1.0)
@@ -512,7 +537,7 @@ func create_gem_ui(g : Gem, pos : Vector2):
 	var ui = gem_ui.instantiate()
 	ui.update(g)
 	ui.global_position = pos
-	game_overlay.add_child(ui)
+	game_ui.game_overlay.add_child(ui)
 	return ui
 
 func delete_gem(tween : Tween, g : Gem, ui, from : String = "hand"):
@@ -520,7 +545,7 @@ func delete_gem(tween : Tween, g : Gem, ui, from : String = "hand"):
 	SSound.se_trash.play()
 	ui.dissolve(0.5)
 	if !tween:
-		tween = game_tweens.create_tween()
+		tween = create_game_tween()
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		if from == "hand":
@@ -562,12 +587,12 @@ func duplicate_gem(tween : Tween, g : Gem, ui, from : String = "hand"):
 	if from == "hand":
 		new_ui.position += Vector2(16.0, 16.0)
 	if !tween:
-		tween = game_tweens.create_tween()
+		tween = create_game_tween()
 	tween.tween_property(new_ui, "position", new_ui.position + Vector2(0.0, -40.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 	tween.tween_callback(func():
 		new_ui.add_child(trail_pb.instantiate())
 	)
-	tween.tween_property(new_ui, "position", status_bar_ui.bag_button.get_global_rect().get_center(), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+	tween.tween_property(new_ui, "position", game_ui.status_bar.bag_button.get_global_rect().get_center(), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	tween.parallel().tween_property(new_ui, "scale", Vector2(0.2, 0.2), 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	tween.tween_callback(func():
 		new_ui.queue_free()
@@ -603,7 +628,7 @@ func entangle_gems(g1 : Gem, g2 : Gem):
 		entangled_groups.erase(gp2)
 
 func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "swap"):
-	var tween = game_tweens.create_tween()
+	var tween = create_game_tween()
 	var g1 = slot1.gem
 	var g2 = Board.get_gem_at(coord)
 	var cell_pos = Board.get_pos(coord)
@@ -621,11 +646,11 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	tween.tween_callback(func():
 		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, null)
-		take_out_gem_from_bag(g2)
+		take_from_bag(g2)
 		Hand.add_gem(g2, -1, true)
 	)
-	var sub1 = game_tweens.create_tween()
-	var sub2 = game_tweens.create_tween()
+	var sub1 = create_game_tween()
+	var sub2 = create_game_tween()
 	var dir = mpos - cell_pos
 	var sec = 1 if reason == "undo" else SUtils.hex_section(rad_to_deg(dir.angle()))
 	dir = Vector2.from_angle(deg_to_rad(sec * 60.0 + 30.0))
@@ -651,13 +676,13 @@ func add_new_gem_from(tween : Tween, g : Gem, coord : Vector2i):
 	var ui = create_gem_ui(g, pos)
 	ui.hide()
 	if !tween:
-		tween = game_tweens.create_tween()
+		tween = create_game_tween()
 	tween.tween_callback(func():
 		ui.show()
 	)
 	tween.tween_property(ui, "scale", Vector2(0.75, 0.75), 0.4 * speed)
 	tween.parallel()
-	SAnimation.cubic_curve_to(tween, ui, status_bar_ui.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5 * speed)
+	SAnimation.cubic_curve_to(tween, ui, game_ui.status_bar.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5 * speed)
 	tween.tween_callback(func():
 		add_gem(g)
 		sort_gems()
@@ -698,6 +723,8 @@ func process_command_line(cl : String):
 			shop_ui.enter()
 		elif cmd == "swaps":
 			swaps = int(tokens[1])
+		elif cmd == "draw":
+			Hand.draw()
 		elif cmd == "board_size":
 			var size = int(tokens[1])
 			board_size = size
@@ -727,18 +754,18 @@ func process_command_line(cl : String):
 		elif cmd == "restore":
 			DirAccess.copy_absolute("res://%s.txt" % tokens[1], "user://save1.json")
 		elif cmd == "test":
-			STest.start("")
+			STest.start()
 		elif cmd == "paint":
 			var t1 = tokens[1]
 			if t1 == "cell":
 				Board.effect_change_color(read_coord(tokens[2]), Gem.name_to_type(tokens[3]), Gem.None, null)
 			elif t1 == "clear":
 				var color = Gem.name_to_type(tokens[2])
-				var tween = game_tweens.create_tween()
+				var tween = create_game_tween()
 				var delay = 0.0
 				for y in Board.cy:
 					for x in Board.cx:
-						var sub = game_tweens.create_tween()
+						var sub = create_game_tween()
 						sub.tween_interval(delay)
 						Board.effect_change_color(Vector2i(x, y), color, Gem.None, sub)
 						tween.tween_subtween(sub)
@@ -773,14 +800,14 @@ func process_command_line(cl : String):
 				if file:
 					var size_line = file.get_line().trim_prefix(" ").trim_suffix(" ")
 					if int(size_line) == board_size:
-						var tween = game_tweens.create_tween()
+						var tween = create_game_tween()
 						var delay = 0.0
 						for y in Board.cy:
 							var values = file.get_line().split(" ")
 							for x in Board.cx:
 								var g = Board.get_gem_at(Vector2i(x, y))
 								if g && g.name == "":
-									var sub = game_tweens.create_tween()
+									var sub = create_game_tween()
 									sub.tween_interval(delay)
 									Board.effect_change_color(Vector2i(x, y), int(values[x]), Gem.None, sub)
 									tween.tween_subtween(sub)
@@ -828,21 +855,23 @@ func set_lang(lang : String):
 		TranslationServer.set_locale("en")
 	elif lang.begins_with("zh"):
 		TranslationServer.set_locale("zh")
-	if round > 0:
-		update_round_text(round)
+	if current_round > 0:
+		update_round_text(current_round)
 	if options_ui.visible:
 		options_ui.lang_changed()
 
 func begin_busy():
-	Hand.ui.disabled = true
-	Drag.release()
+	if !(STest.testing && STest.headless):
+		Hand.ui.disabled = true
+		Drag.release()
 
 func end_busy():
-	if !shop_ui.visible:
-		control_ui.play_button.disabled = false
-	Hand.ui.disabled = false
-	if Board.ui.visible:
-		Board.ui.show_entangled_lines()
+	if !(STest.testing && STest.headless):
+		if !shop_ui.visible:
+			control_ui.play_button.disabled = false
+		Hand.ui.disabled = false
+		if Board.ui.visible:
+			Board.ui.show_entangled_lines()
 
 func begin_transition(tween : Tween):
 	blocker_ui.show()
@@ -868,12 +897,28 @@ func end_transition(tween : Tween):
 	)
 
 func cleanup():
+	if !(STest.testing && STest.headless):
+		self.remove_child(game_tweens)
+		game_tweens.queue_free()
+		game_tweens = Node.new()
+		self.add_child(game_tweens)
+		for n in Board.ui.underlay.get_children():
+			Board.ui.underlay.remove_child(n)
+			n.queue_free()
+		for n in Board.ui.overlay.get_children():
+			Board.ui.overlay.remove_child(n)
+			n.queue_free()
+		for n in game_ui.game_overlay.get_children():
+			game_ui.game_overlay.remove_child(n)
+			n.queue_free()
+	
 	Board.clear()
 	Hand.clear()
 	
-	patterns_bar_ui.clear()
+	if !(STest.testing && STest.headless):
+		game_ui.relics_bar.clear()
+		game_ui.patterns_bar.clear()
 	patterns.clear()
-	relics_bar_ui.clear()
 	relics.clear()
 	bag_gems.clear()
 	gems.clear()
@@ -895,21 +940,29 @@ func cleanup():
 	modifiers["not_consume_repeat_count_chance_i"] = 0
 	modifiers["additional_targets_i"] = 0
 	modifiers["half_price_i"] = 0
+	
+	no_score_marks[Gem.None] = []
+	no_score_marks[Gem.None].push_front(false)
+	for i in Gem.ColorCount:
+		no_score_marks[Gem.ColorFirst + i] = []
+		no_score_marks[Gem.ColorFirst + i].push_front(false)
+	for i in Gem.RuneCount:
+		no_score_marks[Gem.RuneFirst + i] = []
+		no_score_marks[Gem.RuneFirst + i].push_front(false)
 
-func start_game(saving : String = ""):
+func start_game(saving : String = "", parms = {}):
 	stage = Stage.None
 	
 	cleanup()
 	
-	status_bar_ui.board_size_text.show_change = false
-	status_bar_ui.hand_text.show_change = false
-	status_bar_ui.coins_text.show_change = false
-	control_ui.swaps_text.show_change = false
+	if !(STest.testing && STest.headless):
+		game_ui.status_bar.board_size_text.show_change = false
+		game_ui.status_bar.hand_text.show_change = false
+		game_ui.status_bar.coins_text.show_change = false
+		control_ui.swaps_text.show_change = false
 	
 	if saving == "":
 		random_seeds()
-		
-		#change_modifier("red_bouns_i", 3)
 		
 		score = 0
 		base_score = 0
@@ -920,17 +973,23 @@ func start_game(saving : String = ""):
 		score_mult = 1.0
 		gain_scaler = 1.0
 		combos = 0
-		round = 0
-		board_size = 3
-		swaps_per_round = 5
+		current_round = 0
+		board_size = parms.get("board_size", 3)
+		swaps_per_round = parms.get("swaps_per_round", 5)
 		plays_per_round = 0
 		draws_per_roll = 5
-		max_hand_grabs = 5
+		max_hand_grabs = parms.get("max_hand_grabs", 5)
 		pins_num_per_round = 0
 		activates_num_per_round = 0
 		grabs_num_per_round = 0
-		coins = 10
-		update_round_text(round)
+		coins = parms.get("coins", 10)
+		
+		var modifier_parms = parms.get("modifiers", [])
+		for m in modifier_parms:
+			set_modifier(m.name, m.value)
+		
+		if !(STest.testing && STest.headless):
+			update_round_text(current_round)
 		
 		for i in 1:
 			var p = Pattern.new()
@@ -960,131 +1019,159 @@ func start_game(saving : String = ""):
 			r.setup("PaintingOfStarfish")
 			add_relic(r)
 		
-		for i in 16:
+		const base_gem_num : int = 12
+		
+		var red_wave_num = parms.get("red_wave_num", base_gem_num)
+		for i in red_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		var red_palm_num = parms.get("red_palm_num", base_gem_num)
+		for i in red_palm_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		var red_starfish_num = parms.get("red_starfish_num", base_gem_num)
+		for i in red_starfish_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		var orange_wave_num = parms.get("orange_wave_num", base_gem_num)
+		for i in orange_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		var orange_palm_num = parms.get("orange_palm_num", base_gem_num)
+		for i in orange_palm_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		var orange_starfish_num = parms.get("orange_starfish_num", base_gem_num)
+		for i in orange_starfish_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		var green_wave_num = parms.get("green_wave_num", base_gem_num)
+		for i in green_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		var green_palm_num = parms.get("green_palm_num", base_gem_num)
+		for i in green_palm_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		var green_starfish_num = parms.get("green_starfish_num", base_gem_num)
+		for i in green_starfish_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		var blue_wave_num = parms.get("blue_wave_num", base_gem_num)
+		for i in blue_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		var blue_palm_num = parms.get("blue_palm_num", base_gem_num)
+		for i in blue_palm_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		var blue_starfish_num = parms.get("blue_starfish_num", base_gem_num)
+		for i in blue_starfish_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
-		for i in 16:
+		var magenta_wave_num = parms.get("magenta_wave_num", base_gem_num)
+		for i in magenta_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		for i in 16:
+		var magenta_palm_num = parms.get("magenta_palm_num", base_gem_num)
+		for i in magenta_palm_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RunePalm
 			add_gem(g)
-		for i in 16:
+		var magenta_starfish_num = parms.get("magenta_starfish_num", base_gem_num)
+		for i in magenta_starfish_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneStarfish
 			add_gem(g)
+		var extra_gems = parms.get("extra_gems", [])
+		for eg in extra_gems:
+			for i in eg.num:
+				var g = Gem.new()
+				if eg.name == "Wild":
+					g.type = Gem.ColorWild
+				else:
+					g.setup(eg.name)
+				G.add_gem(g)
+		var extra_relics = parms.get("extra_relics", [])
+		for er in extra_relics:
+			for i in er.num:
+				var r = Relic.new()
+				r.setup(er.name)
+				G.add_relic(r)
 		for i in 0:
 			var g = Gem.new()
-			g.setup("Flag")
+			g.setup("Rainbow")
 			add_gem(g)
 	
 		Board.setup(board_size)
 		history.init()
-		control_ui.enter()
+		if !(STest.testing && STest.headless):
+			control_ui.enter()
 		
-		# setting here so that text positions will be all right
-		status_bar_ui.round_text.modulate.a = 0.0
-		status_bar_ui.round_target.modulate.a = 0.0
-		begin_busy()
-		var tween = game_tweens.create_tween()
-		if !STest.testing:
-			tween.tween_interval(1.1)
-		tween.tween_callback(func():
-			Board.ui.enter(null, false)
+		if !(STest.testing && STest.headless):
+			# setting here so that text positions will be all right
+			game_ui.status_bar.round_text.modulate.a = 0.0
+			game_ui.status_bar.round_target.modulate.a = 0.0
 			begin_busy()
+			var tween = create_game_tween()
+			tween.tween_interval(1.1)
+			tween.tween_callback(func():
+				Board.ui.enter(null, false)
+				begin_busy()
+				Board.fill_blanks()
+				for i in max_hand_grabs:
+					Hand.draw()
+				next_round(null)
+			)
+		else:
 			Board.fill_blanks()
-			for i in min(max_hand_grabs, bag_gems.size()):
+			for i in max_hand_grabs:
 				Hand.draw()
 			next_round(null)
-		)
 	else:
-		status_bar_ui.round_text.modulate.a = 1.0
-		status_bar_ui.round_target.modulate.a = 1.0
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.round_text.modulate.a = 1.0
+			game_ui.status_bar.round_target.modulate.a = 1.0
 		load_from_file(saving)
 		history.init()
 	
-	status_bar_ui.board_size_text.show_change = true
-	status_bar_ui.hand_text.show_change = true
-	status_bar_ui.coins_text.show_change = true
-	control_ui.swaps_text.show_change = true
-	control_ui.undo_button.disabled = true
-	game_ui.show()
+	if !(STest.testing && STest.headless):
+		game_ui.status_bar.board_size_text.show_change = true
+		game_ui.status_bar.hand_text.show_change = true
+		game_ui.status_bar.coins_text.show_change = true
+		control_ui.swaps_text.show_change = true
+		control_ui.undo_button.disabled = true
+		game_ui.show()
 
 func exit_game():
-	game_tweens.queue_free()
-	game_tweens = Node.new()
-	self.add_child(game_tweens)
-	for n in Board.ui.underlay.get_children():
-		Board.ui.underlay.remove_child(n)
-		n.queue_free()
-	for n in Board.ui.overlay.get_children():
-		Board.ui.overlay.remove_child(n)
-		n.queue_free()
-	for n in game_overlay.get_children():
-		game_overlay.remove_child(n)
-		n.queue_free()
 	if Board.ui.visible:
 		Board.ui.hide()
 	if shop_ui.visible:
@@ -1099,10 +1186,10 @@ func exit_game():
 	cleanup()
 
 func get_round_desc(r : int):
-	var t = target_score if r == round else get_round_score(r)
-	var rw = reward if r == round else get_round_reward(r)
+	var t = target_score if r == current_round else get_round_score(r)
+	var rw = reward if r == current_round else get_round_reward(r)
 	var ret = tr("ui_game_round_target") % [t, rw]
-	var cs = current_curses if r == round else round_curses[r - 1]
+	var cs = current_curses if r == current_round else round_curses[r - 1]
 	if !cs.is_empty():
 		var cates = {}
 		for c in cs:
@@ -1118,18 +1205,18 @@ func get_round_desc(r : int):
 	return ret
 
 func update_round_text(r : int):
-	status_bar_ui.round_text.text = tr("ui_game_round") % r
-	status_bar_ui.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(r), true, true)
+	game_ui.status_bar.round_text.text = tr("ui_game_round") % r
+	game_ui.status_bar.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(r), true, true)
 
 #const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
 const curse_types = ["red_no_score", "orange_no_score", "green_no_score", "blue_no_score", "magenta_no_score", "wave_no_score", "palm_no_score", "starfish_no_score"]
 func build_round_curses():
-	var build_times = round + 3 - round_curses.size()
+	var build_times = current_round + 3 - round_curses.size()
 	for i in build_times:
 		var curses : Array[Curse] = []
 		var type = SMath.pick_random(curse_types, round_rng)
 		var num = 0
-		match (round + i) % 3:
+		match (current_round + i) % 3:
 			2:
 				num = 1
 				match type:
@@ -1150,42 +1237,48 @@ func remove_curse(c : Curse):
 	c.remove()
 	current_curses.erase(c)
 
-func next_round(tween : Tween = null):
-	build_round_curses()
+func round_begin():
+	score = 0
+	current_round += 1
+	target_score = get_round_score(current_round)
+	reward = get_round_reward(current_round)
+	game_over_mark = ""
+	history.round_reset()
+	current_curses.clear()
+	for c in round_curses[current_round - 1]:
+		var cc = Curse.new()
+		cc.type = c.type
+		current_curses.append(cc)
 	
-	if !tween:
-		tween = game_tweens.create_tween()
+	if !(STest.testing && STest.headless):
+		update_round_text(current_round)
 	
-	tween.tween_callback(func():
-		score = 0
-		round += 1
-		target_score = get_round_score(round)
-		reward = get_round_reward(round)
-		game_over_mark = ""
-		history.round_reset()
-		current_curses.clear()
-		for c in round_curses[round - 1]:
-			var cc = Curse.new()
-			cc.type = c.type
-			current_curses.append(cc)
-		update_round_text(round)
-		
-		swaps = swaps_per_round
-		plays = plays_per_round
-		modifiers["played_i"] = 0
-		
+	swaps = swaps_per_round
+	plays = plays_per_round
+	modifiers["played_i"] = 0
+	
+	if !(STest.testing && STest.headless):
 		if settlement_ui.visible:
 			settlement_ui.exit()
 		if game_over_ui.visible:
 			game_over_ui.exit()
+	
+	for h in event_listeners:
+		if h.event == C.Event.RoundBegan || h.event == C.Event.Any:
+			h.host.on_event.call(C.Event.RoundBegan, null, null)
+
+func next_round(tween : Tween = null):
+	build_round_curses()
+	
+	if !(STest.testing && STest.headless):
+		if !tween:
+			tween = create_game_tween()
 		
-		for h in event_listeners:
-			if h.event == C.Event.RoundBegan || h.event == C.Event.Any:
-				h.host.on_event.call(C.Event.RoundBegan, null, null)
-	)
-	if !STest.testing:
-		tween.tween_property(status_bar_ui.round_text, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-		tween.parallel().tween_property(status_bar_ui.round_target, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			round_begin()
+		)
+		tween.tween_property(game_ui.status_bar.round_text, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(game_ui.status_bar.round_target, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.tween_callback(func():
 			Curse.pick_targets()
 			for c in current_curses:
@@ -1198,39 +1291,45 @@ func next_round(tween : Tween = null):
 		tween.tween_callback(func():
 			Curse.apply_curses()
 		)
-		if false && round == 0:
+		if false && current_round == 0:
 			tween.tween_callback(func():
 				tutorial_ui.enter()
 			)
+		tween.tween_callback(func():
+			stage = Stage.Deploy
+			save_to_file()
+			control_ui.update_preview()
+			control_ui.expected_score_panel.show()
+			end_busy()
+		)
 	else:
+		round_begin()
 		Curse.pick_targets()
 		Curse.apply_curses()
-	tween.tween_callback(func():
 		stage = Stage.Deploy
 		save_to_file()
-		control_ui.update_preview()
-		control_ui.expected_score_panel.show()
-		end_busy()
-	)
 
 func round_end():
-	Board.clear_active_effects()
-	calculator_bar_ui.disappear()
-	control_ui.swaps_text.show_change = false
-	control_ui.swaps_text.show_change = true
 	action_stack.clear()
-	control_ui.undo_button.disabled = true
-	control_ui.expected_score_panel.hide()
+	if !(STest.testing && STest.headless):
+		Board.clear_active_effects()
 	for c in current_curses:
 		c.remove()
 	current_curses.clear()
 	Buff.clear(self, [Buff.Duration.ThisRound])
 	for g in gems:
 		Buff.clear(g, [Buff.Duration.ThisRound])
-	Board.ui.hide_entangled_lines()
+	if !(STest.testing && STest.headless):
+		Board.ui.hide_entangled_lines()
 	for h in event_listeners:
 		if h.event == C.Event.RoundEnded || h.event == C.Event.Any:
 			h.host.on_event.call(C.Event.RoundEnded, null, null)
+	if !(STest.testing && STest.headless):
+		calculator_bar_ui.disappear()
+		control_ui.swaps_text.show_change = false
+		control_ui.swaps_text.show_change = true
+		control_ui.undo_button.disabled = true
+		control_ui.expected_score_panel.hide()
 
 func win():
 	round_end()
@@ -1272,20 +1371,21 @@ func roll():
 
 func play():
 	stage = Stage.Matching
-	modifiers["played_i"] = 1
 
 	base_score = 0
 	combos = modifiers["base_combo_i"]
 	score_mult = 1.0
+	filling_times = 0
+	modifiers["played_i"] = 1
 	speed = 1.0 / base_speed
 	
-	action_stack.clear()
-	control_ui.undo_button.disabled = true
-	control_ui.expected_score_panel.hide()
+	if !(STest.testing && STest.headless):
+		control_ui.undo_button.disabled = true
+		control_ui.expected_score_panel.hide()
+		calculator_bar_ui.appear()
 	
-	calculator_bar_ui.appear()
+	action_stack.clear()
 	begin_busy()
-	filling_times = 0
 	Board.matching()
 
 func toggle_in_game_menu():
@@ -1321,7 +1421,7 @@ func save_to_file(name : String = "1"):
 	data["round_rng_state"] = G.round_rng.state
 	data["shop_rng_seed"] = G.shop_rng.seed
 	data["shop_rng_state"] = G.shop_rng.state
-	data["round"] = G.round
+	data["current_round"] = G.current_round
 	data["board_size"] = G.board_size
 	data["swaps_per_round"] = G.swaps_per_round
 	data["plays_per_round"] = G.plays_per_round
@@ -1330,6 +1430,7 @@ func save_to_file(name : String = "1"):
 	data["coins"] = G.coins
 	data["swaps"] = G.swaps
 	data["plays"] = G.plays
+	data["current_round"] = G.current_round
 	data["score"] = G.score
 	data["target_score"] = G.target_score
 	data["reward"] = G.reward
@@ -1547,7 +1648,7 @@ func load_from_file(name : String = "1"):
 	G.max_hand_grabs = int(data["max_hand_grabs"])
 	G.swaps = int (data["swaps"])
 	G.plays = int(data["plays"])
-	G.round = int(data["round"])
+	G.current_round = int(data["current_round"])
 	G.score = int(data["score"])
 	G.target_score = int(data["target_score"])
 	G.reward = int(data["reward"])
@@ -1570,7 +1671,7 @@ func load_from_file(name : String = "1"):
 		G.round_curses.append(lc)
 	G.combos = int(data["combos"])
 	G.score_mult = data["score_mult"]
-	update_round_text(round)
+	update_round_text(current_round)
 	var game_buffs = data["buffs"]
 	for buff in game_buffs:
 		load_buff.call(buff, G)
@@ -1613,14 +1714,14 @@ func load_from_file(name : String = "1"):
 		p.exp = int(pattern["exp"])
 		p.max_exp = int(pattern["max_exp"])
 		G.patterns.append(p)
-		patterns_bar_ui.add_ui(p)
+		game_ui.patterns_bar.add_ui(p)
 	var relics = data["relics"]
 	for relic in relics:
 		var r = Relic.new()
 		r.setup(relic["name"])
 		r.extra = SUtils.read_dictionary(relic["extra"])
 		G.relics.append(r)
-		relics_bar_ui.add_ui(r)
+		game_ui.relics_bar.add_ui(r)
 	var game_event_listeners = data["event_listeners"]
 	for hook in game_event_listeners:
 		var h = load_hook.call(hook)
@@ -1643,7 +1744,6 @@ func load_from_file(name : String = "1"):
 		if gem_idx != -1:
 			var g = G.gems[gem_idx]
 			c.gem = g
-			Board.ui.update_cell(coord)
 		var state = cell["state"]
 		if state != Cell.State.Normal:
 			Board.set_state_at(coord, state)
@@ -1653,9 +1753,10 @@ func load_from_file(name : String = "1"):
 			Board.freeze(coord)
 		if cell["nullified"]:
 			Board.nullify(coord)
+		Board.ui.update_cell(coord)
 	
 	Board.update_gem_quantity_limit()
-	status_bar_ui.gem_count_text.text = "%d" % gems.size()
+	game_ui.status_bar.gem_count_text.text = "%d" % gems.size()
 	
 	control_ui.enter()
 	
@@ -1729,9 +1830,6 @@ func load_from_file(name : String = "1"):
 				ui.setup(slot["type"], slot["thing"], slot["price"])
 				shop_ui.list2.add_child(ui)
 			shop_ui.enter(null, false)
-	
-	if bag_gems.size() + Hand.grabs.size() + Board.cx * Board.cy != gems.size():
-		var a = 1
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -1784,7 +1882,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				elif event.keycode == KEY_7:
 					paint_brush = Gem.ColorBlack
 	elif event is InputEventMouseMotion:
-		if Board.ui.visible:
+		if Board.ui.visible && !run_info_ui.visible && !bag_viewer_ui.visible && !in_game_menu_ui.visible && !options_ui.visible && !tutorial_ui.visible && !test_ui.visible:
 			var c = Board.ui.hover_coord(true)
 			if Board.is_valid(c):
 				var cc = Board.offset_to_cube(c)
@@ -1830,25 +1928,18 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	randomize()
 	
-	no_score_marks[Gem.None] = []
-	no_score_marks[Gem.None].push_front(false)
-	for i in Gem.ColorCount:
-		no_score_marks[Gem.ColorFirst + i] = []
-		no_score_marks[Gem.ColorFirst + i].push_front(false)
-	for i in Gem.RuneCount:
-		no_score_marks[Gem.RuneFirst + i] = []
-		no_score_marks[Gem.RuneFirst + i].push_front(false)
-	
 	game_tweens = Node.new()
 	self.add_child(game_tweens)
 	
 	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
 	Board.clearing_finished.connect(func():
-		Board.ui.hide_entangled_lines()
+		if !(STest.testing && STest.headless):
+			Board.ui.hide_entangled_lines()
 		Board.fill_blanks()
 	)
 	Board.filling_finished.connect(func():
-		Board.ui.show_entangled_lines()
+		if !(STest.testing && STest.headless):
+			Board.ui.show_entangled_lines()
 		if modifiers["played_i"] > 0:
 			filling_times += 1
 			if filling_times >= C.REFILL_TIMES_TO_STOP:
@@ -1856,7 +1947,8 @@ func _ready() -> void:
 			else:
 				Board.matching()
 		else:
-			control_ui.update_preview()
+			if !(STest.testing && STest.headless):
+				control_ui.update_preview()
 	)
 	Board.matching_finished.connect(func():
 		var processed = false
@@ -1866,7 +1958,8 @@ func _ready() -> void:
 				if processed:
 					break
 		if !processed:
-			control_ui.filling_times_text_container.hide()
+			if !(STest.testing && STest.headless):
+				control_ui.filling_times_container.hide()
 			calculator_bar_ui.calculate()
 	)
 	Hand.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Hand
@@ -1886,6 +1979,7 @@ func _ready() -> void:
 					
 		calc_game_state()
 	)
+	
 	command_line_edit.text_submitted.connect(func(cl : String):
 		process_command_line(cl)
 		command_line_edit.clear()
@@ -1902,7 +1996,6 @@ func _ready() -> void:
 	background.scale = resolution
 	subviewport.size = resolution
 	crt.material.set_shader_parameter("resolution", resolution)
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 func _process(delta: float) -> void:
 	if canvas && !performance_mode:

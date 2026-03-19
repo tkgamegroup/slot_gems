@@ -2,11 +2,11 @@ extends Control
 
 const item_pb = preload("res://ui_settlement_item.tscn")
 
-@onready var panel : PanelContainer = $PanelContainer
-@onready var button : Button = $PanelContainer/VBoxContainer/Button
-@onready var button_text : RichTextLabel = $PanelContainer/VBoxContainer/Button/RichTextLabel
-@onready var list : VBoxContainer = $PanelContainer/VBoxContainer/VBoxContainer
-@onready var particles = $PanelContainer/CPUParticles2D
+@export var panel : PanelContainer
+@export var button : Button
+@export var button_text : RichTextLabel
+@export var list : VBoxContainer
+@export var particles : CPUParticles2D
 
 var rewards = 0
 
@@ -75,10 +75,10 @@ func exit(trans : bool = true):
 	
 	clear()
 	
-	if G.round % 3 == 0:
+	if G.current_round % 3 == 0:
 		if trans:
 			panel.modulate.a = 1.0
-			var tween = G.game_tweens.create_tween()
+			var tween = G.create_game_tween()
 			tween.tween_property(panel, "modulate:a", 0.0, 0.3)
 			tween.tween_callback(func():
 				self.hide()
@@ -91,7 +91,7 @@ func exit(trans : bool = true):
 			panel.hide()
 			self.self_modulate.a = 1.0
 			
-			var tween = G.game_tweens.create_tween()
+			var tween = G.create_game_tween()
 			tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 			tween.tween_callback(func():
 				self.hide()

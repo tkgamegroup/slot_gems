@@ -100,7 +100,7 @@ func _process(delta: float) -> void:
 				G.relics[nidx] = t
 				list.move_child(dragging, nidx)
 	
-	float_island.update(delta)
+	float_island.update()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

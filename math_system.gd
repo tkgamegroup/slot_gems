@@ -1,5 +1,3 @@
-extends Object
-
 class_name SMath
 
 static func v3_21(v2 : Vector2, f : float) -> Vector3:
@@ -110,6 +108,31 @@ static func cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: 
 
 	var s = r0.lerp(r1, t)
 	return s
+
+static func linear_fit(values : Array):
+	var ret = Pair.new(0.0, 0.0)
+	if values.size() < 2:
+		return ret
+	
+	var n = values.size()
+	var sum_x = 0.0
+	var sum_y = 0.0
+	var sum_xy = 0.0
+	var sum_x2 = 0.0
+
+	for i in values.size():
+		var x = float(i)
+		var y = values[i]
+
+		sum_x += x
+		sum_y += y
+		sum_xy += x * y
+		sum_x2 += x * x
+
+	ret.first = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x * sum_x)
+	ret.second = (sum_y - ret.first * sum_x) / n
+
+	return ret
 
 static func weld_lines(src : Array, dist : float = 5.0):
 	var ret = [src[0], src[1]]

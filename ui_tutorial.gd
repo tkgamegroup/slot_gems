@@ -1,12 +1,12 @@
 extends Panel
 
-@onready var panel : Control = $PanelContainer
-@onready var tab_container : TabContainer = $PanelContainer/VBoxContainer/TabContainer
-@onready var prev_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Prev
-@onready var next_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Next
-@onready var elements_image : TextureRect = $Elements
-@onready var close_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button
-@onready var pattern_list = $PanelContainer/VBoxContainer/TabContainer/VBoxContainer2/HBoxContainer
+@export var panel : Control
+@export var tab_container : TabContainer
+@export var prev_button : Button
+@export var next_button : Button
+@export var elements_image : TextureRect
+@export var close_button : Button
+@export var pattern_list : Control
 
 const ui_pattern_pb = preload("res://ui_pattern.tscn")
 

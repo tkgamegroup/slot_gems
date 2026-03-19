@@ -49,14 +49,14 @@ func _ready() -> void:
 		if !slot1.gem || !slot2.gem:
 			return
 		if G.coins < price:
-			G.status_bar_ui.coins_text.hint()
+			G.game_ui.status_bar.coins_text.hint()
 			return
 		
 		G.shop_ui.disabled = true
 		G.coins -= price
 		SSound.se_coin.play()
 		
-		var tween = G.game_tweens.create_tween()
+		var tween = G.create_game_tween()
 		tween.tween_interval(0.2)
 		tween.tween_callback(func():
 			slot1.particles1.emitting = true

@@ -11,18 +11,17 @@ func add_gem(gem : Gem, pos : int = -1, no_ui : bool = false):
 		pos = grabs.size()
 	gem.coord = Vector2i(pos, -1)
 	grabs.insert(pos, gem)
-	if no_ui:
+	if no_ui || (STest.testing && STest.headless):
 		return null
 	return ui.add_slot(gem, pos)
 
 func draw(to_the_end : bool = true):
 	if G.bag_gems.is_empty():
 		return null
-	if grabs.size() >= G.max_hand_grabs:
-		return null
-	var gem : Gem = G.take_out_gem_from_bag()
+	var gem : Gem = G.take_from_bag()
 	var slot = add_gem(gem, -1 if to_the_end else 0)
-	slot.position.y = 50
+	if slot:
+		slot.position.y = 50
 	return slot
 
 func find(g : Gem):
@@ -34,15 +33,31 @@ func erase(idx : int):
 	for i in grabs.size():
 		grabs[i].coord = Vector2i(i, -1)
 	
-	ui.remove_slot(idx)
+	if !(STest.testing && STest.headless):
+		ui.remove_slot(idx)
 	return g
+
+func discard(idx : int):
+	var g = erase(idx)
+	var gem_ui = G.create_gem_ui(g, ui.get_pos(idx))
+	
+	var tween = G.create_game_tween()
+	tween.tween_property(gem_ui, "scale", Vector2(0.7, 0.7), 0.4)
+	tween.parallel()
+	SAnimation.quadratic_curve_to(tween, gem_ui, G.game_ui.status_bar.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
+	tween.tween_callback(func():
+		G.put_to_bag(g)
+		G.sort_gems()
+		gem_ui.queue_free()
+	)
 
 func clear():
 	for g in grabs:
-		G.put_back_gem_to_bag(g)
+		G.put_to_bag(g)
 	grabs.clear()
 	
-	ui.clear()
+	if !(STest.testing && STest.headless):
+		ui.clear()
 
 func swap(coord : Vector2i, gem : Gem):
 	var og = Board.set_gem_at(coord, null)

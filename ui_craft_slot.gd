@@ -45,7 +45,7 @@ func _ready() -> void:
 		if !slot.gem:
 			return
 		if G.coins < price:
-			G.status_bar_ui.coins_text.hint()
+			G.game_ui.status_bar.coins_text.hint()
 			return
 		if type == "w_enchant":
 			var es = Buff.find_all_typed(slot.gem, Buff.Type.Enchant)
@@ -63,7 +63,7 @@ func _ready() -> void:
 		G.coins -= price
 		SSound.se_coin.play()
 		
-		var tween = G.game_tweens.create_tween()
+		var tween = G.create_game_tween()
 		tween.tween_interval(0.2)
 		var sp : AnimatedSprite2D = null
 		if type == "w_enchant":

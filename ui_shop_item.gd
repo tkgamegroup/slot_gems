@@ -65,7 +65,7 @@ func refresh_price():
 
 func buy(tween : Tween = null):
 	if G.coins < price:
-		G.status_bar_ui.coins_text.hint()
+		G.game_ui.status_bar.coins_text.hint()
 		return false
 	if cate == "relic" && G.relics.size() >= 5:
 		SSound.se_error.play()
@@ -78,7 +78,7 @@ func buy(tween : Tween = null):
 			return false
 	
 	if !tween:
-		tween = G.game_tweens.create_tween()
+		tween = G.create_game_tween()
 	tween.tween_callback(func():
 		self.hide()
 		G.shop_ui.disabled = true
@@ -91,46 +91,38 @@ func buy(tween : Tween = null):
 				G.coins += price
 	)
 	if cate == "gem":
-		var ui = content.get_child(0)
-		tween.tween_callback(func():
-			ui.reparent(G.game_overlay)
-			ui.position = self.global_position
-		)
-		
-		tween.tween_property(ui, "global_position", self.global_position - Vector2(0.0, 100.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		var to_bag = true
-		if quantity == 1:
-			for s in G.shop_ui.staging_slots:
-				if s.slot.gem == null:
-					s.slot.disabled = false
-					SAnimation.quadratic_curve_to(tween, ui, s.global_position + Vector2(6, 6), Vector2(0.5, 0.2), 0.4)
-					tween.tween_property(ui, "global_position", s.global_position, 0.5)
-					tween.tween_callback(func():
-						var gem = object as Gem
-						G.add_gem(gem)
-						ui.queue_free()
-						
-						G.take_out_gem_from_bag(gem)
-						s.slot.load_gem(gem)
-					)
-					to_bag = false
-					break
-		if to_bag:
-			tween.tween_property(ui, "scale", Vector2(0.7, 0.7), 0.4)
-			tween.parallel()
-			SAnimation.quadratic_curve_to(tween, ui, G.status_bar_ui.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
-			tween.tween_callback(func():
-				var original = object as Gem
-				for i in quantity:
-					var gem = Gem.new()
-					G.copy_gem(original, gem)
-					G.add_gem(gem)
-				G.sort_gems()
-				ui.queue_free()
-			)
+		var original = object as Gem
+		for i in quantity:
+			var gem = Gem.new()
+			G.copy_gem(original, gem)
+			G.add_gem(gem)
+			var sub = G.create_game_tween()
+			sub.tween_interval(i * 0.1)
+			if i == 0:
+				if Hand.grabs.size() > G.max_hand_grabs:
+					Hand.discard(Hand.grabs.size() - 1)
+				var ui = Hand.add_gem(gem)
+				ui.hide()
+				sub.tween_callback(func():
+					ui.show()
+					ui.elastic = 0.0
+					ui.global_position = self.global_position
+				)
+				sub.tween_property(ui, "elastic", 1.0, 0.4)
+			else:
+				var ui = G.create_gem_ui(gem, self.global_position)
+				sub.tween_property(ui, "scale", Vector2(0.7, 0.7), 0.4)
+				sub.parallel()
+				SAnimation.quadratic_curve_to(sub, ui, G.game_ui.status_bar.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
+				sub.tween_callback(func():
+					ui.queue_free()
+				)
+			if i > 0:
+				tween.parallel()
+			tween.tween_subtween(sub)
 	elif cate == "relic":
 		G.add_relic(object)
-		var ui = G.relics_bar_ui.get_ui(-1)
+		var ui = G.game_ui.relics_bar.get_ui(-1)
 		ui.hide()
 		tween.tween_callback(func():
 			ui.show()
@@ -140,7 +132,7 @@ func buy(tween : Tween = null):
 		tween.tween_property(ui, "elastic", 1.0, 0.4)
 	elif cate == "pattern":
 		G.add_pattern(object)
-		var ui = G.patterns_bar_ui.get_ui(-1)
+		var ui = G.game_ui.patterns_bar.get_ui(-1)
 		ui.hide()
 		tween.tween_callback(func():
 			ui.show()

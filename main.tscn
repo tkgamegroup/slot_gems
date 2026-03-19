@@ -1,4 +1,4 @@
-[gd_scene load_steps=180 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=183 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -89,6 +89,7 @@
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="67_jbvwl"]
 [ext_resource type="Texture2D" uid="uid://np31u18iwfdo" path="res://images/quetion_mark.png" id="68_1yv1y"]
+[ext_resource type="Script" uid="uid://bxlk2fiy6ojj1" path="res://ui_game.gd" id="69_dij0e"]
 [ext_resource type="Script" uid="uid://b5qjvjf6wb7ty" path="res://banner.gd" id="69_phcyf"]
 [ext_resource type="Script" uid="uid://b0rh64phtex0f" path="res://ui_calculate_bar.gd" id="71_f1p13"]
 [ext_resource type="Script" uid="uid://488gjr38gvls" path="res://ui_collections.gd" id="73_4obbf"]
@@ -102,6 +103,8 @@
 [ext_resource type="Script" uid="uid://c0pl81cive81s" path="res://ui_run_info.gd" id="88_yjja3"]
 [ext_resource type="Script" uid="uid://wa74t8m4uwaa" path="res://ui_upgrade.gd" id="94_sn1fb"]
 [ext_resource type="Script" uid="uid://dabbjps03o76h" path="res://ui_test.gd" id="95_inymm"]
+[ext_resource type="Texture2D" uid="uid://bhfkoykwxo26k" path="res://images/checked_small.png" id="96_0arob"]
+[ext_resource type="Texture2D" uid="uid://b0xl8ugcexhye" path="res://images/unchecked_small.png" id="97_dij0e"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
 random_pitch = 1.1
@@ -861,7 +864,7 @@ centered = false
 
 [node name="Canvas" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
 
-[node name="Title" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Title" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("title_txt", "title_txt_shadow", "gems_root", "button_list", "continue_button", "new_game_button", "collections_button", "options_button", "quit_button", "test_button", "version_text")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -870,6 +873,17 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("9_te575")
+title_txt = NodePath("MarginContainer2/Control/Text")
+title_txt_shadow = NodePath("MarginContainer2/Control/Shadow")
+gems_root = NodePath("Control")
+button_list = NodePath("MarginContainer/PanelContainer")
+continue_button = NodePath("MarginContainer/PanelContainer/HBoxContainer/Button1")
+new_game_button = NodePath("MarginContainer/PanelContainer/HBoxContainer/Button2")
+collections_button = NodePath("MarginContainer/PanelContainer/HBoxContainer/Button3")
+options_button = NodePath("MarginContainer/PanelContainer/HBoxContainer/Button4")
+quit_button = NodePath("MarginContainer/PanelContainer/HBoxContainer/Button5")
+test_button = NodePath("MarginContainer/PanelContainer/HBoxContainer/Button6")
+version_text = NodePath("Version")
 
 [node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Title"]
 layout_mode = 1
@@ -1045,7 +1059,13 @@ theme_override_font_sizes/font_size = 64
 text = "ui_titile_quit"
 metadata/_edit_use_anchors_ = true
 
-[node name="Board" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Button6" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "test"
+metadata/_edit_use_anchors_ = true
+
+[node name="Board" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tilemap", "panel", "outlines_root", "underlay", "cells_root", "entangled_lines", "overlay", "hover_ui")]
 visible = false
 material = SubResource("ShaderMaterial_l0gw7")
 anchors_preset = 15
@@ -1054,6 +1074,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("21_34ol3")
+tilemap = NodePath("TileMapLayer")
+panel = NodePath("SubViewport/Panel")
+outlines_root = NodePath("SubViewport/Outlines")
+underlay = NodePath("SubViewport/Underlay")
+cells_root = NodePath("SubViewport/Cells")
+entangled_lines = NodePath("SubViewport/EntangledLines")
+overlay = NodePath("SubViewport/Overlay")
+hover_ui = NodePath("Hover")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 tile_set = SubResource("TileSet_m0hyf")
@@ -1085,7 +1113,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_yysqy")
 [node name="Hover" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
 texture = ExtResource("54_jbvwl")
 
-[node name="Shop" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Shop" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("list1", "list2", "refresh_button", "exit_button", "staging_slot1", "staging_slot2", "staging_slot3")]
 visible = false
 material = SubResource("ShaderMaterial_yjja3")
 anchors_preset = 15
@@ -1094,6 +1122,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("12_uajbh")
+list1 = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer")
+list2 = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer2")
+refresh_button = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton")
+exit_button = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer2/Button")
+staging_slot1 = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot")
+staging_slot2 = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot2")
+staging_slot3 = NodePath("SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot3")
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer/SubViewport/Canvas/Shop"]
 disable_3d = true
@@ -1183,7 +1218,7 @@ layout_mode = 2
 [node name="StagingSlot3" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("58_l0gw7")]
 layout_mode = 2
 
-[node name="GameControl" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="GameControl" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "swaps_text", "play_button", "plays_text", "expected_score_panel", "expected_score_text", "props_bar", "pin_ui", "activate_ui", "grab_ui", "undo_button", "filling_times_container", "filling_times_text", "debug_text")]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -1193,6 +1228,20 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_4wyqg")
+panel = NodePath("MarginContainer2/HBoxContainer2/Panel")
+swaps_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps")
+play_button = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play")
+plays_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2/Plays")
+expected_score_panel = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer")
+expected_score_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer/ExpectedScore")
+props_bar = NodePath("HBoxContainer")
+pin_ui = NodePath("HBoxContainer/UiProp")
+activate_ui = NodePath("HBoxContainer/UiProp2")
+grab_ui = NodePath("HBoxContainer/UiProp3")
+undo_button = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Undo")
+filling_times_container = NodePath("PanelContainer")
+filling_times_text = NodePath("PanelContainer/FillingTimes")
+debug_text = NodePath("MarginContainer/DebugText")
 
 [node name="MarginContainer2" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl"]
 layout_mode = 1
@@ -1402,6 +1451,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("69_dij0e")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI"]
 layout_mode = 1
@@ -1947,7 +1997,7 @@ size_flags_horizontal = 4
 layout_mode = 1
 anchors_preset = 0
 
-[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "base_score_text", "combos_text", "mult_text", "cross1", "cross2", "calculated_text")]
 visible = false
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 3
@@ -1956,6 +2006,13 @@ anchor_right = 1.0
 grow_horizontal = 2
 mouse_filter = 2
 script = ExtResource("71_f1p13")
+panel = NodePath("Panel")
+base_score_text = NodePath("Panel/HBoxContainer/Panel/BaseScore")
+combos_text = NodePath("Panel/HBoxContainer/Panel2/Combos")
+mult_text = NodePath("Panel/HBoxContainer/Panel3/Mult")
+cross1 = NodePath("Panel/HBoxContainer/Control/Label")
+cross2 = NodePath("Panel/HBoxContainer/Control2/Label")
+calculated_text = NodePath("Calculated")
 
 [node name="Panel" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar"]
 layout_mode = 1
@@ -2082,13 +2139,16 @@ text = "8888888"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Banner" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Banner" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("bg", "text1", "text2")]
 visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 500.0
 offset_bottom = 100.0
 script = ExtResource("69_phcyf")
+bg = NodePath("TextureRect")
+text1 = NodePath("VBoxContainer/Label")
+text2 = NodePath("VBoxContainer/Label2")
 
 [node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/Canvas/Banner"]
 layout_mode = 1
@@ -2127,7 +2187,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 meta_underlined = false
 
-[node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Collections" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "item_list", "skill_list", "pattern_list", "relic_list", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2136,6 +2196,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_inymm")
 script = ExtResource("73_4obbf")
+panel = NodePath("PanelContainer")
+item_list = NodePath("PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List")
+skill_list = NodePath("PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List2")
+pattern_list = NodePath("PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List3")
+relic_list = NodePath("PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List4")
+close_button = NodePath("PanelContainer/VBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Collections"]
 custom_minimum_size = Vector2(904, 565)
@@ -2216,7 +2282,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="BagViewer" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="BagViewer" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "title", "legend1", "legend2", "gem_list", "item_list", "comfirm_button", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2225,6 +2291,14 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_l0gw7")
 script = ExtResource("34_rwa0e")
+panel = NodePath("PanelContainer")
+title = NodePath("PanelContainer/VBoxContainer/Label")
+legend1 = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer")
+legend2 = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2")
+gem_list = NodePath("PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/List")
+item_list = NodePath("PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/List2")
+comfirm_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button2")
+close_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/BagViewer"]
 layout_mode = 1
@@ -2343,7 +2417,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="RunInfo" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="RunInfo" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "tab_container", "round1_title", "round2_title", "round3_title", "round1_desc", "round2_desc", "round3_desc", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2352,6 +2426,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_l0gw7")
 script = ExtResource("88_yjja3")
+panel = NodePath("PanelContainer")
+tab_container = NodePath("PanelContainer/VBoxContainer/TabContainer")
+round1_title = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Label")
+round2_title = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer/Label")
+round3_title = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer/Label")
+round1_desc = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Label2")
+round2_desc = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer/Label2")
+round3_desc = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer/Label2")
+close_button = NodePath("PanelContainer/VBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo"]
 layout_mode = 1
@@ -2478,7 +2561,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="Tutorial" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Tutorial" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "tab_container", "prev_button", "next_button", "elements_image", "close_button", "pattern_list")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2487,6 +2570,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jcxqu")
 script = ExtResource("80_f1p13")
+panel = NodePath("PanelContainer")
+tab_container = NodePath("PanelContainer/VBoxContainer/TabContainer")
+prev_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Prev")
+next_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Next")
+elements_image = NodePath("Elements")
+close_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button")
+pattern_list = NodePath("PanelContainer/VBoxContainer/TabContainer/VBoxContainer2/HBoxContainer")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tutorial"]
 custom_minimum_size = Vector2(800, 0)
@@ -2588,7 +2678,7 @@ offset_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource("74_4obbf")
 
-[node name="Options" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Options" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "tab_container", "language_select", "game_speed_select", "performance_mode_checkbox", "invincible_checkbox", "command_line", "monitor_select", "window_mode_select", "resolution_select", "video_apply_button", "crt_checkbox", "se_volume_slider", "music_volume_slider", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2597,6 +2687,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0arob")
 script = ExtResource("14_kw2dv")
+panel = NodePath("PanelContainer")
+tab_container = NodePath("PanelContainer/VBoxContainer/TabContainer")
+language_select = NodePath("PanelContainer/VBoxContainer/TabContainer/Game/GridContainer/OptionButton")
+game_speed_select = NodePath("PanelContainer/VBoxContainer/TabContainer/Game/GridContainer/OptionButton2")
+performance_mode_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/Game/GridContainer/CheckBox")
+invincible_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/Game/GridContainer/CheckBox2")
+command_line = NodePath("PanelContainer/VBoxContainer/TabContainer/Game/GridContainer/LineEdit")
+monitor_select = NodePath("PanelContainer/VBoxContainer/TabContainer/Video/GridContainer/OptionButton")
+window_mode_select = NodePath("PanelContainer/VBoxContainer/TabContainer/Video/GridContainer/OptionButton2")
+resolution_select = NodePath("PanelContainer/VBoxContainer/TabContainer/Video/GridContainer/OptionButton3")
+video_apply_button = NodePath("PanelContainer/VBoxContainer/TabContainer/Video/GridContainer/Button")
+crt_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/Graphics/GridContainer/CheckBox")
+se_volume_slider = NodePath("PanelContainer/VBoxContainer/TabContainer/Audio/GridContainer/HSlider")
+music_volume_slider = NodePath("PanelContainer/VBoxContainer/TabContainer/Audio/GridContainer/HSlider2")
+close_button = NodePath("PanelContainer/VBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Options"]
 layout_mode = 1
@@ -2840,7 +2945,7 @@ step = 0.01
 layout_mode = 2
 text = "ui_close"
 
-[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "configs_list", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "events_list", "variables_list", "variable_name_edit", "variable_base_edit", "variable_step_edit", "variable_add_button", "variable_remove_button", "extras_list", "extra_category_edit", "extra_name_edit", "extra_base_count_edit", "extra_count_increase_edit", "extra_add_button", "extra_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "test_result", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2849,6 +2954,46 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0arob")
 script = ExtResource("95_inymm")
+tab_container = NodePath("PanelContainer/VBoxContainer/TabContainer")
+configs_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/ItemList")
+config_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer/Button")
+config_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer/Button2")
+config_duplicate_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer/Button3")
+config_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer/LineEdit")
+config_rename_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer/Button4")
+filename_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/LineEdit")
+headless_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/CheckBox")
+use_save_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/CheckBox2")
+reroll_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/CheckBox3")
+events_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/ItemList")
+variables_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/ItemList")
+variable_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit")
+variable_base_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit2")
+variable_step_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit3")
+variable_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2/Button")
+variable_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2/Button2")
+extras_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/ItemList")
+extra_category_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit")
+extra_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit2")
+extra_base_count_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit3")
+extra_count_increase_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit4")
+extra_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2/Button")
+extra_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2/Button2")
+samples_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit")
+groups_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit2")
+process_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit3")
+start_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/Button")
+test_list = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/ItemList")
+group_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/LineEdit")
+group_plus_button = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Button")
+group_mimus_button = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Button2")
+name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/LineEdit")
+rename_button = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/Button")
+fit_result = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/Label")
+group_avg = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/Label2")
+test_comment = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/TextEdit")
+test_result = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/GridContainer")
+close_button = NodePath("PanelContainer/VBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Test"]
 layout_mode = 1
@@ -2893,110 +3038,289 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New"]
 layout_mode = 2
 
-[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Configs"
+
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Add"
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+disabled = true
+text = "Remove"
+
+[node name="Button3" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+disabled = true
+text = "Duplicate"
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="Button4" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Rename"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "File Name"
+
+[node name="CheckBox" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_icons/checked = ExtResource("96_0arob")
+theme_override_icons/unchecked = ExtResource("97_dij0e")
+text = "Headless"
+
+[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_icons/checked = ExtResource("96_0arob")
+theme_override_icons/unchecked = ExtResource("97_dij0e")
 text = "Use Save"
 
-[node name="CheckBox2" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer"]
+[node name="CheckBox3" type="CheckBox" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_icons/checked = ExtResource("96_0arob")
+theme_override_icons/unchecked = ExtResource("97_dij0e")
 text = "Reroll"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 12
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer"]
-layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Listen Events"
 
-[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer"]
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
 select_mode = 2
 allow_reselect = true
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2"]
-layout_mode = 2
-text = "Variables"
-
-[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2"]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2"]
-layout_mode = 2
-
-[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-select_all_on_focus = true
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-text = "Name"
-
-[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-select_all_on_focus = true
-
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-text = "Base"
-
-[node name="LineEdit3" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-select_all_on_focus = true
-
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-text = "Step"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = " + "
-
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/VBoxContainer2/HBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = " - "
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New"]
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Extras"
+
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Add"
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+disabled = true
+text = "Remove"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
 select_all_on_focus = true
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Cate"
+
+[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Name"
+
+[node name="LineEdit3" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Base Count"
+
+[node name="LineEdit4" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Count Inc"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Variables"
+
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2"]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Add"
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+disabled = true
+text = "Remove"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Name"
+
+[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Base"
+
+[node name="LineEdit3" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Step"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+select_all_on_focus = true
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Samples"
 
-[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
+[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 select_all_on_focus = true
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Groups"
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New"]
+[node name="LineEdit3" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
 layout_mode = 2
-size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 16
+select_all_on_focus = true
+
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Process"
+
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 22
 text = "Start"
 
 [node name="Tests" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer"]
@@ -3008,19 +3332,78 @@ metadata/_tab_index = 1
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests"]
-custom_minimum_size = Vector2(0, 200)
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests"]
 layout_mode = 2
 
-[node name="ItemList2" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests"]
+[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+editable = false
+select_all_on_focus = true
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "G"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "+"
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "- "
+
+[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Rename"
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextEdit" type="TextEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/Tests"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/h_separation = 32
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "ui_close"
 
-[node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="GameOver" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "desc_text", "max_matching_score_text", "round_text", "seed_text", "new_run", "main_menu_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3029,6 +3412,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_h6isl")
 script = ExtResource("16_iphee")
+panel = NodePath("PanelContainer")
+desc_text = NodePath("PanelContainer/VBoxContainer/Label2")
+max_matching_score_text = NodePath("PanelContainer/VBoxContainer/GridContainer/Label2")
+round_text = NodePath("PanelContainer/VBoxContainer/GridContainer/Label6")
+seed_text = NodePath("PanelContainer/VBoxContainer/GridContainer/Label8")
+new_run = NodePath("PanelContainer/VBoxContainer/VBoxContainer/Button")
+main_menu_button = NodePath("PanelContainer/VBoxContainer/VBoxContainer/Button2")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameOver"]
 layout_mode = 1
@@ -3119,7 +3509,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "ui_game_over_main_menu"
 
-[node name="Settlement" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Settlement" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "button", "button_text", "list", "particles")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3128,6 +3518,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sn1fb")
 script = ExtResource("17_ykjhx")
+panel = NodePath("PanelContainer")
+button = NodePath("PanelContainer/VBoxContainer/Button")
+button_text = NodePath("PanelContainer/VBoxContainer/Button/RichTextLabel")
+list = NodePath("PanelContainer/VBoxContainer/VBoxContainer")
+particles = NodePath("PanelContainer/CPUParticles2D")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Settlement"]
 layout_mode = 1
@@ -3196,7 +3591,7 @@ scale_amount_min = 10.0
 scale_amount_max = 10.0
 color_initial_ramp = SubResource("Gradient_x84n0")
 
-[node name="Upgrade" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Upgrade" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "list", "button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3205,6 +3600,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wat4s")
 script = ExtResource("94_sn1fb")
+panel = NodePath("PanelContainer")
+list = NodePath("PanelContainer/VBoxContainer/HBoxContainer")
+button = NodePath("PanelContainer/VBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade"]
 layout_mode = 1
@@ -3243,7 +3641,7 @@ theme_override_font_sizes/font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxEmpty_exsg7")
 text = "ui_confirm"
 
-[node name="ChooseReward" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="ChooseReward" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "reward_list", "buttons_list", "hide_button", "reroll_button", "skip_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3251,6 +3649,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("36_c2aw5")
+panel = NodePath("PanelContainer")
+reward_list = NodePath("PanelContainer/VBoxContainer/HBoxContainer")
+buttons_list = NodePath("PanelContainer/VBoxContainer/HBoxContainer2")
+hide_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/Button")
+reroll_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/Button2")
+skip_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/Button3")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward"]
 layout_mode = 1
@@ -3299,7 +3703,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wvev2")
 text = "Skip"
 
-[node name="InGameMenu" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="InGameMenu" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "resume_button", "options_button", "main_menu_button", "quit_to_desktop_button", "auto_place_items_button", "win_button", "lose_button", "test_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3308,6 +3712,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dij0e")
 script = ExtResource("15_clbdl")
+panel = NodePath("PanelContainer")
+resume_button = NodePath("PanelContainer/VBoxContainer/Button")
+options_button = NodePath("PanelContainer/VBoxContainer/Button2")
+main_menu_button = NodePath("PanelContainer/VBoxContainer/Button3")
+quit_to_desktop_button = NodePath("PanelContainer/VBoxContainer/Button4")
+auto_place_items_button = NodePath("PanelContainer/VBoxContainer/Button5")
+win_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button6")
+lose_button = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button7")
+test_button = NodePath("PanelContainer/VBoxContainer/Button6")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/InGameMenu"]
 layout_mode = 1
@@ -3393,7 +3806,7 @@ text = "Test"
 visible = false
 modulate = Color(1, 1, 1, 0.501961)
 
-[node name="Dialog" type="Panel" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Dialog" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "title", "content", "button1", "button2")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3401,6 +3814,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("64_wy5fy")
+panel = NodePath("PanelContainer")
+title = NodePath("PanelContainer/VBoxContainer/Label")
+content = NodePath("PanelContainer/VBoxContainer/Label2")
+button1 = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button")
+button2 = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Button2")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Dialog"]
 layout_mode = 1

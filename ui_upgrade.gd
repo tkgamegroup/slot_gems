@@ -2,9 +2,9 @@ extends Control
 
 const shop_item_pb = preload("res://ui_shop_item.tscn")
 
-@onready var panel : Control = $PanelContainer
-@onready var list : Control = $PanelContainer/VBoxContainer/HBoxContainer
-@onready var button : Button = $PanelContainer/VBoxContainer/Button
+@export var panel : Control
+@export var list : Control
+@export var button : Button
 
 var selected = null
 
@@ -34,7 +34,7 @@ func enter():
 	
 	G.stage = G.Stage.Upgrade
 	
-	var tween = G.game_tweens.create_tween()
+	var tween = G.create_game_tween()
 	tween.tween_property(panel, "modulate:a", 1.0, 0.3)
 	
 	tween.tween_interval(0.04)
@@ -73,7 +73,7 @@ func enter():
 
 func exit(trans : bool = true):
 	if trans:
-		var tween = G.game_tweens.create_tween()
+		var tween = G.create_game_tween()
 		tween.tween_callback(func():
 			panel.hide()
 			self.self_modulate.a = 1.0

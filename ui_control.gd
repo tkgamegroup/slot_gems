@@ -3,22 +3,22 @@ extends Control
 const NumberText = preload("res://number_text.gd")
 const UiProp = preload("res://ui_prop.gd")
 
-@onready var panel : Control = $MarginContainer2/HBoxContainer2/Panel
-@onready var swaps_text : NumberText = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps
-@onready var play_button  : Button = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play
-@onready var plays_text : Label = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2/Plays
-@onready var expected_score_panel : Control = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer
-@onready var expected_score_text : Label = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer/ExpectedScore
-@onready var props_bar : Control = $HBoxContainer
-@onready var pin_ui : UiProp = $HBoxContainer/UiProp
-@onready var activate_ui : UiProp = $HBoxContainer/UiProp2
-@onready var grab_ui : UiProp = $HBoxContainer/UiProp3
-@onready var undo_button : Button = $MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Undo
-@onready var filling_times_text_container : Control = $PanelContainer
-@onready var filling_times_text : Label = $PanelContainer/FillingTimes
-var filling_times_tween : Tween = null
-@onready var debug_text : Label = $MarginContainer/DebugText
+@export var panel : Control
+@export var swaps_text : NumberText
+@export var play_button  : Button
+@export var plays_text : Label
+@export var expected_score_panel : Control
+@export var expected_score_text : Label
+@export var props_bar : Control
+@export var pin_ui : UiProp
+@export var activate_ui : UiProp
+@export var grab_ui : UiProp
+@export var undo_button : Button
+@export var filling_times_container : Control
+@export var filling_times_text : Label
+@export var debug_text : Label
 
+var filling_times_tween : Tween = null
 var shake_strength : float = 0.0
 var shake_coord : float = 0.0
 
@@ -94,10 +94,10 @@ func _ready() -> void:
 			if G.action_stack.is_empty():
 				undo_button.disabled = true
 	)
-	filling_times_text_container.mouse_entered.connect(func():
-		STooltip.show(filling_times_text_container, 1, [Pair.new(tr("tt_game_filling_times_title"), tr("tt_game_filling_times_content"))])
+	filling_times_container.mouse_entered.connect(func():
+		STooltip.show(filling_times_container, 1, [Pair.new(tr("tt_game_filling_times_title"), tr("tt_game_filling_times_content"))])
 	)
-	filling_times_text_container.mouse_exited.connect(func():
+	filling_times_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 

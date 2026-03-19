@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=30 format=3 uid="uid://lm57pm3v4aq7"]
+[gd_resource type="Theme" load_steps=32 format=3 uid="uid://lm57pm3v4aq7"]
 
 [ext_resource type="Texture2D" uid="uid://srhk7v1lpvjr" path="res://images/checked.png" id="1_110ce"]
 [ext_resource type="FontFile" uid="uid://cp78tjuwu7qrs" path="res://fonts/Baloo2_Bold.ttf" id="1_cjfk0"]
@@ -96,6 +96,10 @@ content_margin_top = 16.0
 content_margin_bottom = 16.0
 bg_color = Color(0.36282945, 0.36282948, 0.36282933, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yin2u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ttqs8"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndmpe"]
 bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 expand_margin_left = 4.0
@@ -179,6 +183,8 @@ HSlider/icons/grabber_highlight = ExtResource("3_05tig")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_wdt2l")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_504p6")
 HSlider/styles/slider = SubResource("StyleBoxFlat_ttqs8")
+ItemList/styles/focus = SubResource("StyleBoxEmpty_yin2u")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_ttqs8")
 OptionButton/styles/disabled = SubResource("StyleBoxFlat_ndmpe")
 OptionButton/styles/hover = SubResource("StyleBoxFlat_0ceoj")
 OptionButton/styles/normal = SubResource("StyleBoxFlat_6q1gq")

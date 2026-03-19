@@ -28,6 +28,7 @@ enum Event
 	GemLeft,
 	Matched,
 	Eliminated,
+	EliminatedEffect,
 	Activated,
 	ItemMoved,
 	Combo,

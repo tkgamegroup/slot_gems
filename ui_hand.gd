@@ -4,9 +4,10 @@ const slot_ui = preload("res://ui_hand_slot.tscn")
 const UiSlot = preload("res://ui_hand_slot.gd")
 
 @onready var list = $Control
-const item_w = C.SPRITE_SZ
-const item_h = C.SPRITE_SZ
-const gap = 8
+
+const item_w : int = C.SPRITE_SZ
+const item_h : int= C.SPRITE_SZ
+const gap : int = 8
 
 var disabled : bool = false:
 	set(v):
@@ -15,6 +16,12 @@ var disabled : bool = false:
 			list.modulate = Color(0.7, 0.7, 0.7, 1.0)
 		else:
 			list.modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+func adjusted_gap():
+	var n = list.get_child_count()
+	if n == 0:
+		return gap
+	return ((item_w * G.max_hand_grabs + gap * (G.max_hand_grabs - 1)) - n * item_w) / n
 
 func get_slot(idx : int) -> UiSlot:
 	if idx >= 0 && idx < list.get_child_count():
@@ -49,7 +56,8 @@ func remove_slot(idx : int):
 	n.queue_free()
 
 func get_pos(idx : int):
-	return list.global_position + Vector2((item_w + gap) * idx + item_w * 0.5, item_h * 0.5)
+	var _gap = adjusted_gap()
+	return list.global_position + Vector2((item_w + _gap) * idx + item_w * 0.5, item_h * 0.5)
 
 func clear():
 	for n in list.get_children():
@@ -69,6 +77,7 @@ func _process(delta: float) -> void:
 	if n == 0:
 		return
 	var x_off = 0
+	var _gap = adjusted_gap()
 	var drag_idx = -1
 	var drag_on_hand = false
 	if Drag.ui && Drag.ui.get_parent() == list:
@@ -88,16 +97,18 @@ func _process(delta: float) -> void:
 			var p0 = ui.position
 			var p1 = Vector2(x_off, y)
 			ui.position = lerp(p0, p1, 0.2 * ui.elastic)
+			if i >= G.max_hand_grabs:
+				ui.position += Vector2(sin(tt * 2.0 + i * 3.14) * 1.0, sin(tt + 0.57 + i * 3.14) * 2.0) 
 			if (p0 - ui.position).length() > 50.0 && (ui.position - p1).length() < 300.0:
 				G.control_ui.start_shake(4.0, 0.5)
 			ui.rotation_degrees = (sin(x_off * 0.05 + tt / 20.0)) * 3.0
 		if !(i == drag_idx && !drag_on_hand):
-			x_off += item_w + gap
+			x_off += item_w + _gap
 	if drag_on_hand:
 		var x = Drag.ui.get_rect().get_center().x
 		var new_idx = -1
 		for i in n:
-			var c = item_w * i + ((i - 1) * gap if i > 0 else 0) + item_w * 0.5
+			var c = item_w * i + ((i - 1) * _gap if i > 0 else 0) + item_w * 0.5
 			if x >= c - item_w * 0.5 && x < c + item_w * 0.5:
 				new_idx = i
 				break

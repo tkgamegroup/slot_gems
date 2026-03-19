@@ -2,12 +2,12 @@ extends Control
 
 const reward_pb = preload("res://ui_reward.tscn")
 
-@onready var panel : PanelContainer = $PanelContainer
-@onready var reward_list : Control = $PanelContainer/VBoxContainer/HBoxContainer
-@onready var buttons_list : Control = $PanelContainer/VBoxContainer/HBoxContainer2
-@onready var hide_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button
-@onready var reroll_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button2
-@onready var skip_button : Button = $PanelContainer/VBoxContainer/HBoxContainer2/Button3
+@export var panel : PanelContainer
+@export var reward_list : Control
+@export var buttons_list : Control
+@export var hide_button : Button
+@export var reroll_button : Button
+@export var skip_button : Button
 
 var callback : Callable
 
@@ -15,7 +15,7 @@ func choose(idx : int):
 	SSound.se_click.play()
 	G.screen_shake_strength = 8.0
 	buttons_list.hide()
-	var tween = G.game_tweens.create_tween()
+	var tween = G.create_game_tween()
 	var n = reward_list.get_child_count()
 	for i in n:
 		if i != idx:
@@ -43,7 +43,7 @@ func enter(rewards : Array, _callback : Callable):
 	self.show()
 	panel.show()
 	
-	var tween = G.game_tweens.create_tween()
+	var tween = G.create_game_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
 	buttons_list.show()
@@ -64,7 +64,7 @@ func enter(rewards : Array, _callback : Callable):
 func exit():
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = G.game_tweens.create_tween()
+	var tween = G.create_game_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()

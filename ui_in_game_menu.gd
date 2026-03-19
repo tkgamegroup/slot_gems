@@ -1,14 +1,14 @@
 extends Control
 
-@onready var panel : PanelContainer = $PanelContainer
-@onready var resume_button : Button = $PanelContainer/VBoxContainer/Button
-@onready var options_button : Button = $PanelContainer/VBoxContainer/Button2
-@onready var main_menu_button : Button = $PanelContainer/VBoxContainer/Button3
-@onready var quit_to_desktop_button : Button = $PanelContainer/VBoxContainer/Button4
-@onready var auto_place_items_button : Button = $PanelContainer/VBoxContainer/Button5
-@onready var win_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button6
-@onready var lose_button : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button7
-@onready var test_button : Button = $PanelContainer/VBoxContainer/Button6
+@export var panel : PanelContainer
+@export var resume_button : Button
+@export var options_button : Button
+@export var main_menu_button : Button
+@export var quit_to_desktop_button : Button
+@export var auto_place_items_button : Button
+@export var win_button : Button
+@export var lose_button : Button
+@export var test_button : Button
 
 func enter():
 	SSound.music_less_clear()

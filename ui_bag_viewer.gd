@@ -1,13 +1,13 @@
 extends Control
 
-@onready var panel : PanelContainer = $PanelContainer
-@onready var title = $PanelContainer/VBoxContainer/Label
-@onready var legend1 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer
-@onready var legend2 = $PanelContainer/VBoxContainer/HBoxContainer2/HBoxContainer2
-@onready var gem_list = $PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/List
-@onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/List2
-@onready var comfirm_button = $PanelContainer/VBoxContainer/HBoxContainer/Button2
-@onready var close_button = $PanelContainer/VBoxContainer/HBoxContainer/Button
+@export var panel : PanelContainer
+@export var title : Label
+@export var legend1 : Control
+@export var legend2 : Control
+@export var gem_list : GridContainer
+@export var item_list : GridContainer
+@export var comfirm_button : Button
+@export var close_button : Button
 
 const gem_ui = preload("res://ui_gem.tscn")
 

@@ -1,19 +1,19 @@
 extends Control
 
+@export var list1 : Control
+@export var list2 : Control
+@export var refresh_button : Control
+@export var exit_button : Button
+@export var staging_slot1 : staging_slot_ui
+@export var staging_slot2 : staging_slot_ui
+@export var staging_slot3 : staging_slot_ui
+@onready var staging_slots = [staging_slot1, staging_slot2, staging_slot3]
+
 const shop_item_pb = preload("res://ui_shop_item.tscn")
 const craft_slot_pb = preload("res://ui_craft_slot.tscn")
 const entangle_slots_pb = preload("res://ui_entangle_slots.tscn")
 const gem_ui = preload("res://ui_gem.tscn")
 const staging_slot_ui = preload("res://ui_staging_slot.gd")
-
-@onready var list1 : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer
-@onready var list2 : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer/HBoxContainer2
-@onready var refresh_button : Control = $SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton
-@onready var exit_button : Button = $SubViewport/Panel/HBoxContainer/VBoxContainer2/Button
-@onready var staging_slot1 : staging_slot_ui = $SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot
-@onready var staging_slot2 : staging_slot_ui = $SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot2
-@onready var staging_slot3 : staging_slot_ui = $SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer/StagingSlot3
-@onready var staging_slots = [staging_slot1, staging_slot2, staging_slot3]
 
 const expand_board_base_price : int = 15
 var expand_board_price : int
@@ -46,15 +46,10 @@ var disabled : bool = false:
 
 func release_stagings():
 	var has = false
-	for s in staging_slots:
-		if s.slot.gem:
-			s.slot.unload_gem()
-			has = true
-	for n in list2.get_children():
-		if n.slot.gem:
-			n.slot.unload_gem()
-			has = true
-		n.disabled = true
+	if Hand.grabs.size() > G.max_hand_grabs:
+		for i in Hand.grabs.size() - G.max_hand_grabs:
+			Hand.discard(Hand.grabs.size() - 1)
+		has = true
 	return has
 
 func clear():
@@ -87,7 +82,7 @@ const patterns_pool = ["\\", "|", "/", "O", "√", "X", "Island"]
 
 func refresh(tween : Tween = null):
 	if !tween:
-		tween = G.game_tweens.create_tween()
+		tween = G.create_game_tween()
 	
 	self.disabled = true
 	
@@ -249,7 +244,7 @@ func refresh(tween : Tween = null):
 
 func enter(tween : Tween = null, do_refresh : bool = true):
 	if !tween:
-		tween = G.game_tweens.create_tween()
+		tween = G.create_game_tween()
 	
 	self.disabled = true
 	
@@ -261,18 +256,18 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 		n.disabled = true
 	G.stage = G.Stage.Shopping
 	
-	var sub1 = G.game_tweens.create_tween()
-	var sub2 = G.game_tweens.create_tween()
+	var sub1 = G.create_game_tween()
+	var sub2 = G.create_game_tween()
 	sub1.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-	sub2.parallel().tween_property(G.status_bar_ui.round_text, "modulate:a", 0.0, 0.3)
-	sub2.parallel().tween_property(G.status_bar_ui.round_target, "modulate:a", 0.0, 0.3)
+	sub2.parallel().tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
+	sub2.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
 	sub2.tween_callback(func():
 		G.score = 0
-		G.status_bar_ui.round_text.text = tr("ui_shop_title")
-		G.status_bar_ui.round_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
+		G.game_ui.status_bar.round_text.text = tr("ui_shop_title")
+		G.game_ui.status_bar.round_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
 	)
-	sub2.tween_property(G.status_bar_ui.round_text, "modulate:a", 1.0, 0.3)
-	sub2.parallel().tween_property(G.status_bar_ui.round_target, "modulate:a", 1.0, 0.3)
+	sub2.tween_property(G.game_ui.status_bar.round_text, "modulate:a", 1.0, 0.3)
+	sub2.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 1.0, 0.3)
 	tween.tween_subtween(sub1)
 	tween.parallel().tween_subtween(sub2)
 	tween.parallel().tween_property(G.background.material, "shader_parameter/color", Color(0.71, 0.703, 0.504), 0.8)
@@ -294,13 +289,13 @@ func exit(tween : Tween = null, trans : bool = true):
 	if trans:
 		disabled = true
 		if !tween:
-			tween = G.game_tweens.create_tween()
+			tween = G.create_game_tween()
 		if release_stagings():
 			tween.tween_interval(0.4)
 		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 		tween.parallel().tween_property(G.background.material, "shader_parameter/color", Color(0.917, 0.921, 0.65), 0.8)
-		tween.parallel().tween_property(G.status_bar_ui.round_text, "modulate:a", 0.0, 0.3)
-		tween.parallel().tween_property(G.status_bar_ui.round_target, "modulate:a", 0.0, 0.3)
+		tween.parallel().tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
+		tween.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
 		tween.tween_callback(func():
 			clear()
 			self.hide()
@@ -326,7 +321,7 @@ func _ready() -> void:
 	#exit_button.mouse_entered.connect(SSound.se_select.play)
 	refresh_button.button.pressed.connect(func():
 		if G.coins < refresh_price:
-			G.status_bar_ui.coins_text.hint()
+			G.game_ui.status_bar.coins_text.hint()
 			return
 		SSound.se_coin.play()
 		G.coins -= refresh_price

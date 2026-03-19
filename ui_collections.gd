@@ -1,11 +1,11 @@
 extends Control
 
-@onready var panel : PanelContainer = $PanelContainer
-@onready var item_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List
-@onready var skill_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List2
-@onready var pattern_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List3
-@onready var relic_list = $PanelContainer/VBoxContainer/ScrollContainer/VBoxContainer/List4
-@onready var close_button = $PanelContainer/VBoxContainer/Button
+@export var panel : PanelContainer
+@export var item_list : GridContainer
+@export var skill_list : GridContainer
+@export var pattern_list : GridContainer
+@export var relic_list : GridContainer
+@export var close_button : Button
 
 const pattern_ui = preload("res://ui_pattern.tscn")
 const relic_ui = preload("res://ui_relic.tscn")

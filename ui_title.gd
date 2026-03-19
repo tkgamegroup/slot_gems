@@ -1,15 +1,16 @@
 extends Control
 
-@onready var title_txt : RichTextLabel = $MarginContainer2/Control/Text
-@onready var title_txt_shadow : Label = $MarginContainer2/Control/Shadow
-@onready var gems_root : Control = $Control
-@onready var button_list : Control = $MarginContainer/PanelContainer
-@onready var continue_button : Button = $MarginContainer/PanelContainer/HBoxContainer/Button1
-@onready var new_game_button : Button = $MarginContainer/PanelContainer/HBoxContainer/Button2
-@onready var collections_button : Button = $MarginContainer/PanelContainer/HBoxContainer/Button3
-@onready var options_button : Button = $MarginContainer/PanelContainer/HBoxContainer/Button4
-@onready var quit_button : Button = $MarginContainer/PanelContainer/HBoxContainer/Button5
-@onready var version_text : Label = $Version
+@export var title_txt : RichTextLabel
+@export var title_txt_shadow : Label
+@export var gems_root : Control
+@export var button_list : Control
+@export var continue_button : Button
+@export var new_game_button : Button
+@export var collections_button : Button
+@export var options_button : Button
+@export var quit_button : Button
+@export var test_button : Button
+@export var version_text : Label
 
 func exit(tween : Tween = null) -> Tween:
 	if !tween:
@@ -73,6 +74,9 @@ func _ready() -> void:
 		get_tree().quit()
 	)
 	quit_button.mouse_entered.connect(SSound.se_select.play)
+	test_button.pressed.connect(func():
+		G.test_ui.show()
+	)
 	
 	version_text.text = "V%d.%02d.%03d" % [G.version_major, G.version_minor, G.version_patch]
 	

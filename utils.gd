@@ -1,5 +1,3 @@
-extends Object
-
 class_name SUtils
 
 static func get_formated_datetime() -> String:

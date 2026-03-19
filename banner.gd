@@ -1,8 +1,8 @@
 extends Control
 
-@onready var bg : Control = $TextureRect
-@onready var text1 : RichTextLabel = $VBoxContainer/Label
-@onready var text2 : RichTextLabel = $VBoxContainer/Label2
+@export var bg : Control
+@export var text1 : RichTextLabel
+@export var text2 : RichTextLabel
 
 var show_tip_tween : Tween = null
 
@@ -20,13 +20,13 @@ func appear(_text1 : String, _text2 : String, tween : Tween = null):
 	self.show()
 	
 	if !tween:
-		tween = G.game_tweens.create_tween()
+		tween = G.create_game_tween()
 	tween.tween_property(self, "position:x", (vp.x - self.size.x) * 0.5, 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
 	return tween
 
 func disappear(tween : Tween = null, hide_text : bool = false):
 	if !tween:
-		tween = G.game_tweens.create_tween()
+		tween = G.create_game_tween()
 	if hide_text:
 		text1.hide()
 		text2.hide()
@@ -40,7 +40,7 @@ func show_tip(_text1 : String, _text2 : String, duration : float):
 	if show_tip_tween:
 		show_tip_tween.kill()
 		show_tip_tween = null
-	show_tip_tween = G.game_tweens.create_tween()
+	show_tip_tween = G.create_game_tween()
 	appear(_text1, _text2, show_tip_tween)
 	show_tip_tween.tween_interval(duration)
 	disappear(show_tip_tween)

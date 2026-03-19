@@ -1,14 +1,14 @@
 extends Control
 
-@onready var panel = $PanelContainer
-@onready var tab_container : TabContainer = $PanelContainer/VBoxContainer/TabContainer
-@onready var round1_title = $PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Label
-@onready var round2_title = $PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer/Label
-@onready var round3_title = $PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer/Label
-@onready var round1_desc = $PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Label2
-@onready var round2_desc = $PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer/Label2
-@onready var round3_desc = $PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer/Label2
-@onready var close_button : Button = $PanelContainer/VBoxContainer/Button
+@export var panel : Control
+@export var tab_container : TabContainer
+@export var round1_title : Label
+@export var round2_title : Label
+@export var round3_title : Label
+@export var round1_desc : RichTextLabel
+@export var round2_desc : RichTextLabel
+@export var round3_desc : RichTextLabel
+@export var close_button : Button
 
 func enter():
 	self.self_modulate.a = 0.0
@@ -18,7 +18,7 @@ func enter():
 	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
-	var r = G.round
+	var r = G.current_round
 	if !G.shop_ui.visible:
 		r -= 1
 	r = int(r / 3) * 3 + 1

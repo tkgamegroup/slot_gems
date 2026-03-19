@@ -15,7 +15,7 @@ var tween : Tween = null
 func set_value(v : int):
 	if v == value:
 		return
-	if !show_change || STest.testing:
+	if !show_change:
 		value = v
 		text.text = "%d" % value
 		return

@@ -1,10 +1,10 @@
 extends Control
 
-@onready var panel : PanelContainer = $PanelContainer
-@onready var title : Label = $PanelContainer/VBoxContainer/Label
-@onready var content : Label = $PanelContainer/VBoxContainer/Label2
-@onready var button1 : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button
-@onready var button2 : Button = $PanelContainer/VBoxContainer/HBoxContainer/Button2
+@export var panel : PanelContainer
+@export var title : Label
+@export var content : Label
+@export var button1 : Button
+@export var button2 : Button
 
 var action1 : Callable
 var action2 : Callable
