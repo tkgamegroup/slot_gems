@@ -1,14 +1,14 @@
 extends Control
 
-@onready var sub_viewport = $SubViewport
-@onready var gem_kind_sp = $SubViewport/GemKind
-@onready var wild_sp = $SubViewport/Wild
-@onready var special_sp = $SubViewport/Special
-@onready var rune_sp = $SubViewport/Rune
-@onready var display : Sprite2D = $Display
-@onready var charming_fx : CPUParticles2D = $Charming
-@onready var sharp_fx : CPUParticles2D = $Sharp
-@onready var pieces_root = $Pieces
+@export var sub_viewport :SubViewport
+@export var gem_kind_sp : AnimatedSprite2D
+@export var wild_sp : AnimatedSprite2D
+@export var special_sp : AnimatedSprite2D
+@export var rune_sp : AnimatedSprite2D
+@export var display : Sprite2D
+@export var charming_fx : CPUParticles2D
+@export var sharp_fx : CPUParticles2D
+@export var pieces_root : Node2D
 @export var angle : Vector2:
 	set(v):
 		angle = v

@@ -11,11 +11,15 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
-[node name="NumberText" type="MarginContainer"]
+[node name="NumberText" type="MarginContainer" node_paths=PackedStringArray("text", "change", "change_bg", "change_panel")]
 offset_right = 35.0
 offset_bottom = 36.0
 mouse_filter = 2
 script = ExtResource("1_nnhdv")
+text = NodePath("Text")
+change = NodePath("Panel/ChangeBG/Change")
+change_bg = NodePath("Panel/ChangeBG")
+change_panel = NodePath("Panel")
 
 [node name="Text" parent="." instance=ExtResource("2_1k47t")]
 layout_mode = 2

@@ -3,6 +3,7 @@ extends Control
 var type : String
 var payload = null
 var ui : Control
+var ui_scaling : Vector2
 var release_cb : Callable
 var targets : Array[Triple]
 var processing : bool = false
@@ -34,6 +35,7 @@ func start(_type : String, _payload, _ui : Control, _release_cb : Callable):
 	type = _type
 	payload = _payload
 	ui = _ui
+	ui_scaling = ui.scale
 	ui.z_index = 10
 	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	release_cb = _release_cb
@@ -52,6 +54,7 @@ func release(target = null, extra : Dictionary = {}):
 	type = ""
 	payload = null
 	if ui:
+		ui.scale = ui_scaling
 		ui.z_index = 0
 		ui.mouse_filter = Control.MOUSE_FILTER_STOP
 		ui = null
@@ -90,4 +93,4 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	if ui:
-		ui.global_position = get_global_mouse_position() - (ui.size * 0.5) + offset
+		ui.global_position = get_global_mouse_position() - (ui.size * ui.scale * 0.5) + offset

@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" uid="uid://n7kkxuun2q81" path="res://ui_settlement_item.gd" id="1_i73lo"]
 
-[node name="HBoxContainer" type="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" node_paths=PackedStringArray("name_text", "bar_text", "value_text")]
 script = ExtResource("1_i73lo")
+name_text = NodePath("Label")
+bar_text = NodePath("Label2")
+value_text = NodePath("Label3")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2

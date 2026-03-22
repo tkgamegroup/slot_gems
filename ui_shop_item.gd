@@ -1,9 +1,11 @@
 extends Control
 
-@onready var cate_lb = $VBoxContainer/Category
-@onready var content : Control = $VBoxContainer/Content
-@onready var buy_button = $VBoxContainer/Buy
-@onready var price_lb = $VBoxContainer/Price
+const UiRichButton = preload("res://rich_button.gd")
+
+@export var cate_lb : Label
+@export var content : Control
+@export var buy_button : UiRichButton
+@export var price_lb : RichTextLabel
 
 const gem_ui = preload("res://ui_gem.tscn")
 const relic_ui = preload("res://ui_relic.tscn")
@@ -101,6 +103,7 @@ func buy(tween : Tween = null):
 			if i == 0:
 				if Hand.grabs.size() > G.max_hand_grabs:
 					Hand.discard(Hand.grabs.size() - 1)
+				G.take_from_bag(gem)
 				var ui = Hand.add_gem(gem)
 				ui.hide()
 				sub.tween_callback(func():

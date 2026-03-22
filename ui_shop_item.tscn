@@ -15,7 +15,7 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[node name="UiShopItem" type="PanelContainer"]
+[node name="UiShopItem" type="PanelContainer" node_paths=PackedStringArray("cate_lb", "content", "buy_button", "price_lb")]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 83.0
 offset_bottom = 160.0
@@ -23,6 +23,10 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_eiamj")
 script = ExtResource("1_e4q1j")
+cate_lb = NodePath("VBoxContainer/Category")
+content = NodePath("VBoxContainer/Content")
+buy_button = NodePath("VBoxContainer/Buy")
+price_lb = NodePath("VBoxContainer/Price")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2

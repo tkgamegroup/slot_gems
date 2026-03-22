@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var line = $Line2D
+@export var line : Line2D
 
 var coord1 : Vector2i
 var coord2 : Vector2i

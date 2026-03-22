@@ -9,10 +9,12 @@ var name : String
 var image_id : int
 var description : String
 var price : int = 10
+var sockets : Array[Gem]
 var extra : Dictionary
 
 var on_event : Callable
 var on_active : Callable
+var on_socket : Callable
 
 var ui : UiRelic = null
 
@@ -547,6 +549,17 @@ func setup(n : String):
 					if ok:
 						SSound.se_vibra.play()
 				)
+	elif name == "Sandcastle":
+		image_id = 30
+		price = 5
+		sockets.resize(3)
+		extra["bouns_i"] = 10
+		on_socket = func(index : int, g : Gem):
+			var bouns = extra["bouns_i"]
+			if sockets[index]:
+				G.change_modifier(Gem.color_bouns_name(sockets[index].type), -bouns)
+			if g:
+				G.change_modifier(Gem.color_bouns_name(g.type), bouns)
 
 func get_tooltip():
 	var ret : Array[Pair] = []

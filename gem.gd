@@ -133,30 +133,6 @@ static func name_to_type(s : String):
 		"Any": return ColorAny
 	return None
 
-static func type_color(t : int) -> Color:
-	match t:
-		None: return Color(0, 0, 0, 0)
-		ColorRed: return Color(0.83, 0.07, 0.09, 1.0)
-		ColorOrange: return Color(1.0, 0.71, 0.16)
-		ColorGreen: return Color(0.61, 0.75, 0.25)
-		ColorBlue: return Color(0.56, 0.87, 0.96)
-		ColorMagenta: return Color(0.88, 0.20, 0.80)
-		ColorWhite: return Color(0.99, 0.99, 0.99)
-		ColorBlack: return Color(0.27, 0.27, 0.27)
-	return Color.WHITE
-
-static func type_img(t : int):
-	match t:
-		None: return "res://images/gem_colorless.png"
-		ColorRed: return "res://images/gem_red.png"
-		ColorOrange: return "res://images/gem_orange.png"
-		ColorGreen: return "res://images/gem_green.png"
-		ColorBlue: return "res://images/gem_blue.png"
-		ColorMagenta: return "res://images/gem_magenta.png"
-		ColorWhite: return "res://images/gem_white.png"
-		ColorBlack: return "res://images/gem_black.png"
-	return ""
-
 static func split_color_combo(combo : int):
 	match combo:
 		ColorRedOrange:
@@ -191,6 +167,39 @@ static func color_combo_contains(combo : int, v : int):
 	if combo == ColorAny:
 		return true
 	return split_color_combo(combo).has(v)
+
+static func color_bouns_name(t : int) -> String:
+	match t:
+		ColorRed: return "red_bouns_i"
+		ColorOrange: return "orange_bouns_i"
+		ColorGreen: return "green_bouns_i"
+		ColorBlue: return "blue_bouns_i"
+		ColorMagenta: return "magenta_bouns_i"
+	return ""
+
+static func type_color(t : int) -> Color:
+	match t:
+		None: return Color(0, 0, 0, 0)
+		ColorRed: return Color(0.83, 0.07, 0.09, 1.0)
+		ColorOrange: return Color(1.0, 0.71, 0.16)
+		ColorGreen: return Color(0.61, 0.75, 0.25)
+		ColorBlue: return Color(0.56, 0.87, 0.96)
+		ColorMagenta: return Color(0.88, 0.20, 0.80)
+		ColorWhite: return Color(0.99, 0.99, 0.99)
+		ColorBlack: return Color(0.27, 0.27, 0.27)
+	return Color.WHITE
+
+static func type_img(t : int):
+	match t:
+		None: return "res://images/gem_colorless.png"
+		ColorRed: return "res://images/gem_red.png"
+		ColorOrange: return "res://images/gem_orange.png"
+		ColorGreen: return "res://images/gem_green.png"
+		ColorBlue: return "res://images/gem_blue.png"
+		ColorMagenta: return "res://images/gem_magenta.png"
+		ColorWhite: return "res://images/gem_white.png"
+		ColorBlack: return "res://images/gem_black.png"
+	return ""
 
 static func rune_name(r : int):
 	match r:
@@ -242,23 +251,19 @@ static func rune_combo_contains(combo : int, v : int):
 
 func get_base_score():
 	var ret = base_score
-	match type:
-		ColorRed: ret += G.modifiers["red_bouns_i"]
-		ColorOrange: ret += G.modifiers["orange_bouns_i"]
-		ColorGreen: ret += G.modifiers["green_bouns_i"]
-		ColorBlue: ret += G.modifiers["blue_bouns_i"]
-		ColorMagenta: ret += G.modifiers["magenta_bouns_i"]
-		ColorRedOrange: ret += ceil((G.modifiers["red_bouns_i"] + G.modifiers["orange_bouns_i"]) / 2.0)
-		ColorRedGreen: ret += ceil((G.modifiers["red_bouns_i"] + G.modifiers["green_bouns_i"]) / 2.0)
-		ColorRedBlue: ret += ceil((G.modifiers["red_bouns_i"] + G.modifiers["blue_bouns_i"]) / 2.0)
-		ColorRedMagenta: ret += ceil((G.modifiers["red_bouns_i"] + G.modifiers["magenta_bouns_i"]) / 2.0)
-		ColorOrangeGreen: ret += ceil((G.modifiers["orange_bouns_i"] + G.modifiers["green_bouns_i"]) / 2.0)
-		ColorOrangeBlue: ret += ceil((G.modifiers["orange_bouns_i"] + G.modifiers["blue_bouns_i"]) / 2.0)
-		ColorOrangeMagenta: ret += ceil((G.modifiers["orange_bouns_i"] + G.modifiers["magenta_bouns_i"]) / 2.0)
-		ColorGreenBlue: ret += ceil((G.modifiers["green_bouns_i"] + G.modifiers["blue_bouns_i"]) / 2.0)
-		ColorGreenMagenta: ret += ceil((G.modifiers["green_bouns_i"] + G.modifiers["magenta_bouns_i"]) / 2.0)
-		ColorBlueMagenta: ret += ceil((G.modifiers["blue_bouns_i"] + G.modifiers["magenta_bouns_i"]) / 2.0)
-		ColorWild: ret += ceil((G.modifiers["red_bouns_i"] + G.modifiers["orange_bouns_i"] + G.modifiers["green_bouns_i"] + G.modifiers["blue_bouns_i"] + G.modifiers["magenta_bouns_i"]) / 5.0) 
+	if type >= ColorFirst && type <= ColorLast:
+		ret += G.modifiers[color_bouns_name(type)]
+	elif type >= ColorComboFirst && type <= ColorComboLast:
+		var sum = 0
+		var cols = split_color_combo(type)
+		for c in cols:
+			sum += G.modifiers[color_bouns_name(c)]
+		ret += ceil(sum / float(cols.size()))
+	elif type == ColorWild:
+		var sum = 0
+		for i in ColorCount:
+			sum += G.modifiers[color_bouns_name(ColorFirst + i)]
+		ret += ceil(sum / float(ColorCount)) 
 	return ret
 
 func get_score():
@@ -574,7 +579,7 @@ func setup(n : String):
 					for i in points.size() - 1:
 						var p0 = points[i]
 						var p1 = points[i + 1]
-						for c in Board.draw_line(Board.offset_to_cube(p0), Board.offset_to_cube(p1)):
+						for c in Board.coords_in_line(Board.offset_to_cube(p0), Board.offset_to_cube(p1)):
 							var cc = Board.cube_to_offset(c)
 							coords.append(cc)
 						if tween:

@@ -17,7 +17,7 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[node name="Tooltip" type="PanelContainer"]
+[node name="Tooltip" type="PanelContainer" node_paths=PackedStringArray("title_text", "content_text")]
 offset_right = 166.0
 offset_bottom = 34.0
 size_flags_horizontal = 0
@@ -25,6 +25,8 @@ size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_a3ohg")
 script = ExtResource("1_p2sb4")
+title_text = NodePath("VBoxContainer/Title")
+content_text = NodePath("VBoxContainer/Content")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2

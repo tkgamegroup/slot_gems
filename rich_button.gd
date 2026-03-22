@@ -1,7 +1,7 @@
 extends Control
 
-@onready var text = $RichTextLabel
-@onready var button = $Button
+@export var text : RichTextLabel
+@export var button : Button
 
 @export var disabled : bool = false:
 	set(v):

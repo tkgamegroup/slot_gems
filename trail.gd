@@ -1,7 +1,7 @@
 extends Node
 
-@onready var trail = $Line2D
-@onready var timer = $Timer
+@export var trail : Line2D
+@export var timer : Timer
 
 var width : float = 5.0
 var color : Color = Color(1.0, 1.0, 1.0)

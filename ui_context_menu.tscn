@@ -5,7 +5,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_twh2u"]
 
-[node name="UiContextMenu" type="Control"]
+[node name="UiContextMenu" type="Control" node_paths=PackedStringArray("list", "sell_button", "sell_text")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +13,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_twh2u")
+list = NodePath("VBoxContainer")
+sell_button = NodePath("VBoxContainer/Sell")
+sell_text = NodePath("VBoxContainer/Sell/HBoxContainer/Label")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0

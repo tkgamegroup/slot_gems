@@ -2,18 +2,19 @@ extends Control
 
 const UiGem = preload("res://ui_gem.gd")
 
-@onready var gem_ui : UiGem = $UiGem
-@onready var img_open : TextureRect = $Open
-@onready var img_close : TextureRect = $Close
-@onready var particles1 : CPUParticles2D = $CPUParticles2D
-@onready var particles2 : CPUParticles2D = $CPUParticles2D2
+@export var gem_ui : UiGem
+@export var img_open : TextureRect
+@export var img_close : TextureRect
+@export var particles1 : CPUParticles2D
+@export var particles2 : CPUParticles2D
 
 var gem : Gem = null
 var disabled : bool = false:
 	set(v):
 		disabled = v
 		update_color(false)
-var rc_to_unload : bool = true
+var right_click_to_unload : bool = true
+var allow_change : bool = true
 
 signal on_load
 signal on_unload
@@ -59,15 +60,16 @@ func _ready() -> void:
 			update_color(false)
 		else:
 			if !disabled:
-				load_gem(payload.gem)
-				return true
+				if !gem || allow_change:
+					load_gem(payload.gem)
+					return true
 		return false
 	)
 	self.gui_input.connect(func(event : InputEvent):
 		if disabled:
 			return
 		if event is InputEventMouseButton:
-			if rc_to_unload && event.pressed && event.button_index == MOUSE_BUTTON_RIGHT:
+			if right_click_to_unload && event.pressed && event.button_index == MOUSE_BUTTON_RIGHT:
 				SSound.se_drag_item.play()
 				unload_gem()
 	)

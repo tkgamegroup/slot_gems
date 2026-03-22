@@ -16,12 +16,17 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[node name="UiReward" type="Panel"]
+[node name="UiReward" type="Panel" node_paths=PackedStringArray("bg", "icon_img", "title_txt", "desc_txt", "cate_txt")]
 custom_minimum_size = Vector2(240, 360)
 offset_right = 240.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bgtbs")
 script = ExtResource("1_3gn8b")
+bg = NodePath("BG")
+icon_img = NodePath("BG/Icon")
+title_txt = NodePath("BG/Label")
+desc_txt = NodePath("BG/Label2")
+cate_txt = NodePath("BG/Label3")
 
 [node name="BG" type="Panel" parent="."]
 layout_mode = 1

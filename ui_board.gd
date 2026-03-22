@@ -6,6 +6,7 @@ extends Control
 @export var underlay : Node2D
 @export var cells_root : Node2D
 @export var entangled_lines : Node2D
+@export var draw_lines : Node2D
 @export var overlay : Node2D
 @export var hover_ui : Sprite2D
 

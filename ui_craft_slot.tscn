@@ -5,11 +5,14 @@
 [ext_resource type="PackedScene" uid="uid://doi8xt0sm16fg" path="res://ui_gem_slot.tscn" id="3_u3j5k"]
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="6_16ix3"]
 
-[node name="CraftSlot" type="VBoxContainer"]
+[node name="CraftSlot" type="VBoxContainer" node_paths=PackedStringArray("title_txt", "slot", "button")]
 offset_right = 150.0
 offset_bottom = 178.0
 theme_override_constants/separation = 8
 script = ExtResource("1_rxl87")
+title_txt = NodePath("Title")
+slot = NodePath("Slot")
+button = NodePath("MarginContainer/Button")
 
 [node name="Title" type="RichTextLabel" parent="."]
 custom_minimum_size = Vector2(150, 35)

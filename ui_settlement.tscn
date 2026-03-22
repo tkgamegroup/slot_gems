@@ -3,9 +3,9 @@
 [sub_resource type="GDScript" id="GDScript_bpnin"]
 script/source = "extends Control
 
-@onready var name_text = $Label
-@onready var bar_text = $Label2
-@onready var value_text = $Label3
+@export var name_text : Label
+@export var bar_text : Label
+@export var value_text : RichTextLabel
 
 var name_str : String
 var value_str : String
@@ -25,8 +25,11 @@ func _ready() -> void:
 	)
 "
 
-[node name="HBoxContainer" type="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" node_paths=PackedStringArray("name_text", "bar_text", "value_text")]
 script = SubResource("GDScript_bpnin")
+name_text = NodePath("Label")
+bar_text = NodePath("Label2")
+value_text = NodePath("Label3")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2

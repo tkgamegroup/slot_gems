@@ -7,7 +7,7 @@ static func get_formated_datetime() -> String:
 	datetime = datetime.replace(" ", "_")
 	return datetime
 
-static func replacing_gem_tag(text : String, with_color : bool, with_url : bool, used_gems : Array = []) -> String:
+static func replacing_gem_tag(text : String, with_color : bool, with_url : bool, referenced_gems : Array = []) -> String:
 	var ret = ""
 	var regex = RegEx.new()
 	regex.compile(r"\[gem_([A-Za-z0-9]+)\]")
@@ -25,7 +25,23 @@ static func replacing_gem_tag(text : String, with_color : bool, with_url : bool,
 				ret += " [color=cyan]%s[/color]" % G.tr("gem_name_" + gem_name)
 		else:
 			ret += " " + G.tr("gem_name_" + gem_name)
-		used_gems.append(gem_name)
+		referenced_gems.append(gem_name)
+		last_end = end
+	ret += text.substr(last_end)
+	return ret
+
+static func replacing_constellation_tag(text : String, referenced_constellations : Array = []):
+	var ret = ""
+	var regex = RegEx.new()
+	regex.compile(r"\[const_([A-Za-z0-9]+)\]")
+	var last_end = 0
+	var matches = regex.search_all(text)
+	for m in matches:
+		var start = m.get_start()
+		var end = m.get_end()
+		ret += text.substr(last_end, start - last_end)
+		var constellation_name = m.get_string(1)
+		referenced_constellations.append(constellation_name)
 		last_end = end
 	ret += text.substr(last_end)
 	return ret
@@ -72,9 +88,10 @@ static func replacing_conditioning_line_tag(text : String) -> String:
 	return ret
 
 const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_consumable", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_nullified", "w_in_mist"]
-static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], used_gems : Array = []) -> String:
+static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], referenced_gems : Array = [], referenced_constellations : Array = []) -> String:
 	var ret = ""
-	ret = replacing_gem_tag(text, with_color, with_url, used_gems)
+	ret = replacing_gem_tag(text, with_color, with_url, referenced_gems)
+	ret = replacing_constellation_tag(text, referenced_constellations)
 	ret = replacing_number_tag(ret, with_color)
 	ret = replacing_conditioning_line_tag(ret)
 	

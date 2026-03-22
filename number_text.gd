@@ -1,9 +1,9 @@
 extends Control
 
-@onready var text : Control = $Text
-@onready var change : Label = $Panel/ChangeBG/Change
-@onready var change_bg : ColorRect = $Panel/ChangeBG
-@onready var change_panel : Control = $Panel
+@export var text : Control
+@export var change : Label
+@export var change_bg : ColorRect
+@export var change_panel : Control
 
 @export var font_size : int = 22
 

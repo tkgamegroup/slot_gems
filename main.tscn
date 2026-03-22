@@ -1,4 +1,4 @@
-[gd_scene load_steps=183 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=185 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -76,6 +76,7 @@
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="Texture2D" uid="uid://ed1myix0g4wq" path="res://images/hover.png" id="54_jbvwl"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
+[ext_resource type="Script" uid="uid://cshsxbefna3q3" path="res://draw_lines.gd" id="55_k1udn"]
 [ext_resource type="Script" uid="uid://coxa0ciyuwmpa" path="res://top_bar.gd" id="57_c2n8d"]
 [ext_resource type="PackedScene" uid="uid://jx25i3eefmlt" path="res://ui_staging_slot.tscn" id="58_l0gw7"]
 [ext_resource type="Script" uid="uid://on0uey2ql632" path="res://ui_status_bar.gd" id="59_nqrtl"]
@@ -105,6 +106,7 @@
 [ext_resource type="Script" uid="uid://dabbjps03o76h" path="res://ui_test.gd" id="95_inymm"]
 [ext_resource type="Texture2D" uid="uid://bhfkoykwxo26k" path="res://images/checked_small.png" id="96_0arob"]
 [ext_resource type="Texture2D" uid="uid://b0xl8ugcexhye" path="res://images/unchecked_small.png" id="97_dij0e"]
+[ext_resource type="Script" uid="uid://yfu3obay4eym" path="res://ui_tooltips.gd" id="106_wat4s"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
 random_pitch = 1.1
@@ -1065,7 +1067,7 @@ theme_override_font_sizes/font_size = 64
 text = "test"
 metadata/_edit_use_anchors_ = true
 
-[node name="Board" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tilemap", "panel", "outlines_root", "underlay", "cells_root", "entangled_lines", "overlay", "hover_ui")]
+[node name="Board" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tilemap", "panel", "outlines_root", "underlay", "cells_root", "entangled_lines", "draw_lines", "overlay", "hover_ui")]
 visible = false
 material = SubResource("ShaderMaterial_l0gw7")
 anchors_preset = 15
@@ -1080,6 +1082,7 @@ outlines_root = NodePath("SubViewport/Outlines")
 underlay = NodePath("SubViewport/Underlay")
 cells_root = NodePath("SubViewport/Cells")
 entangled_lines = NodePath("SubViewport/EntangledLines")
+draw_lines = NodePath("SubViewport/DrawLines")
 overlay = NodePath("SubViewport/Overlay")
 hover_ui = NodePath("Hover")
 
@@ -1107,6 +1110,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_yysqy")
 [node name="Cells" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
 
 [node name="EntangledLines" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
+
+[node name="DrawLines" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
+script = ExtResource("55_k1udn")
 
 [node name="Overlay" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
 
@@ -3866,12 +3872,33 @@ text = "Yes"
 layout_mode = 2
 text = "No"
 
-[node name="Tooltips" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="Tooltips" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("absoulte", "offset", "panel", "container", "list1", "list2", "show_more")]
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
+script = ExtResource("106_wat4s")
+absoulte = NodePath("Absolute")
+offset = NodePath("Control")
+panel = NodePath("Control/ScorllContainer")
+container = NodePath("Control/ScorllContainer/MarginContainer")
+list1 = NodePath("Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer")
+list2 = NodePath("Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer2")
+show_more = NodePath("Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer")
 
-[node name="ScorllContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips"]
+[node name="Absolute" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Tooltips"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/Tooltips"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScorllContainer" type="ScrollContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control"]
 layout_mode = 1
 offset_right = 16.0
 size_flags_horizontal = 0
@@ -3881,7 +3908,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_m50mc")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_jbvwl")
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 4
@@ -3889,36 +3916,39 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer/MarginContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_top = -6
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f0uef")
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer/PanelContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 16
 text = "tt_alt_to_show_more"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/ScorllContainer/MarginContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Tooltips/Control/ScorllContainer/MarginContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0

@@ -5,11 +5,15 @@
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="3_0gqb4"]
 [ext_resource type="PackedScene" uid="uid://doi8xt0sm16fg" path="res://ui_gem_slot.tscn" id="3_d1jea"]
 
-[node name="EntangleSlots" type="VBoxContainer"]
+[node name="EntangleSlots" type="VBoxContainer" node_paths=PackedStringArray("title_txt", "slot1", "slot2", "button")]
 offset_right = 172.0
 offset_bottom = 170.0
 theme_override_constants/separation = 8
 script = ExtResource("1_3lccf")
+title_txt = NodePath("Title")
+slot1 = NodePath("HBoxContainer/Slot1")
+slot2 = NodePath("HBoxContainer/Slot2")
+button = NodePath("MarginContainer/Button")
 
 [node name="Title" type="RichTextLabel" parent="."]
 custom_minimum_size = Vector2(150, 35)

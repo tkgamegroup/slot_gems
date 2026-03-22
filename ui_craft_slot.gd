@@ -2,10 +2,11 @@ extends Control
 
 const UiGem = preload("res://ui_gem.gd")
 const UiSlot = preload("res://ui_gem_slot.gd")
+const UiRichButton = preload("res://rich_button.gd")
 
-@onready var title_txt : RichTextLabel = $Title
-@onready var slot : UiSlot = $Slot
-@onready var button = $MarginContainer/Button
+@export var title_txt : RichTextLabel
+@export var slot : UiSlot
+@export var button : UiRichButton
 
 var type : String
 var thing : String

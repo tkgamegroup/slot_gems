@@ -1,5 +1,5 @@
 extends Control
 
-@onready var button : Button = $Button
-@onready var num : Label = $Button/Label
-@onready var select : ColorRect = $ColorRect
+@export var button : Button
+@export var num : Label
+@export var select : ColorRect

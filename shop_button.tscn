@@ -13,8 +13,8 @@ border_color = Color(0.313695, 0.200541, 0.00778849, 1)
 [sub_resource type="GDScript" id="GDScript_i4576"]
 script/source = "extends Control
 
-@onready var button : Button = $HBoxContainer/Button
-@onready var price : Label = $HBoxContainer/Price/HBoxContainer/Label
+@export var button : Button
+@export var price : Label
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkkcx"]
@@ -76,13 +76,15 @@ shadow_offset = Vector2(3, 2)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rdvh"]
 
-[node name="ShopButton" type="PanelContainer"]
+[node name="ShopButton" type="PanelContainer" node_paths=PackedStringArray("button", "price")]
 offset_right = 83.0
 offset_bottom = 40.0
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vc7fc")
 script = SubResource("GDScript_i4576")
+button = NodePath("HBoxContainer/Button")
+price = NodePath("HBoxContainer/Price/HBoxContainer/Label")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

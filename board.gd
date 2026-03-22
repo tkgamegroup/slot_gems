@@ -92,7 +92,7 @@ func offset_nearest_to(p : Vector2i, coords : Array[Vector2i], limit : int = 100
 func cube_lerp(a : Vector3i, b : Vector3i, v : float):
 	return Vector3i(round(lerp(a.x, b.x, v)), round(lerp(a.y, b.y, v)), round(lerp(a.z, b.z, v)))
 
-func draw_line(a : Vector3i, b : Vector3i):
+func coords_in_line(a : Vector3i, b : Vector3i):
 	var n = cube_distance(a, b)
 	var res = []
 	for i in n:

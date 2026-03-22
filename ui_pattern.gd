@@ -1,7 +1,7 @@
 extends Control
 
-@onready var tilemap : TileMapLayer = $TileMapLayer
-@onready var exp_bar : ProgressBar = $ProgressBar
+@export var tilemap : TileMapLayer
+@export var exp_bar : ProgressBar
 
 var pattern : Pattern = null
 var coord_groups : Array[Array]

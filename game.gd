@@ -14,7 +14,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 14
+const version_patch : int = 15
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -286,8 +286,10 @@ var filling_times : int = 0:
 					)
 
 var hovering_coord : Vector2i = Vector2i(-1, -1)
-var paint_mode : bool = false
-var paint_brush : int = Gem.None
+var paint_mode : String = "off"
+var paint_brush1 : int = Gem.ColorWhite
+var paint_brush2 : int = Gem.ColorBlack
+var paint_coord : Vector2i = Vector2i(-1, -1)
 
 var crt_mode : bool = true:
 	set(v):
@@ -690,7 +692,9 @@ func add_new_gem_from(tween : Tween, g : Gem, coord : Vector2i):
 	)
 
 static func read_coord(s : String):
-	return Vector2i(int(s.substr(0, 3)), int(s.substr(3, 6)))
+	if s.length() == 6:
+		return Vector2i(int(s.substr(0, 3)), int(s.substr(3, 6)))
+	return Vector2i(-1, -1)
 
 func process_command_line(cl : String):
 	var tokens = []
@@ -756,66 +760,85 @@ func process_command_line(cl : String):
 		elif cmd == "test":
 			STest.start()
 		elif cmd == "paint":
-			var t1 = tokens[1]
-			if t1 == "cell":
-				Board.effect_change_color(read_coord(tokens[2]), Gem.name_to_type(tokens[3]), Gem.None, null)
-			elif t1 == "clear":
-				var color = Gem.name_to_type(tokens[2])
-				var tween = create_game_tween()
-				var delay = 0.0
-				for y in Board.cy:
-					for x in Board.cx:
-						var sub = create_game_tween()
-						sub.tween_interval(delay)
-						Board.effect_change_color(Vector2i(x, y), color, Gem.None, sub)
-						tween.tween_subtween(sub)
-						tween.parallel()
-						delay += 0.01
-			elif t1 == "mode":
-				if tokens[2] == "on":
-					paint_mode = true
-				elif tokens[2] == "off":
-					paint_mode = false
-			elif t1 == "brush":
-				paint_brush = Gem.name_to_type(tokens[2])
-			elif t1 == "save":
-				var name = tokens[2]
-				if !DirAccess.dir_exists_absolute("res://paintings"):
-					DirAccess.make_dir_absolute("res://paintings")
-				var content = "%d" % board_size
-				for y in Board.cy:
-					content += "\n"
-					for x in Board.cx:
-						var g = Board.get_gem_at(Vector2i(x, y))
-						if g && g.name == "":
-							content += "%d " % g.type
-						else:
-							content += "%d " % Gem.None
-				var file = FileAccess.open("res://paintings/%s.txt" % name, FileAccess.WRITE)
-				file.store_string(content)
-				file.close()
-			elif t1 == "load":
-				var name = tokens[2]
-				var file = FileAccess.open("res://paintings/%s.txt" % name, FileAccess.READ)
-				if file:
-					var size_line = file.get_line().trim_prefix(" ").trim_suffix(" ")
-					if int(size_line) == board_size:
+			if tokens.size() >= 2:
+				var t1 = tokens[1]
+				if t1 == "cell":
+					if tokens.size() >= 4:
+						Board.effect_change_color(read_coord(tokens[2]), Gem.name_to_type(tokens[3]), Gem.None, null)
+				elif t1 == "clear":
+					var color = Gem.ColorBlack
+					if tokens.size() >= 3:
+						color = Gem.name_to_type(tokens[2])
+					var tween = create_game_tween()
+					var delay = 0.0
+					for y in Board.cy:
+						for x in Board.cx:
+							var sub = create_game_tween()
+							sub.tween_interval(delay)
+							Board.effect_change_color(Vector2i(x, y), color, Gem.None, sub)
+							tween.tween_subtween(sub)
+							tween.parallel()
+							delay += 0.01
+					Painting.clear_lines()
+				elif t1 == "mode":
+					if tokens.size() >= 3:
+						if tokens[2] == "on":
+							paint_mode = "pencil"
+							paint_coord = Vector2i(-1, -1)
+						elif tokens[2] == "pencil":
+							paint_mode = "pencil"
+							paint_coord = Vector2i(-1, -1)
+						elif tokens[2] == "line":
+							paint_mode = "line"
+							paint_coord = Vector2i(-1, -1)
+						elif tokens[2] == "off":
+							paint_mode = "off"
+							paint_coord = Vector2i(-1, -1)
+				elif t1 == "brush":
+					if tokens.size() >= 3:
+						paint_brush1 = Gem.name_to_type(tokens[2])
+				elif t1 == "brush1":
+					if tokens.size() >= 3:
+						paint_brush1 = Gem.name_to_type(tokens[2])
+				elif t1 == "brush2":
+					if tokens.size() >= 3:
+						paint_brush2 = Gem.name_to_type(tokens[2])
+				elif t1 == "save":
+					if tokens.size() >= 3:
+						var name = tokens[2]
+						Painting.save_to_file(name)
+				elif t1 == "load":
+					if tokens.size() >= 3:
+						var name = tokens[2]
+						var content = Painting.load_from_file(name)
+						var colors = content.colors
+						var lines = content.lines
+						var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
 						var tween = create_game_tween()
 						var delay = 0.0
-						for y in Board.cy:
-							var values = file.get_line().split(" ")
-							for x in Board.cx:
-								var g = Board.get_gem_at(Vector2i(x, y))
+						for col in colors.keys():
+							for cc in colors[col]:
+								var oc = Board.cube_to_offset(center + cc)
+								var g = Board.get_gem_at(oc)
 								if g && g.name == "":
 									var sub = create_game_tween()
 									sub.tween_interval(delay)
-									Board.effect_change_color(Vector2i(x, y), int(values[x]), Gem.None, sub)
+									Board.effect_change_color(oc, col, Gem.None, sub)
 									tween.tween_subtween(sub)
 									tween.parallel()
 									delay += 0.01
-					file.close()
-			elif t1 == "image":
-				Painting.set_board_to_image("")
+						for l in lines:
+							var sub = create_game_tween()
+							sub.tween_interval(delay)
+							sub.tween_callback(func():
+								Painting.add_line(Board.cube_to_offset(center + l[0]), Board.cube_to_offset(center + l[1]))
+							)
+							tween.tween_subtween(sub)
+							tween.parallel()
+							delay += 0.01
+				elif t1 == "image":
+					if tokens.size() >= 3:
+						Painting.set_board_to_image(tokens[2])
 
 func get_round_score(r : int):
 	if r <= 10:
@@ -1014,9 +1037,13 @@ func start_game(saving : String = "", parms = {}):
 			add_pattern(p)
 		'''
 		
+		for i in 1:
+			var r = Relic.new()
+			r.setup("Aries")
+			add_relic(r)
 		for i in 0:
 			var r = Relic.new()
-			r.setup("PaintingOfStarfish")
+			r.setup("Sandcastle")
 			add_relic(r)
 		
 		const base_gem_num : int = 12
@@ -1866,21 +1893,42 @@ func _unhandled_input(event: InputEvent) -> void:
 				command_line_edit.visible = !command_line_edit.visible
 				if command_line_edit.visible:
 					command_line_edit.grab_focus()
-			if paint_mode:
+			if paint_mode != "off":
 				if event.keycode == KEY_1:
-					paint_brush = Gem.ColorRed
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorRed
+					else:
+						paint_brush2 = Gem.ColorRed
 				elif event.keycode == KEY_2:
-					paint_brush = Gem.ColorOrange
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorOrange
+					else:
+						paint_brush2 = Gem.ColorOrange
 				elif event.keycode == KEY_3:
-					paint_brush = Gem.ColorGreen
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorGreen
+					else:
+						paint_brush2 = Gem.ColorGreen
 				elif event.keycode == KEY_4:
-					paint_brush = Gem.ColorBlue
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorBlue
+					else:
+						paint_brush2 = Gem.ColorBlue
 				elif event.keycode == KEY_5:
-					paint_brush = Gem.ColorMagenta
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorMagenta
+					else:
+						paint_brush2 = Gem.ColorMagenta
 				elif event.keycode == KEY_6:
-					paint_brush = Gem.ColorWhite
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorWhite
+					else:
+						paint_brush2 = Gem.ColorWhite
 				elif event.keycode == KEY_7:
-					paint_brush = Gem.ColorBlack
+					if !event.shift_pressed:
+						paint_brush1 = Gem.ColorBlack
+					else:
+						paint_brush2 = Gem.ColorBlack
 	elif event is InputEventMouseMotion:
 		if Board.ui.visible && !run_info_ui.visible && !bag_viewer_ui.visible && !in_game_menu_ui.visible && !options_ui.visible && !tutorial_ui.visible && !test_ui.visible:
 			var c = Board.ui.hover_coord(true)
@@ -1922,8 +1970,25 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if hovering_coord.x != -1 && hovering_coord.y != -1 && paint_brush != Gem.None:
-					Board.effect_change_color(hovering_coord, paint_brush, Gem.None, null)
+				if hovering_coord.x != -1 && hovering_coord.y != -1 && paint_mode != "off":
+					if paint_mode == "pencil":
+						Board.effect_change_color(hovering_coord, paint_brush1, Gem.None, null)
+					elif paint_mode == "line":
+						if paint_coord.x == -1 && paint_coord.y == -1:
+							paint_coord = hovering_coord
+						else:
+							Painting.add_line(paint_coord, hovering_coord)
+							paint_coord = Vector2i(-1, -1)
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				if hovering_coord.x != -1 && hovering_coord.y != -1 && paint_mode != "off":
+					if paint_mode == "pencil":
+						Board.effect_change_color(hovering_coord, paint_brush2, Gem.None, null)
+					elif paint_mode == "line":
+						if paint_coord.x == -1 && paint_coord.y == -1:
+							paint_coord = hovering_coord
+						else:
+							Painting.remove_line(paint_coord, hovering_coord)
+							paint_coord = Vector2i(-1, -1)
 
 func _ready() -> void:
 	randomize()
@@ -1963,6 +2028,7 @@ func _ready() -> void:
 			calculator_bar_ui.calculate()
 	)
 	Hand.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Hand
+	STooltip.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Tooltips
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		stage = Stage.Deploy
@@ -2003,5 +2069,5 @@ func _process(delta: float) -> void:
 		screen_shake_noise_coord += 30.0 * delta
 		screen_offset = lerp(screen_offset, (mouse_pos - subviewport.size * 0.5) * 0.007, 0.05)
 		var off = screen_offset + Vector2(screen_shake_noise.get_noise_2d(17.0, screen_shake_noise_coord), screen_shake_noise.get_noise_2d(93.0, screen_shake_noise_coord)) * screen_shake_strength
-		canvas.offset = off
+		canvas.offset = round(off)
 		#background.material.set_shader_parameter("offset", Vector2(off.x * 2.0 / resolution.x, off.y * 2.0 / resolution.y))

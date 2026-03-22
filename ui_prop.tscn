@@ -1,13 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://0k6g2b1qldhp"]
 
-[ext_resource type="Script" path="res://ui_prop.gd" id="1_l02xr"]
+[ext_resource type="Script" uid="uid://b4lbhk3jxlg71" path="res://ui_prop.gd" id="1_l02xr"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_naec8"]
 
-[node name="UiProp" type="VBoxContainer"]
+[node name="UiProp" type="VBoxContainer" node_paths=PackedStringArray("button", "num", "select")]
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_l02xr")
+button = NodePath("Button")
+num = NodePath("Button/Label")
+select = NodePath("ColorRect")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2

@@ -2,7 +2,7 @@ extends Control
 
 const UiSlot = preload("res://ui_gem_slot.gd")
 
-@onready var slot : UiSlot = $Slot
+@export var slot : UiSlot
 
 var disabled : bool = false:
 	set(v):
@@ -10,7 +10,7 @@ var disabled : bool = false:
 		slot.disabled = v
 
 func _ready() -> void:
-	slot.rc_to_unload = false
+	slot.right_click_to_unload = false
 	slot.on_load.connect(func(gem : Gem):
 		if slot.gem:
 			var ui = Hand.add_gem(slot.gem)

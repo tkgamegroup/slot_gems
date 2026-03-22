@@ -28,5 +28,5 @@ func setup(_target, _move_strength : float, _rotate_strength : float, freq : flo
 func update():
 	if enable && !G.performance_mode:
 		jitter.update()
-		target.position = offset + jitter.value * move_strength
+		target.position = round(offset + jitter.value * move_strength)
 		target.rotation_degrees = jitter.value.y * rotate_strength

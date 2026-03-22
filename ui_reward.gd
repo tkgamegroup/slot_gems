@@ -1,10 +1,10 @@
 extends Control
 
-@onready var bg : Control = $BG
-@onready var icon_img : Sprite2D = $BG/Icon
-@onready var title_txt : Label = $BG/Label
-@onready var desc_txt : Label = $BG/Label2
-@onready var cate_txt : Label = $BG/Label3
+@export var bg : Control
+@export var icon_img : Sprite2D
+@export var title_txt : Label
+@export var desc_txt : Label
+@export var cate_txt : Label
 
 var data : Dictionary
 

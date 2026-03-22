@@ -371,7 +371,7 @@ relic_desc_GhostAmmo,Your repeat effects have a 50% chance of not consuming a re
 relic_name_RockBottom,Rock Bottom,谷底石
 relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座
-relic_desc_Aries,When matching at least 3 Destroy runes: (w_active) Explode and eliminate cells within [n_{range_i}]-ring at {times_i} random locations.,当匹配到至少3个破坏符文时：(w_active) 在随机的{times_i}个位置爆炸并消除[n_2]环内的格子。
+relic_desc_Aries,When [const_Aries]: (w_active) Explode and eliminate cells within [n_{range_i}]-ring at {times_i} random locations.,当[const_Aries]时：(w_active) 在随机的{times_i}个位置爆炸并消除[n_2]环内的格子。
 relic_name_Taurus,Taurus,金牛座
 relic_desc_Taurus,When matching at least 3 Grow runes: +{value_i} Score.,当匹配到至少3个生长符文时：+{value_i}分数。
 relic_name_Gemini,Gemini,双子座

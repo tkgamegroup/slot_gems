@@ -6,13 +6,19 @@
 [ext_resource type="Texture2D" uid="uid://csgetbs60orud" path="res://images/frozen.png" id="5_v5bqx"]
 [ext_resource type="SpriteFrames" uid="uid://bybc42chjmbrn" path="res://images/nullify.tres" id="7_gl3ak"]
 
-[node name="UiCell" type="Control"]
+[node name="UiCell" type="Control" node_paths=PackedStringArray("gem_ui", "pinned", "frozen", "nullified", "nullified_sp1", "nullified_sp2")]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 3
 anchors_preset = 0
 pivot_offset = Vector2(24, 24)
 mouse_filter = 2
 script = ExtResource("1_c8dfl")
+gem_ui = NodePath("Gem")
+pinned = NodePath("Pinned")
+frozen = NodePath("Frozen")
+nullified = NodePath("Nullified")
+nullified_sp1 = NodePath("Nullified/sp1")
+nullified_sp2 = NodePath("Nullified/sp2")
 
 [node name="Gem" parent="." instance=ExtResource("2_sxxmi")]
 layout_mode = 0

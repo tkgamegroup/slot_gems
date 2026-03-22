@@ -1,8 +1,8 @@
 extends Control
 
-@onready var list : Control = $VBoxContainer
-@onready var sell_button : Button = $VBoxContainer/Sell
-@onready var sell_text : Label = $VBoxContainer/Sell/HBoxContainer/Label
+@export var list : Control
+@export var sell_button : Button
+@export var sell_text : Label
 
 var sell_price : int
 var pos : Vector2

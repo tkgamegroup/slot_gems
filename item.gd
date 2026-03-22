@@ -471,7 +471,7 @@ func setup(n : String):
 					var coords : Array[Vector2i] = []
 					var p0 = data["from"]
 					var p1 = data["to"]
-					for c in Board.draw_line(Board.offset_to_cube(p0), Board.offset_to_cube(p1)):
+					for c in Board.coords_in_line(Board.offset_to_cube(p0), Board.offset_to_cube(p1)):
 						var cc = Board.cube_to_offset(c)
 						coords.append(cc)
 					tween.tween_callback(func():

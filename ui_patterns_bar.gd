@@ -57,7 +57,7 @@ func get_pos(idx : int):
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(item_w, 0)
 	
-	float_island.setup(self, 2.0, 0.1, 0.2)
+	float_island.setup(self, 2.0, 0.0, 0.2)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()

@@ -7,7 +7,7 @@ const relic_pb = preload("res://ui_relic.tscn")
 const ctx_menu_pb = preload("res://ui_context_menu.tscn")
 const item_w = 104
 const item_h = 72
-const gap = 8
+const gap = 32
 
 var dragging : Control = null
 var drag_pos : Vector2
@@ -27,6 +27,7 @@ func get_ui(idx : int):
 func add_ui(r : Relic):
 	var ui = relic_pb.instantiate()
 	ui.setup(r, 0)
+	ui.build_sockets()
 	list.add_child(ui)
 	r.ui = ui
 	var n = list.get_child_count()
@@ -72,7 +73,7 @@ func get_pos(idx : int):
 func _ready() -> void:
 	list.custom_minimum_size = Vector2(item_w, 0)
 	
-	float_island.setup(self, 2.0, 0.1, 0.2)
+	float_island.setup(self, 2.0, 0.0, 0.2)
 
 func _process(delta: float) -> void:
 	var n = list.get_child_count()

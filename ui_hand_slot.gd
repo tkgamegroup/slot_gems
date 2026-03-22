@@ -1,6 +1,8 @@
 extends Control
 
-@onready var gem_ui = $Gem
+const UiGem = preload("res://ui_gem.gd")
+
+@export var gem_ui : UiGem
 
 var gem : Gem = null
 var preview = MatchPreview.new()

@@ -2,12 +2,12 @@ extends Control
 
 const UiGem = preload("res://ui_gem.gd")
 
-@onready var gem_ui : UiGem = $Gem
-@onready var pinned : Sprite2D = $Pinned
-@onready var frozen : Sprite2D = $Frozen
-@onready var nullified : Node2D = $Nullified
-@onready var nullified_sp1 : AnimatedSprite2D = $Nullified/sp1
-@onready var nullified_sp2 : AnimatedSprite2D = $Nullified/sp2
+@export var gem_ui : UiGem
+@export var pinned : Sprite2D
+@export var frozen : Sprite2D
+@export var nullified : Node2D
+@export var nullified_sp1 : AnimatedSprite2D
+@export var nullified_sp2 : AnimatedSprite2D
 
 func set_nullified(v : bool):
 	if v:

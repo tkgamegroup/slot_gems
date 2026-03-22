@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7erj2rv6vl1f"]
+
+[ext_resource type="Script" uid="uid://b4v67wnu4xtgu" path="res://ui_constellation.gd" id="1_wj2a4"]
+
+[node name="UiConstellation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wj2a4")

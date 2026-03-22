@@ -9,8 +9,10 @@ point_count = 2
 [sub_resource type="Gradient" id="Gradient_46ph2"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
-[node name="Node" type="Node"]
+[node name="Node" type="Node" node_paths=PackedStringArray("trail", "timer")]
 script = ExtResource("1_xjhlx")
+trail = NodePath("Line2D")
+timer = NodePath("Timer")
 
 [node name="Line2D" type="Line2D" parent="."]
 width = 5.0

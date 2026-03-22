@@ -1,7 +1,7 @@
 extends Control
 
-@onready var text_lb : RichTextLabel = $Text
-@onready var shadow_lb : Label = $Shadow
+@export var text_lb : RichTextLabel
+@export var shadow_lb : Label
 
 @export var text : String:
 	set(v):
