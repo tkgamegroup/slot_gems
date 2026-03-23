@@ -1,28 +1,26 @@
 extends PanelContainer
 
-const NumberText = preload("res://number_text.gd")
-
 @onready var score_container : Control = $HBoxContainer/VBoxContainer
 @onready var score_text : Label = $HBoxContainer/VBoxContainer/Score
 @onready var red_bouns_container : Control = $HBoxContainer/HBoxContainer/Control
-@onready var red_bouns_text : NumberText = $HBoxContainer/HBoxContainer/Control/NumberText
+@onready var red_bouns_text : G.NumberText = $HBoxContainer/HBoxContainer/Control/NumberText
 @onready var orange_bouns_container : Control = $HBoxContainer/HBoxContainer/Control2
-@onready var orange_bouns_text : NumberText = $HBoxContainer/HBoxContainer/Control2/NumberText
+@onready var orange_bouns_text : G.NumberText = $HBoxContainer/HBoxContainer/Control2/NumberText
 @onready var green_bouns_container : Control = $HBoxContainer/HBoxContainer/Control3
-@onready var green_bouns_text : NumberText = $HBoxContainer/HBoxContainer/Control3/NumberText
+@onready var green_bouns_text : G.NumberText = $HBoxContainer/HBoxContainer/Control3/NumberText
 @onready var blue_bouns_container : Control = $HBoxContainer/HBoxContainer/Control4
-@onready var blue_bouns_text : NumberText = $HBoxContainer/HBoxContainer/Control4/NumberText
+@onready var blue_bouns_text : G.NumberText = $HBoxContainer/HBoxContainer/Control4/NumberText
 @onready var magenta_bouns_container : Control = $HBoxContainer/HBoxContainer/Control5
-@onready var magenta_bouns_text : NumberText = $HBoxContainer/HBoxContainer/Control5/NumberText
+@onready var magenta_bouns_text : G.NumberText = $HBoxContainer/HBoxContainer/Control5/NumberText
 @onready var round_container : Control = $HBoxContainer/VBoxContainer4
 @onready var round_text : RichTextLabel = $HBoxContainer/VBoxContainer4/Round
 @onready var round_target : RichTextLabel = $HBoxContainer/VBoxContainer4/Target
 @onready var board_size_container : Control = $HBoxContainer/HBoxContainer4
-@onready var board_size_text : NumberText = $HBoxContainer/HBoxContainer4/BoardSize
+@onready var board_size_text : G.NumberText = $HBoxContainer/HBoxContainer4/BoardSize
 @onready var hand_container : Control = $HBoxContainer/HBoxContainer5
-@onready var hand_text : NumberText = $HBoxContainer/HBoxContainer5/Hand
+@onready var hand_text : G.NumberText = $HBoxContainer/HBoxContainer5/Hand
 @onready var coins_container : Control = $HBoxContainer/HBoxContainer2
-@onready var coins_text : NumberText = $HBoxContainer/HBoxContainer2/Coins
+@onready var coins_text : G.NumberText = $HBoxContainer/HBoxContainer2/Coins
 @onready var info_button : Button = $HBoxContainer/HBoxContainer3/Info
 @onready var bag_button : Button = $HBoxContainer/HBoxContainer3/HBoxContainer/Bag
 @onready var gem_count_text : Label = $HBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer/Label

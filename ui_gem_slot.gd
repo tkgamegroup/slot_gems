@@ -1,8 +1,6 @@
 extends Control
 
-const UiGem = preload("res://ui_gem.gd")
-
-@export var gem_ui : UiGem
+@export var gem_ui : G.UiGem
 @export var img_open : TextureRect
 @export var img_close : TextureRect
 @export var particles1 : CPUParticles2D

@@ -2,8 +2,6 @@ extends RefCounted
 
 class_name Pattern
 
-const UiPattern = preload("res://ui_pattern.gd")
-
 var name : String
 var coord_groups : Array[Array]
 var recipes : Array
@@ -13,7 +11,7 @@ var lv : int = 1
 var exp : int = 0
 var max_exp : int = get_max_exp(1)
 
-var ui : UiPattern = null
+var ui : G.UiPattern = null
 
 static func get_max_exp(_lv : int):
 	return int(pow(1.5, _lv - 1) * 50000)

@@ -3,8 +3,6 @@ extends Control
 @export var sp : AnimatedSprite2D
 @export var sockets_bar : Control
 
-const gem_slot_pb = preload("res://ui_gem_slot.tscn")
-
 var relic : Relic
 var tt_dir : int = 0
 var elastic : float = 1.0
@@ -16,7 +14,7 @@ func setup(_relic : Relic, _tt_dir : int = 0):
 func build_sockets():
 	for i in relic.sockets.size():
 		var g = relic.sockets[i]
-		var ui = gem_slot_pb.instantiate()
+		var ui = G.gem_slot_pb.instantiate()
 		ui.right_click_to_unload = false
 		ui.allow_change = false
 		ui.on_load.connect(func(g : Gem):

@@ -1,8 +1,6 @@
 extends Control
 
-const UiSlot = preload("res://ui_gem_slot.gd")
-
-@export var slot : UiSlot
+@export var slot : G.UiGemSlot
 
 var disabled : bool = false:
 	set(v):

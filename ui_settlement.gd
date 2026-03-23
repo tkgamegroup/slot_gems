@@ -1,7 +1,5 @@
 extends Control
 
-const item_pb = preload("res://ui_settlement_item.tscn")
-
 @export var panel : PanelContainer
 @export var button : Button
 @export var button_text : RichTextLabel
@@ -38,7 +36,7 @@ func enter():
 	)
 	tween.tween_interval(0.2)
 	tween.tween_callback(func():
-		var ui_s = item_pb.instantiate()
+		var ui_s = G.settlement_item_pb.instantiate()
 		ui_s.name_str = tr("ui_settlement_round_rewards")
 		ui_s.value_str = "%d[img]res://images/coin.png[/img]" % G.reward
 		list.add_child(ui_s)
@@ -47,7 +45,7 @@ func enter():
 	if G.swaps > 0:
 		tween.tween_interval(0.2)
 		tween.tween_callback(func():
-			var ui_s = item_pb.instantiate()
+			var ui_s = G.settlement_item_pb.instantiate()
 			ui_s.name_str = tr("ui_settlement_swap_rewards")
 			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % G.swaps
 			list.add_child(ui_s)
@@ -56,7 +54,7 @@ func enter():
 	if G.coins >= 10:
 		tween.tween_interval(0.2)
 		tween.tween_callback(func():
-			var ui_s = item_pb.instantiate()
+			var ui_s = G.settlement_item_pb.instantiate()
 			ui_s.name_str = tr("ui_settlement_interest")
 			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % int(G.coins / 10)
 			list.add_child(ui_s)
@@ -100,6 +98,27 @@ func exit(trans : bool = true):
 			G.shop_ui.enter(tween)
 		else:
 			self.hide()
+
+func load_from_data(data : Dictionary):
+	clear()
+	button_text.text = "%s[img]res://images/coin.png[/img]" % (tr("ui_settlement_cash_out") % int(data["settlement_rewards"]))
+	button.disabled = false
+	var list_data = data["settlement_list"]
+	for item in list_data:
+		var ui = G.settlement_item_pb.instantiate()
+		ui.name_str = item["name"]
+		ui.value_str = item["value"]
+		list.add_child(ui)
+
+func save_to_data(data : Dictionary):
+	data["settlement_rewards"] = rewards
+	var list_data = []
+	for s in list.get_children():
+		var item = {}
+		item["name"] = s.name_str
+		item["value"] = s.value_str
+		list_data.append(item)
+	data["settlement_list"] = list_data
 
 func _ready() -> void:
 	button.pressed.connect(func():

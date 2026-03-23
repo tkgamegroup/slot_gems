@@ -2,8 +2,6 @@ extends RefCounted
 
 class_name MatchPreview
 
-const line_pb = preload("res://dashed_line.tscn")
-
 var matchings : Array[Array]
 var rune_matchings : Array[int]
 var lines : Array[Node2D]
@@ -69,7 +67,7 @@ func show():
 			c /= pts.size()
 			for i in pts.size():
 				pts[i] = pts[i] - c
-			var l = line_pb.instantiate()
+			var l = G.dashed_line_pb.instantiate()
 			l.default_color = Color(0.0, 0.0, 0.0, 1.0)
 			l.width = 3
 			l.points = pts

@@ -52,9 +52,6 @@ const RuneLast = RuneStarfish
 const RuneComboFirst = RuneWavePalm
 const RuneComboLast = RuneAny
 
-const gem_frames : SpriteFrames = preload("res://images/gems.tres")
-const rune_frames : SpriteFrames = preload("res://images/runes.tres")
-
 var id : int
 var type : int = None
 var rune : int = None

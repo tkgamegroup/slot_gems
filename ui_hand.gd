@@ -1,8 +1,5 @@
 extends Control
 
-const slot_ui = preload("res://ui_hand_slot.tscn")
-const UiSlot = preload("res://ui_hand_slot.gd")
-
 @onready var list = $Control
 
 const item_w : int = C.SPRITE_SZ
@@ -23,15 +20,15 @@ func adjusted_gap():
 		return gap
 	return ((item_w * G.max_hand_grabs + gap * (G.max_hand_grabs - 1)) - n * item_w) / n
 
-func get_slot(idx : int) -> UiSlot:
+func get_slot(idx : int) -> G.UiHandSlot:
 	if idx >= 0 && idx < list.get_child_count():
 		return list.get_child(idx)
 	return null
 
-func add_slot(gem : Gem, idx : int = -1) -> UiSlot:
+func add_slot(gem : Gem, idx : int = -1) -> G.UiHandSlot:
 	if idx == -1:
 		idx = list.get_child_count()
-	var ui = slot_ui.instantiate()
+	var ui = G.hand_slot_pb.instantiate()
 	ui.gem = gem
 	list.add_child(ui)
 	list.move_child(ui, idx)

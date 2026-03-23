@@ -2,9 +2,6 @@ extends RefCounted
 
 class_name Relic
 
-const relic_frames : SpriteFrames = preload("res://images/relics.tres")
-const UiRelic = preload("res://ui_relic.gd")
-
 var name : String
 var image_id : int
 var description : String
@@ -16,7 +13,7 @@ var on_event : Callable
 var on_active : Callable
 var on_socket : Callable
 
-var ui : UiRelic = null
+var ui : G.UiRelic = null
 
 func setup(n : String):
 	name = n

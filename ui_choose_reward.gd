@@ -1,7 +1,5 @@
 extends Control
 
-const reward_pb = preload("res://ui_reward.tscn")
-
 @export var panel : PanelContainer
 @export var reward_list : Control
 @export var buttons_list : Control
@@ -52,7 +50,7 @@ func enter(rewards : Array, _callback : Callable):
 		n.queue_free()
 	for i in rewards.size():
 		var r = rewards[i]
-		var ui = reward_pb.instantiate()
+		var ui = G.reward_pb.instantiate()
 		ui.setup(r)
 		ui.gui_input.connect(func(event : InputEvent):
 			if event is InputEventMouseButton:

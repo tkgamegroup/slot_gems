@@ -8,8 +8,6 @@ extends Panel
 @export var close_button : Button
 @export var pattern_list : Control
 
-const ui_pattern_pb = preload("res://ui_pattern.tscn")
-
 var view_idx : int = 0
 
 func update_view():
@@ -49,22 +47,22 @@ func exit():
 func _ready() -> void:
 	var p1 = Pattern.new()
 	p1.setup("\\")
-	var pui1 = ui_pattern_pb.instantiate()
+	var pui1 = G.pattern_ui_pb.instantiate()
 	pui1.setup(p1, true)
 	pattern_list.add_child(pui1)
 	var p2 = Pattern.new()
 	p2.setup("|")
-	var pui2 = ui_pattern_pb.instantiate()
+	var pui2 = G.pattern_ui_pb.instantiate()
 	pui2.setup(p2, true)
 	pattern_list.add_child(pui2)
 	var p3 = Pattern.new()
 	p3.setup("/")
-	var pui3 = ui_pattern_pb.instantiate()
+	var pui3 = G.pattern_ui_pb.instantiate()
 	pui3.setup(p3, true)
 	pattern_list.add_child(pui3)
 	var p4 = Pattern.new()
 	p4.setup("Island")
-	var pui4 = ui_pattern_pb.instantiate()
+	var pui4 = G.pattern_ui_pb.instantiate()
 	pui4.setup(p4, true)
 	pattern_list.add_child(pui4)
 	prev_button.pressed.connect(func():

@@ -1,8 +1,6 @@
 extends Control
 
-const UiGem = preload("res://ui_gem.gd")
-
-@export var gem_ui : UiGem
+@export var gem_ui : G.UiGem
 @export var pinned : Sprite2D
 @export var frozen : Sprite2D
 @export var nullified : Node2D

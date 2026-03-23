@@ -9,10 +9,10 @@ point_count = 2
 [node name="Particles" type="CPUParticles2D"]
 emitting = false
 amount = 5
+texture = ExtResource("1_buh3c")
 lifetime = 0.8
 one_shot = true
 local_coords = true
-texture = ExtResource("1_buh3c")
 emission_shape = 1
 emission_sphere_radius = 8.0
 spread = 180.0

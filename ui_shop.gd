@@ -4,16 +4,10 @@ extends Control
 @export var list2 : Control
 @export var refresh_button : Control
 @export var exit_button : Button
-@export var staging_slot1 : staging_slot_ui
-@export var staging_slot2 : staging_slot_ui
-@export var staging_slot3 : staging_slot_ui
+@export var staging_slot1 : G.UiStagingSlot
+@export var staging_slot2 : G.UiStagingSlot
+@export var staging_slot3 : G.UiStagingSlot
 @onready var staging_slots = [staging_slot1, staging_slot2, staging_slot3]
-
-const shop_item_pb = preload("res://ui_shop_item.tscn")
-const craft_slot_pb = preload("res://ui_craft_slot.tscn")
-const entangle_slots_pb = preload("res://ui_entangle_slots.tscn")
-const gem_ui = preload("res://ui_gem.tscn")
-const staging_slot_ui = preload("res://ui_staging_slot.gd")
 
 const expand_board_base_price : int = 15
 var expand_board_price : int
@@ -118,7 +112,7 @@ func refresh(tween : Tween = null):
 	for i in 3:
 		tween.tween_interval(0.04)
 		tween.tween_callback(func():
-			var ui = shop_item_pb.instantiate()
+			var ui = G.shop_item_pb.instantiate()
 			var gem = Gem.new()
 			var price = 0
 			var quantity = 1
@@ -162,7 +156,7 @@ func refresh(tween : Tween = null):
 		if G.shop_rng.randf() > 0.3 && !relics_pool2.is_empty():
 			tween.tween_interval(0.04)
 			tween.tween_callback(func():
-				var ui = shop_item_pb.instantiate()
+				var ui = G.shop_item_pb.instantiate()
 				var relic = Relic.new()
 				relic.setup(SMath.pick_and_remove(relics_pool2, G.shop_rng))
 				ui.setup("relic", relic, relic.price)
@@ -171,7 +165,7 @@ func refresh(tween : Tween = null):
 		elif !patterns_pool2.is_empty():
 			tween.tween_interval(0.04)
 			tween.tween_callback(func():
-				var ui = shop_item_pb.instantiate()
+				var ui = G.shop_item_pb.instantiate()
 				var pattern = Pattern.new()
 				pattern.setup(SMath.pick_random(patterns_pool2, G.shop_rng))
 				ui.setup("pattern", pattern, pattern.price)
@@ -185,7 +179,7 @@ func refresh(tween : Tween = null):
 		if G.shop_rng.randf() >= 0.4:
 			if slots >= 2 && G.shop_rng.randf() >= 0.9:
 				tween.tween_callback(func():
-					var ui = entangle_slots_pb.instantiate()
+					var ui = G.entangle_slots_pb.instantiate()
 					ui.setup(3)
 					list2.add_child(ui)
 				)
@@ -193,14 +187,14 @@ func refresh(tween : Tween = null):
 			else:
 				if G.shop_rng.randf() >= 0.5:
 					tween.tween_callback(func():
-						var ui = craft_slot_pb.instantiate()
+						var ui = G.craft_slot_pb.instantiate()
 						ui.setup("w_enchant", "w_enchant_charming", 2)
 						list2.add_child(ui)
 					)
 					slots -= 1
 				else:
 					tween.tween_callback(func():
-						var ui = craft_slot_pb.instantiate()
+						var ui = G.craft_slot_pb.instantiate()
 						ui.setup("w_enchant", "w_enchant_sharp", 2)
 						list2.add_child(ui)
 					)
@@ -209,14 +203,14 @@ func refresh(tween : Tween = null):
 			if G.shop_rng.randf() >= 0.3:
 				if G.shop_rng.randf() >= 0.5:
 					tween.tween_callback(func():
-						var ui = craft_slot_pb.instantiate()
+						var ui = G.craft_slot_pb.instantiate()
 						ui.setup("w_delete", "", delete_price)
 						list2.add_child(ui)
 					)
 					slots -= 1
 				else:
 					tween.tween_callback(func():
-						var ui = craft_slot_pb.instantiate()
+						var ui = G.craft_slot_pb.instantiate()
 						ui.setup("w_duplicate", "", 4)
 						list2.add_child(ui)
 					)
@@ -224,14 +218,14 @@ func refresh(tween : Tween = null):
 			else:
 				if G.shop_rng.randf() >= 0.5:
 					tween.tween_callback(func():
-						var ui = craft_slot_pb.instantiate()
+						var ui = G.craft_slot_pb.instantiate()
 						ui.setup("w_enchant", "w_wild", 6)
 						list2.add_child(ui)
 					)
 					slots -= 1
 				else:
 					tween.tween_callback(func():
-						var ui = craft_slot_pb.instantiate()
+						var ui = G.craft_slot_pb.instantiate()
 						ui.setup("w_enchant", "w_omni", 6)
 						list2.add_child(ui)
 					)
@@ -309,6 +303,78 @@ func exit(tween : Tween = null, trans : bool = true):
 		clear()
 		self.hide()
 	return tween
+
+func load_from_data(data : Dictionary):
+	refresh_price = int(data["shop_refresh_price"])
+	expand_board_price = data["shop_expand_board_price"]
+	clear()
+	var list1_data = data["shop_list1"]
+	for item in list1_data:
+		var ui = G.shop_item_pb.instantiate()
+		var cate = item["cate"]
+		if cate == "gem":
+			var object = item["object"]
+			var g = Gem.new()
+			g.type = object["type"]
+			g.rune = object["rune"]
+			g.base_score = int(object["base_score"])
+			var buffs = object["buffs"]
+			for buff in buffs:
+				Buff.load_from_data(g, buff)
+			ui.setup("gem", g, item["price"])
+		elif cate == "relic":
+			var object = item["object"]
+			var r = Relic.new()
+			r.setup(object["name"])
+			ui.setup("relic", r, item["price"])
+		list1.add_child(ui)
+	var list2_data = data["shop_list2"]
+	for slot in list2_data:
+		var ui = G.craft_slot_pb.instantiate()
+		ui.setup(slot["type"], slot["thing"], slot["price"])
+		list2.add_child(ui)
+
+func save_to_data(data : Dictionary):
+	data["shop_refresh_price"] = refresh_price
+	data["shop_expand_board_price"] = expand_board_price
+	var list1_data = []
+	for n in list1.get_children():
+		var ui = n as G.UiShopItem
+		var item = {}
+		item["cate"] = ui.cate
+		if ui.cate == "gem":
+			var g = ui.object as Gem
+			var object = {}
+			object["type"] = g.type
+			object["rune"] = g.rune
+			object["base_score"] = g.base_score
+			var buffs = []
+			for b in g.buffs:
+				var buff = {}
+				Buff.save_to_data(b, buff)
+				buffs.append(buff)
+			object["buffs"] = buffs
+			item["object"] = object
+		elif ui.cate == "relic":
+			var r = ui.object as Relic
+			var object = {}
+			object["name"] = r.name
+			item["object"] = object
+		item["price"] = ui.price
+		list1_data.append(item)
+	data["shop_list1"] = list1_data
+	var list2_data = []
+	for n in list2.get_children():
+		if n is G.UiCraftSlot:
+			var ui = n as G.UiCraftSlot
+			var slot = {}
+			slot["type"] = ui.type
+			slot["thing"] = ui.thing
+			slot["price"] = ui.price
+			list2_data.append(slot)
+		else:
+			pass
+	data["shop_list2"] = list2_data
 
 func _ready() -> void:
 	self.pivot_offset = self.size * 0.5

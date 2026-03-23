@@ -1,10 +1,6 @@
 extends Node
 
-const Ui = preload("res://ui_tooltips.gd")
-const constellation_pb = preload("res://ui_constellation.tscn")
-const tooltip_pb = preload("res://tooltip.tscn")
-
-var ui : Ui = null
+var ui : G.UiTooltips = null
 
 var showing : bool = false
 var alpha : float = 0.0
@@ -35,7 +31,7 @@ func show(_node, _dir : int, contents : Array[Pair]):
 	var referenced_gems = []
 	var referenced_constellations = []
 	for c in contents:
-		var item = tooltip_pb.instantiate()
+		var item = G.tooltip_pb.instantiate()
 		item.title = SUtils.format_text(c.first, false, false, words, referenced_gems, referenced_constellations)
 		item.content = SUtils.format_text(c.second, true, false, words, referenced_gems, referenced_constellations)
 		ui.list1.add_child(item)
@@ -43,19 +39,19 @@ func show(_node, _dir : int, contents : Array[Pair]):
 		var g = Gem.new()
 		g.setup(n)
 		for c in g.get_tooltip():
-			var item = tooltip_pb.instantiate()
+			var item = G.tooltip_pb.instantiate()
 			item.title = SUtils.format_text(c.first, false, false, words)
 			item.content = SUtils.format_text(c.second, true, false, words)
 			ui.list1.add_child(item)
 	for n in referenced_constellations:
-		var const_pb = constellation_pb.instantiate()
+		var const_pb = G.constellation_pb.instantiate()
 		const_pb.setup(n)
 		ui.absoulte.add_child(const_pb)
 	for w in words:
 		var msg = w + "_desc"
 		var desc = tr(msg)
 		if desc != msg:
-			var item = tooltip_pb.instantiate()
+			var item = G.tooltip_pb.instantiate()
 			item.title = w
 			item.content = desc
 			ui.list2.add_child(item)

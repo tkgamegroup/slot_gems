@@ -1,15 +1,9 @@
 extends Control
 
-const UiRichButton = preload("res://rich_button.gd")
-
 @export var cate_lb : Label
 @export var content : Control
-@export var buy_button : UiRichButton
+@export var buy_button : G.UiRichButton
 @export var price_lb : RichTextLabel
-
-const gem_ui = preload("res://ui_gem.tscn")
-const relic_ui = preload("res://ui_relic.tscn")
-const pattern_ui = preload("res://ui_pattern.tscn")
 
 var cate : String
 var object
@@ -179,7 +173,7 @@ func _ready() -> void:
 		cate_lb.show()
 		var ctrl = Control.new()
 		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
-		var ui = gem_ui.instantiate()
+		var ui = G.gem_ui_pb.instantiate()
 		ui.update(object)
 		ctrl.add_child(ui)
 		ctrl.mouse_entered.connect(func():
@@ -203,14 +197,14 @@ func _ready() -> void:
 	elif cate == "pattern":
 		cate_lb.text = tr("pattern")
 		cate_lb.show()
-		var ui = pattern_ui.instantiate()
+		var ui = G.pattern_ui_pb.instantiate()
 		ui.setup(object, true)
 		ui.mouse_filter = Control.MOUSE_FILTER_PASS
 		content.add_child(ui)
 	elif cate == "relic":
 		cate_lb.text = tr("relic")
 		cate_lb.show()
-		var ui = relic_ui.instantiate()
+		var ui = G.relic_ui_pb.instantiate()
 		ui.setup(object)
 		ui.mouse_filter = Control.MOUSE_FILTER_PASS
 		content.add_child(ui)

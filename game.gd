@@ -14,18 +14,31 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 15
+const version_patch : int = 16
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
 
 const UiGem = preload("res://ui_gem.gd")
+const UiRelic = preload("res://ui_relic.gd")
+const UiPattern = preload("res://ui_pattern.gd")
+const NumberText = preload("res://number_text.gd")
+const UiRichButton = preload("res://rich_button.gd")
+const UiGemSlot = preload("res://ui_gem_slot.gd")
+const UiStagingSlot = preload("res://ui_staging_slot.gd")
+const UiCraftSlot = preload("res://ui_craft_slot.gd")
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
+const UiBoard = preload("res://ui_board.gd")
+const UiProp = preload("res://ui_prop.gd")
+const UiHandSlot = preload("res://ui_hand_slot.gd")
+const UiHand = preload("res://ui_hand.gd")
+const UiStatusBar = preload("res://ui_status_bar.gd")
+const UiRelicsBar = preload("res://ui_relics_bar.gd")
+const UiPatternsBar = preload("res://ui_patterns_bar.gd")
 const UiControl = preload("res://ui_control.gd")
-const UiShop = preload("res://ui_shop.gd")
 const UiShopItem = preload("res://ui_shop_item.gd")
-const CraftSlot = preload("res://ui_craft_slot.gd")
+const UiShop = preload("res://ui_shop.gd")
 const UiGame = preload("res://ui_game.gd")
 const UiCalculatorBar = preload("res://ui_calculate_bar.gd")
 const UiBanner = preload("res://banner.gd")
@@ -41,16 +54,34 @@ const UiChooseReward = preload("res://ui_choose_reward.gd")
 const UiRunInfo = preload("res://ui_run_info.gd")
 const UiBagViewer = preload("res://ui_bag_viewer.gd")
 const UiTutorial = preload("res://ui_tutorial.gd")
-const gem_ui = preload("res://ui_gem.tscn")
-const popup_txt_pb = preload("res://popup_txt.tscn")
-const trail_pb = preload("res://trail.tscn")
-const craft_slot_pb = preload("res://ui_craft_slot.tscn")
-const shop_item_pb = preload("res://ui_shop_item.tscn")
-const settlement_item_pb = preload("res://ui_settlement_item.tscn")
-const pointer_cursor = preload("res://images/pointer.png")
-const pin_cursor = preload("res://images/pin.png")
-const activate_cursor = preload("res://images/magic_stick.png")
-const grab_cursor = preload("res://images/grab.png")
+const UiTooltips = preload("res://ui_tooltips.gd")
+
+@onready var gem_frames : SpriteFrames = load("res://images/gems.tres")
+@onready var rune_frames : SpriteFrames = load("res://images/runes.tres")
+@onready var relic_frames : SpriteFrames = load("res://images/relics.tres")
+@onready var popup_txt_pb = load("res://popup_txt.tscn")
+@onready var gem_ui_pb = load("res://ui_gem.tscn")
+@onready var gem_slot_pb = load("res://ui_gem_slot.tscn")
+@onready var trail_pb = load("res://trail.tscn")
+@onready var cell_pb = load("res://ui_cell.tscn")
+@onready var outline_pb = load("res://ui_outline.tscn")
+@onready var dashed_line_pb = load("res://dashed_line.tscn")
+@onready var entangled_line_pb = load("res://entangled_line.tscn")
+@onready var constellation_pb = load("res://ui_constellation.tscn")
+@onready var hand_slot_pb = load("res://ui_hand_slot.tscn")
+@onready var relic_ui_pb = load("res://ui_relic.tscn")
+@onready var pattern_ui_pb = load("res://ui_pattern.tscn")
+@onready var settlement_item_pb = load("res://ui_settlement_item.tscn")
+@onready var reward_pb = load("res://ui_reward.tscn")
+@onready var shop_item_pb = load("res://ui_shop_item.tscn")
+@onready var craft_slot_pb = load("res://ui_craft_slot.tscn")
+@onready var entangle_slots_pb = load("res://ui_entangle_slots.tscn")
+@onready var tooltip_pb = load("res://tooltip.tscn")
+@onready var contex_menu_pb = load("res://ui_context_menu.tscn")
+@onready var pointer_cursor = load("res://images/pointer.png")
+@onready var pin_cursor = load("res://images/pin.png")
+@onready var activate_cursor = load("res://images/magic_stick.png")
+@onready var grab_cursor = load("res://images/grab.png")
 
 @onready var background : Node2D = $/root/Main/SubViewportContainer/SubViewport/Background
 @onready var crt : Control = $/root/Main/PostProcessing/ColorRect
@@ -536,7 +567,7 @@ func float_status_text(s : String, col : Color):
 	)
 
 func create_gem_ui(g : Gem, pos : Vector2):
-	var ui = gem_ui.instantiate()
+	var ui = gem_ui_pb.instantiate()
 	ui.update(g)
 	ui.global_position = pos
 	game_ui.game_overlay.add_child(ui)
@@ -906,10 +937,10 @@ func end_transition(tween : Tween):
 	tween.tween_callback(func():
 		match randi() % 2:
 			0: 
-				trans_sp.sprite_frames = Gem.gem_frames
+				trans_sp.sprite_frames = G.gem_frames
 				trans_sp.frame = randi_range(1, 41)
 			1: 
-				trans_sp.sprite_frames = Relic.relic_frames
+				trans_sp.sprite_frames = G.relic_frames
 				trans_sp.frame = randi_range(1, 14)
 		trans_sp.scale = Vector2(0.0, 0.0)
 	)
@@ -1427,11 +1458,6 @@ func save_to_file(name : String = "1"):
 	if STest.testing:
 		return
 	
-	var save_buff = func(b : Buff, d : Dictionary):
-		d["uid"] = b.uid
-		d["type"] = b.type
-		d["duration"] = b.duration
-		d["data"] = SUtils.save_dictionary(b.data)
 	var save_hook = func(h : Hook, d : Dictionary):
 		d["event"] = h.event
 		d["host_type"] = h.host_type
@@ -1483,7 +1509,7 @@ func save_to_file(name : String = "1"):
 	var game_buffs = []
 	for b in G.buffs:
 		var buff = {}
-		save_buff.call(b, buff)
+		Buff.save_to_data(b, buff)
 		game_buffs.append(buff)
 	data["buffs"] = game_buffs
 	var game_event_listeners = []
@@ -1516,7 +1542,7 @@ func save_to_file(name : String = "1"):
 		var buffs = []
 		for b in g.buffs:
 			var buff = {}
-			save_buff.call(b, buff)
+			Buff.save_to_data(b, buff)
 			buffs.append(buff)
 		gem["buffs"] = buffs
 		gem["extra"] = SUtils.save_dictionary(g.extra)
@@ -1566,71 +1592,13 @@ func save_to_file(name : String = "1"):
 	data["cells"] = cells
 	if G.stage == Stage.Settlement:
 		data["stage"] = "settlement"
-		data["settlement_rewards"] = G.settlement_ui.rewards
-		var list = []
-		for s in settlement_ui.list.get_children():
-			var item = {}
-			item["name"] = s.name_str
-			item["value"] = s.value_str
-			list.append(item)
-		data["settlement_list"] = list
+		settlement_ui.save_to_data(data)
 	elif G.stage == Stage.Upgrade:
 		data["stage"] = "upgrade"
-		var list = []
-		for n in upgrade_ui.list.get_children():
-			var ui = n as UiShopItem
-			var item = {}
-			item["cate"] = ui.cate
-			if ui.cate == "pattern":
-				var p = ui.object as Pattern
-				var object = {}
-				object["name"] = p.name
-				item["object"] = object
-			item["price"] = ui.price
-			list.append(item)
-		data["upgrade_list"] = list
+		upgrade_ui.save_to_data(data)
 	elif G.stage == Stage.Shopping:
 		data["stage"] = "shopping"
-		data["shop_refresh_price"] = shop_ui.refresh_price
-		data["shop_expand_board_price"] = shop_ui.expand_board_price
-		var list1 = []
-		for n in shop_ui.list1.get_children():
-			var ui = n as UiShopItem
-			var item = {}
-			item["cate"] = ui.cate
-			if ui.cate == "gem":
-				var g = ui.object as Gem
-				var object = {}
-				object["type"] = g.type
-				object["rune"] = g.rune
-				object["base_score"] = g.base_score
-				var buffs = []
-				for b in g.buffs:
-					var buff = {}
-					save_buff.call(b, buff)
-					buffs.append(buff)
-				object["buffs"] = buffs
-				item["object"] = object
-			elif ui.cate == "relic":
-				var r = ui.object as Relic
-				var object = {}
-				object["name"] = r.name
-				item["object"] = object
-			item["price"] = ui.price
-			list1.append(item)
-		data["shop_list1"] = list1
-		var list2 = []
-		for n in shop_ui.list2.get_children():
-			if n is CraftSlot:
-				var ui = n as CraftSlot
-				var slot = {}
-				slot["type"] = ui.type
-				slot["thing"] = ui.thing
-				slot["price"] = ui.price
-				list2.append(slot)
-			else:
-				pass
-		data["shop_list2"] = list2
+		shop_ui.save_to_data(data)
 	
 	var file = FileAccess.open("user://save%s.json" % name, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data, "\t", false))
@@ -1643,15 +1611,6 @@ func load_from_file(name : String = "1"):
 	var data = JSON.parse_string(file.get_as_text())
 	file.close()
 	
-	var load_buff = func(d : Dictionary, host):
-		var b = Buff.new()
-		b.uid = d["uid"]
-		b.type = int(d["type"])
-		b.host = host
-		b.duration = int(d["duration"])
-		b.data = SUtils.read_dictionary(d["data"])
-		host.buffs.append(b)
-		return b
 	var load_hook = func(d : Dictionary):
 		var host_type = int(d["host_type"])
 		var host_idx = int(d["host"])
@@ -1701,7 +1660,7 @@ func load_from_file(name : String = "1"):
 	update_round_text(current_round)
 	var game_buffs = data["buffs"]
 	for buff in game_buffs:
-		load_buff.call(buff, G)
+		Buff.load_from_data(G, buff)
 	var saved_modifiers = SUtils.read_dictionary(data["modifiers"])
 	for k in saved_modifiers:
 		G.set_modifier(k, saved_modifiers[k])
@@ -1726,7 +1685,7 @@ func load_from_file(name : String = "1"):
 		g.bag_stamp = int(gem["bag_stamp"])
 		var buffs = gem["buffs"]
 		for buff in buffs:
-			load_buff.call(buff, g)
+			Buff.load_from_data(g, buff)
 		g.extra = SUtils.read_dictionary(gem["extra"])
 		G.gems.append(g)
 	var bag_gems = data["bag_gems"]
@@ -1798,64 +1757,16 @@ func load_from_file(name : String = "1"):
 		if stage == "settlement":
 			G.stage = Stage.Settlement
 			Board.ui.enter(null, false)
-			G.settlement_ui.clear()
-			G.settlement_ui.button_text.text = "%s[img]res://images/coin.png[/img]" % (tr("ui_settlement_cash_out") % int(data["settlement_rewards"]))
-			G.settlement_ui.button.disabled = false
-			var list = data["settlement_list"]
-			for item in list:
-				var ui = settlement_item_pb.instantiate()
-				ui.name_str = item["name"]
-				ui.value_str = item["value"]
-				G.settlement_ui.list.add_child(ui)
-			G.settlement_ui.show()
+			settlement_ui.load_from_data(data)
+			settlement_ui.show()
 		elif stage == "upgrade":
 			G.stage = Stage.Upgrade
 			Board.ui.enter(null, false)
-			G.upgrade_ui.clear()
-			var list = data["upgrade_list"]
-			for item in list:
-				var ui = shop_item_pb.instantiate()
-				var cate = item["cate"]
-				if cate == "pattern":
-					var object = item["object"]
-					var p = Pattern.new()
-					p.setup(object["name"])
-					ui.setup("pattern", p, item["price"], 1, true)
-				else:
-					ui.setup(cate, null, item["price"], 1, true)
-				G.upgrade_ui.setup_item_listener(ui)
-				G.upgrade_ui.list.add_child(ui)
-			G.upgrade_ui.show()
+			upgrade_ui.load_from_data(data)
+			upgrade_ui.show()
 		elif stage == "shopping":
 			G.stage = Stage.Shopping
-			shop_ui.refresh_price = int(data["shop_refresh_price"])
-			shop_ui.expand_board_price = data["shop_expand_board_price"]
-			shop_ui.clear()
-			var list1 = data["shop_list1"]
-			for item in list1:
-				var ui = shop_item_pb.instantiate()
-				var cate = item["cate"]
-				if cate == "gem":
-					var object = item["object"]
-					var g = Gem.new()
-					g.type = object["type"]
-					g.rune = object["rune"]
-					g.base_score = int(object["base_score"])
-					var buffs = object["buffs"]
-					for buff in buffs:
-						load_buff.call(buff, g)
-					ui.setup("gem", g, item["price"])
-				elif cate == "relic":
-					var object = item["object"]
-					var r = Relic.new()
-					r.setup(object["name"])
-					ui.setup("relic", r, item["price"])
-				shop_ui.list1.add_child(ui)
-			var list2 = data["shop_list2"]
-			for slot in list2:
-				var ui = craft_slot_pb.instantiate()
-				ui.setup(slot["type"], slot["thing"], slot["price"])
-				shop_ui.list2.add_child(ui)
+			shop_ui.load_from_data(data)
 			shop_ui.enter(null, false)
 
 func _input(event: InputEvent) -> void:

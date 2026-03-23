@@ -1,12 +1,8 @@
 extends Control
 
-const UiGem = preload("res://ui_gem.gd")
-const UiSlot = preload("res://ui_gem_slot.gd")
-const UiRichButton = preload("res://rich_button.gd")
-
 @export var title_txt : RichTextLabel
-@export var slot : UiSlot
-@export var button : UiRichButton
+@export var slot : G.UiGemSlot
+@export var button : G.UiRichButton
 
 var type : String
 var thing : String

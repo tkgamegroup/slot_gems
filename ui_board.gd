@@ -10,12 +10,6 @@ extends Control
 @export var overlay : Node2D
 @export var hover_ui : Sprite2D
 
-const UiCell = preload("res://ui_cell.gd")
-const UiHandSlot = preload("res://ui_hand_slot.gd")
-const cell_pb = preload("res://ui_cell.tscn")
-const outline_pb = preload("res://ui_outline.tscn")
-const entangled_line_pb = preload("res://entangled_line.tscn")
-
 func game_coord(c : Vector2i):
 	return c + Vector2i(Board.cx, Board.cy) / 2 - C.BOARD_CENTER
 
@@ -31,7 +25,7 @@ func hover_coord(to_game_coord : bool = false):
 func get_pos(c : Vector2i):
 	return tilemap.map_to_local(c)
 
-func get_cell(c : Vector2i) -> UiCell:
+func get_cell(c : Vector2i) -> G.UiCell:
 	return cells_root.get_child(c.y * Board.cx + c.x)
 
 func update_cell(c : Vector2i):
@@ -68,11 +62,11 @@ func clear():
 func add_cell(c : Vector2i):
 	var pos = get_pos(c) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 	
-	var outline = outline_pb.instantiate()
+	var outline = G.outline_pb.instantiate()
 	outline.position = pos
 	outlines_root.add_child(outline)
 	
-	var cell = cell_pb.instantiate()
+	var cell = G.cell_pb.instantiate()
 	cell.position = pos
 	cells_root.add_child(cell)
 
@@ -134,7 +128,7 @@ func show_entangled_lines():
 							already_has = true
 							break
 					if !already_has:
-						var line = entangled_line_pb.instantiate()
+						var line = G.entangled_line_pb.instantiate()
 						line.setup(g1.coord, g2.coord)
 						Board.ui.entangled_lines.add_child(line)
 	for n in old_nodes:
@@ -171,7 +165,7 @@ func _ready() -> void:
 			pass
 		else:
 			if G.swaps > 0:
-				var slot1 = payload as UiHandSlot
+				var slot1 = payload as G.UiHandSlot
 				var coord = extra["coord"]
 				var g2 = Board.get_gem_at(coord)
 				if Board.get_cell(coord).in_mist:

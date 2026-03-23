@@ -1,8 +1,6 @@
 extends Node
 
-const UiHand = preload("res://ui_hand.gd")
-
-var ui : UiHand = null
+var ui : G.UiHand = null
 
 var grabs : Array[Gem]
 

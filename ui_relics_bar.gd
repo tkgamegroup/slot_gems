@@ -3,8 +3,6 @@ extends PanelContainer
 @onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
 @onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
 
-const relic_pb = preload("res://ui_relic.tscn")
-const ctx_menu_pb = preload("res://ui_context_menu.tscn")
 const item_w = 104
 const item_h = 72
 const gap = 32
@@ -25,7 +23,7 @@ func get_ui(idx : int):
 	return list.get_child(idx)
 
 func add_ui(r : Relic):
-	var ui = relic_pb.instantiate()
+	var ui = G.relic_ui_pb.instantiate()
 	ui.setup(r, 0)
 	ui.build_sockets()
 	list.add_child(ui)
@@ -41,7 +39,7 @@ func add_ui(r : Relic):
 					drag_pos = event.position
 					ui.z_index = 1
 				elif event.button_index == MOUSE_BUTTON_RIGHT:
-					var menu = ctx_menu_pb.instantiate()
+					var menu = G.contex_menu_pb.instantiate()
 					menu.open(event.global_position, int(r.price / 2))
 					G.canvas.add_child(menu)
 					menu.on_sell.connect(func():

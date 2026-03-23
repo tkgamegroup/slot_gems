@@ -1,7 +1,5 @@
 extends Control
 
-const shop_item_pb = preload("res://ui_shop_item.tscn")
-
 @export var panel : Control
 @export var list : Control
 @export var button : Button
@@ -39,28 +37,28 @@ func enter():
 	
 	tween.tween_interval(0.04)
 	tween.tween_callback(func():
-		var ui = shop_item_pb.instantiate()
+		var ui = G.shop_item_pb.instantiate()
 		ui.setup("upgrade_board", null, 15, 1, true)
 		list.add_child(ui)
 		setup_item_listener(ui)
 	)
 	tween.tween_interval(0.04)
 	tween.tween_callback(func():
-		var ui = shop_item_pb.instantiate()
+		var ui = G.shop_item_pb.instantiate()
 		ui.setup("increase_swaps", null, 5, 1, true)
 		list.add_child(ui)
 		setup_item_listener(ui)
 	)
 	tween.tween_interval(0.04)
 	tween.tween_callback(func():
-		var ui = shop_item_pb.instantiate()
+		var ui = G.shop_item_pb.instantiate()
 		ui.setup("increase_hand_size", null, 0, 1, true)
 		list.add_child(ui)
 		setup_item_listener(ui)
 	)
 	tween.tween_interval(0.04)
 	tween.tween_callback(func():
-		var ui = shop_item_pb.instantiate()
+		var ui = G.shop_item_pb.instantiate()
 		ui.setup("nothing", null, -2, 1, true)
 		list.add_child(ui)
 		setup_item_listener(ui)
@@ -95,6 +93,37 @@ func exit(trans : bool = true):
 	else:
 		clear()
 		self.hide()
+
+func load_from_data(data : Dictionary):
+	clear()
+	var list_data = data["upgrade_list"]
+	for item in list_data:
+		var ui = G.shop_item_pb.instantiate()
+		var cate = item["cate"]
+		if cate == "pattern":
+			var object = item["object"]
+			var p = Pattern.new()
+			p.setup(object["name"])
+			ui.setup("pattern", p, item["price"], 1, true)
+		else:
+			ui.setup(cate, null, item["price"], 1, true)
+		setup_item_listener(ui)
+		list.add_child(ui)
+
+func save_to_data(data : Dictionary):
+	var list_data = []
+	for n in list.get_children():
+		var ui = n as G.UiShopItem
+		var item = {}
+		item["cate"] = ui.cate
+		if ui.cate == "pattern":
+			var p = ui.object as Pattern
+			var object = {}
+			object["name"] = p.name
+			item["object"] = object
+		item["price"] = ui.price
+		list_data.append(item)
+	data["upgrade_list"] = list_data
 
 func _ready() -> void:
 	button.pressed.connect(func():

@@ -1,18 +1,15 @@
 extends Control
 
-const NumberText = preload("res://number_text.gd")
-const UiProp = preload("res://ui_prop.gd")
-
 @export var panel : Control
-@export var swaps_text : NumberText
+@export var swaps_text : G.NumberText
 @export var play_button  : Button
 @export var plays_text : Label
 @export var expected_score_panel : Control
 @export var expected_score_text : Label
 @export var props_bar : Control
-@export var pin_ui : UiProp
-@export var activate_ui : UiProp
-@export var grab_ui : UiProp
+@export var pin_ui : G.UiProp
+@export var activate_ui : G.UiProp
+@export var grab_ui : G.UiProp
 @export var undo_button : Button
 @export var filling_times_container : Control
 @export var filling_times_text : Label

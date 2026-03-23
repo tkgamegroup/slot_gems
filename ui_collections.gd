@@ -7,9 +7,6 @@ extends Control
 @export var relic_list : GridContainer
 @export var close_button : Button
 
-const pattern_ui = preload("res://ui_pattern.tscn")
-const relic_ui = preload("res://ui_relic.tscn")
-
 func clear():
 	for n in item_list.get_children():
 		item_list.remove_child(n)
@@ -36,14 +33,14 @@ func enter():
 	for n in patterns:
 		var p = Pattern.new()
 		p.setup(n)
-		var ui = pattern_ui.instantiate()
+		var ui = G.pattern_ui.instantiate()
 		ui.setup(p, true)
 		pattern_list.add_child(ui)
 	var relics = ["ExplosionScience", "HighExplosives", "UniformBlasting", "SympatheticDetonation", "BlockedLever", "MobiusStrip", "Premeditation", "PentagramPower", "RedComposition", "Sunflowers", "WaterLilies", "BlueNude", "LesDemoisellesDAvignon"]
 	for n in relics:
 		var r = Relic.new()
 		r.setup(n)
-		var ui = relic_ui.instantiate()
+		var ui = G.relic_ui.instantiate()
 		ui.setup(r)
 		relic_list.add_child(ui)
 

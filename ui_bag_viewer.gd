@@ -9,8 +9,6 @@ extends Control
 @export var comfirm_button : Button
 @export var close_button : Button
 
-const gem_ui = preload("res://ui_gem.tscn")
-
 var selecteds = []
 var select_num : int
 var select_callback : Callable
@@ -63,7 +61,7 @@ func enter(select_category : String = "", _select_num : int = 0, select_prompt :
 		ctrl.mouse_exited.connect(func():
 			STooltip.close()
 		)
-		var ui = gem_ui.instantiate()
+		var ui = G.gem_ui_pb.instantiate()
 		ui.update(g)
 		ctrl.add_child(ui)
 		var bar = create_bar()

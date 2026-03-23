@@ -24,13 +24,9 @@ var cells : Array[Cell]
 var curr_min_gem_num : int
 var next_min_gem_num : int
 
-const UiBoard = preload("res://ui_board.gd")
-const particles_pb = preload("res://particles.tscn")
-const active_effect_pb = preload("res://ui_active_effect.tscn")
-const black_bg = preload("res://images/black_bg.png")
-const trail_pb = preload("res://trail.tscn")
+@onready var active_effect_pb = load("res://ui_active_effect.tscn")
 
-var ui : UiBoard = null
+var ui : G.UiBoard = null
 
 var num_tasks : int
 var show_coords : bool = false
@@ -680,7 +676,7 @@ func collect_scores(tween : Tween):
 				sub.tween_interval(staging_idx * 0.02)
 				if !G.performance_mode:
 					sub.tween_callback(func():
-						var trail = trail_pb.instantiate()
+						var trail = G.trail_pb.instantiate()
 						trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
 						s.first.add_child(trail)
 					)
@@ -1036,7 +1032,7 @@ func effect_place_items_from_bag(items : Array, tween : Tween = null, source = n
 				
 				var sp = AnimatedSprite2D.new()
 				sp.position = G.game_ui.status_bar.bag_button.get_global_rect().get_center()
-				sp.sprite_frames = Gem.gem_frames
+				sp.sprite_frames = G.gem_frames
 				sp.frame = items[i].image_id
 				sp.z_index = 4
 				ui.overlay.add_child(sp)

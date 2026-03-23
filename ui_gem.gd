@@ -92,7 +92,7 @@ func break_into_pieces():
 	if pieces_tweens.is_empty():
 		if image_id == 0:
 			gem_kind_sp.hide()
-			var tex = Gem.gem_frames.get_frame_texture("default", type - Gem.ColorFirst + 1)
+			var tex = G.gem_frames.get_frame_texture("default", type - Gem.ColorFirst + 1)
 			pieces_root.z_index = 0
 			pieces_tweens = SEffect.add_break_pieces(Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, pieces_root, 0.5 * G.speed)
 			for t in pieces_tweens:

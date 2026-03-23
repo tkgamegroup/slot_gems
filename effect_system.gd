@@ -1,15 +1,15 @@
 extends Node
 
-const explosion_frames : SpriteFrames = preload("res://images/fx/explosion.tres")
-const big_explosion_frames : SpriteFrames = preload("res://images/fx/big_explosion.tres")
-const black_hole_rotating_frames : SpriteFrames = preload("res://images/fx/black_hole_rotating.tres")
-const white_hole_injection_frames : SpriteFrames = preload("res://images/fx/white_hole_injection.tres")
-const slash_frames : SpriteFrames = preload("res://images/fx/slash.tres")
-const splash_pb = preload("res://splash.tscn")
-const fireball_image : Texture = preload("res://images/fx/fireball.png")
-const distortion = preload("res://fx_distortion.tscn")
-const lightning = preload("res://fx_lightning.tscn")
-const leading_line_pb = preload("res://leading_line.tscn")
+@onready var explosion_frames : SpriteFrames = load("res://images/fx/explosion.tres")
+@onready var big_explosion_frames : SpriteFrames = load("res://images/fx/big_explosion.tres")
+@onready var black_hole_rotating_frames : SpriteFrames = load("res://images/fx/black_hole_rotating.tres")
+@onready var white_hole_injection_frames : SpriteFrames = load("res://images/fx/white_hole_injection.tres")
+@onready var slash_frames : SpriteFrames = load("res://images/fx/slash.tres")
+@onready var splash_pb = load("res://splash.tscn")
+@onready var fireball_image : Texture = load("res://images/fx/fireball.png")
+@onready var distortion = load("res://fx_distortion.tscn")
+@onready var lightning = load("res://fx_lightning.tscn")
+@onready var leading_line_pb = load("res://leading_line.tscn")
 
 func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width = 8.0):
 	var l = SEffect.leading_line_pb.instantiate()

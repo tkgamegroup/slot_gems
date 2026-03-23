@@ -1,7 +1,5 @@
 extends PanelContainer
 
-const pattern_pb = preload("res://ui_pattern.tscn")
-
 @onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
 @onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
 
@@ -25,7 +23,7 @@ func get_ui(idx : int):
 	return list.get_child(idx)
 
 func add_ui(p : Pattern):
-	var ui = pattern_pb.instantiate()
+	var ui = G.pattern_ui_pb.instantiate()
 	ui.setup(p, false, 3)
 	list.add_child(ui)
 	p.ui = ui

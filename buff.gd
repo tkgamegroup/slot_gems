@@ -154,3 +154,19 @@ static func remove_by_caster(host, caster):
 			return true
 		return false
 	)
+
+static func load_from_data(host, d : Dictionary):
+	var b = Buff.new()
+	b.uid = d["uid"]
+	b.type = int(d["type"])
+	b.host = host
+	b.duration = int(d["duration"])
+	b.data = SUtils.read_dictionary(d["data"])
+	host.buffs.append(b)
+	return b
+
+static func save_to_data(b : Buff, d : Dictionary):
+	d["uid"] = b.uid
+	d["type"] = b.type
+	d["duration"] = b.duration
+	d["data"] = SUtils.save_dictionary(b.data)
