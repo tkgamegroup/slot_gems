@@ -373,27 +373,26 @@ relic_desc_RockBottom,Gems' score will not descent.,
 relic_name_Aries,Aries,白羊座
 relic_desc_Aries,When [const_Aries]: (w_active) Explode and eliminate cells within [n_{range_i}]-ring at {times_i} random locations.,当[const_Aries]时：(w_active) 在随机的{times_i}个位置爆炸并消除[n_2]环内的格子。
 relic_name_Taurus,Taurus,金牛座
-relic_desc_Taurus,When matching at least 3 Grow runes: +{value_i} Score.,当匹配到至少3个生长符文时：+{value_i}分数。
+relic_desc_Taurus,When [const_Taurus]: +{value_i} Score.,当[const_Taurus]时：+{value_i}分数。
 relic_name_Gemini,Gemini,双子座
-relic_desc_Gemini,When matching at least 3 Wisdom runes: (w_active) Duplicate the left most gem from Hand.,当匹配到至少3个灵智符文时：(w_active) 复制手中最左边的宝石。
+relic_desc_Gemini,When [const_Gemini]: (w_active) Duplicate the left most gem from Hand.,当[const_Gemini]时：(w_active) 复制手中最左边的宝石。
 relic_name_Cancer,Cancer,巨蟹座
-relic_desc_Cancer,"When matching at least 1 Wisdom, and 2 Grow runes: (w_active) Remove 1 curse.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 移除1个诅咒。
+relic_desc_Cancer,When [const_Cancer]: (w_active) Remove 1 curse.,当[const_Cancer]时：(w_active) 移除1个诅咒。
 relic_name_Leo,Leo,狮子座
-relic_desc_Leo,"When matching at least 2 Destroy, 1 Wisdom, and 1 Grow runes: +1 Swaps.",当匹配到至少2个破坏、1个灵智、和1个生长符文时：+1 交换次数。
+relic_desc_Leo,When [const_Leo]: +1 Swaps.,当[const_Leo]时：+1 交换次数。
 relic_name_Virgo,Virgo,处女座
-relic_desc_Virgo,"When matching at least 2 Wisdom, and 1 Grow runes: +{value_f} Mult.",当匹配到至少2个灵智、和1个生长符文时：+{value_f}倍率。
+relic_desc_Virgo,When [const_Virgo]: +{value_f} Mult.,当[const_Virgo]时：+{value_f}倍率。
 relic_name_Libra,Libra,天秤座
-relic_desc_Libra,"When matching at least 2 Wisdom, and 1 Grow runes:",当匹配到至少2个灵智、和1个生长符文时：
-str_Libra_effect,Balanced,平衡
+relic_desc_Libra,When [const_Libra]:,当[const_Libra]时：
 relic_name_Scorpio,Scorpio,天蝎座
-relic_desc_Scorpio,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Delete the right most gem from Hand.,当匹配到至少2个破坏、和1个灵智符文时：(w_active) 删除手中最右边的宝石。
+relic_desc_Scorpio,When [const_Scorpio]: (w_active) Delete the right most gem from Hand.,当[const_Scorpius]时：(w_active) 删除手中最右边的宝石。
 relic_name_Sagittarius,Sagittarius,射手座
-relic_desc_Sagittarius,When matching at least 2 Destroy and 1 Wisdom runes: (w_active) Eliminate 1 most valuable gem.,当匹配到至少2个破坏、和1个灵智符文时： (w_active) 消除1个最有价值的宝石。
+relic_desc_Sagittarius,When [const_Sagittarius]: (w_active) Eliminate 1 most valuable gem.,当[const_Sagittarius]时： (w_active) 消除1个最有价值的宝石。
 relic_name_Capricorn,Capricorn,摩羯座
-relic_desc_Capricorn,"When matching at least 1 Destroy, and 2 Grow runes: Coins +{amount}.",当匹配到至少1个破坏、和2个生长符文时：金币+{amount}。
+relic_desc_Capricorn,When [const_Capricorn]: Coins +{amount}.,当[const_Capricorn]时：金币+{amount}。
 relic_name_Aquarius,Aquarius,水瓶座
-relic_desc_Aquarius,"When matching at least 3 Wisdom runes: (w_active) Select 1 random gem, its Base Score +{value_i}.",当匹配到至少3个灵智符文时：(w_active) 选择1个随机宝石，它的基础分数+{value_i}。
+relic_desc_Aquarius,"When [const_Aquarius]: (w_active) Select 1 random gem, its Base Score +{value_i}.",当[const_Aquarius]时：(w_active) 选择1个随机宝石，它的基础分数+{value_i}。
 relic_name_Pisces,Pisces,双鱼座
-relic_desc_Pisces,"When matching at least 2 Wisdom, and 1 Grow runes: (w_active) Turn 2 random gems into w_wild temporarily.",当匹配到至少1个灵智、和2个生长符文时：(w_active) 使2个随机宝石临时地变为w_wild。
+relic_desc_Pisces,When [const_Pisces]: (w_active) Turn 2 random gems into w_wild temporarily.,当[const_Aries]时：(w_active) 使2个随机宝石临时地变为w_wild。
 relic_name_HalfPriceCoupon,Half-Price Coupon,半价券
 relic_desc_HalfPriceCoupon,The price of purchasing gems and relics is halved.,购买宝石与遗物的价格减半。

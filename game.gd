@@ -59,29 +59,29 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 @onready var gem_frames : SpriteFrames = load("res://images/gems.tres")
 @onready var rune_frames : SpriteFrames = load("res://images/runes.tres")
 @onready var relic_frames : SpriteFrames = load("res://images/relics.tres")
-@onready var popup_txt_pb = load("res://popup_txt.tscn")
-@onready var gem_ui_pb = load("res://ui_gem.tscn")
-@onready var gem_slot_pb = load("res://ui_gem_slot.tscn")
-@onready var trail_pb = load("res://trail.tscn")
-@onready var cell_pb = load("res://ui_cell.tscn")
-@onready var outline_pb = load("res://ui_outline.tscn")
-@onready var dashed_line_pb = load("res://dashed_line.tscn")
-@onready var entangled_line_pb = load("res://entangled_line.tscn")
-@onready var constellation_pb = load("res://ui_constellation.tscn")
-@onready var hand_slot_pb = load("res://ui_hand_slot.tscn")
-@onready var relic_ui_pb = load("res://ui_relic.tscn")
-@onready var pattern_ui_pb = load("res://ui_pattern.tscn")
-@onready var settlement_item_pb = load("res://ui_settlement_item.tscn")
-@onready var reward_pb = load("res://ui_reward.tscn")
-@onready var shop_item_pb = load("res://ui_shop_item.tscn")
-@onready var craft_slot_pb = load("res://ui_craft_slot.tscn")
-@onready var entangle_slots_pb = load("res://ui_entangle_slots.tscn")
-@onready var tooltip_pb = load("res://tooltip.tscn")
-@onready var contex_menu_pb = load("res://ui_context_menu.tscn")
-@onready var pointer_cursor = load("res://images/pointer.png")
-@onready var pin_cursor = load("res://images/pin.png")
-@onready var activate_cursor = load("res://images/magic_stick.png")
-@onready var grab_cursor = load("res://images/grab.png")
+@onready var popup_txt_pb : PackedScene = load("res://popup_txt.tscn")
+@onready var gem_ui_pb : PackedScene = load("res://ui_gem.tscn")
+@onready var gem_slot_pb : PackedScene = load("res://ui_gem_slot.tscn")
+@onready var trail_pb : PackedScene = load("res://trail.tscn")
+@onready var cell_pb : PackedScene = load("res://ui_cell.tscn")
+@onready var outline_pb : PackedScene = load("res://ui_outline.tscn")
+@onready var dashed_line_pb : PackedScene = load("res://dashed_line.tscn")
+@onready var entangled_line_pb : PackedScene = load("res://entangled_line.tscn")
+@onready var constellation_pb : PackedScene = load("res://ui_constellation.tscn")
+@onready var hand_slot_pb : PackedScene = load("res://ui_hand_slot.tscn")
+@onready var relic_ui_pb : PackedScene = load("res://ui_relic.tscn")
+@onready var pattern_ui_pb : PackedScene = load("res://ui_pattern.tscn")
+@onready var settlement_item_pb : PackedScene = load("res://ui_settlement_item.tscn")
+@onready var reward_pb : PackedScene = load("res://ui_reward.tscn")
+@onready var shop_item_pb : PackedScene = load("res://ui_shop_item.tscn")
+@onready var craft_slot_pb : PackedScene = load("res://ui_craft_slot.tscn")
+@onready var entangle_slots_pb : PackedScene = load("res://ui_entangle_slots.tscn")
+@onready var tooltip_pb : PackedScene = load("res://tooltip.tscn")
+@onready var contex_menu_pb : PackedScene = load("res://ui_context_menu.tscn")
+@onready var pointer_cursor : Texture = load("res://images/pointer.png")
+@onready var pin_cursor : Texture = load("res://images/pin.png")
+@onready var activate_cursor : Texture = load("res://images/magic_stick.png")
+@onready var grab_cursor : Texture = load("res://images/grab.png")
 
 @onready var background : Node2D = $/root/Main/SubViewportContainer/SubViewport/Background
 @onready var crt : Control = $/root/Main/PostProcessing/ColorRect
@@ -500,7 +500,7 @@ func add_combo():
 	Board.on_combo()
 	Buff.remove_by_id_list(self, buffs_to_clear)
 
-func create_game_tween():
+func create_game_tween() -> Tween:
 	if !(STest.testing && STest.headless):
 		return game_tweens.create_tween()
 	return null
@@ -727,6 +727,7 @@ static func read_coord(s : String):
 		return Vector2i(int(s.substr(0, 3)), int(s.substr(3, 6)))
 	return Vector2i(-1, -1)
 
+var cli_history : Array[String]
 func process_command_line(cl : String):
 	var tokens = []
 	var lq = -1
@@ -812,19 +813,12 @@ func process_command_line(cl : String):
 							delay += 0.01
 					Painting.clear_lines()
 				elif t1 == "mode":
-					if tokens.size() >= 3:
-						if tokens[2] == "on":
-							paint_mode = "pencil"
-							paint_coord = Vector2i(-1, -1)
-						elif tokens[2] == "pencil":
-							paint_mode = "pencil"
-							paint_coord = Vector2i(-1, -1)
-						elif tokens[2] == "line":
-							paint_mode = "line"
-							paint_coord = Vector2i(-1, -1)
-						elif tokens[2] == "off":
-							paint_mode = "off"
-							paint_coord = Vector2i(-1, -1)
+					if paint_mode == "on":
+						paint_mode = "off"
+						paint_coord = Vector2i(-1, -1)
+					else:
+						paint_mode = "on"
+						paint_coord = Vector2i(-1, -1)
 				elif t1 == "brush":
 					if tokens.size() >= 3:
 						paint_brush1 = Gem.name_to_type(tokens[2])
@@ -842,34 +836,41 @@ func process_command_line(cl : String):
 					if tokens.size() >= 3:
 						var name = tokens[2]
 						var content = Painting.load_from_file(name)
-						var colors = content.colors
-						var lines = content.lines
-						var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
-						var tween = create_game_tween()
-						var delay = 0.0
-						for col in colors.keys():
-							for cc in colors[col]:
-								var oc = Board.cube_to_offset(center + cc)
-								var g = Board.get_gem_at(oc)
-								if g && g.name == "":
-									var sub = create_game_tween()
-									sub.tween_interval(delay)
-									Board.effect_change_color(oc, col, Gem.None, sub)
-									tween.tween_subtween(sub)
-									tween.parallel()
-									delay += 0.01
-						for l in lines:
-							var sub = create_game_tween()
-							sub.tween_interval(delay)
-							sub.tween_callback(func():
-								Painting.add_line(Board.cube_to_offset(center + l[0]), Board.cube_to_offset(center + l[1]))
-							)
-							tween.tween_subtween(sub)
-							tween.parallel()
-							delay += 0.01
+						if !content.is_empty():
+							var colors = content.colors
+							var lines = content.lines
+							var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+							var tween = create_game_tween()
+							var delay = 0.0
+							for col in colors.keys():
+								for cc in colors[col]:
+									var oc = Board.cube_to_offset(center + cc)
+									var g = Board.get_gem_at(oc)
+									if g && g.name == "":
+										var sub = create_game_tween()
+										sub.tween_interval(delay)
+										Board.effect_change_color(oc, col, Gem.None, sub)
+										tween.tween_subtween(sub)
+										tween.parallel()
+										delay += 0.01
+							for l in lines:
+								var sub = create_game_tween()
+								sub.tween_interval(delay)
+								sub.tween_callback(func():
+									Painting.add_line(Board.cube_to_offset(center + l[0]), Board.cube_to_offset(center + l[1]))
+								)
+								tween.tween_subtween(sub)
+								tween.parallel()
+								delay += 0.01
 				elif t1 == "image":
 					if tokens.size() >= 3:
 						Painting.set_board_to_image(tokens[2])
+	
+	for c in cli_history:
+		if c == cl:
+			cli_history.erase(c)
+			break
+	cli_history.append(cl)
 
 func get_round_score(r : int):
 	if r <= 10:
@@ -1070,7 +1071,7 @@ func start_game(saving : String = "", parms = {}):
 		
 		for i in 1:
 			var r = Relic.new()
-			r.setup("Aries")
+			r.setup("Taurus")
 			add_relic(r)
 		for i in 0:
 			var r = Relic.new()
@@ -1806,40 +1807,44 @@ func _unhandled_input(event: InputEvent) -> void:
 					command_line_edit.grab_focus()
 			if paint_mode != "off":
 				if event.keycode == KEY_1:
-					if !event.shift_pressed:
-						paint_brush1 = Gem.ColorRed
-					else:
+					if event.shift_pressed:
 						paint_brush2 = Gem.ColorRed
-				elif event.keycode == KEY_2:
-					if !event.shift_pressed:
-						paint_brush1 = Gem.ColorOrange
+					elif event.alt_pressed:
+						paint_mode = "pencil"
 					else:
+						paint_brush1 = Gem.ColorRed
+				elif event.keycode == KEY_2:
+					if event.shift_pressed:
 						paint_brush2 = Gem.ColorOrange
+					elif event.alt_pressed:
+						paint_mode = "line"
+					else:
+						paint_brush1 = Gem.ColorOrange
 				elif event.keycode == KEY_3:
 					if !event.shift_pressed:
 						paint_brush1 = Gem.ColorGreen
 					else:
 						paint_brush2 = Gem.ColorGreen
 				elif event.keycode == KEY_4:
-					if !event.shift_pressed:
-						paint_brush1 = Gem.ColorBlue
-					else:
+					if event.shift_pressed:
 						paint_brush2 = Gem.ColorBlue
+					else:
+						paint_brush1 = Gem.ColorBlue
 				elif event.keycode == KEY_5:
-					if !event.shift_pressed:
-						paint_brush1 = Gem.ColorMagenta
-					else:
+					if event.shift_pressed:
 						paint_brush2 = Gem.ColorMagenta
+					else:
+						paint_brush1 = Gem.ColorMagenta
 				elif event.keycode == KEY_6:
-					if !event.shift_pressed:
-						paint_brush1 = Gem.ColorWhite
-					else:
+					if event.shift_pressed:
 						paint_brush2 = Gem.ColorWhite
-				elif event.keycode == KEY_7:
-					if !event.shift_pressed:
-						paint_brush1 = Gem.ColorBlack
 					else:
+						paint_brush1 = Gem.ColorWhite
+				elif event.keycode == KEY_7:
+					if event.shift_pressed:
 						paint_brush2 = Gem.ColorBlack
+					else:
+						paint_brush1 = Gem.ColorBlack
 	elif event is InputEventMouseMotion:
 		if Board.ui.visible && !run_info_ui.visible && !bag_viewer_ui.visible && !in_game_menu_ui.visible && !options_ui.visible && !tutorial_ui.visible && !test_ui.visible:
 			var c = Board.ui.hover_coord(true)
@@ -1881,25 +1886,28 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if hovering_coord.x != -1 && hovering_coord.y != -1 && paint_mode != "off":
-					if paint_mode == "pencil":
-						Board.effect_change_color(hovering_coord, paint_brush1, Gem.None, null)
-					elif paint_mode == "line":
-						if paint_coord.x == -1 && paint_coord.y == -1:
-							paint_coord = hovering_coord
+				if paint_mode == "on":
+					if hovering_coord.x != -1 && hovering_coord.y != -1:
+						paint_coord = hovering_coord
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				if paint_mode == "on":
+					if hovering_coord.x != -1 && hovering_coord.y != -1:
+						paint_coord = hovering_coord
+		else:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if paint_mode == "on":
+					if hovering_coord.x != -1 && hovering_coord.y != -1:
+						if paint_coord == hovering_coord:
+							Board.effect_change_color(hovering_coord, paint_brush1, Gem.None, null)
 						else:
 							Painting.add_line(paint_coord, hovering_coord)
-							paint_coord = Vector2i(-1, -1)
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
-				if hovering_coord.x != -1 && hovering_coord.y != -1 && paint_mode != "off":
-					if paint_mode == "pencil":
-						Board.effect_change_color(hovering_coord, paint_brush2, Gem.None, null)
-					elif paint_mode == "line":
-						if paint_coord.x == -1 && paint_coord.y == -1:
-							paint_coord = hovering_coord
+				if paint_mode == "on":
+					if hovering_coord.x != -1 && hovering_coord.y != -1:
+						if paint_coord == hovering_coord:
+							Board.effect_change_color(hovering_coord, paint_brush2, Gem.None, null)
 						else:
 							Painting.remove_line(paint_coord, hovering_coord)
-							paint_coord = Vector2i(-1, -1)
 
 func _ready() -> void:
 	randomize()

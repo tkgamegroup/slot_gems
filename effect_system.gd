@@ -5,11 +5,12 @@ extends Node
 @onready var black_hole_rotating_frames : SpriteFrames = load("res://images/fx/black_hole_rotating.tres")
 @onready var white_hole_injection_frames : SpriteFrames = load("res://images/fx/white_hole_injection.tres")
 @onready var slash_frames : SpriteFrames = load("res://images/fx/slash.tres")
-@onready var splash_pb = load("res://splash.tscn")
 @onready var fireball_image : Texture = load("res://images/fx/fireball.png")
-@onready var distortion = load("res://fx_distortion.tscn")
-@onready var lightning = load("res://fx_lightning.tscn")
-@onready var leading_line_pb = load("res://leading_line.tscn")
+@onready var star_bright : PackedScene = load("res://star_bright.tscn")
+@onready var splash_pb : PackedScene = load("res://splash.tscn")
+@onready var distortion : PackedScene = load("res://fx_distortion.tscn")
+@onready var lightning : PackedScene = load("res://fx_lightning.tscn")
+@onready var leading_line_pb : PackedScene = load("res://leading_line.tscn")
 
 func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width = 8.0):
 	var l = SEffect.leading_line_pb.instantiate()
@@ -161,3 +162,14 @@ func add_white_hole_injection(pos : Vector2, size : Vector2, z_index : int, dura
 	tween.tween_property(sp, "scale", Vector2(0, 0), 0.5)
 	tween.tween_callback(sp.queue_free)
 	return sp
+
+func show_constellation(name : String):
+	var ui = G.constellation_pb.instantiate()
+	ui.preview = false
+	ui.setup(name)
+	Board.ui.overlay.add_child(ui)
+	var tween = G.create_game_tween()
+	tween.tween_interval(1.0 * G.speed)
+	tween.tween_callback(func():
+		ui.queue_free()
+	)

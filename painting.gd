@@ -76,15 +76,17 @@ static func set_board_to_image(name : String):
 			delay += 0.01
 
 static func add_line(a : Vector2i, b : Vector2i):
+	if a == b:
+		return
 	for l in lines:
-		if (l.first == a && l.second == b) || l.first == b && l.second == a:
+		if (l.first == a && l.second == b) || (l.first == b && l.second == a):
 			return
 	lines.append(Pair.new(a, b))
 	Board.ui.draw_lines.queue_redraw()
 
 static func remove_line(a : Vector2i, b : Vector2i):
 	for l in lines:
-		if (l.first == a && l.second == b) || l.first == b && l.second == a:
+		if (l.first == a && l.second == b) || (l.first == b && l.second == a):
 			lines.erase(l)
 	Board.ui.draw_lines.queue_redraw()
 
