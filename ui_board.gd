@@ -50,6 +50,7 @@ func update_cell(c : Vector2i):
 	ui.pinned.visible = cell.pinned
 	ui.frozen.visible = cell.frozen
 	ui.set_nullified(cell.nullified)
+	ui.set_floating(cell.floating)
 
 func clear():
 	for n in outlines_root.get_children():

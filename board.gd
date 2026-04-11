@@ -175,7 +175,8 @@ func set_gem_at(c : Vector2i, g : Gem):
 	var og = cell.gem
 	if og:
 		for h in event_listeners:
-			h.host.on_event.call(C.Event.GemLeft, null, og)
+			if h.event == C.Event.GemLeft || h.event == C.Event.Any:
+				h.host.on_event.call(C.Event.GemLeft, null, og)
 		SMath.remove_if(event_listeners, func(h : Hook):
 			return h.host == og
 		)
@@ -192,7 +193,8 @@ func set_gem_at(c : Vector2i, g : Gem):
 			var h = Hook.new(-1, g, C.HostType.Gem, false)
 			event_listeners.append(h)
 		for h in event_listeners:
-			h.host.on_event.call(C.Event.GemEntered, null, g)
+			if h.event == C.Event.GemEntered || h.event == C.Event.Any:
+				h.host.on_event.call(C.Event.GemEntered, null, g)
 	else:
 		cell.pinned = false
 		cell.frozen = false
@@ -328,6 +330,19 @@ func set_in_mist(c : Vector2i, v : bool):
 	if cell.in_mist == v:
 		return false
 	cell.in_mist = v
+	if !(STest.testing && STest.headless):
+		ui.update_cell(c)
+	return true
+
+func set_floating(c : Vector2i, v : bool):
+	c = format_coord(c)
+	if !is_valid(c):
+		return false
+	var idx = c.y * cx + c.x
+	var cell = cells[idx]
+	if cell.floating == v:
+		return false
+	cell.floating = v
 	if !(STest.testing && STest.headless):
 		ui.update_cell(c)
 	return true

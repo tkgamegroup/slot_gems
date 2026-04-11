@@ -11,6 +11,7 @@ var extra : Dictionary
 
 var on_event : Callable
 var on_active : Callable
+var on_aura : Callable
 var on_socket : Callable
 
 var ui : G.UiRelic = null
@@ -231,12 +232,28 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.GemEntered, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.GemLeft, self, C.HostType.Relic)
 			elif event == C.Event.LostRelic:
 				if data == self:
 					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
 				if active_constellation("Aries"):
 					pass
+			elif event == C.Event.GemEntered:
+				var coords = get_constellation_star_coords("Aries", true)
+				var g = data as Gem
+				for c in coords:
+					if g.coord == c && g.rune == Gem.RuneStarfish:
+						Board.set_floating(g.coord, true)
+						break
+			elif event == C.Event.GemLeft:
+				var coords = get_constellation_star_coords("Aries", true)
+				var g = data as Gem
+				for c in coords:
+					if g.coord == c && g.rune == Gem.RuneStarfish:
+						Board.set_floating(g.coord, false)
+						break
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var times = extra["times_i"]
 			for i in times:
@@ -520,7 +537,8 @@ func setup(n : String):
 				G.change_modifier(Gem.color_bouns_name(g.type), bouns)
 
 static var constellation_star_coords : Dictionary = {}
-func active_constellation(name : String):
+
+static func get_constellation_star_coords(name : String, translate : bool = false):
 	if !constellation_star_coords.has(name):
 		var content = Painting.load_from_file(name)
 		var whites = content.colors.get(Gem.ColorWhite, [])
@@ -528,12 +546,20 @@ func active_constellation(name : String):
 		for p in whites:
 			coords.append(p)
 		constellation_star_coords[name] = coords
+	if !translate:
+		return constellation_star_coords[name]
 	var coords = constellation_star_coords[name]
 	var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+	var ret = []
+	for c in coords:
+		ret.append(Board.cube_to_offset(center + c))
+	return ret
+
+func active_constellation(name : String):
+	var coords = get_constellation_star_coords(name, true)
 	var ok = true
 	for c in coords:
-		var oc = Board.format_coord(Board.cube_to_offset(center + c))
-		var g = Board.get_gem_at(oc)
+		var g = Board.get_gem_at(c)
 		if !g || (g.rune != Gem.RuneStarfish && g.rune != Gem.RuneOmni):
 			ok = false
 			break

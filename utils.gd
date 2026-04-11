@@ -40,6 +40,7 @@ static func replacing_constellation_tag(text : String, referenced_constellations
 		var start = m.get_start()
 		var end = m.get_end()
 		ret += text.substr(last_end, start - last_end)
+		ret += "w_star_chart"
 		var constellation_name = m.get_string(1)
 		referenced_constellations.append(constellation_name)
 		last_end = end
@@ -87,7 +88,7 @@ static func replacing_conditioning_line_tag(text : String) -> String:
 	ret += text.substr(last_end)
 	return ret
 
-const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_consumable", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_nullified", "w_in_mist"]
+const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_consumable", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_star_chart", "w_nullified", "w_in_mist", "w_floating"]
 static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], referenced_gems : Array = [], referenced_constellations : Array = []) -> String:
 	var ret = ""
 	ret = replacing_gem_tag(text, with_color, with_url, referenced_gems)
@@ -96,7 +97,7 @@ static func format_text(text : String, with_color : bool, with_url : bool, used_
 	ret = replacing_conditioning_line_tag(ret)
 	
 	for w in words:
-		if text.find(w) != -1:
+		if ret.find(w) != -1:
 			if with_color:
 				if with_url:
 					ret = ret.replace(w, "[url=%s][color=cyan]%s[/color][/url]" % [w, G.tr(w)])

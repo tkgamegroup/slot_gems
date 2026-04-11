@@ -47,7 +47,17 @@ func show(_node, _dir : int, contents : Array[Pair]):
 		var const_pb = G.constellation_pb.instantiate()
 		const_pb.setup(n)
 		ui.absoulte.add_child(const_pb)
+	var words2 = []
 	for w in words:
+		var msg = w + "_desc"
+		var desc = tr(msg)
+		if desc != msg:
+			var item = G.tooltip_pb.instantiate()
+			item.title = w
+			item.content = SUtils.format_text(desc, true, false, words2)
+			ui.list2.add_child(item)
+			ui.show_more.show()
+	for w in words2:
 		var msg = w + "_desc"
 		var desc = tr(msg)
 		if desc != msg:

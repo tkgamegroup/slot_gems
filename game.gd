@@ -1071,7 +1071,7 @@ func start_game(saving : String = "", parms = {}):
 		
 		for i in 1:
 			var r = Relic.new()
-			r.setup("Taurus")
+			r.setup("Aries")
 			add_relic(r)
 		for i in 0:
 			var r = Relic.new()
@@ -1339,7 +1339,6 @@ func next_round(tween : Tween = null):
 		tween.tween_property(game_ui.status_bar.round_text, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.parallel().tween_property(game_ui.status_bar.round_target, "modulate:a", 1.0, 0.5).from(0.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		tween.tween_callback(func():
-			Curse.pick_targets()
 			for c in current_curses:
 				var coord = c.coord
 				if c.afflicted_gem:
@@ -1363,7 +1362,6 @@ func next_round(tween : Tween = null):
 		)
 	else:
 		round_begin()
-		Curse.pick_targets()
 		Curse.apply_curses()
 		stage = Stage.Deploy
 		save_to_file()

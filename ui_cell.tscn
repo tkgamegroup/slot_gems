@@ -1,12 +1,56 @@
-[gd_scene load_steps=6 format=3 uid="uid://cpv0mxnsh1ct3"]
+[gd_scene load_steps=11 format=3 uid="uid://cpv0mxnsh1ct3"]
 
 [ext_resource type="Script" uid="uid://bwcptmt32c0ay" path="res://ui_cell.gd" id="1_c8dfl"]
 [ext_resource type="PackedScene" uid="uid://s5ehr1388thk" path="res://ui_gem.tscn" id="2_sxxmi"]
 [ext_resource type="Texture2D" uid="uid://bhcfbybb53f87" path="res://images/pined.png" id="5_qcpuj"]
 [ext_resource type="Texture2D" uid="uid://csgetbs60orud" path="res://images/frozen.png" id="5_v5bqx"]
+[ext_resource type="Texture2D" uid="uid://bv4kkyfjpfj7e" path="res://images/little_bubble.png" id="6_qcpuj"]
 [ext_resource type="SpriteFrames" uid="uid://bybc42chjmbrn" path="res://images/nullify.tres" id="7_gl3ak"]
 
-[node name="UiCell" type="Control" node_paths=PackedStringArray("gem_ui", "pinned", "frozen", "nullified", "nullified_sp1", "nullified_sp2")]
+[sub_resource type="Gradient" id="Gradient_gl3ak"]
+offsets = PackedFloat32Array(0, 0.46341464, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0)
+
+[sub_resource type="Animation" id="Animation_gl3ak"]
+length = 1.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Gem:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.5),
+"transitions": PackedFloat32Array(1, 4.438279, 0.27739227),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -4), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qcpuj"]
+resource_name = "default"
+length = 1.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Gem:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.43333334, 1.5),
+"transitions": PackedFloat32Array(1, 3.6050012, 3.6050024),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -3), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gtmp1"]
+_data = {
+&"RESET": SubResource("Animation_gl3ak"),
+&"default": SubResource("Animation_qcpuj")
+}
+
+[node name="UiCell" type="Control" node_paths=PackedStringArray("gem_ui", "pinned", "frozen", "nullified", "nullified_sp1", "nullified_sp2", "floating", "floating_bubbles", "floating_animation")]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 3
 anchors_preset = 0
@@ -19,6 +63,9 @@ frozen = NodePath("Frozen")
 nullified = NodePath("Nullified")
 nullified_sp1 = NodePath("Nullified/sp1")
 nullified_sp2 = NodePath("Nullified/sp2")
+floating = NodePath("Floating")
+floating_bubbles = NodePath("Floating/Bubbles")
+floating_animation = NodePath("Floating/AnimationPlayer")
 
 [node name="Gem" parent="." instance=ExtResource("2_sxxmi")]
 layout_mode = 0
@@ -45,3 +92,23 @@ speed_scale = 0.5
 modulate = Color(0.360621, 0.526466, 0.622788, 1)
 sprite_frames = ExtResource("7_gl3ak")
 speed_scale = 0.5
+
+[node name="Floating" type="Node2D" parent="."]
+visible = false
+
+[node name="Bubbles" type="CPUParticles2D" parent="Floating"]
+position = Vector2(36, 68)
+emitting = false
+texture = ExtResource("6_qcpuj")
+lifetime = 1.5
+explosiveness = 0.7
+emission_shape = 3
+emission_rect_extents = Vector2(20, 1)
+gravity = Vector2(0, -100)
+color_ramp = SubResource("Gradient_gl3ak")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Floating"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_gtmp1")
+}
