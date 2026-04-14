@@ -2,8 +2,7 @@ extends RefCounted
 
 class_name MatchPreview
 
-var matchings : Array[Array]
-var rune_matchings : Array[int]
+var matchings : Array[Dictionary]
 var lines : Array[Node2D]
 var tween : Tween = null
 
@@ -14,7 +13,7 @@ func find_all_matchings():
 			for p in G.patterns:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
-					matchings.append(res)
+					matchings.append({"pattern":p,"coords":res})
 
 func find_missing_ones(check_color : int, check_rune : int):
 	matchings.clear()
@@ -25,11 +24,11 @@ func find_missing_ones(check_color : int, check_rune : int):
 				if !res.is_empty():
 					var added = false
 					for m in matchings:
-						if m[0] == res[0]:
+						if m.coords[0] == res[0]:
 							added = true
 							break
 					if !added:
-						matchings.append(res)
+						matchings.append({"pattern":p,"coords":res})
 
 func show():
 	for n in lines:
@@ -41,9 +40,9 @@ func show():
 		tween = null
 	tween = G.create_game_tween()
 	var idx = 0
-	for res in matchings:
+	for m in matchings:
 		var gs = []
-		for c in res:
+		for c in m.coords:
 			var ok = false
 			for g in gs:
 				if g.is_empty():

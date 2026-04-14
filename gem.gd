@@ -32,12 +32,12 @@ enum
 	ColorGreenBlueMagenta,
 	ColorAny,
 	RuneWave,
-	RunePalm,
-	RuneStarfish,
+	RuneCircle,
+	RuneStar,
 	RuneOmni,
-	RuneWavePalm,
-	RuneWaveStarfish,
-	RunePalmStarfish,
+	RuneWaveCircle,
+	RuneWaveStar,
+	RuneCircleStar,
 	RuneAny
 }
 
@@ -48,8 +48,8 @@ const ColorComboFirst = ColorRedOrange
 const ColorComboLast = ColorAny
 const RuneCount = RuneLast - RuneFirst + 1
 const RuneFirst = RuneWave
-const RuneLast = RuneStarfish
-const RuneComboFirst = RuneWavePalm
+const RuneLast = RuneStar
+const RuneComboFirst = RuneWaveCircle
 const RuneComboLast = RuneAny
 
 var id : int
@@ -201,8 +201,8 @@ static func type_img(t : int):
 static func rune_name(r : int):
 	match r:
 		RuneWave: return "Wave"
-		RunePalm: return "Palm"
-		RuneStarfish: return "Starfish"
+		RuneCircle: return "Circle"
+		RuneStar: return "Star"
 		RuneOmni: return "Omni"
 		RuneAny: return "Any"
 	return "None"
@@ -211,8 +211,8 @@ static func name_to_rune(s : String):
 	match s:
 		"None": return None
 		"Wave": return RuneWave
-		"Palm": return RunePalm
-		"Starfish": return RuneStarfish
+		"Circle": return RuneCircle
+		"Star": return RuneStar
 		"Omni": return RuneOmni
 		"Any": return RuneAny
 	return None
@@ -220,8 +220,8 @@ static func name_to_rune(s : String):
 static func rune_display_name(r : int):
 	match r:
 		RuneWave: return G.tr("rune_wave")
-		RunePalm: return G.tr("rune_palm")
-		RuneStarfish: return G.tr("rune_starfish")
+		RuneCircle: return G.tr("rune_circle")
+		RuneStar: return G.tr("rune_star")
 		RuneOmni: return "w_omni"
 		RuneAny: return G.tr("rune_any")
 	return "None"
@@ -229,19 +229,19 @@ static func rune_display_name(r : int):
 static func rune_img(r : int):
 	match r:
 		RuneWave: return "res://images/rune_wave.png"
-		RunePalm: return "res://images/rune_palm.png"
-		RuneStarfish: return "res://images/rune_starfish.png"
+		RuneCircle: return "res://images/rune_circle.png"
+		RuneStar: return "res://images/rune_star.png"
 		RuneOmni: return "res://images/rune_omni.png"
 	return ""
 
 static func rune_combo_contains(combo : int, v : int):
 	match combo:
-		RuneWavePalm:
-			return v == RuneWave || v == RunePalm
-		RuneWaveStarfish:
-			return v == RuneWave || v == RuneStarfish
-		RunePalmStarfish:
-			return v == RunePalm || v == RuneStarfish
+		RuneWaveCircle:
+			return v == RuneWave || v == RuneCircle
+		RuneWaveStar:
+			return v == RuneWave || v == RuneStar
+		RuneCircleStar:
+			return v == RuneCircle || v == RuneStar
 		RuneAny:
 			return true
 	return false

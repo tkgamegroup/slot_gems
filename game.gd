@@ -14,7 +14,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 16
+const version_patch : int = 17
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -125,6 +125,10 @@ var swaps : int:
 		swaps = v
 		if !(STest.testing && STest.headless):
 			control_ui.swaps_text.set_value(swaps)
+		if control_ui.play_button.disabled == false && swaps == 0:
+			control_ui.show_last_play()
+		else:
+			control_ui.last_play.hide()
 var swaps_per_round : int
 var plays : int:
 	set(v):
@@ -218,8 +222,6 @@ var base_score : int:
 				calculator_bar_ui.base_score_text.text = "%d" % base_score
 		else:
 			base_score = v
-
-var staging_scores : Array[Pair]
 
 var combos_tween : Tween
 var combos : int = 0:
@@ -532,19 +534,18 @@ func add_score(value : int, pos : Vector2):
 		ui.z_index = 8
 		game_ui.game_overlay.add_child(ui)
 	
-		staging_scores.append(Pair.new(ui, value))
-		
 		var tween = ui.create_tween()
 		tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
 		tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * speed)
 		tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 		tween.tween_callback(func():
-			lb.hide()
+			G.base_score += value
+			ui.queue_free()
 		)
 	
 		add_score_dir *= -1
 	else:
-		staging_scores.append(Pair.new(null, value))
+		G.base_score += value
 
 var status_tween : Tween
 func float_status_text(s : String, col : Color):
@@ -917,13 +918,23 @@ func set_lang(lang : String):
 
 func begin_busy():
 	if !(STest.testing && STest.headless):
+		control_ui.shuffle_button.disabled = true
+		control_ui.undo_button.disabled = true
+		control_ui.play_button.disabled = true
+		control_ui.last_play.hide()
 		Hand.ui.disabled = true
 		Drag.release()
 
 func end_busy():
 	if !(STest.testing && STest.headless):
+		if swaps > 0:
+			control_ui.shuffle_button.disabled = false
+		if !action_stack.is_empty():
+			control_ui.undo_button.disabled = false
 		if !shop_ui.visible:
 			control_ui.play_button.disabled = false
+			if swaps == 0:
+				control_ui.show_last_play()
 		Hand.ui.disabled = false
 		if Board.ui.visible:
 			Board.ui.show_entangled_lines()
@@ -1046,18 +1057,21 @@ func start_game(saving : String = "", parms = {}):
 		if !(STest.testing && STest.headless):
 			update_round_text(current_round)
 		
-		for i in 1:
-			var p = Pattern.new()
-			p.setup("\\")
-			add_pattern(p)
-		for i in 1:
-			var p = Pattern.new()
-			p.setup("|")
-			add_pattern(p)
-		for i in 1:
-			var p = Pattern.new()
-			p.setup("/")
-			add_pattern(p)
+		var no_default_patterns = parms.get("no_default_patterns", 0)
+		if !no_default_patterns:
+			for i in 1:
+				var p = Pattern.new()
+				p.setup("\\")
+				add_pattern(p)
+			for i in 1:
+				var p = Pattern.new()
+				p.setup("|")
+				add_pattern(p)
+			for i in 1:
+				var p = Pattern.new()
+				p.setup("/")
+				add_pattern(p)
+		
 		'''
 		for i in 1:
 			var p = Pattern.new()
@@ -1069,7 +1083,7 @@ func start_game(saving : String = "", parms = {}):
 			add_pattern(p)
 		'''
 		
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Aries")
 			add_relic(r)
@@ -1086,17 +1100,17 @@ func start_game(saving : String = "", parms = {}):
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var red_palm_num = parms.get("red_palm_num", base_gem_num)
-		for i in red_palm_num:
+		var red_circle_num = parms.get("red_circle_num", base_gem_num)
+		for i in red_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
-			g.rune = Gem.RunePalm
+			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var red_starfish_num = parms.get("red_starfish_num", base_gem_num)
-		for i in red_starfish_num:
+		var red_star_num = parms.get("red_star_num", base_gem_num)
+		for i in red_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
-			g.rune = Gem.RuneStarfish
+			g.rune = Gem.RuneStar
 			add_gem(g)
 		var orange_wave_num = parms.get("orange_wave_num", base_gem_num)
 		for i in orange_wave_num:
@@ -1104,17 +1118,17 @@ func start_game(saving : String = "", parms = {}):
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var orange_palm_num = parms.get("orange_palm_num", base_gem_num)
-		for i in orange_palm_num:
+		var orange_circle_num = parms.get("orange_circle_num", base_gem_num)
+		for i in orange_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
-			g.rune = Gem.RunePalm
+			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var orange_starfish_num = parms.get("orange_starfish_num", base_gem_num)
-		for i in orange_starfish_num:
+		var orange_star_num = parms.get("orange_star_num", base_gem_num)
+		for i in orange_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
-			g.rune = Gem.RuneStarfish
+			g.rune = Gem.RuneStar
 			add_gem(g)
 		var green_wave_num = parms.get("green_wave_num", base_gem_num)
 		for i in green_wave_num:
@@ -1122,17 +1136,17 @@ func start_game(saving : String = "", parms = {}):
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var green_palm_num = parms.get("green_palm_num", base_gem_num)
-		for i in green_palm_num:
+		var green_circle_num = parms.get("green_circle_num", base_gem_num)
+		for i in green_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
-			g.rune = Gem.RunePalm
+			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var green_starfish_num = parms.get("green_starfish_num", base_gem_num)
-		for i in green_starfish_num:
+		var green_star_num = parms.get("green_star_num", base_gem_num)
+		for i in green_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
-			g.rune = Gem.RuneStarfish
+			g.rune = Gem.RuneStar
 			add_gem(g)
 		var blue_wave_num = parms.get("blue_wave_num", base_gem_num)
 		for i in blue_wave_num:
@@ -1140,17 +1154,17 @@ func start_game(saving : String = "", parms = {}):
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var blue_palm_num = parms.get("blue_palm_num", base_gem_num)
-		for i in blue_palm_num:
+		var blue_circle_num = parms.get("blue_circle_num", base_gem_num)
+		for i in blue_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
-			g.rune = Gem.RunePalm
+			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var blue_starfish_num = parms.get("blue_starfish_num", base_gem_num)
-		for i in blue_starfish_num:
+		var blue_star_num = parms.get("blue_star_num", base_gem_num)
+		for i in blue_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
-			g.rune = Gem.RuneStarfish
+			g.rune = Gem.RuneStar
 			add_gem(g)
 		var magenta_wave_num = parms.get("magenta_wave_num", base_gem_num)
 		for i in magenta_wave_num:
@@ -1158,17 +1172,17 @@ func start_game(saving : String = "", parms = {}):
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var magenta_palm_num = parms.get("magenta_palm_num", base_gem_num)
-		for i in magenta_palm_num:
+		var magenta_circle_num = parms.get("magenta_circle_num", base_gem_num)
+		for i in magenta_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
-			g.rune = Gem.RunePalm
+			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var magenta_starfish_num = parms.get("magenta_starfish_num", base_gem_num)
-		for i in magenta_starfish_num:
+		var magenta_star_num = parms.get("magenta_star_num", base_gem_num)
+		for i in magenta_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
-			g.rune = Gem.RuneStarfish
+			g.rune = Gem.RuneStar
 			add_gem(g)
 		var extra_gems = parms.get("extra_gems", [])
 		for eg in extra_gems:
@@ -1179,12 +1193,19 @@ func start_game(saving : String = "", parms = {}):
 				else:
 					g.setup(eg.name)
 				G.add_gem(g)
+		var extra_patterns = parms.get("extra_patterns", [])
+		for ep in extra_patterns:
+			for i in ep.num:
+				var p = Pattern.new()
+				p.setup(ep.name)
+				add_pattern(p)
 		var extra_relics = parms.get("extra_relics", [])
 		for er in extra_relics:
 			for i in er.num:
 				var r = Relic.new()
 				r.setup(er.name)
 				G.add_relic(r)
+		
 		for i in 0:
 			var g = Gem.new()
 			g.setup("Rainbow")
@@ -1204,14 +1225,13 @@ func start_game(saving : String = "", parms = {}):
 			tween.tween_interval(1.1)
 			tween.tween_callback(func():
 				Board.ui.enter(null, false)
-				begin_busy()
-				Board.fill_blanks()
+				Board.down_proc()
 				for i in max_hand_grabs:
 					Hand.draw()
 				next_round(null)
 			)
 		else:
-			Board.fill_blanks()
+			Board.down_proc()
 			for i in max_hand_grabs:
 				Hand.draw()
 			next_round(null)
@@ -1268,7 +1288,7 @@ func update_round_text(r : int):
 	game_ui.status_bar.round_target.text = "[wave amp=20.0 freq=-3.0]%s[/wave]" % SUtils.format_text(get_round_desc(r), true, true)
 
 #const curse_types = ["lust", "gluttony", "greed", "sloth", "wrath", "envy", "pride"]
-const curse_types = ["red_no_score", "orange_no_score", "green_no_score", "blue_no_score", "magenta_no_score", "wave_no_score", "palm_no_score", "starfish_no_score"]
+const curse_types = ["red_no_score", "orange_no_score", "green_no_score", "blue_no_score", "magenta_no_score", "wave_no_score", "circle_no_score", "star_no_score"]
 func build_round_curses():
 	var build_times = current_round + 3 - round_curses.size()
 	for i in build_times:
@@ -1357,7 +1377,6 @@ func next_round(tween : Tween = null):
 			stage = Stage.Deploy
 			save_to_file()
 			control_ui.update_preview()
-			control_ui.expected_score_panel.show()
 			end_busy()
 		)
 	else:
@@ -1414,7 +1433,6 @@ func calc_game_state():
 			win()
 		else:
 			control_ui.update_preview()
-			control_ui.expected_score_panel.show()
 			end_busy()
 
 func roll():
@@ -1437,13 +1455,24 @@ func play():
 	speed = 1.0 / base_speed
 	
 	if !(STest.testing && STest.headless):
-		control_ui.undo_button.disabled = true
 		control_ui.expected_score_panel.hide()
 		calculator_bar_ui.appear()
 	
 	action_stack.clear()
 	begin_busy()
 	Board.matching()
+
+func shuffle():
+	if G.swaps == 0:
+		return
+	G.swaps -= 1
+	
+	if !(STest.testing && STest.headless):
+		control_ui.expected_score_panel.hide()
+	
+	action_stack.clear()
+	G.begin_busy()
+	Board.shuffle()
 
 func toggle_in_game_menu():
 	if !in_game_menu_ui.visible:
@@ -1750,8 +1779,9 @@ func load_from_file(name : String = "1"):
 		G.stage = Stage.Deploy
 		Board.ui.enter(null, false)
 		control_ui.update_preview()
-		control_ui.expected_score_panel.show()
 		control_ui.play_button.disabled = false
+		if swaps == 0:
+			control_ui.show_last_play()
 	else:
 		if stage == "settlement":
 			G.stage = Stage.Settlement
@@ -1922,15 +1952,11 @@ func _ready() -> void:
 	Board.filling_finished.connect(func():
 		if !(STest.testing && STest.headless):
 			Board.ui.show_entangled_lines()
-		if modifiers["played_i"] > 0:
-			filling_times += 1
-			if filling_times >= C.REFILL_TIMES_TO_STOP:
-				calc_game_state()
-			else:
-				Board.matching()
+		filling_times += 1
+		if filling_times >= C.REFILL_TIMES_TO_STOP:
+			calc_game_state()
 		else:
-			if !(STest.testing && STest.headless):
-				control_ui.update_preview()
+			Board.matching()
 	)
 	Board.matching_finished.connect(func():
 		var processed = false
@@ -1943,6 +1969,11 @@ func _ready() -> void:
 			if !(STest.testing && STest.headless):
 				control_ui.filling_times_container.hide()
 			calculator_bar_ui.calculate()
+	)
+	Board.shuffle_finished.connect(func():
+		end_busy()
+		if !(STest.testing && STest.headless):
+			control_ui.update_preview()
 	)
 	Hand.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Hand
 	STooltip.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Tooltips

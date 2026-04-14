@@ -4,18 +4,22 @@ extends Control
 @export var swaps_text : G.NumberText
 @export var play_button  : Button
 @export var plays_text : Label
+@export var undo_button : Button
+@export var shuffle_button : Button
 @export var expected_score_panel : Control
 @export var expected_score_text : Label
+@export var last_play : Control
+@export var last_play_text : RichTextLabel
 @export var props_bar : Control
 @export var pin_ui : G.UiProp
 @export var activate_ui : G.UiProp
 @export var grab_ui : G.UiProp
-@export var undo_button : Button
 @export var filling_times_container : Control
 @export var filling_times_text : Label
 @export var debug_text : Label
 
 var filling_times_tween : Tween = null
+var last_play_tween : Tween = null
 var shake_strength : float = 0.0
 var shake_coord : float = 0.0
 
@@ -35,16 +39,35 @@ func update_preview():
 	preview.find_all_matchings()
 	
 	var base = 0
-	var combos = 0
-	var mult = 1.0
-	for m in preview.matchings:
-		combos += 1
-		for c in m:
+	for i in preview.matchings.size():
+		var m = preview.matchings[i]
+		for c in m.coords:
+			var found = false
+			for j in i:
+				var mm = preview.matchings[j]
+				for cc in mm.coords:
+					if c == cc:
+						found = true
+						break
+				if found:
+					break
+			if found:
+				continue
 			var g = Board.get_gem_at(c)
 			if g && g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
 				if !G.no_score_marks[g.type].front() && !G.no_score_marks[g.rune].front():
-					base += g.get_score()
-	expected_score_text.text = "%d" % int(base * G.mult_from_combos(combos) * mult)
+					base += round(g.get_score() * m.pattern.mult)
+	expected_score_text.text = "%d" % base
+	expected_score_panel.show()
+
+func show_last_play():
+	if last_play_tween:
+		last_play_tween.kill()
+		last_play_tween = null
+	last_play.show()
+	last_play.scale = Vector2(0.0, 0.0)
+	last_play_tween = G.create_game_tween()
+	last_play_tween.tween_property(last_play, "scale", Vector2(1.0, 1.0), 0.3)
 
 func _ready() -> void:
 	play_button.pressed.connect(func():
@@ -58,7 +81,7 @@ func _ready() -> void:
 		if !play_button.disabled:
 			preview.show()
 		
-		STooltip.show(play_button, 1, [Pair.new(tr("tt_game_match_title"), tr("tt_game_match_content"))])
+		STooltip.show(play_button, 1, [Pair.new(tr("tt_game_play_title"), tr("tt_game_play_content"))])
 	)
 	play_button.mouse_exited.connect(func():
 		STooltip.close()
@@ -91,6 +114,24 @@ func _ready() -> void:
 			if G.action_stack.is_empty():
 				undo_button.disabled = true
 	)
+	undo_button.mouse_entered.connect(func():
+		STooltip.show(undo_button, 0, [Pair.new(tr("tt_game_undo"), "")])
+	)
+	undo_button.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	shuffle_button.pressed.connect(func():
+		SSound.se_click.play()
+		G.screen_shake_strength = 8.0
+		G.shuffle()
+	)
+	shuffle_button.mouse_entered.connect(func():
+		STooltip.show(shuffle_button, 2, [Pair.new(tr("tt_game_shuffle_title"), tr("tt_game_shuffle_content"))])
+	)
+	shuffle_button.mouse_exited.connect(func():
+		STooltip.close()
+	)
+	last_play_text.text = "[shake]%s[/shake]" % tr("ui_game_last_play")
 	filling_times_container.mouse_entered.connect(func():
 		STooltip.show(filling_times_container, 1, [Pair.new(tr("tt_game_filling_times_title"), tr("tt_game_filling_times_content"))])
 	)

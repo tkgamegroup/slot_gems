@@ -89,7 +89,7 @@ func setup(n : String):
 				var g = Board.get_gem_at(c)
 				if g && g.rune == Gem.RuneWave || g.rune == Gem.RuneOmni:
 					G.add_score(extra["value_i"], Board.get_pos(c))
-	elif name == "PaintingOfPalm":
+	elif name == "PaintingOfCircle":
 		image_id = 7
 		extra["value_i"] = 18
 		price = 5
@@ -103,9 +103,9 @@ func setup(n : String):
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
-				if g && g.rune == Gem.RunePalm || g.rune == Gem.RuneOmni:
+				if g && g.rune == Gem.RuneCircle || g.rune == Gem.RuneOmni:
 					G.add_score(extra["value_i"], Board.get_pos(c))
-	elif name == "PaintingOfStarfish":
+	elif name == "PaintingOfStar":
 		image_id = 8
 		extra["value_i"] = 18
 		price = 5
@@ -119,7 +119,7 @@ func setup(n : String):
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
-				if g && g.rune == Gem.RuneStarfish || g.rune == Gem.RuneOmni:
+				if g && g.rune == Gem.RuneStar || g.rune == Gem.RuneOmni:
 					G.add_score(extra["value_i"], Board.get_pos(c))
 	elif name == "Amplifier":
 		image_id = 9
@@ -244,14 +244,14 @@ func setup(n : String):
 				var coords = get_constellation_star_coords("Aries", true)
 				var g = data as Gem
 				for c in coords:
-					if g.coord == c && g.rune == Gem.RuneStarfish:
+					if g.coord == c && g.rune == Gem.RuneStar:
 						Board.set_floating(g.coord, true)
 						break
 			elif event == C.Event.GemLeft:
 				var coords = get_constellation_star_coords("Aries", true)
 				var g = data as Gem
 				for c in coords:
-					if g.coord == c && g.rune == Gem.RuneStarfish:
+					if g.coord == c && g.rune == Gem.RuneStar:
 						Board.set_floating(g.coord, false)
 						break
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
@@ -560,7 +560,7 @@ func active_constellation(name : String):
 	var ok = true
 	for c in coords:
 		var g = Board.get_gem_at(c)
-		if !g || (g.rune != Gem.RuneStarfish && g.rune != Gem.RuneOmni):
+		if !g || (g.rune != Gem.RuneStar && g.rune != Gem.RuneOmni):
 			ok = false
 			break
 	if ok || true:

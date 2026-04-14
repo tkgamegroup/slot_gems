@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpmonffyemkop"
-path="res://.godot/imported/painting_of_palm.png-cd3ce3a05fb069398848cdde4c8442c3.ctex"
+uid="uid://ckgpel2kqhlog"
+path="res://.godot/imported/painting_of_star.png-f9aaa3ff7a058258863e022c60f78d4b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/painting_of_palm.png"
-dest_files=["res://.godot/imported/painting_of_palm.png-cd3ce3a05fb069398848cdde4c8442c3.ctex"]
+source_file="res://images/relics/painting_of_star.png"
+dest_files=["res://.godot/imported/painting_of_star.png-f9aaa3ff7a058258863e022c60f78d4b.ctex"]
 
 [params]
 

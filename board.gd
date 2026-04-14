@@ -39,6 +39,7 @@ var event_listeners : Array[Hook]
 signal filling_finished
 signal matching_finished
 signal clearing_finished
+signal shuffle_finished
 
 # odd-q vertical layout shoves odd columns down
 # even-q vertical layout shoves even columns down
@@ -260,7 +261,7 @@ func score_at(c : Vector2i, additional_score : int = 0, mult : float = 1.0):
 		if G.no_score_marks[g.type].front() || G.no_score_marks[g.rune].front():
 			return
 	var pos = get_pos(c)
-	G.add_score((g.get_score() + additional_score) * mult, pos)
+	G.add_score(round((g.get_score() + additional_score) * mult), pos)
 
 func pin(c : Vector2i):
 	c = format_coord(c)
@@ -681,52 +682,9 @@ func clear_consumed():
 	else:
 		clearing_finished.emit()
 
-func collect_scores(tween : Tween):
-	var staging_idx = 0
-	if !G.staging_scores.is_empty():
-		if tween:
-			G.staging_scores.shuffle()
-			for s in G.staging_scores:
-				var sub = G.create_game_tween()
-				sub.tween_interval(staging_idx * 0.02)
-				if !G.performance_mode:
-					sub.tween_callback(func():
-						var trail = G.trail_pb.instantiate()
-						trail.setup(5.0, Color(1.0, 1.0, 1.0, 0.5))
-						s.first.add_child(trail)
-					)
-					sub.tween_property(s.first, "scale", Vector2(1.0, 1.0), 0.5 * G.speed)
-					sub.parallel()
-					SAnimation.quadratic_curve_to(sub, s.first, G.calculator_bar_ui.base_score_text.get_global_rect().get_center(), Vector2(0.3 + randf() * 0.3, (0.1 + randf() * 0.1) * sign(randf() - 0.5)), 0.5 * G.speed).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
-				sub.tween_callback(func():
-					G.base_score += s.second
-				)
-				sub.tween_callback(s.first.queue_free)
-				if staging_idx > 0:
-					tween.parallel()
-				tween.tween_subtween(sub)
-				staging_idx += 1
-		else:
-			for s in G.staging_scores:
-				G.base_score += s.second
-		G.staging_scores.clear()
-	return tween
-
-var filling_tween : Tween = null
-func fill_blanks():
-	if filling_tween:
-		return
-	filling_tween = G.create_game_tween()
-	
-	if G.gems.size() < Board.curr_min_gem_num:
-		G.game_over_mark = "not_enough_gems"
-		G.lose()
-		return
-	
-	var collect_tween = G.create_game_tween()
-	collect_scores(collect_tween)
-	
-	var down_tween = G.create_game_tween()
+func down_proc(tween : Tween = null):
+	if !tween:
+		tween = G.create_game_tween()
 	for x in cx:
 		var subx = G.create_game_tween()
 		var delay = 0.0
@@ -793,11 +751,24 @@ func fill_blanks():
 				subx.parallel().tween_subtween(sub)
 				delay += 0.08
 		if subx:
-			down_tween.parallel().tween_subtween(subx)
+			tween.parallel().tween_subtween(subx)
+
+var filling_tween : Tween = null
+func fill_blanks():
+	if filling_tween:
+		return
+	filling_tween = G.create_game_tween()
+	
+	if G.gems.size() < Board.curr_min_gem_num:
+		G.game_over_mark = "not_enough_gems"
+		G.lose()
+		return
+	
+	var down_tween = G.create_game_tween()
+	down_proc(down_tween)
 	
 	if filling_tween:
-		filling_tween.tween_subtween(collect_tween)
-		filling_tween.parallel().tween_subtween(down_tween)
+		filling_tween.tween_subtween(down_tween)
 		filling_tween.tween_callback(func():
 			filling_tween = null
 			if G.game_over_mark == "":
@@ -807,38 +778,83 @@ func fill_blanks():
 		if G.game_over_mark == "":
 			filling_finished.emit()
 
+func shuffle():
+	var tween = G.create_game_tween()
+	
+	for x in cx:
+		var subx = G.create_game_tween()
+		var delay = 0.0
+		for i in range(cy - 1, -1, -1):
+			var c = Vector2i(x, i)
+			if !get_cell(c).is_unmovable():
+				var g = get_gem_at(c)
+				if g:
+					var sub = G.create_game_tween()
+					if sub:
+						sub.tween_interval(delay * G.speed)
+						var cell_ui = ui.get_cell(c)
+						sub.tween_property(cell_ui, "scale", Vector2(0.0, 0.0), 0.1 * G.speed).from(Vector2(1.0, 1.0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+					if sub:
+						sub.tween_callback(func():
+							set_gem_at(c, null)
+						)
+						subx.parallel().tween_subtween(sub)
+						delay += 0.08
+					else:
+						set_gem_at(c, null)
+		if subx:
+			tween.parallel().tween_subtween(subx)
+	
+	if tween:
+		tween.tween_callback(func():
+			var tween2 = G.create_game_tween()
+			down_proc(tween2)
+			tween2.tween_callback(func():
+				shuffle_finished.emit()
+			)
+		)
+	else:
+		down_proc()
+		shuffle_finished.emit()
+
 func on_combo():
 	for h in event_listeners:
 		if h.event == C.Event.Combo || h.event == C.Event.Any:
 			h.host.on_event.call(C.Event.Combo, null, null)
 
-func pattern_score(coords : Array[Vector2i], p : Pattern):
-	p.add_exp(1)
-	
-	if !(STest.testing && STest.headless):
-		SSound.se_bubble_pop.play()
-	G.add_combo()
-	for c in coords:
-		score_at(c, 0, p.mult)
-
 func matching_proc():
 	var tween = G.create_game_tween()
 	
 	var matched_num = 0
-	for y in cy:
-		for x in cx:
-			for p in G.patterns:
+	for p in G.patterns:
+		for y in cy:
+			for x in cx:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
+					if matched_num == 0:
+						if tween:
+							tween.tween_callback(func():
+								if !(STest.testing && STest.headless):
+									SSound.se_bubble_pop.play()
+								G.add_combo()
+							)
+						else:
+							G.add_combo()
+					matched_num += 1
+					p.add_exp(1)
+					
 					var sub = G.create_game_tween()
 					if sub:
 						sub.tween_interval(matched_num * 0.04 * G.speed)
-						sub.tween_callback(func():
-							pattern_score(res, p)
-						)
-					else:
-						pattern_score(res, p)
-					matched_num += 1
+					for c in res:
+						var g = get_gem_at(c)
+						if !g.eliminated:
+							if sub:
+								sub.tween_callback(func():
+									score_at(c, 0, p.mult)
+								)
+							else:
+								score_at(c, 0, p.mult)
 					
 					for h in event_listeners:
 						if h.event == C.Event.Matched || h.event == C.Event.Any:

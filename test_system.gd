@@ -234,7 +234,8 @@ func reset():
 			var n = d.base_count + d.count_increase * group_idx
 			parms.get_or_add("extra_gems", []).append({"name":d.name,"num":n})
 		elif d.category == "pattern":
-			pass
+			var n = d.base_count + d.count_increase * group_idx
+			parms.get_or_add("extra_patterns", []).append({"name":d.name,"num":n})
 		elif d.category == "relic":
 			var n = d.base_count + d.count_increase * group_idx
 			parms.get_or_add("extra_relics", []).append({"name":d.name,"num":n})

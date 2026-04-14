@@ -6,7 +6,7 @@ var name : String
 var coord_groups : Array[Array]
 var recipes : Array
 var price : int = 10
-var mult : int = 1
+var mult : float = 1.0
 var lv : int = 1
 var exp : int = 0
 var max_exp : int = get_max_exp(1)
@@ -22,20 +22,15 @@ func setup(n : String):
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, 0, -2), Vector3i(3, 0, -3)])
 		recipes.append([Gem.ColorAny])
 	elif name == "|":
+		mult = 1.5
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(0, 2, -2), Vector3i(0, 3, -3)])
 		recipes.append([Gem.ColorAny])
 	elif name == "/":
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, -1, 0), Vector3i(2, -2, 0), Vector3i(3, -3, 0)])
 		recipes.append([Gem.ColorAny])
-	elif name == "Y":
-		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(1, 1, -2), Vector3i(2, -1, -1)])
-		recipes.append([Gem.RuneAny])
-	elif name == "C":
-		coord_groups.append([Vector3i(1, -1, 0), Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 1, -2)])
-		recipes.append([Gem.RuneAny])
 	elif name == "O":
+		mult = 2.0
 		coord_groups.append([Vector3i(1, -1, 0), Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 1, -2), Vector3i(2, -1, -1), Vector3i(2, 0, -2)])
-		recipes.append([Gem.ColorAny])
 		recipes.append([Gem.RuneAny])
 	elif name == "√":
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 0, -1), Vector3i(2, -1, -1), Vector3i(3, -2, -1)])
@@ -43,10 +38,16 @@ func setup(n : String):
 	elif name == "X":
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, 0, -2), Vector3i(2, -1, -1), Vector3i(0, 1, -1)])
 		recipes.append([Gem.RuneAny])
+	elif name == "Y":
+		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(1, 1, -2), Vector3i(2, -1, -1)])
+		recipes.append([Gem.RuneAny])
+	elif name == "C":
+		coord_groups.append([Vector3i(1, -1, 0), Vector3i(0, 0, 0), Vector3i(0, 1, -1), Vector3i(1, 1, -2)])
+		recipes.append([Gem.RuneAny])
 	elif name == "Island":
 		coord_groups.append([Vector3i(1, -1, 0)])
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, -1, -1)])
-		recipes.append([Gem.RunePalm, Gem.RuneWave])
+		recipes.append([Gem.RuneCircle, Gem.RuneWave])
 
 func all_coords() -> Array[Vector3i]:
 	var ret : Array[Vector3i] = []
@@ -65,10 +66,10 @@ func contains_coord(off : Vector2i, coord : Vector2i) -> bool:
 
 func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int = Gem.None, external_map : Dictionary = {}):
 	var c_off = Board.offset_to_cube(off)
-	var matcheds : Array[Vector2i] = []
-	var mismatcheds : Array[Vector2i] = []
-	var checkeds : Array[Vector2i] = []
 	for r in recipes:
+		var matcheds : Array[Vector2i] = []
+		var mismatcheds : Array[Vector2i] = []
+		var checkeds : Array[Vector2i] = []
 		for i in coord_groups.size():
 			var group = coord_groups[i]
 			var coords = []
@@ -115,12 +116,11 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 						mismatcheds.append(coords[j])
 						if check_rune == val || check_rune == Gem.RuneOmni || Gem.rune_combo_contains(check_rune, val):
 							checkeds.append(coords[j])
-	if check_color != Gem.None || check_rune != Gem.None:
-		if mismatcheds.size() == 1 && !checkeds.is_empty():
-			return checkeds
-		return [] as Array[Vector2i]
-	if mismatcheds.is_empty():
-		return matcheds
+		if check_color != Gem.None || check_rune != Gem.None:
+			if mismatcheds.size() == 1 && !checkeds.is_empty():
+				return checkeds
+		elif mismatcheds.is_empty():
+			return matcheds
 	return [] as Array[Vector2i]
 
 func get_ui_coords():
@@ -140,11 +140,9 @@ func get_ui_coords():
 
 func add_exp(v : int):
 	var old_lv = lv
-	var old_mult = mult
 	exp += v
 	while exp >= max_exp:
 		lv += 1
-		mult += 1
 		exp -= max_exp
 		max_exp = get_max_exp(lv)
 	if ui:
@@ -156,7 +154,7 @@ func add_exp(v : int):
 		if lv > old_lv:
 			var ctrl = Control.new()
 			var lb = Label.new()
-			lb.text = "LV +1\nMult +%d" % (mult - old_mult)
+			lb.text = "LV +1"
 			lb.modulate.a = 0.2
 			ctrl.add_child(lb)
 			ui.add_child(ctrl)
@@ -185,5 +183,7 @@ func get_tooltip():
 				content += "%s\n" % Gem.rune_display_name(v)
 			else:
 				content += "%s\n" % tr("gem_unknow")
+	if mult != 1.0:
+		content += "Mult: %.1f" % mult
 	ret.append(Pair.new(tr("pattern_name_" + name), content))
 	return ret

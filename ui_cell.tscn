@@ -51,10 +51,10 @@ _data = {
 }
 
 [node name="UiCell" type="Control" node_paths=PackedStringArray("gem_ui", "pinned", "frozen", "nullified", "nullified_sp1", "nullified_sp2", "floating", "floating_bubbles", "floating_animation")]
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 3
 anchors_preset = 0
-pivot_offset = Vector2(24, 24)
+pivot_offset = Vector2(36, 36)
 mouse_filter = 2
 script = ExtResource("1_c8dfl")
 gem_ui = NodePath("Gem")

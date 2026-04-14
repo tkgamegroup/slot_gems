@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckgpel2kqhlog"
-path="res://.godot/imported/painting_of_starfish.png-b3ef5e25c6934956c4e487bfb65f3566.ctex"
+uid="uid://bpmonffyemkop"
+path="res://.godot/imported/painting_of_circle.png-43fcea877ec2ffc607977456f3d1b9eb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/relics/painting_of_starfish.png"
-dest_files=["res://.godot/imported/painting_of_starfish.png-b3ef5e25c6934956c4e487bfb65f3566.ctex"]
+source_file="res://images/relics/painting_of_circle.png"
+dest_files=["res://.godot/imported/painting_of_circle.png-43fcea877ec2ffc607977456f3d1b9eb.ctex"]
 
 [params]
 

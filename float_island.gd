@@ -5,7 +5,9 @@ class_name FloatIsland
 var target
 var move_strength : float
 var rotate_strength : float
-var jitter : Jitter = Jitter.new()
+var noise : Noise
+var coord : Vector2
+var value : Vector2
 var offset : Vector2
 var enable : bool = false
 
@@ -14,7 +16,11 @@ func setup(_target, _move_strength : float, _rotate_strength : float, freq : flo
 	move_strength = _move_strength
 	rotate_strength = _rotate_strength
 	
-	jitter.setup(freq)
+	noise = FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	noise.frequency = freq
+	noise.seed = randi()
 	
 	target.visibility_changed.connect(func():
 		if target.is_visible_in_tree():
@@ -27,6 +33,8 @@ func setup(_target, _move_strength : float, _rotate_strength : float, freq : flo
 
 func update():
 	if enable && !G.performance_mode:
-		jitter.update()
-		target.position = round(offset + jitter.value * move_strength)
-		target.rotation_degrees = jitter.value.y * rotate_strength
+		var t = Time.get_ticks_msec() / 1000.0
+		coord += Vector2(noise.get_noise_2d(17.1, t), noise.get_noise_2d(97.9, t)) * 0.15
+		var value = Vector2(sin(coord.x), sin(coord.y))
+		target.position = round(offset + value * move_strength)
+		target.rotation_degrees = value.y * rotate_strength

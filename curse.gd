@@ -27,10 +27,10 @@ static func apply_curses():
 				G.no_score_marks[Gem.ColorMagenta].push_front(true)
 			"curse_wave_no_score":
 				G.no_score_marks[Gem.RuneWave].push_front(true)
-			"curse_palm_no_score":
-				G.no_score_marks[Gem.RunePalm].push_front(true)
-			"curse_starfish_no_score":
-				G.no_score_marks[Gem.RuneStarfish].push_front(true)
+			"curse_circle_no_score":
+				G.no_score_marks[Gem.RuneCircle].push_front(true)
+			"curse_star_no_score":
+				G.no_score_marks[Gem.RuneStar].push_front(true)
 
 func remove():
 	match type:
@@ -46,7 +46,7 @@ func remove():
 			G.no_score_marks[Gem.ColorMagenta].pop_front()
 		"curse_wave_no_score":
 			G.no_score_marks[Gem.RuneWave].pop_front()
-		"curse_palm_no_score":
-			G.no_score_marks[Gem.RunePalm].pop_front()
-		"curse_starfish_no_score":
-			G.no_score_marks[Gem.RuneStarfish].pop_front()
+		"curse_circle_no_score":
+			G.no_score_marks[Gem.RuneCircle].pop_front()
+		"curse_star_no_score":
+			G.no_score_marks[Gem.RuneStar].pop_front()

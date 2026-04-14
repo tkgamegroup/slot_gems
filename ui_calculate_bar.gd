@@ -28,7 +28,7 @@ func appear():
 
 func get_result(result : Dictionary):
 	result["combo_mult"] = G.mult_from_combos(G.combos)
-	result["value"] = int(G.base_score * result["combo_mult"] * G.score_mult)
+	result["value"] = int(round(G.base_score * result["combo_mult"] * G.score_mult))
 
 func calculate_proc():
 	var result = {}
@@ -45,18 +45,11 @@ func calculate_proc():
 		SAnimation.jump(tween, combos_text, 4, 0.2, func():
 			combos_text.text = "%.2f" % result["combo_mult"]
 		)
-		tween.tween_property(cross1, "scale:x", 1.0, 0.3 * G.speed)
-		#tween.parallel().tween_property(cross2, "scale:x", 1.0, 0.3 * G.speed)
+		tween.tween_property(cross1, "scale:x", 1.0, 0.1 * G.speed).from(0.0)
 		tween.tween_interval(0.3 * G.speed)
 		tween.tween_callback(func():
-			SSound.se_calc2.pitch_scale = 1.0 / G.speed
-			SSound.se_calc2.play()
-		)
-		SAnimation.jump(tween, base_score_text, 4, 0.2 * G.speed, Callable(), false)
-		SAnimation.jump(tween, combos_text, 4, 0.2 * G.speed, Callable(), false)
-		#SAnimation.jump(tween, mult_text, 4, 0.2 * G.speed, Callable(), false)
-		tween.tween_interval(0.3 * G.speed)
-		tween.tween_callback(func():
+			SSound.se_calc1.pitch_scale = 1.0 / G.speed
+			SSound.se_calc1.play()
 			calculated_text.show()
 			calculated_text.text = "%d" % result["value"]
 			calculated_text.position = Vector2((G.resolution.x - calculated_text.size.x) * 0.5, 220)

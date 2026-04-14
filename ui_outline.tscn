@@ -5,7 +5,6 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Outline" type="Sprite2D" parent="."]
-modulate = Color(0, 0, 0, 0.19607843)
 position = Vector2(-4, -4)
 texture = ExtResource("1_qasoe")
 centered = false

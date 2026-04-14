@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://03641uiumwkc"
-path="res://.godot/imported/rune_starfish.png-2d0e5eb4f3ee1bb16291954ffd3f304f.ctex"
+uid="uid://ccgj6kw6hyrhb"
+path="res://.godot/imported/shuffle.png-10172dd5c0cea462693dc12527e725be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/rune_starfish.png"
-dest_files=["res://.godot/imported/rune_starfish.png-2d0e5eb4f3ee1bb16291954ffd3f304f.ctex"]
+source_file="res://images/shuffle.png"
+dest_files=["res://.godot/imported/shuffle.png-10172dd5c0cea462693dc12527e725be.ctex"]
 
 [params]
 

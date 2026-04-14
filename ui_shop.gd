@@ -70,7 +70,7 @@ func buy_randomly():
 	return false
 
 const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "Coin", "Bomb", "C4", "Rainbow", "Orange", "IaiCut", "Lightning", "EnergyDrink", "Badge", "Magnet", "Volcano", "PolishingPowder"]
-const relics_pool = ["PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfPalm", "PaintingOfStarfish", "Amplifier", "Recorder", "GhostAmmo", "Multicast", "MobiusStrip", "Premeditation", "PentagramPower", "HalfPriceCoupon"]
+const relics_pool = ["PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfCircle", "PaintingOfStar", "Amplifier", "Recorder", "GhostAmmo", "Multicast", "MobiusStrip", "Premeditation", "PentagramPower", "HalfPriceCoupon"]
 
 const patterns_pool = ["\\", "|", "/", "O", "√", "X", "Island"]
 
@@ -245,7 +245,10 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	self.show()
 	self.material.set_shader_parameter("x_rot", -90.0)
 	
+	G.control_ui.undo_button.disabled = true
+	G.control_ui.shuffle_button.disabled = true
 	G.control_ui.play_button.disabled = true
+	G.control_ui.last_play.hide()
 	for n in staging_slots:
 		n.disabled = true
 	G.stage = G.Stage.Shopping

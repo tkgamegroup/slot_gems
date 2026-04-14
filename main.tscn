@@ -1,4 +1,4 @@
-[gd_scene load_steps=185 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=188 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -88,7 +88,9 @@
 [ext_resource type="Shader" uid="uid://bptjtflv2v5ak" path="res://materials/perspective.gdshader" id="64_jbvwl"]
 [ext_resource type="Script" uid="uid://c0518ysbhih83" path="res://ui_dialog.gd" id="64_wy5fy"]
 [ext_resource type="Script" uid="uid://bmn54yoswxpwn" path="res://ui_patterns_bar.gd" id="64_x2fcq"]
+[ext_resource type="Texture2D" uid="uid://ccgj6kw6hyrhb" path="res://images/shuffle.png" id="66_ywjan"]
 [ext_resource type="PackedScene" uid="uid://3a8ejhbdode0" path="res://rich_button.tscn" id="67_jbvwl"]
+[ext_resource type="Script" uid="uid://c3tk78b8ewg5o" path="res://shake.gd" id="67_m74q3"]
 [ext_resource type="Texture2D" uid="uid://np31u18iwfdo" path="res://images/quetion_mark.png" id="68_1yv1y"]
 [ext_resource type="Script" uid="uid://bxlk2fiy6ojj1" path="res://ui_game.gd" id="69_dij0e"]
 [ext_resource type="Script" uid="uid://b5qjvjf6wb7ty" path="res://banner.gd" id="69_phcyf"]
@@ -311,6 +313,9 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 expand_margin_left = 3.0
 expand_margin_right = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tko6h"]
+bg_color = Color(0.7902301, 0.54486454, 0.14142862, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vieuh"]
 bg_color = Color(0.398622, 0.150025, 0.502998, 0.643137)
@@ -1224,7 +1229,7 @@ layout_mode = 2
 [node name="StagingSlot3" parent="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("58_l0gw7")]
 layout_mode = 2
 
-[node name="GameControl" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "swaps_text", "play_button", "plays_text", "expected_score_panel", "expected_score_text", "props_bar", "pin_ui", "activate_ui", "grab_ui", "undo_button", "filling_times_container", "filling_times_text", "debug_text")]
+[node name="GameControl" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "swaps_text", "play_button", "plays_text", "undo_button", "shuffle_button", "expected_score_panel", "expected_score_text", "last_play", "last_play_text", "props_bar", "pin_ui", "activate_ui", "grab_ui", "filling_times_container", "filling_times_text", "debug_text")]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -1235,16 +1240,19 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_4wyqg")
 panel = NodePath("MarginContainer2/HBoxContainer2/Panel")
-swaps_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps")
+swaps_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Swaps")
 play_button = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play")
 plays_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer2/Plays")
+undo_button = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Undo")
+shuffle_button = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Shuffle")
 expected_score_panel = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer")
 expected_score_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control/PanelContainer/ExpectedScore")
+last_play = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2/MarginContainer/Control/PanelContainer")
+last_play_text = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2/MarginContainer/Control/PanelContainer/MarginContainer/Label")
 props_bar = NodePath("HBoxContainer")
 pin_ui = NodePath("HBoxContainer/UiProp")
 activate_ui = NodePath("HBoxContainer/UiProp2")
 grab_ui = NodePath("HBoxContainer/UiProp3")
-undo_button = NodePath("MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Undo")
 filling_times_container = NodePath("PanelContainer")
 filling_times_text = NodePath("PanelContainer/FillingTimes")
 debug_text = NodePath("MarginContainer/DebugText")
@@ -1276,35 +1284,40 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_fepj7")
 layout_mode = 2
 theme_override_constants/separation = 16
 
+[node name="Shuffle" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+icon = ExtResource("66_ywjan")
+
 [node name="Undo" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 disabled = true
 icon = ExtResource("45_5yh34")
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.5850627, 0.58506185, 0.585062, 1)
 theme_override_font_sizes/font_size = 22
 text = "ui_game_swaps"
 
-[node name="Swaps" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3" instance=ExtResource("31_uatky")]
+[node name="Swaps" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer" instance=ExtResource("31_uatky")]
 layout_mode = 2
 font_size = 60
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps" index="0"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Swaps" index="0"]
 text = "0"
 
-[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Text" index="1"]
+[node name="Text" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Swaps/Text" index="1"]
 theme_override_colors/default_color = Color(1, 1, 1, 1)
 
-[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Panel/ChangeBG" index="0"]
+[node name="Change" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Swaps/Panel/ChangeBG" index="0"]
 text = "0"
 
 [node name="Hand" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
@@ -1324,6 +1337,7 @@ mouse_filter = 2
 [node name="Play" type="Button" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 3
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_ovcoh")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_4obbf")
@@ -1358,6 +1372,46 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 18
 text = "9999"
 horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2"]
+layout_mode = 1
+offset_right = 67.0
+offset_bottom = 91.0
+theme_override_constants/margin_left = 20
+
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2/MarginContainer/Control"]
+visible = false
+layout_mode = 1
+offset_right = 66.0
+offset_bottom = 88.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_tko6h")
+script = ExtResource("67_m74q3")
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2/MarginContainer/Control/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/Play/Control2/MarginContainer/Control/PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer"]
 visible = false
@@ -3996,8 +4050,8 @@ wait_time = 0.1
 
 [editable path="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer2/Control"]
 [editable path="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps"]
-[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer3/Swaps/Text"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Swaps"]
+[editable path="SubViewportContainer/SubViewport/Canvas/GameControl/MarginContainer2/HBoxContainer2/Panel/HBoxContainer/VBoxContainer/Swaps/Text"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp2"]
 [editable path="SubViewportContainer/SubViewport/Canvas/GameControl/HBoxContainer/UiProp3"]

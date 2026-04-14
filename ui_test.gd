@@ -286,6 +286,9 @@ func _ready() -> void:
 			if name.is_valid_filename():
 				DirAccess.rename_absolute(format_config_filename(configs_list.get_item_text(sel[0])), format_config_filename(name))
 				configs_list.set_item_text(sel[0], name)
+				STest.filename = name
+				save_config()
+				filename_edit.text = name
 	)
 	filename_edit.text_changed.connect(func(text : String):
 		STest.filename = text
