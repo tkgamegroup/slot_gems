@@ -115,7 +115,7 @@ func setup(n : String):
 					if Board.is_valid(c):
 						places.append(c)
 				tween.tween_callback(func():
-					G.add_combo()
+					G.add_chain()
 					Board.score_at(SMath.pick_random(places, G.game_rng))
 				)
 				Board.eliminate([coord], tween, Board.ActiveReason.Item, self)
@@ -172,7 +172,7 @@ func setup(n : String):
 				for sp in sps:
 					sp.queue_free()
 				
-				G.add_combo()
+				G.add_chain()
 				for c in coords:
 					Board.score_at(c)
 			)
@@ -212,7 +212,7 @@ func setup(n : String):
 				)
 				tween.tween_interval(3.0)
 				tween.tween_callback(func():
-						G.add_combo()
+						G.add_chain()
 						for c in coords:
 							if Board.is_valid(c):
 								Board.score_at(c)
@@ -244,7 +244,7 @@ func setup(n : String):
 						ui.scale = Vector2(0.0, 0.0).max(ui.scale - Vector2(0.1, 0.1))
 			, 0.0, 1200.0, 3.0)
 			tween.tween_callback(func():
-					G.add_combo()
+					G.add_chain()
 					for c in coords:
 						if Board.is_valid(c):
 							Board.score_at(c)
@@ -292,7 +292,7 @@ func setup(n : String):
 					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.speed)
 					coords.append(c)
 					tween.tween_callback(func():
-						G.add_combo()
+						G.add_chain()
 						Board.score_at(c)
 					)
 					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
@@ -350,7 +350,7 @@ func setup(n : String):
 					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.speed)
 					coords.append(c)
 					tween.tween_callback(func():
-						G.add_combo()
+						G.add_chain()
 						Board.score_at(c)
 						'''
 						var item = Board.get_item_at(c)
@@ -430,7 +430,7 @@ func setup(n : String):
 				var pos = Board.get_pos(c)
 				SAnimation.move_to(tween, item_ui, pos, 0.4 * G.speed)
 				tween.tween_callback(func():
-					G.add_combo()
+					G.add_chain()
 					G.add_score(score, pos)
 				)
 				Board.item_moved(self, tween, coord, c)
@@ -475,7 +475,7 @@ func setup(n : String):
 						var cc = Board.cube_to_offset(c)
 						coords.append(cc)
 					tween.tween_callback(func():
-						G.add_combo()
+						G.add_chain()
 						for c in coords:
 							if Board.is_valid(c):
 								Board.score_at(c)

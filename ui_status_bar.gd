@@ -83,7 +83,7 @@ func _ready() -> void:
 		G.run_info_ui.enter()
 	)
 	info_button.mouse_entered.connect(func():
-		STooltip.show(bag_button, 3, [Pair.new(tr("tt_game_info_title"), "")])
+		STooltip.show(info_button, 3, [Pair.new(tr("tt_game_info_title"), "")])
 	)
 	info_button.mouse_exited.connect(func():
 		STooltip.close()

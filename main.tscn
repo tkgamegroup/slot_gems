@@ -52,7 +52,6 @@
 [ext_resource type="AudioStream" uid="uid://2khtvdvdvbr0" path="res://sounds/enchant.wav" id="23_birbe"]
 [ext_resource type="AudioStream" uid="uid://cpkkextbq8y8f" path="res://sounds/break.wav" id="23_jbvwl"]
 [ext_resource type="AudioStream" uid="uid://3wg5uqxalyav" path="res://sounds/trash.wav" id="24_f1p13"]
-[ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="28_1savb"]
 [ext_resource type="Texture2D" uid="uid://c7txrafqs3mca" path="res://images/bag.png" id="30_fg5n8"]
 [ext_resource type="AudioStream" uid="uid://6ke0esdwk034" path="res://sounds/well_done.wav" id="31_c2n8d"]
 [ext_resource type="Texture2D" uid="uid://djb5uvo3rgm82" path="res://images/pin.png" id="31_kgos7"]
@@ -75,6 +74,7 @@
 [ext_resource type="Script" uid="uid://q3bwx8d73ita" path="res://ui_hand.gd" id="53_mnqjw"]
 [ext_resource type="Texture2D" uid="uid://dxn8soibnkyno" path="res://images/play.png" id="54_eldhe"]
 [ext_resource type="Texture2D" uid="uid://ed1myix0g4wq" path="res://images/hover.png" id="54_jbvwl"]
+[ext_resource type="Texture2D" uid="uid://bwugfc7blstsu" path="res://images/gem_blank.png" id="54_m74q3"]
 [ext_resource type="PackedScene" uid="uid://0k6g2b1qldhp" path="res://ui_prop.tscn" id="55_0a5p1"]
 [ext_resource type="Script" uid="uid://cshsxbefna3q3" path="res://draw_lines.gd" id="55_k1udn"]
 [ext_resource type="Script" uid="uid://coxa0ciyuwmpa" path="res://top_bar.gd" id="57_c2n8d"]
@@ -192,16 +192,16 @@ shader_parameter/y_rot = 0.0
 shader_parameter/x_rot = 0.0
 shader_parameter/inset = 0.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34ol3"]
-texture = ExtResource("28_1savb")
-texture_region_size = Vector2i(32, 32)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tko6h"]
+texture = ExtResource("54_m74q3")
+texture_region_size = Vector2i(72, 72)
 0:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_m0hyf"]
 tile_shape = 3
 tile_offset_axis = 1
 tile_size = Vector2i(72, 72)
-sources/1 = SubResource("TileSetAtlasSource_34ol3")
+sources/1 = SubResource("TileSetAtlasSource_tko6h")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yysqy"]
 bg_color = Color(0.65693647, 0.67263705, 0.693556, 1)
@@ -692,6 +692,7 @@ bus = &"SFX"
 stream = SubResource("AudioStreamRandomizer_34ol3")
 volume_db = -12.0
 pitch_scale = 0.5
+max_polyphony = 10
 bus = &"SFX"
 
 [node name="Brush" type="AudioStreamPlayer" parent="SFX"]
@@ -761,7 +762,7 @@ bus = &"SFX"
 
 [node name="BubblePop3" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("22_41lik")
-volume_db = -15.0
+volume_db = -20.0
 bus = &"SFX"
 
 [node name="Break" type="AudioStreamPlayer" parent="SFX"]
@@ -1122,6 +1123,7 @@ script = ExtResource("55_k1udn")
 [node name="Overlay" type="Node2D" parent="SubViewportContainer/SubViewport/Canvas/Board/SubViewport"]
 
 [node name="Hover" type="Sprite2D" parent="SubViewportContainer/SubViewport/Canvas/Board"]
+visible = false
 texture = ExtResource("54_jbvwl")
 
 [node name="Shop" type="SubViewportContainer" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("list1", "list2", "refresh_button", "exit_button", "staging_slot1", "staging_slot2", "staging_slot3")]
@@ -1502,7 +1504,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 40
 
-[node name="GameUI" type="Control" parent="SubViewportContainer/SubViewport/Canvas"]
+[node name="GameUI" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("game_overlay", "status_bar", "relics_bar", "patterns_bar", "chains_label")]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -1512,6 +1514,11 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("69_dij0e")
+game_overlay = NodePath("Overlay")
+status_bar = NodePath("VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar")
+relics_bar = NodePath("VBoxContainer/Control/MarginContainer/RelicsBar")
+patterns_bar = NodePath("VBoxContainer/Control/MarginContainer2/PatternsBar")
+chains_label = NodePath("Chains")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/GameUI"]
 layout_mode = 1
@@ -2053,11 +2060,23 @@ theme_override_constants/margin_right = 8
 layout_mode = 2
 size_flags_horizontal = 4
 
+[node name="Chains" type="Label" parent="SubViewportContainer/SubViewport/Canvas/GameUI"]
+visible = false
+layout_mode = 0
+offset_left = 1250.0
+offset_top = 200.0
+offset_right = 1411.0
+offset_bottom = 278.0
+theme_override_colors/font_outline_color = Color(0.7729371, 0.28094792, 0.7390526, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 48
+text = "CHAIN!!"
+
 [node name="Overlay" type="Control" parent="SubViewportContainer/SubViewport/Canvas/GameUI"]
 layout_mode = 1
 anchors_preset = 0
 
-[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "base_score_text", "combos_text", "mult_text", "cross1", "cross2", "calculated_text")]
+[node name="CalculateBar" type="Control" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "base_score_text", "chains_text", "mult_text", "cross1", "cross2", "calculated_text")]
 visible = false
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 3
@@ -2068,7 +2087,7 @@ mouse_filter = 2
 script = ExtResource("71_f1p13")
 panel = NodePath("Panel")
 base_score_text = NodePath("Panel/HBoxContainer/Panel/BaseScore")
-combos_text = NodePath("Panel/HBoxContainer/Panel2/Combos")
+chains_text = NodePath("Panel/HBoxContainer/Panel2/NumberText")
 mult_text = NodePath("Panel/HBoxContainer/Panel3/Mult")
 cross1 = NodePath("Panel/HBoxContainer/Control/Label")
 cross2 = NodePath("Panel/HBoxContainer/Control2/Label")
@@ -2134,15 +2153,9 @@ custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_41lik")
 
-[node name="Combos" type="Label" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel2"]
-custom_minimum_size = Vector2(60, 0)
+[node name="NumberText" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer/Panel2" instance=ExtResource("31_uatky")]
 layout_mode = 2
-size_flags_horizontal = 0
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 32
-text = "0X"
-horizontal_alignment = 1
-vertical_alignment = 1
+font_size = 32
 
 [node name="Control2" type="Control" parent="SubViewportContainer/SubViewport/Canvas/CalculateBar/Panel/HBoxContainer"]
 visible = false
@@ -3005,7 +3018,7 @@ step = 0.01
 layout_mode = 2
 text = "ui_close"
 
-[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "configs_list", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "events_list", "variables_list", "variable_name_edit", "variable_base_edit", "variable_step_edit", "variable_add_button", "variable_remove_button", "extras_list", "extra_category_edit", "extra_name_edit", "extra_base_count_edit", "extra_count_increase_edit", "extra_add_button", "extra_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "test_result", "close_button")]
+[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "configs_list", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "ai_level_edit", "events_list", "variables_list", "variable_name_edit", "variable_base_edit", "variable_step_edit", "variable_add_button", "variable_remove_button", "extras_list", "extra_category_edit", "extra_name_edit", "extra_base_count_edit", "extra_count_increase_edit", "extra_add_button", "extra_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "test_result", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3025,6 +3038,7 @@ filename_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxCont
 headless_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/CheckBox")
 use_save_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/CheckBox2")
 reroll_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/CheckBox3")
+ai_level_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer/LineEdit2")
 events_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/ItemList")
 variables_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/ItemList")
 variable_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit")
@@ -3179,6 +3193,16 @@ theme_override_font_sizes/font_size = 16
 theme_override_icons/checked = ExtResource("96_0arob")
 theme_override_icons/unchecked = ExtResource("97_dij0e")
 text = "Reroll"
+
+[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+select_all_on_focus = true
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "AI"
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -4046,7 +4070,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="TestTimer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.5
 
 [editable path="SubViewportContainer/SubViewport/Canvas/Title/MarginContainer2/Control"]
 [editable path="SubViewportContainer/SubViewport/Canvas/Shop/SubViewport/Panel/HBoxContainer/VBoxContainer2/RichButton"]

@@ -14,7 +14,7 @@ enum Type
 
 enum Duration
 {
-	ThisCombo,
+	ThisChain,
 	ThisMatching,
 	ThisRound,
 	OnBoard,

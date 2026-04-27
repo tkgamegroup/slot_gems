@@ -4,7 +4,7 @@ var ui : G.UiHand = null
 
 var grabs : Array[Gem]
 
-func add_gem(gem : Gem, pos : int = -1, no_ui : bool = false):
+func add_gem(gem : Gem, pos : int = -1, no_ui : bool = false) -> G.UiHandSlot:
 	if pos == -1:
 		pos = grabs.size()
 	gem.coord = Vector2i(pos, -1)

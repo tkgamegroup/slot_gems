@@ -8,19 +8,23 @@ var tween : Tween = null
 
 func find_all_matchings():
 	matchings.clear()
-	for y in Board.cy:
-		for x in Board.cx:
-			for p in G.patterns:
-				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
+	for p in G.patterns:
+		for y in Board.cy:
+			for x in Board.cx:
+				var c = Vector2i(x, y)
+				var res : Array[Vector2i] = p.match_with(c)
 				if !res.is_empty():
 					matchings.append({"pattern":p,"coords":res})
 
 func find_missing_ones(check_color : int, check_rune : int):
 	matchings.clear()
-	for y in Board.cy:
-		for x in Board.cx:
-			for p in G.patterns:
-				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), check_color, check_rune)
+	for p in G.patterns:
+		for y in Board.cy:
+			for x in Board.cx:
+				var c = Vector2i(x, y)
+				if c == Vector2i(9, 1):
+					c = Vector2i(9, 1)
+				var res : Array[Vector2i] = p.match_with(c, check_color, check_rune)
 				if !res.is_empty():
 					var added = false
 					for m in matchings:

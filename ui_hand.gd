@@ -14,12 +14,6 @@ var disabled : bool = false:
 		else:
 			list.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
-func adjusted_gap():
-	var n = list.get_child_count()
-	if n == 0:
-		return gap
-	return ((item_w * G.max_hand_grabs + gap * (G.max_hand_grabs - 1)) - n * item_w) / n
-
 func get_slot(idx : int) -> G.UiHandSlot:
 	if idx >= 0 && idx < list.get_child_count():
 		return list.get_child(idx)
@@ -53,8 +47,7 @@ func remove_slot(idx : int):
 	n.queue_free()
 
 func get_pos(idx : int):
-	var _gap = adjusted_gap()
-	return list.global_position + Vector2((item_w + _gap) * idx + item_w * 0.5, item_h * 0.5)
+	return list.global_position + Vector2((item_w + gap) * idx + item_w * 0.5, item_h * 0.5)
 
 func clear():
 	for n in list.get_children():
@@ -73,8 +66,7 @@ func _process(delta: float) -> void:
 	var n = list.get_child_count()
 	if n == 0:
 		return
-	var x_off = 0
-	var _gap = adjusted_gap()
+	
 	var drag_idx = -1
 	var drag_on_hand = false
 	if Drag.ui && Drag.ui.get_parent() == list:
@@ -84,6 +76,18 @@ func _process(delta: float) -> void:
 	if drag_idx != -1:
 		if rect.has_point(mpos):
 			drag_on_hand = true
+	
+	var x_off = 0
+	var _gap = gap
+	
+	var w0 : float = G.max_hand_grabs * (item_w + gap) - gap
+	var w1 : float = 0.0
+	for i in n:
+		var ui = get_slot(i)
+		if (ui != Drag.ui || drag_on_hand) && ui.elastic > 0.0:
+			w1 += item_w
+	_gap = (w0 - w1) / n
+	
 	var tt = Time.get_ticks_usec() / 60000.0
 	for i in n:
 		var ui = get_slot(i)
@@ -99,7 +103,7 @@ func _process(delta: float) -> void:
 			if (p0 - ui.position).length() > 50.0 && (ui.position - p1).length() < 300.0:
 				G.control_ui.start_shake(4.0, 0.5)
 			ui.rotation_degrees = (sin(x_off * 0.05 + tt / 20.0)) * 3.0
-		if !(i == drag_idx && !drag_on_hand):
+		if (ui != Drag.ui || drag_on_hand) && ui.elastic > 0.0:
 			x_off += item_w + _gap
 	if drag_on_hand:
 		var x = Drag.ui.get_rect().get_center().x

@@ -5,7 +5,13 @@ extends Control
 @export var change_bg : ColorRect
 @export var change_panel : Control
 
-@export var font_size : int = 22
+@export var font_size : int = 22:
+	set(v):
+		font_size = v
+		text.font_size = font_size
+		change.add_theme_font_size_override("font_size", font_size)
+		self.custom_minimum_size = Vector2(font_size * 1.6, font_size)
+		self.size = self.custom_minimum_size
 
 var value : int
 var show_change : bool = true
@@ -63,9 +69,3 @@ func hint():
 	, 0.0, 1.0, 0.5)
 	hint_tween.parallel()
 	SAnimation.shake(hint_tween, text, 5.0, 0.5)
-
-func _ready() -> void:
-	text.font_size = font_size
-	change.add_theme_font_size_override("font_size", font_size)
-	self.custom_minimum_size = Vector2(font_size * 1.6, font_size)
-	self.size = self.custom_minimum_size

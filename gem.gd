@@ -533,12 +533,12 @@ func setup(n : String):
 			if tween:
 				tween.tween_interval(0.5 * G.speed)
 				tween.tween_callback(func():
-					G.add_combo()
+					G.add_chain()
 					for c in coords:
 						Board.score_at(c, power)
 				)
 			else:
-				G.add_combo()
+				G.add_chain()
 				for c in coords:
 					Board.score_at(c, power)
 			Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
@@ -590,12 +590,12 @@ func setup(n : String):
 					if tween:
 						tween.tween_interval(0.5 * G.speed)
 						tween.tween_callback(func():
-								G.add_combo()
+								G.add_chain()
 								for c in coords:
 									Board.score_at(c, power)
 						)
 					else:
-						G.add_combo()
+						G.add_chain()
 						for c in coords:
 							Board.score_at(c, power)
 					Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
@@ -947,22 +947,15 @@ func setup(n : String):
 			match event: 
 				C.Event.BeforeMatching:
 					var first_magnet = Board.find_gem("Magnet")
-					var map = first_magnet.extra.get_or_add("map", {})
-					if map.is_empty():
-						for y in Board.cy:
-							for x in Board.cx:
-								var c = Vector2i(x, y)
-								var g = Board.get_gem_at(c)
-								if g:
-									map[c] = {"type":g.type,"rune":g.rune}
-								else:
-									map[c] = {"type":Gem.None,"rune":Gem.None}
+					var board = first_magnet.extra.get_or_add("board", {})
+					if board.is_empty():
+						board = SUtils.get_board_data()
 						
 					var ok = false
 					for p in G.patterns:
 						var cc = Board.offset_to_cube(coord)
 						for c in p.all_coords():
-							if !p.match_with(Board.cube_to_offset(cc - c), Gem.None, Gem.None, map).is_empty():
+							if !p.match_with(Board.cube_to_offset(cc - c), Gem.None, Gem.None, board).is_empty():
 								ok = true
 								break
 					if !ok:
@@ -972,7 +965,7 @@ func setup(n : String):
 								for p in G.patterns:
 									var c = Vector2i(x, y)
 									if !p.contains_coord(c, coord):
-										var res : Array[Vector2i] = p.match_with(c, type, rune, map)
+										var res : Array[Vector2i] = p.match_with(c, type, rune, board)
 										if !res.is_empty():
 											target = res[0]
 											break
@@ -994,9 +987,9 @@ func setup(n : String):
 							if !cands.is_empty():
 								target = SMath.pick_random(cands, G.game_rng)
 						if target.x != -1 && target.y != -1:
-							var temp = map[coord]
-							map[coord] = map[target]
-							map[target] = temp
+							var temp = board[coord]
+							board[coord] = board[target]
+							board[target] = temp
 							Board.effect_swap(coord, target, tween)
 							tween.tween_callback(func():
 								first_magnet.extra.erase("map")
@@ -1047,13 +1040,13 @@ func setup(n : String):
 							SAnimation.parabola_3d(tween, sp, pos, Board.get_pos(t.first), 0.4 * G.speed)
 					if tween:
 						tween.tween_callback(func():
-							G.add_combo()
+							G.add_chain()
 							for t in arr:
 								Board.score_at(t.first, power)
 								t.second.queue_free()
 						)
 					else:
-						G.add_combo()
+						G.add_chain()
 						for t in arr:
 							Board.score_at(t.first, power)
 					Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)

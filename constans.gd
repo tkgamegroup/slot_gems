@@ -31,7 +31,7 @@ enum Event
 	EliminatedEffect,
 	Activated,
 	ItemMoved,
-	Combo,
+	Chain,
 	Exploded,
 	Count,
 	Any

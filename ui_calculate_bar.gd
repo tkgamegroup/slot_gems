@@ -2,7 +2,7 @@ extends Control
 
 @export var panel : Control
 @export var base_score_text : Label
-@export var combos_text : Label
+@export var chains_text : G.NumberText
 @export var mult_text : Label
 @export var cross1 : Label
 @export var cross2 : Label
@@ -16,7 +16,7 @@ func appear():
 		panel.scale = Vector2(0.0, 0.0)
 		
 		base_score_text.text = "0"
-		combos_text.text = "0X"
+		chains_text.set_value(0)
 		mult_text.text = "1.0"
 		cross1.scale.x = 0.0
 		cross2.scale.x = 0.0
@@ -27,23 +27,24 @@ func appear():
 		self.show()
 
 func get_result(result : Dictionary):
-	result["combo_mult"] = G.mult_from_combos(G.combos)
-	result["value"] = int(round(G.base_score * result["combo_mult"] * G.score_mult))
+	result["chain_mult"] = G.mult_from_chains(G.chains)
+	result["value"] = int(round(G.base_score * result["chain_mult"] * G.score_mult))
 
 func calculate_proc():
 	var result = {}
 	
 	var tween = G.create_game_tween()
 	if tween:
-		tween.tween_interval(0.3)
+		tween.tween_interval(0.3 * G.speed)
 		tween.tween_callback(func():
 			get_result(result)
 			
 			SSound.se_calc1.pitch_scale = 1.0 / G.speed
 			SSound.se_calc1.play()
 		)
-		SAnimation.jump(tween, combos_text, 4, 0.2, func():
-			combos_text.text = "%.2f" % result["combo_mult"]
+		SAnimation.jump(tween, chains_text, 4, 0.4 * G.speed, func():
+			#chains_text.text = "%.2f" % result["chain_mult"]
+			pass
 		)
 		tween.tween_property(cross1, "scale:x", 1.0, 0.1 * G.speed).from(0.0)
 		tween.tween_interval(0.3 * G.speed)

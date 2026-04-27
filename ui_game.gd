@@ -1,7 +1,7 @@
 extends Control
 
-
-@onready var game_overlay : Control = $Overlay
-@onready var status_bar : G.UiStatusBar = $VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar
-@onready var relics_bar : G.UiRelicsBar = $VBoxContainer/Control/MarginContainer/RelicsBar
-@onready var patterns_bar : G.UiPatternsBar = $VBoxContainer/Control/MarginContainer2/PatternsBar
+@export var game_overlay : Control
+@export var status_bar : G.UiStatusBar
+@export var relics_bar : G.UiRelicsBar
+@export var patterns_bar : G.UiPatternsBar
+@export var chains_label : Label

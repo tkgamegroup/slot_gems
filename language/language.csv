@@ -99,7 +99,6 @@ ui_collections_skills,Skills,技能
 ui_collections_patterns,Patterns,图案
 ui_collections_relics,Relics,遗物
 ui_game_score,Score,分数
-ui_game_combos,Combos,连击
 ui_game_mult,Mult,倍率
 tt_alt_to_show_more,Alt to show more,按Alt显示更多
 tt_red_base_score,Red gems' base score,红色宝石基础分数
@@ -278,7 +277,7 @@ item_desc_BlackHole,Eliminate: (w_active) If this is the last item activated. El
 item_name_WhiteHole,White Hole,白洞
 item_desc_WhiteHole,Eliminate: (w_active) Eliminate all cells. (Only activate if this is the first item activated.),
 item_name_Dog,Dog,狗
-item_desc_Dog,Eliminate: +{value_i} score for each different Item. (Not affected by combos),消除：棋盘上每有一个不同的道具则+{value_i}分数。（不会受连击影响）
+item_desc_Dog,Eliminate: +{value_i} score for each different Item.,消除：棋盘上每有一个不同的道具则+{value_i}分数。
 item_name_Cat,Cat,猫
 item_desc_Cat,Eliminate: (w_active) Jump to a cell and eliminate it within [n_2]-ring. Repeat 2 times.,消除：(w_active) 跳到一个[n_2]环内的格子并消除它。重复2次。
 item_name_Rooster,Rooster,公鸡
@@ -296,7 +295,7 @@ item_desc_Horse,Turn mounted and this Item into a new Item.,
 item_name_Elephant,Elephant,大象
 item_desc_Elephant,Eliminate all cells this item traveled.,
 item_name_HotDog,Hot Dog,热狗
-item_desc_HotDog,Eliminate: +{value_i} score. (Not affected by combos),消除：+{value_i}分数。（不会受连击影响）
+item_desc_HotDog,Eliminate: +{value_i} score.,消除：+{value_i}分数。
 item_name_IaiCut,Iai Cut,居合斩
 item_desc_IaiCut,Eliminate: (w_active) Eliminate a row on a random direction.,消除：(w_active) 消除随机方向的1行。
 item_name_Magnet,Magnet,磁铁
@@ -349,9 +348,9 @@ relic_desc_SympatheticDetonation,Bombs will activate when cells next to are elim
 relic_name_MobiusStrip,Mobius Strip,莫比乌斯环
 relic_desc_MobiusStrip,The upper and lower parts of the Board are connected.,棋盘的上下部分相互链接。
 relic_name_Premeditation,Premeditation,预谋
-relic_desc_Premeditation,Combo starts from {value_i}.,连击从{value_i}开始。
+relic_desc_Premeditation,Chain starts from {value_i}.,连锁从{value_i}开始。
 relic_name_PentagramPower,Pentagram Power,五角之力
-relic_desc_PentagramPower,"Every 5 Combos, gets x{value_f} score mult in that combo.",每5个连击，那次连击获得x{value_f}分数倍率。
+relic_desc_PentagramPower,"Every 5 Chains, gets x{value_f} score mult in that chain.",每5个连锁，那次连锁获得x{value_f}分数倍率。
 relic_name_Recorder,Recorder,录音机
 relic_desc_Recorder,Your active effects will trigger twice.,你的激活效果会触发两次。
 relic_name_GhostAmmo,Ghost Ammo,幽灵弹药

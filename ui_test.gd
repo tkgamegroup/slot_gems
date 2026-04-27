@@ -11,6 +11,7 @@ extends Panel
 @export var headless_checkbox : Button
 @export var use_save_checkbox : Button
 @export var reroll_checkbox : Button
+@export var ai_level_edit : LineEdit
 @export var events_list : ItemList
 @export var variables_list : ItemList
 @export var variable_name_edit : LineEdit
@@ -82,6 +83,7 @@ func update_config_ui():
 	headless_checkbox.set_pressed_no_signal(STest.headless)
 	use_save_checkbox.set_pressed_no_signal(STest.use_save)
 	reroll_checkbox.set_pressed_no_signal(STest.reroll)
+	ai_level_edit.text = "%d" % STest.ai_level
 	events_list.clear()
 	for i in C.Event.Count:
 		events_list.add_item(str(C.Event.find_key(i)))
@@ -304,6 +306,10 @@ func _ready() -> void:
 	)
 	reroll_checkbox.toggled.connect(func(v : bool):
 		STest.reroll = v
+		save_config()
+	)
+	ai_level_edit.text_changed.connect(func(text : String):
+		STest.ai_level = int(text)
 		save_config()
 	)
 	events_list.multi_selected.connect(func(idx : int, selected : bool):

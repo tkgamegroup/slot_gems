@@ -14,7 +14,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 17
+const version_patch : int = 18
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -125,10 +125,10 @@ var swaps : int:
 		swaps = v
 		if !(STest.testing && STest.headless):
 			control_ui.swaps_text.set_value(swaps)
-		if control_ui.play_button.disabled == false && swaps == 0:
-			control_ui.show_last_play()
-		else:
-			control_ui.last_play.hide()
+			if control_ui.play_button.disabled == false && swaps == 0:
+				control_ui.show_last_play()
+			else:
+				control_ui.last_play.hide()
 var swaps_per_round : int
 var plays : int:
 	set(v):
@@ -223,36 +223,34 @@ var base_score : int:
 		else:
 			base_score = v
 
-var combos_tween : Tween
-var combos : int = 0:
+var chains_tween : Tween
+var chains : int = 0:
 	set(v):
+		chains = v
 		if !(STest.testing && STest.headless):
-			if v > combos:
-				combos = v
-				if combos_tween:
-					combos_tween.custom_step(100.0)
-					combos_tween = null
-				if calculator_bar_ui.visible:
-					calculator_bar_ui.combos_text.position.y = 0
-					combos_tween = create_game_tween()
-					SAnimation.jump(combos_tween, calculator_bar_ui.combos_text, -0.0, 0.25 * speed, func():
-						calculator_bar_ui.combos_text.text = "%dX" % v
-					)
-					combos_tween.tween_callback(func():
-						combos_tween = null
-					)
-			else:
-				if combos_tween:
-					combos_tween.kill()
-					combos_tween = null
-				combos = v
-				calculator_bar_ui.combos_text.text = "%dX" % combos
-		else:
-			combos = v
+			if chains < 2:
+				calculator_bar_ui.chains_text.show_change = false
+			calculator_bar_ui.chains_text.set_value(chains)
+			calculator_bar_ui.chains_text.show_change = true
+			
+			if chains >= 2:
+				if chains_tween:
+					chains_tween.custom_step(100.0)
+					chains_tween = null
+				game_ui.chains_label.show()
+				game_ui.chains_label.pivot_offset = game_ui.chains_label.size * 0.5
+				game_ui.chains_label.rotation_degrees = randf() * 20.0 - 10.0
+				chains_tween = create_game_tween()
+				chains_tween.tween_interval(0.5 * speed)
+				chains_tween.tween_property(game_ui.chains_label, "modulate:a", 0.0, 0.3 * speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				chains_tween.tween_callback(func():
+					game_ui.chains_label.hide()
+					game_ui.chains_label.modulate.a = 1.0
+				)
 
-const combos_to_mult_parm = 1.0 / log(2.0)
-func mult_from_combos(combos : int):
-	return log((combos + 1) * 1.0) * combos_to_mult_parm
+const chains_to_mult_parm = 1.0 / log(2.0)
+func mult_from_chains(chains : int):
+	return log((chains + 1) * 1.0) * chains_to_mult_parm
 
 var gain_scaler : float = 1.0
 var score_mult_tween : Tween = null
@@ -399,7 +397,7 @@ func put_to_bag(g : Gem):
 	g.bonus_score = 0
 	g.coord = Vector2i(-1, -1)
 	g.bag_stamp = current_round
-	Buff.clear(g, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.OnBoard])
+	Buff.clear(g, [Buff.Duration.ThisChain, Buff.Duration.ThisMatching, Buff.Duration.OnBoard])
 	bag_gems.append(g)
 
 func sort_gems():
@@ -414,8 +412,8 @@ func find_entangled_group(g : Gem):
 	return null
 
 func on_modifier_changed(name):
-	if name == "base_combo_i":
-		combos = max(combos, modifiers["base_combo_i"])
+	if name == "base_chain_i":
+		chains = max(chains, modifiers["base_chain_i"])
 	elif name == "red_bouns_i":
 		if !(STest.testing && STest.headless):
 			game_ui.status_bar.red_bouns_text.set_value(modifiers["red_bouns_i"])
@@ -493,13 +491,13 @@ func has_relic(n : String):
 			return true
 	return false
 
-func add_combo():
-	combos += 1
+func add_chain():
+	chains += 1
 	var buffs_to_clear = []
 	for b in self.buffs:
-		if b.duration == Buff.Duration.ThisCombo:
+		if b.duration == Buff.Duration.ThisChain:
 			buffs_to_clear.append(b.uid)
-	Board.on_combo()
+	Board.on_chain()
 	Buff.remove_by_id_list(self, buffs_to_clear)
 
 func create_game_tween() -> Tween:
@@ -670,39 +668,39 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 	var hf_sz = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 	begin_busy()
 	slot1.elastic = -1.0
-	var slot2 = Hand.ui.add_slot(g2)
-	slot2.global_position = cell_pos - hf_sz
-	slot2.elastic = -1.0
-	tween.tween_callback(func():
-		slot1.z_index = 10
-	)
+	slot1.z_index = 10
 	tween.tween_interval(0.1)
 	tween.tween_callback(func():
 		SSound.se_drop_item.play()
 		Board.set_gem_at(coord, null)
+		
 		take_from_bag(g2)
-		Hand.add_gem(g2, -1, true)
-	)
-	var sub1 = create_game_tween()
-	var sub2 = create_game_tween()
-	var dir = mpos - cell_pos
-	var sec = 1 if reason == "undo" else SUtils.hex_section(rad_to_deg(dir.angle()))
-	dir = Vector2.from_angle(deg_to_rad(sec * 60.0 + 30.0))
-	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz + dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	sub1.tween_property(slot1, "global_position", cell_pos - hf_sz, 0.2)
-	sub2.tween_interval(0.1)
-	sub2.tween_property(slot2.gem_ui, "angle", SUtils.hex_quadrant(sec) * Vector2(75.0, 30.0), 0.07)
-	sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-	sub2.parallel().tween_property(slot2.gem_ui, "angle", Vector2(0.0, 0.0), 0.07)
-	sub2.tween_property(slot2, "elastic", 1.0, 0.2).from(0.0)
-	tween.tween_subtween(sub1)
-	tween.parallel().tween_subtween(sub2)
-	
-	tween.tween_callback(func():
-		Board.set_gem_at(coord, g1)
-		Hand.erase(slot1.get_index())
-		control_ui.update_preview()
-		end_busy()
+		var slot2 = Hand.add_gem(g2, -1)
+		slot2.global_position = cell_pos - hf_sz
+		slot2.elastic = -1.0
+		
+		var sub1 = create_game_tween()
+		var sub2 = create_game_tween()
+		var dir = mpos - cell_pos
+		var sec = 1 if reason == "undo" else SUtils.hex_section(rad_to_deg(dir.angle()))
+		dir = Vector2.from_angle(deg_to_rad(sec * 60.0 + 30.0))
+		sub1.tween_property(slot1, "global_position", cell_pos - hf_sz + dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		sub1.tween_property(slot1, "global_position", cell_pos - hf_sz, 0.2)
+		sub2.tween_interval(0.1)
+		sub2.tween_property(slot2.gem_ui, "angle", SUtils.hex_quadrant(sec) * Vector2(75.0, 30.0), 0.07)
+		sub2.tween_property(slot2, "global_position", cell_pos - hf_sz - dir * C.BOARD_TILE_SZ * 0.75, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		sub2.parallel().tween_property(slot2.gem_ui, "angle", Vector2(0.0, 0.0), 0.07)
+		sub2.tween_property(slot2, "elastic", 1.0, 0.2).from(0.0)
+		
+		var tween2 = create_game_tween()
+		tween2.tween_subtween(sub1)
+		tween2.parallel().tween_subtween(sub2)
+		tween2.tween_callback(func():
+			Hand.erase(slot1.get_index())
+			Board.set_gem_at(coord, g1)
+			control_ui.update_preview()
+			end_busy()
+		)
 	)
 
 func add_new_gem_from(tween : Tween, g : Gem, coord : Vector2i):
@@ -989,7 +987,7 @@ func cleanup():
 	bag_gems.clear()
 	gems.clear()
 	
-	Buff.clear(G, [Buff.Duration.ThisCombo, Buff.Duration.ThisMatching, Buff.Duration.ThisRound, Buff.Duration.Eternal])
+	Buff.clear(G, [Buff.Duration.ThisChain, Buff.Duration.ThisMatching, Buff.Duration.ThisRound, Buff.Duration.Eternal])
 	event_listeners.clear()
 	Board.event_listeners.clear()
 	modifiers.clear()
@@ -999,7 +997,7 @@ func cleanup():
 	modifiers["blue_bouns_i"] = 0
 	modifiers["magenta_bouns_i"] = 0
 	modifiers["played_i"] = 0
-	modifiers["base_combo_i"] = 0
+	modifiers["base_chain_i"] = 0
 	modifiers["board_upper_lower_connected_i"] = 0
 	modifiers["extra_range_i"] = 0
 	modifiers["additional_active_times_i"] = 0
@@ -1038,7 +1036,7 @@ func start_game(saving : String = "", parms = {}):
 		round_curses.clear()
 		score_mult = 1.0
 		gain_scaler = 1.0
-		combos = 0
+		chains = 0
 		current_round = 0
 		board_size = parms.get("board_size", 3)
 		swaps_per_round = parms.get("swaps_per_round", 5)
@@ -1419,6 +1417,8 @@ func lose():
 
 func calc_game_state():
 	if STest.testing:
+		control_ui.update_preview()
+		end_busy()
 		return
 	if game_over_mark != "":
 		lose()
@@ -1448,7 +1448,7 @@ func play():
 	stage = Stage.Matching
 
 	base_score = 0
-	combos = modifiers["base_combo_i"]
+	chains = modifiers["base_chain_i"]
 	score_mult = 1.0
 	filling_times = 0
 	modifiers["played_i"] = 1
@@ -1532,7 +1532,7 @@ func save_to_file(name : String = "1"):
 			round_curse.append(curse)
 		round_curses.append(round_curse)
 	data["round_curses"] = round_curses
-	data["combos"] = G.combos
+	data["chains"] = G.chains
 	data["score_mult"] = G.score_mult
 	var game_buffs = []
 	for b in G.buffs:
@@ -1683,7 +1683,7 @@ func load_from_file(name : String = "1"):
 			c.coord = str_to_var("Vector2i" + curse["coord"])
 			lc.append(c)
 		G.round_curses.append(lc)
-	G.combos = int(data["combos"])
+	G.chains = int(data["chains"])
 	G.score_mult = data["score_mult"]
 	update_round_text(current_round)
 	var game_buffs = data["buffs"]
@@ -1983,13 +1983,13 @@ func _ready() -> void:
 		speed = 1.0 / base_speed
 		save_to_file()
 		
-		Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+		Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisChain])
 		for y in Board.cy:
 			for x in Board.cx:
 				var c = Vector2i(x, y)
 				var g = Board.get_gem_at(c)
 				if g:
-					Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisCombo])
+					Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisChain])
 					
 		calc_game_state()
 	)

@@ -33,6 +33,24 @@ static func component_sort(v3 : Vector3i):
 static func tangent2(v : Vector2) -> Vector2:
 	return v2_3(v3_21(v, 0.0).cross(Vector3(0.0, 0.0, 1.0)))
 
+static func index_sort(arr : Array) -> Array[int]:
+	var ret : Array[int] = []
+	for i in range(arr.size()):
+		ret.append(i)
+	ret.sort_custom(func(a, b):
+		return arr[a] < arr[b]
+	)
+	return ret
+
+static func index_sort_reverse(arr : Array) -> Array[int]:
+	var ret : Array[int] = []
+	for i in range(arr.size()):
+		ret.append(i)
+	ret.sort_custom(func(a, b):
+		return arr[a] > arr[b]
+	)
+	return ret
+
 static func get_shuffled_indices(n : int):
 	var ret = []
 	for i in n:

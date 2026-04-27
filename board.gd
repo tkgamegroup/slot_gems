@@ -69,7 +69,7 @@ func offset_to_cube(c : Vector2i):
 
 func cube_to_offset(c : Vector3i):
 	return cube_to_oddq(c) if (G.board_size % 2 == 0) else cube_to_evenq(c)
-	
+
 func cube_distance(a : Vector3i, b : Vector3i):
 	return (abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)) / 2
 
@@ -685,6 +685,7 @@ func clear_consumed():
 func down_proc(tween : Tween = null):
 	if !tween:
 		tween = G.create_game_tween()
+	var sound_played = {}
 	for x in cx:
 		var subx = G.create_game_tween()
 		var delay = 0.0
@@ -694,7 +695,7 @@ func down_proc(tween : Tween = null):
 		for i in range(cy - 1, -1, -1):
 			var c = Vector2i(x, i)
 			if !get_cell(c).is_unmovable():
-				if get_gem_at(Vector2i(x, i)):
+				if get_gem_at(c):
 					if i < min_hole:
 						gems.append(c)
 				else:
@@ -712,6 +713,11 @@ func down_proc(tween : Tween = null):
 					sub.tween_callback(func():
 						set_gem_at(c, G.take_from_bag())
 					)
+					if !sound_played.has(delay):
+						sub.tween_callback(func():
+							SSound.se_bubble_pop3.play()
+						)
+						sound_played[delay] = 1
 				else:
 					set_gem_at(c, G.take_from_bag())
 			else:
@@ -726,6 +732,11 @@ func down_proc(tween : Tween = null):
 							og = G.take_from_bag(og)
 						set_gem_at(c, og)
 					)
+					if !sound_played.has(delay):
+						sub.tween_callback(func():
+							SSound.se_bubble_pop3.play()
+						)
+						sound_played[delay] = 1
 				else:
 					var og = set_gem_at(cc, null)
 					if og:
@@ -817,10 +828,10 @@ func shuffle():
 		down_proc()
 		shuffle_finished.emit()
 
-func on_combo():
+func on_chain():
 	for h in event_listeners:
-		if h.event == C.Event.Combo || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.Combo, null, null)
+		if h.event == C.Event.Chain || h.event == C.Event.Any:
+			h.host.on_event.call(C.Event.Chain, null, null)
 
 func matching_proc():
 	var tween = G.create_game_tween()
@@ -836,10 +847,10 @@ func matching_proc():
 							tween.tween_callback(func():
 								if !(STest.testing && STest.headless):
 									SSound.se_bubble_pop.play()
-								G.add_combo()
+								G.add_chain()
 							)
 						else:
-							G.add_combo()
+							G.add_chain()
 					matched_num += 1
 					p.add_exp(1)
 					
@@ -985,7 +996,7 @@ func on_exploded(coords : Array[Vector2i], target_coord : Vector2i, range : int,
 		if h.event == C.Event.Exploded || h.event == C.Event.Any:
 			h.host.on_event.call(C.Event.Exploded, null, data)
 	
-	G.add_combo()
+	G.add_chain()
 	for c in coords:
 		score_at(c, power)
 

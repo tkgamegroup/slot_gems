@@ -177,10 +177,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("base_combo_i", extra["value_i"])
+					G.set_modifier("base_chain_i", extra["value_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("base_combo_i", 0)
+					G.set_modifier("base_chain_i", 0)
 	elif name == "PentagramPower":
 		image_id = 15
 		price = 9
@@ -188,14 +188,14 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.Combo, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.Chain, self, C.HostType.Relic)
 			elif event == C.Event.LostRelic:
 				if data == self:
 					SUtils.remove_event_listeners(Board, self)
-			elif event == C.Event.Combo:
-				if G.combos > 0 && G.combos % 5 == 0:
+			elif event == C.Event.Chain:
+				if G.chains > 0 && G.chains % 5 == 0:
 					var v = extra["value_f"]
-					Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":v}, Buff.Duration.ThisCombo)
+					Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":v}, Buff.Duration.ThisChain)
 	elif name == "HalfPriceCoupon":
 		image_id = 16
 		price = 5
@@ -427,7 +427,7 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
-					G.add_combo()
+					G.add_chain()
 					Board.score_at(target)
 				)
 				Board.eliminate([target], tween, Board.ActiveReason.Relic, self)

@@ -216,3 +216,68 @@ static func get_cells_border(coords : Array[Vector2i]):
 			ret.append(p + Vector2(w * +0.25, h * +0.5 + 2))
 			ret.append(p + Vector2(w * +0.5, 0.0))
 	return ret
+
+static func get_hand_data():
+	var ret = []
+	for g in Hand.grabs:
+		ret.append({"type":g.type, "rune":g.rune, "score":g.get_score()})
+	return ret
+
+static func get_board_data():
+	var ret = {}
+	for y in Board.cy:
+		for x in Board.cx:
+			var c = Vector2i(x, y)
+			var g = Board.get_gem_at(c)
+			if g:
+				ret[c] = {"type":g.type, "rune":g.rune, "score":g.get_score()}
+			else:
+				ret[c] = {"type":Gem.None, "rune":Gem.None, "score":0}
+	return ret
+
+static func temp_board_matched_cells(board : Dictionary):
+	var map = {}
+	for p in G.patterns:
+		for y in Board.cy:
+			for x in Board.cx:
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), 0, 0, board)
+				for c in res:
+					map[c] = 1
+	return map
+
+static func temp_board_clear_matcheds(board : Dictionary):
+	var map = {}
+	for p in G.patterns:
+		for y in Board.cy:
+			for x in Board.cx:
+				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), 0, 0, board)
+				for c in res:
+					map[c] = 1
+	for c in map.keys():
+		board[c] = null
+	for x in Board.cx:
+		var min_hole = -1
+		var gems = []
+		var holes = []
+		for i in range(Board.cy - 1, -1, -1):
+			var c = Vector2i(x, i)
+			if board[c]:
+				if i < min_hole:
+					gems.append(c)
+			else:
+				holes.append(c)
+				min_hole = i
+		while !holes.is_empty():
+			var c = holes[0]
+			holes.pop_front()
+			var cc = gems[0] if gems.size() > 0 else Vector2i(x, -1)
+			if cc.y < 0:
+				board[c] = null
+			else:
+				gems.pop_front()
+				holes.append(cc)
+				holes.sort()
+				holes.reverse()
+				var oi = board[cc]
+				board[cc] = null
+				board[c] = oi
