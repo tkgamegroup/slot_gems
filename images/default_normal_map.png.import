@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7qagfwhfqrs3"
-path="res://.godot/imported/hex-dent.png-428c2ee27001d9be1de1a63295482dc4.ctex"
+uid="uid://5svsackukrob"
+path="res://.godot/imported/default_normal_map.png-e2405358e1c92f29630d7067f32c7ead.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/hex-dent.png"
-dest_files=["res://.godot/imported/hex-dent.png-428c2ee27001d9be1de1a63295482dc4.ctex"]
+source_file="res://images/default_normal_map.png"
+dest_files=["res://.godot/imported/default_normal_map.png-e2405358e1c92f29630d7067f32c7ead.ctex"]
 
 [params]
 

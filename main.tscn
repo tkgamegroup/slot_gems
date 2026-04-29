@@ -1,4 +1,4 @@
-[gd_scene load_steps=188 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=189 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -66,6 +66,7 @@
 [ext_resource type="FontFile" uid="uid://b0maexk5weyes" path="res://fonts/Arizonia-Regular.ttf" id="42_23xmf"]
 [ext_resource type="Shader" uid="uid://y40rqpmbg7sv" path="res://materials/gem_kind.gdshader" id="42_h6isl"]
 [ext_resource type="SpriteFrames" uid="uid://baf3431damatq" path="res://images/gems.tres" id="42_swlj1"]
+[ext_resource type="Texture2D" uid="uid://5svsackukrob" path="res://images/default_normal_map.png" id="43_tko6h"]
 [ext_resource type="Texture2D" uid="uid://geocqfohmdvo" path="res://images/undo.png" id="45_5yh34"]
 [ext_resource type="Texture2D" uid="uid://c3jjkrxraupf7" path="res://images/hex-o.png" id="45_53bls"]
 [ext_resource type="PackedScene" uid="uid://bfk7153owjlg0" path="res://float_text.tscn" id="51_lwnsi"]
@@ -146,6 +147,7 @@ shader_parameter/contrast = 3.0
 shader_parameter/multiply = 0.2
 shader_parameter/color = Color(0.917, 0.921, 0.65, 1)
 shader_parameter/ray_color = Color(1, 0.964, 0.69, 1)
+shader_parameter/normal_data = ExtResource("43_tko6h")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_41lik"]
 shader = ExtResource("42_h6isl")

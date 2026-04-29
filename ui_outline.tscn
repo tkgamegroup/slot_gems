@@ -1,10 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://1uswtjs0af28"]
+[gd_scene load_steps=5 format=3 uid="uid://1uswtjs0af28"]
 
-[ext_resource type="Texture2D" uid="uid://c7qagfwhfqrs3" path="res://images/hex-dent.png" id="1_qasoe"]
+[ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_mea0y"]
+[ext_resource type="Texture2D" uid="uid://t7qwjt70ff8s" path="res://images/hex_dent_position.png" id="2_ggt1s"]
+[ext_resource type="Texture2D" uid="uid://gdkwgr8vp54j" path="res://images/hex_dent_normal.png" id="2_i6kup"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i6kup"]
+shader = ExtResource("1_mea0y")
+shader_parameter/scale = 16.0000002384192
+shader_parameter/speed = 0.5000000074506
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/brightness = 1.0
+shader_parameter/contrast = 3.0
+shader_parameter/multiply = 0.2
+shader_parameter/color = Color(0.917, 0.921, 0.65, 1)
+shader_parameter/ray_color = Color(1, 0.964, 0.69, 1)
+shader_parameter/normal_data = ExtResource("2_i6kup")
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Outline" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_i6kup")
 position = Vector2(-4, -4)
-texture = ExtResource("1_qasoe")
+texture = ExtResource("2_ggt1s")
 centered = false

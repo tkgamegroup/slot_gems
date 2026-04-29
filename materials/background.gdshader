@@ -13,6 +13,8 @@ uniform float multiply = 0.2;
 uniform vec3 color : source_color = vec3(0.917, 0.921, 0.650);
 uniform vec3 ray_color : source_color = vec3(1.0, 0.964, 0.69);
 
+uniform sampler2D normal_data;
+
 vec4 mod289(vec4 x)
 {
     return x - floor(x / 289.0) * 289.0;
@@ -90,16 +92,9 @@ vec4 snoise(vec3 v)
 
 void fragment()
 {
-	vec2 uv = vec2(SCREEN_UV.x, 1.0 - SCREEN_UV.y);
+	vec2 uv = SCREEN_UV;
+	uv.y = 1.0 - uv.y;
 	uv.x *= SCREEN_PIXEL_SIZE.y / SCREEN_PIXEL_SIZE.x;
-	//uv = floor(uv * 64.0) / 64.0;
-	//float uv_radius = length(uv);
-	//float uv_phi = atan(uv.y, uv.x);
-	//float spiral_phi = (log(uv_radius) * 8.0 - uv_phi) / TAU;
-	//float spiral_radius = exp((TAU * (spiral_phi) + uv_phi) / 8.0);
-	//uv.x = spiral_phi;
-	//uv.y = spiral_radius;
-	//COLOR = vec4(vec3(spiral_radius), 1.0);
 	uv += offset;
 	vec3 pos = vec3(uv.x, TIME * speed, uv.y);
 	pos.x *= scale;
@@ -110,6 +105,11 @@ void fragment()
 	pos -= 0.07 * noise.xyz;
 	noise = snoise( pos );
 	float intensity = exp(noise.w * contrast - brightness);
+	vec3 nor = texture(normal_data, UV).rgb;
+	nor = normalize(nor * 2.0 - 1.0);
+	float light = max(0.0, dot(nor, normalize(vec3(-0.3, 0.23, 1.2))));
 	vec4 c = vec4(color.r - uv.y * 0.7, color.g - uv.y * 0.4, color.b - uv.y * 0.1, 1.0);
-	COLOR = c + vec4(ray_color * multiply * intensity, intensity);
+	float alpha = COLOR.a;
+	COLOR = alpha * (c * light + vec4(ray_color * multiply * intensity, 1.0));
+	//COLOR = vec4(nor, 1.0);
 }
