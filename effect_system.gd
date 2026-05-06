@@ -48,6 +48,25 @@ func add_big_explosion(pos : Vector2, size : Vector2, z_index : int, duration : 
 	SSound.se_explode.play()
 	return sp
 
+func add_gem_burst(c0 : Vector2i, coords : Array[Vector2i], range : int, duration : float):
+	var tween = G.create_game_tween()
+	var pc = Board.get_pos(c0)
+	for c in coords:
+		var p0 = Board.get_pos(c)
+		var dir = Vector2(1.0, 0.0)
+		if c == c0:
+			dir = Vector2.from_angle(randf() * TAU)
+		else:
+			dir = (p0 - pc).normalized()
+		dir = Vector2.from_angle(dir.angle() + (randf() * 0.4 - 0.2))
+		var factor = clamp(1.0 - p0.distance_to(pc) / (range * C.SPRITE_SZ - C.SPRITE_SZ * 0.5), 0.0, 1.0)
+		var dist = factor * 500.0
+		var ui = Board.ui.get_cell(c).gem_ui
+		var sub = G.create_game_tween()
+		SAnimation.parabola_3d(sub, ui, p0, p0 + dir * dist, duration)
+		tween.parallel()
+		tween.tween_subtween(sub)
+
 func add_distortion(pos : Vector2, size : Vector2, z_index : int, duration : float):
 	var fx = distortion.instantiate()
 	fx.position = pos
@@ -55,7 +74,7 @@ func add_distortion(pos : Vector2, size : Vector2, z_index : int, duration : flo
 	fx.z_index = z_index
 	Board.ui.overlay.add_child(fx)
 	var tween = G.create_game_tween()
-	tween.tween_property(fx.material, "shader_parameter/radius", 0.5, duration).from(0.0).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(fx.material, "shader_parameter/radius", 0.5, duration).from(0.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(fx.queue_free)
 	return fx
 
@@ -100,7 +119,8 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	SSound.se_lightning_connect.play()
 	return fx
 
-func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, duration : float, num_extra_points : int = 8) -> Array[Tween]:
+func add_break_pieces(pos : Vector2, texture : Texture, parent, duration : float, num_extra_points : int = 8) -> Array[Tween]:
+	var size = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ)
 	var points = []
 	points.append(Vector2(0, 0))
 	points.append(Vector2(size.x, 0))
@@ -110,6 +130,7 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 		points.append(Vector2(randf() * size.x, randf() * size.y))
 	var indices = Geometry2D.triangulate_delaunay(points)
 	var tweens : Array[Tween] = []
+	pos += Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
 	for i in range(0, indices.size(), 3):
 		var poly = Polygon2D.new()
 		var verts = []
@@ -131,8 +152,8 @@ func add_break_pieces(pos : Vector2, size : Vector2, texture : Texture, parent, 
 		parent.add_child(poly)
 		poly.position = pos
 		var tween = G.create_game_tween()
-		tween.tween_property(poly, "position", pos + d * 105.0 + Vector2(randf_range(-20.0, +20.0), 50.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(poly, "position", pos + d * 105.0 + Vector2(randf_range(-20.0, +20.0), 50.0), duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(poly, "scale", Vector2(0.0, 0.0), duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tween.tween_callback(poly.queue_free)
 		tweens.append(tween)
 	return tweens
@@ -173,3 +194,14 @@ func show_constellation(name : String):
 	tween.tween_callback(func():
 		ui.queue_free()
 	)
+
+func add_movie(name : String, duration : float, speed : float = 1.0):
+	var sp = AnimatedSprite2D.new()
+	sp.sprite_frames = load("res://movies/%s/frames.tres" % name)
+	sp.scale = Vector2(C.RESOLUTION) / Vector2(480.0, 270.0)
+	sp.speed_scale = speed
+	sp.play("default", G.speed)
+	var tween = G.create_game_tween()
+	tween.tween_interval(duration)
+	tween.tween_callback(sp.queue_free)
+	return sp

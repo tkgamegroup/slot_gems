@@ -14,7 +14,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 19
+const version_patch : int = 20
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -478,6 +478,9 @@ func add_relic(r : Relic):
 func remove_relic(r : Relic):
 	relics.erase(r)
 	game_ui.relics_bar.remove_ui(r)
+	
+	SUtils.remove_event_listeners(G, r)
+	SUtils.remove_event_listeners(Board, r)
 	
 	if r.on_event.is_valid():
 		r.on_event.call(C.Event.LostRelic, null, r)
@@ -1081,7 +1084,7 @@ func start_game(saving : String = "", parms = {}):
 			add_pattern(p)
 		'''
 		
-		for i in 0:
+		for i in 1:
 			var r = Relic.new()
 			r.setup("Aries")
 			add_relic(r)
@@ -1341,8 +1344,8 @@ func round_begin():
 			game_over_ui.exit()
 	
 	for h in event_listeners:
-		if h.event == C.Event.RoundBegan || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.RoundBegan, null, null)
+		if h.event == C.Event.RoundBegin || h.event == C.Event.Any:
+			h.host.on_event.call(C.Event.RoundBegin, null, null)
 
 func next_round(tween : Tween = null):
 	build_round_curses()
@@ -1396,8 +1399,8 @@ func round_end():
 	if !(STest.testing && STest.headless):
 		Board.ui.hide_entangled_lines()
 	for h in event_listeners:
-		if h.event == C.Event.RoundEnded || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.RoundEnded, null, null)
+		if h.event == C.Event.RoundEnd || h.event == C.Event.Any:
+			h.host.on_event.call(C.Event.RoundEnd, null, null)
 	if !(STest.testing && STest.headless):
 		calculator_bar_ui.disappear()
 		control_ui.swaps_text.show_change = false

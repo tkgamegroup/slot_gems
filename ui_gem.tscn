@@ -63,7 +63,7 @@ colors = PackedColorArray(0.75, 0.195, 0.195, 1, 0.7, 0.637467, 0.231, 1, 0.2249
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.132075, 0.191011), 0.0, 0.0, 0, 0, Vector2(0.698113, 0.191011), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 4
 
-[node name="UiGem" type="Control" node_paths=PackedStringArray("sub_viewport", "gem_kind_sp", "wild_sp", "special_sp", "rune_sp", "display", "charming_fx", "sharp_fx", "pieces_root")]
+[node name="UiGem" type="Control" node_paths=PackedStringArray("sub_viewport", "gem_kind_sp", "wild_sp", "special_sp", "rune_sp", "display", "charming_fx", "sharp_fx")]
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 3
 anchors_preset = 0
@@ -77,9 +77,6 @@ rune_sp = NodePath("SubViewport/Rune")
 display = NodePath("Display")
 charming_fx = NodePath("Charming")
 sharp_fx = NodePath("Sharp")
-pieces_root = NodePath("Pieces")
-
-[node name="Pieces" type="Node2D" parent="."]
 
 [node name="SubViewport" type="SubViewport" parent="."]
 disable_3d = true

@@ -897,11 +897,11 @@ func setup(n : String):
 			match event: 
 				C.Event.GainGem:
 					if data == self:
-						SUtils.add_event_listener(G, C.Event.RoundEnded, self, C.HostType.Gem)
+						SUtils.add_event_listener(G, C.Event.RoundEnd, self, C.HostType.Gem)
 				C.Event.LostGem:
 					if data == self:
 						SUtils.remove_event_listeners(G, self)
-				C.Event.RoundEnded:
+				C.Event.RoundEnd:
 					self.base_score *= 2
 	elif name == "EnergyDrink":
 		type = ColorGreen
@@ -1061,11 +1061,11 @@ func setup(n : String):
 			match event:
 				C.Event.GainGem:
 					if data == self:
-						G.event_listeners.append(Hook.new(C.Event.RoundEnded, self, C.HostType.Gem, false))
+						G.event_listeners.append(Hook.new(C.Event.RoundEnd, self, C.HostType.Gem, false))
 				C.Event.LostGem:
 					if data == self:
 						SUtils.remove_event_listeners(G, self)
-				C.Event.RoundEnded:
+				C.Event.RoundEnd:
 					if coord.x == -1 && coord.y == -1:
 						for g in G.bag_gems:
 							if g.name == "" || g.name == "Gem":

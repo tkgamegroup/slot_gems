@@ -81,9 +81,6 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.Eliminated, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
@@ -97,9 +94,6 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.Eliminated, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
@@ -113,9 +107,6 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.Eliminated, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
@@ -189,9 +180,6 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.Chain, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.Chain:
 				if G.chains > 0 && G.chains % 5 == 0:
 					var v = extra["value_f"]
@@ -217,9 +205,6 @@ func setup(n : String):
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.GemBaseScoreChanged, self, C.HostType.Relic)
 					SUtils.add_event_listener(Board, C.Event.GemBonusScoreChanged, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.GemBaseScoreChanged || event == C.Event.GemBonusScoreChanged:
 				if data["value"] < 0:
 					data["value"] = 0
@@ -228,18 +213,14 @@ func setup(n : String):
 		price = 4
 		extra["range_i"] = 0
 		extra["times_i"] = 3
+		extra["achieved_i"] = 0
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
+					SUtils.add_event_listener(G, C.Event.RoundBegin, self, C.HostType.Relic)
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
 					SUtils.add_event_listener(Board, C.Event.GemEntered, self, C.HostType.Relic)
 					SUtils.add_event_listener(Board, C.Event.GemLeft, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
-			elif event == C.Event.BeforeMatching:
-				if active_constellation("Aries"):
-					pass
 			elif event == C.Event.GemEntered:
 				var coords = get_constellation_star_coords("Aries", true)
 				var g = data as Gem
@@ -254,7 +235,42 @@ func setup(n : String):
 					if g.coord == c && g.rune == Gem.RuneStar:
 						Board.set_floating(g.coord, false)
 						break
+			elif event == C.Event.RoundBegin:
+				extra["achieved_i"] = 0
+			elif event == C.Event.BeforeMatching:
+				if extra["achieved_i"] == 0 && try_to_activate_constellation("Aries"):
+					extra["achieved_i"] = 1
+					tween.tween_callback(func():
+						SEffect.show_constellation(name)
+					)
+					tween.tween_interval(1.0 * G.speed)
+					tween.tween_callback(func():
+						Board.activate(self, C.HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
+					)
+					return true
+				return false
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
+			var range = 6
+			var coord = Vector2i(Board.cx / 2, Board.cy / 2)
+			var coords : Array[Vector2i] = []
+			for r in range:
+				if r == 0:
+					coords.append(coord)
+				else:
+					for c in Board.offset_ring(coord, r):
+						if Board.is_valid(c):
+							coords.append(c)
+			var time_scale = 1.2
+			var ui = SEffect.add_movie("Aries", 2.0 * time_scale * G.speed, time_scale / G.speed)
+			G.game_ui.game_overlay.add_child(ui)
+			ui.position = Board.get_pos(Vector2i(Board.cx / 2, Board.cy / 2))
+			tween.tween_interval(1.2 * time_scale * G.speed)
+			tween.tween_callback(func():
+				SEffect.add_gem_burst(coord, coords, range, 0.3 * G.speed)
+			)
+			tween.tween_interval(0.3 * G.speed)
+			Board.eliminate(coords, tween, Board.ActiveReason.Relic, self, true)
+			'''
 			var times = extra["times_i"]
 			for i in times:
 				var subtween = G.create_game_tween()
@@ -264,6 +280,7 @@ func setup(n : String):
 				if i > 0:
 					tween.parallel()
 				tween.tween_subtween(subtween)
+			'''
 	elif name == "Taurus":
 		image_id = 19
 		price = 4
@@ -272,11 +289,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Taurus"):
+				if try_to_activate_constellation("Taurus"):
 					pass
 	elif name == "Gemini":
 		image_id = 20
@@ -285,11 +299,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Gemini"):
+				if try_to_activate_constellation("Gemini"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !Hand.grabs.is_empty():
@@ -308,11 +319,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Cancer"):
+				if try_to_activate_constellation("Cancer"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !G.current_curses.is_empty():
@@ -333,11 +341,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Leo"):
+				if try_to_activate_constellation("Leo"):
 					pass
 	elif name == "Virgo":
 		image_id = 23
@@ -347,11 +352,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Virgo"):
+				if try_to_activate_constellation("Virgo"):
 					pass
 	elif name == "Libra":
 		image_id = 24
@@ -359,11 +361,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Libra"):
+				if try_to_activate_constellation("Libra"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			tween.tween_callback(func():
@@ -380,11 +379,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Scorpio"):
+				if try_to_activate_constellation("Scorpio"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			if !Hand.grabs.is_empty() && G.gems.size() - 1 >= Board.curr_min_gem_num:
@@ -404,11 +400,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Sagittarius"):
+				if try_to_activate_constellation("Sagittarius"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var target = Vector2i(-1, -1)
@@ -439,11 +432,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Capricorn"):
+				if try_to_activate_constellation("Capricorn"):
 					pass
 	elif name == "Aquarius":
 		image_id = 28
@@ -453,11 +443,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Aquarius"):
+				if try_to_activate_constellation("Aquarius"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var cands = Board.filter(func(gem : Gem):
@@ -492,11 +479,8 @@ func setup(n : String):
 			if event == C.Event.GainRelic:
 				if data == self:
 					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-			elif event == C.Event.LostRelic:
-				if data == self:
-					SUtils.remove_event_listeners(Board, self)
 			elif event == C.Event.BeforeMatching:
-				if active_constellation("Pisces"):
+				if try_to_activate_constellation("Pisces"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var cands = Board.filter(func(gem : Gem):
@@ -555,7 +539,7 @@ static func get_constellation_star_coords(name : String, translate : bool = fals
 		ret.append(Board.cube_to_offset(center + c))
 	return ret
 
-func active_constellation(name : String):
+func try_to_activate_constellation(name : String):
 	var coords = get_constellation_star_coords(name, true)
 	var ok = true
 	for c in coords:
@@ -563,8 +547,8 @@ func active_constellation(name : String):
 		if !g || (g.rune != Gem.RuneStar && g.rune != Gem.RuneOmni):
 			ok = false
 			break
-	if ok || true:
-		SEffect.show_constellation(name)
+	# TODO
+	ok = true
 	return ok
 
 func get_tooltip():

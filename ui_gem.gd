@@ -8,7 +8,6 @@ extends Control
 @export var display : Sprite2D
 @export var charming_fx : CPUParticles2D
 @export var sharp_fx : CPUParticles2D
-@export var pieces_root : Node2D
 @export var angle : Vector2:
 	set(v):
 		angle = v
@@ -93,14 +92,12 @@ func break_into_pieces():
 		if image_id == 0:
 			gem_kind_sp.hide()
 			var tex = G.gem_frames.get_frame_texture("default", type - Gem.ColorFirst + 1)
-			pieces_root.z_index = 0
-			pieces_tweens = SEffect.add_break_pieces(Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ), tex, pieces_root, 0.5 * G.speed)
+			pieces_tweens = SEffect.add_break_pieces(global_position, tex, G.game_ui.game_overlay, 0.5 * G.speed)
 			for t in pieces_tweens:
 				t.custom_step(0.005 * G.speed)
 				t.pause()
 
 func move_pieces():
-	pieces_root.z_index = 3
 	for t in pieces_tweens:
 		t.play()
 	pieces_tweens.clear()

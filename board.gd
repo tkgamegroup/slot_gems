@@ -459,7 +459,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 			sp.global_position = relic.ui.get_global_rect().get_center()
 			sp.z_index = 6
 			sp.get_child(1).text = "%d" % active_serial
-			G.game_overlay.add_child(sp)
+			G.game_ui.game_overlay.add_child(sp)
 	
 	var ae = ActiveEffect.new()
 	ae.host = host

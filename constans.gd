@@ -10,8 +10,8 @@ const REFILL_TIMES_TO_STOP = 40
 
 enum Event
 {
-	RoundBegan,
-	RoundEnded,
+	RoundBegin,
+	RoundEnd,
 	BeforeMatching,
 	MatchingFinished,
 	BeforeScoreCalculating,
