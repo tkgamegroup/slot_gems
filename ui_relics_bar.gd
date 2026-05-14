@@ -1,7 +1,7 @@
 extends PanelContainer
 
-@onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
-@onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
+@export var list : Control
+@export var number_text : Label
 
 const item_w = 104
 const item_h = 72
@@ -26,6 +26,7 @@ func add_ui(r : Relic):
 	var ui = G.relic_ui_pb.instantiate()
 	ui.setup(r, 0)
 	ui.build_sockets()
+	ui.name = "Relic%d" % (list.get_child_count() + 1)
 	list.add_child(ui)
 	r.ui = ui
 	var n = list.get_child_count()

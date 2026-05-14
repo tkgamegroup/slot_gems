@@ -9,6 +9,8 @@ var targets : Array[Triple]
 var processing : bool = false
 const offset : Vector2 = Vector2(0, -0)
 
+signal finished
+
 func add_target(_type : String, node, cb : Callable):
 	var t = Triple.new(_type, node, cb)
 	targets.append(t)
@@ -60,6 +62,8 @@ func release(target = null, extra : Dictionary = {}):
 		ui = null
 	release_cb = Callable()
 	processing = false
+	if ok:
+		finished.emit()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

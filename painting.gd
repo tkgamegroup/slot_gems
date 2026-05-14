@@ -22,7 +22,7 @@ static func save_to_file(name : String):
 	var file = ConfigFile.new()
 	var colors_data = {}
 	var lines_data = []
-	var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+	var center = Board.offset_to_cube(Board.center)
 	for y in Board.cy:
 		for x in Board.cx:
 			var oc = Vector2i(x, y)

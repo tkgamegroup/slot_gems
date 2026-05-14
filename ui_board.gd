@@ -11,10 +11,10 @@ extends Control
 @export var hover_ui : Sprite2D
 
 func game_coord(c : Vector2i):
-	return c + Vector2i(Board.cx, Board.cy) / 2 - C.BOARD_CENTER
+	return c + Board.center - C.UI_BOARD_CENTER
 
 func ui_coord(c : Vector2i):
-	return c - Vector2i(Board.cx, Board.cy) / 2 + C.BOARD_CENTER
+	return c - Board.center + C.UI_BOARD_CENTER
 
 func hover_coord(to_game_coord : bool = false):
 	var c = tilemap.local_to_map(tilemap.get_local_mouse_position()) 
@@ -48,7 +48,12 @@ func update_cell(c : Vector2i):
 	elif cell.state == Cell.State.Consumed:
 		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
 	ui.pinned.visible = cell.pinned
-	ui.frozen.visible = cell.frozen
+	if cell.frozen > 0:
+		ui.frozen.visible = true
+		var alpha = clamp(cell.frozen, 1, 5) * 0.1 + 0.3
+		ui.frozen.modulate.a = alpha
+	else:
+		ui.frozen.visible = false
 	ui.set_nullified(cell.nullified)
 	ui.set_floating(cell.floating)
 
@@ -150,7 +155,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Board && self.visible:
 			var c = hover_coord()
-			var cc = c + Vector2i(Board.cx / 2, Board.cy / 2) - C.BOARD_CENTER
+			var cc = c + Board.center - C.UI_BOARD_CENTER
 			if Board.is_valid(cc):
 				hover_ui.show()
 				hover_ui.position = get_pos(c)
@@ -184,7 +189,8 @@ func _ready() -> void:
 				
 				G.swap_hand_and_board(slot1, coord)
 				G.action_stack.append(Pair.new(coord, g2))
-				G.control_ui.undo_button.disabled = false
+				if !G.tutorial_ui.visible:
+					G.control_ui.undo_button.disabled = false
 				return true
 			else:
 				G.control_ui.swaps_text.hint()

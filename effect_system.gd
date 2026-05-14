@@ -190,7 +190,7 @@ func show_constellation(name : String):
 	ui.setup(name)
 	Board.ui.overlay.add_child(ui)
 	var tween = G.create_game_tween()
-	tween.tween_interval(1.0 * G.speed)
+	tween.tween_interval(1.0 * G.time_scale)
 	tween.tween_callback(func():
 		ui.queue_free()
 	)
@@ -200,7 +200,7 @@ func add_movie(name : String, duration : float, speed : float = 1.0):
 	sp.sprite_frames = load("res://movies/%s/frames.tres" % name)
 	sp.scale = Vector2(C.RESOLUTION) / Vector2(480.0, 270.0)
 	sp.speed_scale = speed
-	sp.play("default", G.speed)
+	sp.play("default", G.time_scale)
 	var tween = G.create_game_tween()
 	tween.tween_interval(duration)
 	tween.tween_callback(sp.queue_free)

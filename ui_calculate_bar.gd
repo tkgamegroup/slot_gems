@@ -22,7 +22,7 @@ func appear():
 		cross2.scale.x = 0.0
 		
 		var tween = G.create_game_tween()
-		tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.3 * G.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.3 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		
 		self.show()
 
@@ -35,39 +35,39 @@ func calculate_proc():
 	
 	var tween = G.create_game_tween()
 	if tween:
-		tween.tween_interval(0.3 * G.speed)
+		tween.tween_interval(0.3 * G.time_scale)
 		tween.tween_callback(func():
 			get_result(result)
 			
-			SSound.se_calc1.pitch_scale = 1.0 / G.speed
+			SSound.se_calc1.pitch_scale = 1.0 / G.time_scale
 			SSound.se_calc1.play()
 		)
-		SAnimation.jump(tween, chains_text, 4, 0.4 * G.speed, func():
+		SAnimation.jump(tween, chains_text, 4, 0.4 * G.time_scale, func():
 			#chains_text.text = "%.2f" % result["chain_mult"]
 			pass
 		)
-		tween.tween_property(cross1, "scale:x", 1.0, 0.1 * G.speed).from(0.0)
-		tween.tween_interval(0.3 * G.speed)
+		tween.tween_property(cross1, "scale:x", 1.0, 0.1 * G.time_scale).from(0.0)
+		tween.tween_interval(0.3 * G.time_scale)
 		tween.tween_callback(func():
-			SSound.se_calc1.pitch_scale = 1.0 / G.speed
+			SSound.se_calc1.pitch_scale = 1.0 / G.time_scale
 			SSound.se_calc1.play()
 			calculated_text.show()
 			calculated_text.text = "%d" % result["value"]
 			calculated_text.position = Vector2((G.resolution.x - calculated_text.size.x) * 0.5, 220)
 		)
-		SAnimation.jump(tween, calculated_text, 8, 0.5 * G.speed, Callable(), true, false)
-		tween.tween_property(panel, "scale", Vector2(0.0, 0.0), 0.3 * G.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-		tween.tween_property(calculated_text, "global_position", G.game_ui.status_bar.score_text.get_global_rect().get_center() + Vector2(-calculated_text.size.x * 0.5, 50), 0.5 * G.speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		SAnimation.jump(tween, calculated_text, 8, 0.5 * G.time_scale, Callable(), true, false)
+		tween.tween_property(panel, "scale", Vector2(0.0, 0.0), 0.3 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+		tween.tween_property(calculated_text, "global_position", G.game_ui.status_bar.score_text.get_global_rect().get_center() + Vector2(-calculated_text.size.x * 0.5, 50), 0.5 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
 		
 		var score0 = G.score
 		tween.tween_callback(func():
-			SSound.se_score_counting.pitch_scale = 1.0 / G.speed
+			SSound.se_score_counting.pitch_scale = 1.0 / G.time_scale
 			SSound.se_score_counting.play()
 		)
 		tween.tween_method(func(v):
 			G.score = score0 + int(v * result["value"])
 			calculated_text.text = "%d" % int((1.0 - v) * result["value"])
-		, 0.0, 1.0, 0.5 * G.speed)
+		, 0.0, 1.0, 0.5 * G.time_scale)
 		tween.tween_callback(func():
 			disappear()
 			finished.emit()
@@ -89,7 +89,7 @@ func calculate():
 	for h in G.event_listeners:
 		var sub = G.create_game_tween()
 		if sub:
-			sub.tween_interval(delay * G.speed)
+			sub.tween_interval(delay * G.time_scale)
 		if h.host.on_event.call(C.Event.BeforeScoreCalculating, sub, null):
 			if tween:
 				tween.parallel()

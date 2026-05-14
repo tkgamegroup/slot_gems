@@ -27,16 +27,16 @@ func _ready() -> void:
 		image.texture = load("res://images/constellations/%s.png" % constellation_name)
 		image.show()
 		
-		animation.play("show", -1, G.speed)
+		animation.play("show", -1, G.time_scale)
 		
-		var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+		var center = Board.offset_to_cube(Board.center)
 		for p in points:
 			var sp = SEffect.star_bright.instantiate()
 			sp.position = Board.get_pos(Board.cube_to_offset(center + p))
 			add_child(sp)
 
 func _draw() -> void:
-	var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+	var center = Board.offset_to_cube(Board.center)
 	var radius = C.SPRITE_SZ * 0.5
 	if preview:
 		for p in points:

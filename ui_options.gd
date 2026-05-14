@@ -105,10 +105,10 @@ func load_config():
 		if lang != "unknown":
 			G.set_lang(lang)
 		match config.get_value("", "game_speed", 1):
-			0: G.speed = 0.5
-			1: G.speed = 1.0
-			2: G.speed = 2.0
-			3: G.speed = 4.0
+			0: G.time_scale = 0.5
+			1: G.time_scale = 1.0
+			2: G.time_scale = 2.0
+			3: G.time_scale = 4.0
 		G.performance_mode = config.get_value("", "performance_mode", false)
 		G.invincible = config.get_value("", "invincible", false)
 		DisplayServer.window_set_current_screen(config.get_value("", "monitor", 0))
@@ -198,7 +198,7 @@ func _ready() -> void:
 			1: G.base_speed = 1.0
 			2: G.base_speed = 2.0
 			3: G.base_speed = 4.0
-		G.speed = 1.0 / G.base_speed
+		G.time_scale = 1.0 / G.base_speed
 		save_config()
 	)
 	crt_checkbox.toggled.connect(func(v : bool):

@@ -111,14 +111,14 @@ func setup(n : String):
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			if effect_index == 0:
 				var places = []
-				for c in Board.offset_neighbors(coord):
+				for c in Board.offset_adjacents(coord):
 					if Board.is_valid(c):
 						places.append(c)
 				tween.tween_callback(func():
 					G.add_chain()
 					Board.score_at(SMath.pick_random(places, G.game_rng))
 				)
-				Board.eliminate([coord], tween, Board.ActiveReason.Item, self)
+				Board.eliminate([coord], 0, tween, Board.ActiveReason.Item, self)
 			elif effect_index == 1:
 				Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "Virus":
@@ -128,7 +128,7 @@ func setup(n : String):
 			if reason == Board.PlaceReason.FromHand:
 				var places = []
 				'''
-				for c in Board.offset_neighbors(coord):
+				for c in Board.offset_adjacents(coord):
 					if Board.is_valid(c) && !Board.get_item_at(c):
 						places.append(c)
 				if !places.is_empty():
@@ -151,7 +151,7 @@ func setup(n : String):
 			while !arr.is_empty():
 				var arr2 = []
 				for c in arr:
-					for cc in Board.offset_neighbors(c):
+					for cc in Board.offset_adjacents(c):
 						if !coords.has(cc):
 							var g = Board.get_gem_at(cc)
 							if g && g.type == color:
@@ -167,16 +167,14 @@ func setup(n : String):
 								coords.append(cc)
 				arr.clear()
 				arr.append_array(arr2)
-				tween.tween_interval(0.4 * G.speed)
+				tween.tween_interval(0.4 * G.time_scale)
 			tween.tween_callback(func():
 				for sp in sps:
 					sp.queue_free()
 				
 				G.add_chain()
-				for c in coords:
-					Board.score_at(c)
 			)
-			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+			Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
 	elif name == "BlackHole":
 		image_id = 15
 		category = "Normal"
@@ -212,12 +210,9 @@ func setup(n : String):
 				)
 				tween.tween_interval(3.0)
 				tween.tween_callback(func():
-						G.add_chain()
-						for c in coords:
-							if Board.is_valid(c):
-								Board.score_at(c)
+					G.add_chain()
 				)
-				Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+				Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
 	elif name == "WhiteHole":
 		image_id = 16
 		category = "Normal"
@@ -244,12 +239,9 @@ func setup(n : String):
 						ui.scale = Vector2(0.0, 0.0).max(ui.scale - Vector2(0.1, 0.1))
 			, 0.0, 1200.0, 3.0)
 			tween.tween_callback(func():
-					G.add_chain()
-					for c in coords:
-						if Board.is_valid(c):
-							Board.score_at(c)
+				G.add_chain()
 			)
-			Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+			Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
 	elif name == "Dog":
 		image_id = 18
 		category = "Animal"
@@ -289,13 +281,12 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = SMath.pick_random(cands, G.game_rng)
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.time_scale)
 					coords.append(c)
 					tween.tween_callback(func():
 						G.add_chain()
-						Board.score_at(c)
 					)
-					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
+					Board.eliminate([c], 0, tween, Board.ActiveReason.Item, self)
 					bc = c
 	elif name == "Rooster":
 		image_id = 20
@@ -347,11 +338,10 @@ func setup(n : String):
 				if !cands.is_empty():
 					var c = SMath.pick_random(cands, G.game_rng)
 					var pos = Board.get_pos(c)
-					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.speed)
+					SAnimation.quadratic_curve_to(tween, item_ui, pos, Vector2(0.5, 0.5), 0.4 * G.time_scale)
 					coords.append(c)
 					tween.tween_callback(func():
 						G.add_chain()
-						Board.score_at(c)
 						'''
 						var item = Board.get_item_at(c)
 						if !item:
@@ -374,7 +364,7 @@ func setup(n : String):
 							)
 						'''
 					)
-					Board.eliminate([c], tween, Board.ActiveReason.Item, self)
+					Board.eliminate([c], 0, tween, Board.ActiveReason.Item, self)
 					bc = c
 	elif name == "Fox":
 		image_id = 22
@@ -428,7 +418,7 @@ func setup(n : String):
 				var i = Board.get_item_at(c)
 				var score = i.extra["score"]
 				var pos = Board.get_pos(c)
-				SAnimation.move_to(tween, item_ui, pos, 0.4 * G.speed)
+				SAnimation.move_to(tween, item_ui, pos, 0.4 * G.time_scale)
 				tween.tween_callback(func():
 					G.add_chain()
 					G.add_score(score, pos)
@@ -476,11 +466,8 @@ func setup(n : String):
 						coords.append(cc)
 					tween.tween_callback(func():
 						G.add_chain()
-						for c in coords:
-							if Board.is_valid(c):
-								Board.score_at(c)
 					)
-					Board.eliminate(coords, tween, Board.ActiveReason.Item, self)
+					Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
 	elif name == "HotDog":
 		image_id = 27
 		category = "Food"

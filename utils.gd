@@ -88,7 +88,30 @@ static func replacing_conditioning_line_tag(text : String) -> String:
 	ret += text.substr(last_end)
 	return ret
 
-const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_consumable", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_star_chart", "w_nullified", "w_in_mist", "w_floating"]
+static func parse_tagged_string(text: String) -> Array:
+	var ret = []
+	var inside = false
+	var current_tags = ""
+	var current_string = ""
+	for c in text:
+		if c == "[":
+			if !current_tags.is_empty() || !current_string.is_empty():
+				ret.append(Pair.new(current_tags.split(" "), current_string))
+			current_tags = ""
+			current_string = ""
+			inside = true
+		elif c == "]":
+			inside = false
+		else:
+			if inside:
+				current_tags += c
+			else:
+				current_string += c
+	if !current_tags.is_empty() || !current_string.is_empty():
+		ret.append(Pair.new(current_tags.split(" "), current_string))
+	return ret
+
+const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_consumable", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_star_chart", "w_frozen", "w_nullified", "w_in_mist", "w_floating"]
 static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], referenced_gems : Array = [], referenced_constellations : Array = []) -> String:
 	var ret = ""
 	ret = replacing_gem_tag(text, with_color, with_url, referenced_gems)

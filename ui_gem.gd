@@ -92,9 +92,9 @@ func break_into_pieces():
 		if image_id == 0:
 			gem_kind_sp.hide()
 			var tex = G.gem_frames.get_frame_texture("default", type - Gem.ColorFirst + 1)
-			pieces_tweens = SEffect.add_break_pieces(global_position, tex, G.game_ui.game_overlay, 0.5 * G.speed)
+			pieces_tweens = SEffect.add_break_pieces(global_position, tex, G.game_ui.game_overlay, 0.5 * G.time_scale)
 			for t in pieces_tweens:
-				t.custom_step(0.005 * G.speed)
+				t.custom_step(0.005 * G.time_scale)
 				t.pause()
 
 func move_pieces():

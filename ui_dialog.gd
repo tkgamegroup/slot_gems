@@ -10,13 +10,23 @@ var action1 : Callable
 var action2 : Callable
 
 func do_nothing():
-	pass
+	exit()
 
-func open(_title : String, _content : String, yes_action : Callable, no_action : Callable):
+func open(_title : String, _content : String, buttons_num : int = 1, button1_action : Callable = do_nothing, button2_action : Callable = do_nothing):
 	title.text = _title
 	content.text = _content
-	action1 = yes_action
-	action2 = no_action
+	action1 = button1_action
+	action2 = button2_action
+	
+	if buttons_num == 1:
+		button1.text = "OK"
+		button1.show()
+		button2.hide()
+	elif buttons_num == 2:
+		button1.text = "Yes"
+		button1.show()
+		button2.text = "No"
+		button2.show()
 	
 	self.self_modulate.a = 0.0
 	self.show()
@@ -41,7 +51,7 @@ func _ready() -> void:
 			action1.call()
 		action1 = do_nothing
 	)
-	button1.pressed.connect(func():
+	button2.pressed.connect(func():
 		exit()
 		if action2.is_valid():
 			action2.call()

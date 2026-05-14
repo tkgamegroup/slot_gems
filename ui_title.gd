@@ -49,13 +49,7 @@ func _ready() -> void:
 		SSound.music_more_clear()
 		G.screen_shake_strength = 8.0
 		
-		var tween = G.create_tween()
-		G.begin_transition(tween)
-		exit(tween)
-		tween.tween_callback(func():
-			G.start_game()
-		)
-		G.end_transition(tween)
+		G.new_game_ui.enter()
 	)
 	new_game_button.mouse_entered.connect(SSound.se_select.play)
 	collections_button.pressed.connect(func():

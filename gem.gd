@@ -527,11 +527,11 @@ func setup(n : String):
 				var p1 = Board.get_pos(sub_coords.back())
 				if tween:
 					tween.tween_callback(func():
-						var sp = SEffect.add_slash(p0, p1, 3, 0.25 * G.speed)
+						var sp = SEffect.add_slash(p0, p1, 3, 0.25 * G.time_scale)
 						Board.ui.overlay.add_child(sp)
 					)
 			if tween:
-				tween.tween_interval(0.5 * G.speed)
+				tween.tween_interval(0.5 * G.time_scale)
 				tween.tween_callback(func():
 					G.add_chain()
 					for c in coords:
@@ -539,9 +539,7 @@ func setup(n : String):
 				)
 			else:
 				G.add_chain()
-				for c in coords:
-					Board.score_at(c, power)
-			Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
+			Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "Lightning":
 		type = ColorBlue
 		rune = None
@@ -581,14 +579,14 @@ func setup(n : String):
 							coords.append(cc)
 						if tween:
 							if i > 0:
-								tween.tween_interval(0.05 * G.speed)
+								tween.tween_interval(0.05 * G.time_scale)
 							tween.tween_callback(func():
-								var fx = SEffect.add_lighning(Board.get_pos(p0), Board.get_pos(p1), 3, 0.5 * G.speed)
+								var fx = SEffect.add_lighning(Board.get_pos(p0), Board.get_pos(p1), 3, 0.5 * G.time_scale)
 								Board.ui.overlay.add_child(fx)
 							)
 					coords.append(points.back())
 					if tween:
-						tween.tween_interval(0.5 * G.speed)
+						tween.tween_interval(0.5 * G.time_scale)
 						tween.tween_callback(func():
 								G.add_chain()
 								for c in coords:
@@ -596,9 +594,7 @@ func setup(n : String):
 						)
 					else:
 						G.add_chain()
-						for c in coords:
-							Board.score_at(c, power)
-					Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
+					Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "Strawberry":
 		type = ColorRed
 		rune = None
@@ -682,7 +678,7 @@ func setup(n : String):
 			var times = 1 + G.modifiers["additional_targets_i"]
 			for i in times:
 				if i > 0:
-					tween.tween_interval(0.3 * G.speed)
+					tween.tween_interval(0.3 * G.time_scale)
 				tween.tween_callback(func():
 					var target = SMath.pick_random(cands)
 					G.change_modifier("%s_bouns_i" % target, add_value)
@@ -710,7 +706,7 @@ func setup(n : String):
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cands = []
-			for c in Board.offset_neighbors(coord):
+			for c in Board.offset_adjacents(coord):
 				var g = Board.get_gem_at(c)
 				if g && g.type != Gem.ColorOrange && g.type != Gem.ColorWild && !g.active:
 					cands.append(c)
@@ -718,10 +714,10 @@ func setup(n : String):
 				var targets = SMath.pick_n_random(cands, 1 + G.modifiers["additional_targets_i"], G.game_rng)
 				tween.tween_callback(func():
 					for target in targets:
-						var fx = SEffect.add_splash(Board.get_pos(coord), Board.get_pos(target), Color.ORANGE, 3, 0.5 * G.speed)
+						var fx = SEffect.add_splash(Board.get_pos(coord), Board.get_pos(target), Color.ORANGE, 3, 0.5 * G.time_scale)
 						Board.ui.overlay.add_child(fx)
 				)
-				tween.tween_interval(0.5 * G.speed)
+				tween.tween_interval(0.5 * G.time_scale)
 				var first = true
 				for target in targets:
 					var g = Board.get_gem_at(target)
@@ -745,7 +741,7 @@ func setup(n : String):
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cands = []
-			for c in Board.offset_neighbors(coord):
+			for c in Board.offset_adjacents(coord):
 				var g = Board.get_gem_at(c)
 				if g && (g.rune == Gem.RuneWave || g.rune == Gem.RuneOmni):
 					cands.append(c)
@@ -759,11 +755,11 @@ func setup(n : String):
 				for i in times:
 					var target = SMath.pick_random(cands, G.game_rng)
 					var target_pos = Board.get_pos(target)
-					tween.tween_property(ui, "position", target_pos - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, 0.15 * G.speed)
-					tween.tween_property(ui, "rotation_degrees", -30.0, 0.15 * G.speed)
-					tween.tween_property(ui, "rotation_degrees", 0.0, 0.15 * G.speed)
-					tween.tween_property(ui, "rotation_degrees", -30.0, 0.15 * G.speed)
-					tween.tween_property(ui, "rotation_degrees", 0.0, 0.15 * G.speed)
+					tween.tween_property(ui, "position", target_pos - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, 0.15 * G.time_scale)
+					tween.tween_property(ui, "rotation_degrees", -30.0, 0.15 * G.time_scale)
+					tween.tween_property(ui, "rotation_degrees", 0.0, 0.15 * G.time_scale)
+					tween.tween_property(ui, "rotation_degrees", -30.0, 0.15 * G.time_scale)
+					tween.tween_property(ui, "rotation_degrees", 0.0, 0.15 * G.time_scale)
 					if has_bait || G.game_rng.randf() > 0.3:
 						if !has_bait && G.game_rng.randf() > 0.9:
 							var sp = Sprite2D.new()
@@ -774,8 +770,8 @@ func setup(n : String):
 							tween.tween_callback(func():
 								sp.show()
 							)
-							tween.tween_interval(0.3 * G.speed)
-							tween.tween_property(sp, "modulate:a", 0.0, 0.3 * G.speed)
+							tween.tween_interval(0.3 * G.time_scale)
+							tween.tween_property(sp, "modulate:a", 0.0, 0.3 * G.time_scale)
 							tween.tween_callback(func():
 								sp.queue_free()
 								G.float_text("UPGRADE", target_pos)
@@ -934,7 +930,7 @@ func setup(n : String):
 						tween.tween_callback(func():
 							G.add_score(100, Hand.ui.get_pos(coord.x))
 						)
-						tween.tween_interval(0.5 * G.speed)
+						tween.tween_interval(0.5 * G.time_scale)
 						return true
 					return false
 	elif name == "Magnet":
@@ -980,7 +976,7 @@ func setup(n : String):
 									var c = Vector2i(x, y)
 									var g = Board.get_gem_at(c)
 									if g && g.type != type:
-										for cc in Board.offset_neighbors(c):
+										for cc in Board.offset_adjacents(c):
 											var g2 = Board.get_gem_at(cc)
 											if g2 && g2.type == type:
 												cands.append(c)
@@ -1027,7 +1023,7 @@ func setup(n : String):
 						arr.append(Pair.new(c, null))
 						coords.append(c)
 					if tween:
-						tween.tween_interval(0.1 * G.speed)
+						tween.tween_interval(0.1 * G.time_scale)
 						for t in arr:
 							var sp = Sprite2D.new()
 							sp.texture = SEffect.fireball_image
@@ -1037,19 +1033,16 @@ func setup(n : String):
 							Board.ui.overlay.add_child(sp)
 							t.second = sp
 							tween.parallel()
-							SAnimation.parabola_3d(tween, sp, pos, Board.get_pos(t.first), 0.4 * G.speed)
+							SAnimation.parabola_3d(tween, sp, pos, Board.get_pos(t.first), 0.4 * G.time_scale)
 					if tween:
 						tween.tween_callback(func():
 							G.add_chain()
 							for t in arr:
-								Board.score_at(t.first, power)
 								t.second.queue_free()
 						)
 					else:
 						G.add_chain()
-						for t in arr:
-							Board.score_at(t.first, power)
-					Board.eliminate(coords, tween, Board.ActiveReason.Gem, self)
+					Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "PolishingPowder":
 		type = None
 		rune = None

@@ -29,6 +29,7 @@ func enter():
 	self.show()
 
 func exit():
+	expected_score_panel.hide()
 	self.hide()
 
 func start_shake(strength : float, pos : float = 0.0):
@@ -37,6 +38,10 @@ func start_shake(strength : float, pos : float = 0.0):
 
 func update_preview():
 	preview.find_all_matchings()
+	for i in Hand.grabs.size():
+		var g = Hand.grabs[i]
+		var ui = Hand.ui.get_slot(i)
+		ui.preview.find_missing_ones(g.type, g.rune)
 	
 	var base = 0
 	for i in preview.matchings.size():

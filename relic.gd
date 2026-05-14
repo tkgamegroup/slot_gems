@@ -243,7 +243,7 @@ func setup(n : String):
 					tween.tween_callback(func():
 						SEffect.show_constellation(name)
 					)
-					tween.tween_interval(1.0 * G.speed)
+					tween.tween_interval(1.0 * G.time_scale)
 					tween.tween_callback(func():
 						Board.activate(self, C.HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
 					)
@@ -251,7 +251,7 @@ func setup(n : String):
 				return false
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
 			var range = 6
-			var coord = Vector2i(Board.cx / 2, Board.cy / 2)
+			var coord = Board.center
 			var coords : Array[Vector2i] = []
 			for r in range:
 				if r == 0:
@@ -261,20 +261,23 @@ func setup(n : String):
 						if Board.is_valid(c):
 							coords.append(c)
 			var time_scale = 1.2
-			var ui = SEffect.add_movie("Aries", 2.0 * time_scale * G.speed, time_scale / G.speed)
+			var ui = SEffect.add_movie("Aries", 2.0 * time_scale * G.time_scale, time_scale / G.time_scale)
 			G.game_ui.game_overlay.add_child(ui)
-			ui.position = Board.get_pos(Vector2i(Board.cx / 2, Board.cy / 2))
-			tween.tween_interval(1.2 * time_scale * G.speed)
+			ui.position = Board.get_pos(Board.center)
+			tween.tween_interval(1.2 * time_scale * G.time_scale)
 			tween.tween_callback(func():
-				SEffect.add_gem_burst(coord, coords, range, 0.3 * G.speed)
+				SEffect.add_gem_burst(coord, coords, range, 0.3 * G.time_scale)
 			)
-			tween.tween_interval(0.3 * G.speed)
-			Board.eliminate(coords, tween, Board.ActiveReason.Relic, self, true)
+			tween.tween_interval(0.3 * G.time_scale)
+			tween.tween_callback(func():
+				G.add_chain()
+			)
+			Board.eliminate(coords, 0, tween, Board.ActiveReason.Relic, self, true)
 			'''
 			var times = extra["times_i"]
 			for i in times:
 				var subtween = G.create_game_tween()
-				subtween.tween_interval(i * 0.1 * G.speed)
+				subtween.tween_interval(i * 0.1 * G.time_scale)
 				var target = Vector2i(G.game_rng.randi_range(0, Board.cx - 1), G.game_rng.randi_range(0, Board.cy - 1))
 				Board.effect_explode(ui.get_global_rect().get_center(), target, extra["range_i"], 0, subtween)
 				if i > 0:
@@ -307,9 +310,9 @@ func setup(n : String):
 				var idx = 0
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
-					SEffect.add_leading_line(ui_pos, Hand.ui.get_pos(idx), 0.3 * G.speed)
+					SEffect.add_leading_line(ui_pos, Hand.ui.get_pos(idx), 0.3 * G.time_scale)
 				)
-				tween.tween_interval(0.3 * G.speed)
+				tween.tween_interval(0.3 * G.time_scale)
 				tween.tween_callback(func():
 					G.duplicate_gem(null, Hand.grabs[idx], Hand.ui.get_slot(idx))
 				)
@@ -328,9 +331,9 @@ func setup(n : String):
 				var curse = G.current_curses[G.game_rng.randi_range(0, G.current_curses.size() - 1)]
 				if curse.coord.x != -1 && curse.coord.y != -1:
 					tween.tween_callback(func():
-						SEffect.add_leading_line(ui_pos, Board.get_pos(curse.coord), 0.3 * G.speed)
+						SEffect.add_leading_line(ui_pos, Board.get_pos(curse.coord), 0.3 * G.time_scale)
 					)
-					tween.tween_interval(0.3 * G.speed)
+					tween.tween_interval(0.3 * G.time_scale)
 				tween.tween_callback(func():
 					G.remove_curse(curse)
 				)
@@ -421,9 +424,8 @@ func setup(n : String):
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
 					G.add_chain()
-					Board.score_at(target)
 				)
-				Board.eliminate([target], tween, Board.ActiveReason.Relic, self)
+				Board.eliminate([target], 0, tween, Board.ActiveReason.Relic, self)
 	elif name == "Capricorn":
 		image_id = 27
 		price = 4
@@ -533,7 +535,7 @@ static func get_constellation_star_coords(name : String, translate : bool = fals
 	if !translate:
 		return constellation_star_coords[name]
 	var coords = constellation_star_coords[name]
-	var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+	var center = Board.offset_to_cube(Board.center)
 	var ret = []
 	for c in coords:
 		ret.append(Board.cube_to_offset(center + c))

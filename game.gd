@@ -29,6 +29,7 @@ const UiStagingSlot = preload("res://ui_staging_slot.gd")
 const UiCraftSlot = preload("res://ui_craft_slot.gd")
 const UiCell = preload("res://ui_cell.gd")
 const UiTitle = preload("res://ui_title.gd")
+const UiNewGame = preload("res://ui_new_game.gd")
 const UiBoard = preload("res://ui_board.gd")
 const UiProp = preload("res://ui_prop.gd")
 const UiHandSlot = preload("res://ui_hand_slot.gd")
@@ -53,7 +54,9 @@ const UiUpgrade = preload("res://ui_upgrade.gd")
 const UiChooseReward = preload("res://ui_choose_reward.gd")
 const UiRunInfo = preload("res://ui_run_info.gd")
 const UiBagViewer = preload("res://ui_bag_viewer.gd")
+const UiGuide = preload("res://ui_guide.gd")
 const UiTutorial = preload("res://ui_tutorial.gd")
+const UiTutorialAction = preload("res://ui_tutorial_action.gd")
 const UiTooltips = preload("res://ui_tooltips.gd")
 
 @onready var gem_frames : SpriteFrames = load("res://images/gems.tres")
@@ -78,6 +81,7 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 @onready var entangle_slots_pb : PackedScene = load("res://ui_entangle_slots.tscn")
 @onready var tooltip_pb : PackedScene = load("res://tooltip.tscn")
 @onready var contex_menu_pb : PackedScene = load("res://ui_context_menu.tscn")
+@onready var tutorial_action_pb : PackedScene = load("res://ui_tutorial_action.tscn")
 @onready var pointer_cursor : Texture = load("res://images/pointer.png")
 @onready var pin_cursor : Texture = load("res://images/pin.png")
 @onready var activate_cursor : Texture = load("res://images/magic_stick.png")
@@ -91,6 +95,7 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 @onready var subviewport : SubViewport = $/root/Main/SubViewportContainer/SubViewport
 @onready var canvas : CanvasLayer = $/root/Main/SubViewportContainer/SubViewport/Canvas
 @onready var title_ui : UiTitle = $/root/Main/SubViewportContainer/SubViewport/Canvas/Title
+@onready var new_game_ui : UiNewGame = $/root/Main/SubViewportContainer/SubViewport/Canvas/NewGame
 @onready var control_ui : UiControl = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameControl
 @onready var shop_ui : UiShop = $/root/Main/SubViewportContainer/SubViewport/Canvas/Shop
 @onready var game_ui : UiGame = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameUI
@@ -102,6 +107,7 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 @onready var collections_ui : UiCollections = $/root/Main/SubViewportContainer/SubViewport/Canvas/Collections
 @onready var run_info_ui : UiRunInfo = $/root/Main/SubViewportContainer/SubViewport/Canvas/RunInfo
 @onready var bag_viewer_ui : UiBagViewer = $/root/Main/SubViewportContainer/SubViewport/Canvas/BagViewer
+@onready var guide_ui : UiGuide = $/root/Main/SubViewportContainer/SubViewport/Canvas/Guide
 @onready var tutorial_ui : UiTutorial = $/root/Main/SubViewportContainer/SubViewport/Canvas/Tutorial
 @onready var in_game_menu_ui : UiInGameMenu = $/root/Main/SubViewportContainer/SubViewport/Canvas/InGameMenu
 @onready var game_over_ui : UiGameOver = $/root/Main/SubViewportContainer/SubViewport/Canvas/GameOver
@@ -210,7 +216,7 @@ var base_score : int:
 				calculator_bar_ui.base_score_text.position.y = 4
 				calculator_bar_ui.base_score_text.text = "%d" % v
 				base_score_tween = create_game_tween()
-				base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2 * speed)
+				base_score_tween.tween_property(calculator_bar_ui.base_score_text, "position:y", 0, 0.2 * time_scale)
 				base_score_tween.tween_callback(func():
 					base_score_tween = null
 				)
@@ -241,8 +247,8 @@ var chains : int = 0:
 				game_ui.chains_label.pivot_offset = game_ui.chains_label.size * 0.5
 				game_ui.chains_label.rotation_degrees = randf() * 20.0 - 10.0
 				chains_tween = create_game_tween()
-				chains_tween.tween_interval(0.5 * speed)
-				chains_tween.tween_property(game_ui.chains_label, "modulate:a", 0.0, 0.3 * speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				chains_tween.tween_interval(0.5 * time_scale)
+				chains_tween.tween_property(game_ui.chains_label, "modulate:a", 0.0, 0.3 * time_scale).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 				chains_tween.tween_callback(func():
 					game_ui.chains_label.hide()
 					game_ui.chains_label.modulate.a = 1.0
@@ -264,7 +270,7 @@ var score_mult : float = 1.0:
 				calculator_bar_ui.mult_text.position.y = 4
 				calculator_bar_ui.mult_text.text = "%.1f" % v
 				score_mult_tween = create_game_tween()
-				score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * speed)
+				score_mult_tween.tween_property(calculator_bar_ui.mult_text, "position:y", 0, 0.2 * time_scale)
 				score_mult_tween.tween_callback(func():
 					score_mult_tween = null
 				)
@@ -276,21 +282,6 @@ var score_mult : float = 1.0:
 				calculator_bar_ui.mult_text.text = "%.1f" % score_mult
 		else:
 			score_mult = v
-
-var coins : int = 10:
-	set(v):
-		coins = v
-		if !(STest.testing && STest.headless):
-			game_ui.status_bar.coins_text.set_value(coins)
-
-var buffs : Array[Buff]
-var modifiers : Dictionary
-var game_over_mark : String = ""
-
-var history : History = History.new()
-
-var base_speed : float = 1.0
-var speed : float = 1.0 / base_speed
 
 var filling_times : int = 0:
 	set(v):
@@ -309,14 +300,35 @@ var filling_times : int = 0:
 				if control_ui.filling_times_container.visible:
 					control_ui.filling_times_text.position.y = 0
 					control_ui.filling_times_tween = create_game_tween()
-					SAnimation.jump(control_ui.filling_times_tween, control_ui.filling_times_text, -0.0, 0.25 * speed, func():
+					SAnimation.jump(control_ui.filling_times_tween, control_ui.filling_times_text, -0.0, 0.25 * time_scale, func():
 						control_ui.filling_times_text.text = "%d" % filling_times
 					)
 					control_ui.filling_times_tween.tween_callback(func():
 						control_ui.filling_times_tween = null
 					)
 
+var coins : int = 10:
+	set(v):
+		coins = v
+		if !(STest.testing && STest.headless):
+			game_ui.status_bar.coins_text.set_value(coins)
+
+var buffs : Array[Buff]
+var modifiers : Dictionary
+var game_over_mark : String = ""
+var invincible : bool = false
+
+var base_speed : float = 1.0
+var time_scale : float = 1.0 / base_speed
+
+var busy : bool = false
+
+var history : History = History.new()
+
+signal swap_finished
+
 var hovering_coord : Vector2i = Vector2i(-1, -1)
+
 var paint_mode : String = "off"
 var paint_brush1 : int = Gem.ColorWhite
 var paint_brush2 : int = Gem.ColorBlack
@@ -345,7 +357,6 @@ var performance_mode : bool = false:
 				crt.show()
 			else:
 				crt.hide()
-var invincible : bool = false
 
 func random_seeds():
 	game_rng.seed = Time.get_ticks_usec()
@@ -536,9 +547,9 @@ func add_score(value : int, pos : Vector2):
 		game_ui.game_overlay.add_child(ui)
 	
 		var tween = ui.create_tween()
-		tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * speed)
-		tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * speed)
-		tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * speed).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+		tween.tween_property(ui, "position:y", pos.y - 20, 0.1 * time_scale)
+		tween.tween_property(ui, "position:x", pos.x + add_score_dir * 8, 0.2 * time_scale)
+		tween.parallel().tween_property(ui, "position:y", pos.y, 0.2 * time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 		tween.tween_callback(func():
 			G.base_score += value
 			ui.queue_free()
@@ -703,6 +714,7 @@ func swap_hand_and_board(slot1 : Control, coord : Vector2i, reason : String = "s
 			Board.set_gem_at(coord, g1)
 			control_ui.update_preview()
 			end_busy()
+			swap_finished.emit()
 		)
 	)
 
@@ -715,9 +727,9 @@ func add_new_gem_from(tween : Tween, g : Gem, coord : Vector2i):
 	tween.tween_callback(func():
 		ui.show()
 	)
-	tween.tween_property(ui, "scale", Vector2(0.75, 0.75), 0.4 * speed)
+	tween.tween_property(ui, "scale", Vector2(0.75, 0.75), 0.4 * time_scale)
 	tween.parallel()
-	SAnimation.cubic_curve_to(tween, ui, game_ui.status_bar.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5 * speed)
+	SAnimation.cubic_curve_to(tween, ui, game_ui.status_bar.bag_button.get_global_rect().get_center(), Vector2(0.1, 0.2), Vector2(0.9, 0.2), 0.5 * time_scale)
 	tween.tween_callback(func():
 		add_gem(g)
 		sort_gems()
@@ -759,6 +771,12 @@ func process_command_line(cl : String):
 			lose()
 		elif cmd == "shopping":
 			shop_ui.enter()
+		elif cmd == "freeze":
+			var coord = read_coord(tokens[1])
+			Board.freeze(coord)
+		elif cmd == "unfreeze":
+			var coord = read_coord(tokens[1])
+			Board.unfreeze(coord)
 		elif cmd == "swaps":
 			swaps = int(tokens[1])
 		elif cmd == "draw":
@@ -841,7 +859,7 @@ func process_command_line(cl : String):
 						if !content.is_empty():
 							var colors = content.colors
 							var lines = content.lines
-							var center = Board.offset_to_cube(Vector2i(Board.cx / 2, Board.cy / 2))
+							var center = Board.offset_to_cube(Board.center)
 							var tween = create_game_tween()
 							var delay = 0.0
 							for col in colors.keys():
@@ -925,20 +943,26 @@ func begin_busy():
 		control_ui.last_play.hide()
 		Hand.ui.disabled = true
 		Drag.release()
+	busy = true
 
 func end_busy():
 	if !(STest.testing && STest.headless):
 		if swaps > 0:
-			control_ui.shuffle_button.disabled = false
+			if !tutorial_ui.visible:
+				control_ui.shuffle_button.disabled = false
 		if !action_stack.is_empty():
-			control_ui.undo_button.disabled = false
+			if !tutorial_ui.visible:
+				control_ui.undo_button.disabled = false
 		if !shop_ui.visible:
-			control_ui.play_button.disabled = false
+			if !tutorial_ui.visible:
+				control_ui.play_button.disabled = false
 			if swaps == 0:
 				control_ui.show_last_play()
-		Hand.ui.disabled = false
+		if !tutorial_ui.visible || tutorial_ui.get_action_types().has(C.TutorialAction.Swap):
+			Hand.ui.disabled = false
 		if Board.ui.visible:
 			Board.ui.show_entangled_lines()
+	busy = false
 
 func begin_transition(tween : Tween):
 	blocker_ui.show()
@@ -1029,7 +1053,13 @@ func start_game(saving : String = "", parms = {}):
 		control_ui.swaps_text.show_change = false
 	
 	if saving == "":
-		random_seeds()
+		var seed = parms.get("seed", 0)
+		if seed == 0:
+			random_seeds()
+		else:
+			game_rng.seed = seed
+			round_rng.seed = game_rng.seed + 1
+			shop_rng.seed = game_rng.seed + 2
 		
 		score = 0
 		base_score = 0
@@ -1084,7 +1114,7 @@ func start_game(saving : String = "", parms = {}):
 			add_pattern(p)
 		'''
 		
-		for i in 1:
+		for i in 0:
 			var r = Relic.new()
 			r.setup("Aries")
 			add_relic(r)
@@ -1214,10 +1244,10 @@ func start_game(saving : String = "", parms = {}):
 	
 		Board.setup(board_size)
 		history.init()
-		if !(STest.testing && STest.headless):
-			control_ui.enter()
 		
 		if !(STest.testing && STest.headless):
+			control_ui.enter()
+			
 			# setting here so that text positions will be all right
 			game_ui.status_bar.round_text.modulate.a = 0.0
 			game_ui.status_bar.round_target.modulate.a = 0.0
@@ -1254,6 +1284,8 @@ func start_game(saving : String = "", parms = {}):
 func exit_game():
 	if Board.ui.visible:
 		Board.ui.hide()
+	if calculator_bar_ui.visible:
+		calculator_bar_ui.disappear()
 	if shop_ui.visible:
 		shop_ui.exit(null, false)
 	if settlement_ui.visible:
@@ -1372,7 +1404,7 @@ func next_round(tween : Tween = null):
 		)
 		if false && current_round == 0:
 			tween.tween_callback(func():
-				tutorial_ui.enter()
+				guide_ui.enter()
 			)
 		tween.tween_callback(func():
 			stage = Stage.Deploy
@@ -1455,7 +1487,7 @@ func play():
 	score_mult = 1.0
 	filling_times = 0
 	modifiers["played_i"] = 1
-	speed = 1.0 / base_speed
+	time_scale = 1.0 / base_speed
 	
 	if !(STest.testing && STest.headless):
 		control_ui.expected_score_panel.hide()
@@ -1766,7 +1798,7 @@ func load_from_file(name : String = "1"):
 			Board.set_state_at(coord, state)
 		if cell["pinned"]:
 			Board.pin(coord)
-		if cell["frozen"]:
+		if cell["frozen"] > 0:
 			Board.freeze(coord)
 		if cell["nullified"]:
 			Board.nullify(coord)
@@ -1808,9 +1840,10 @@ func _input(event: InputEvent) -> void:
 				pass
 	elif event is InputEventMouseMotion:
 		mouse_pos = event.position
+		#print("%.1f %.1f" % [mouse_pos.x, mouse_pos.y])
 		if Board && Board.ui.visible:
 			var c = Board.ui.hover_coord()
-			var cc = c + Vector2i(Board.cx / 2, Board.cy / 2) - C.BOARD_CENTER
+			var cc = c + Board.center - C.UI_BOARD_CENTER
 			if Board.is_valid(cc):
 				Board.ui.hover_ui.show()
 				Board.ui.hover_ui.position = Board.ui.get_pos(c)
@@ -1827,8 +1860,8 @@ func _unhandled_input(event: InputEvent) -> void:
 					options_ui.exit()
 				elif bag_viewer_ui.visible:
 					bag_viewer_ui.exit()
-				elif tutorial_ui.visible:
-					tutorial_ui.exit()
+				elif guide_ui.visible:
+					guide_ui.exit()
 				elif control_ui.visible:
 					G.screen_shake_strength = 8.0
 					toggle_in_game_menu()
@@ -1877,7 +1910,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					else:
 						paint_brush1 = Gem.ColorBlack
 	elif event is InputEventMouseMotion:
-		if Board.ui.visible && !run_info_ui.visible && !bag_viewer_ui.visible && !in_game_menu_ui.visible && !options_ui.visible && !tutorial_ui.visible && !test_ui.visible:
+		if Board.ui.visible && !run_info_ui.visible && !bag_viewer_ui.visible && !in_game_menu_ui.visible && !options_ui.visible && !guide_ui.visible && !test_ui.visible:
 			var c = Board.ui.hover_coord(true)
 			if Board.is_valid(c):
 				var cc = Board.offset_to_cube(c)
@@ -1885,25 +1918,27 @@ func _unhandled_input(event: InputEvent) -> void:
 				control_ui.debug_text.text = "(%d,%d) (%d,%d,%d)" % [c.x, c.y, cc.x, cc.y, cc.z]
 				var contents : Array[Pair] = []
 				var cell = Board.get_cell(c)
+				if cell.frozen > 0:
+					contents.append(Pair.new(tr("tt_cell_frozen") % cell.frozen, tr("tt_cell_frozen_content")))
 				if cell.nullified:
 					contents.append(Pair.new(tr("tt_cell_nullified"), tr("tt_cell_nullified_content")))
 				if cell.in_mist:
 					contents.append(Pair.new(tr("tt_cell_in_mist"), tr("tt_cell_in_mist_content")))
+				if cell.floating:
+					contents.append(Pair.new(tr("tt_cell_floating"), tr("tt_cell_floating_content")))
 				var g = Board.get_gem_at(c)
 				if g:
 					var cell_ui = Board.ui.get_cell(c)
 					if STooltip.node != cell_ui:
 						contents.append_array(g.get_tooltip())
 						var dir = 0
-						var hcx = Board.cx / 2
-						var hcy = Board.cy / 2
-						if c.x <= hcx:
-							if c.y <= hcy:
+						if c.x <= Board.hfcx:
+							if c.y <= Board.hfcy:
 								dir = 0
 							else:
 								dir = 1
 						else:
-							if c.y <= hcy:
+							if c.y <= Board.hfcy:
 								dir = 3
 							else:
 								dir = 2
@@ -1983,7 +2018,7 @@ func _ready() -> void:
 	calculator_bar_ui.finished.connect(func():
 		history.update()
 		stage = Stage.Deploy
-		speed = 1.0 / base_speed
+		time_scale = 1.0 / base_speed
 		save_to_file()
 		
 		Buff.clear(self, [Buff.Duration.ThisMatching, Buff.Duration.ThisChain])

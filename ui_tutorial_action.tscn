@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://da5fjshcjuyrm"]
+
+[ext_resource type="Script" uid="uid://2yvsnp3mriwe" path="res://ui_tutorial_action.gd" id="1_s6vbn"]
+
+[node name="Target" type="ColorRect"]
+mouse_filter = 2
+color = Color(1, 1, 1, 0.5019608)
+script = ExtResource("1_s6vbn")

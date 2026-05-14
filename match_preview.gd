@@ -22,8 +22,6 @@ func find_missing_ones(check_color : int, check_rune : int):
 		for y in Board.cy:
 			for x in Board.cx:
 				var c = Vector2i(x, y)
-				if c == Vector2i(9, 1):
-					c = Vector2i(9, 1)
 				var res : Array[Vector2i] = p.match_with(c, check_color, check_rune)
 				if !res.is_empty():
 					var added = false
@@ -46,6 +44,7 @@ func show():
 	var idx = 0
 	for m in matchings:
 		var gs = []
+		var color = Color(0.0, 0.0, 0.0, 1.0)
 		for c in m.coords:
 			var ok = false
 			for g in gs:
@@ -54,7 +53,7 @@ func show():
 					ok = true
 					break
 				for cc in g:
-					if Board.offset_neighbors(cc, false).has(c):
+					if Board.offset_adjacents(cc, false).has(c):
 						g.append(c)
 						ok = true
 						break
@@ -71,7 +70,7 @@ func show():
 			for i in pts.size():
 				pts[i] = pts[i] - c
 			var l = G.dashed_line_pb.instantiate()
-			l.default_color = Color(0.0, 0.0, 0.0, 1.0)
+			l.default_color = color
 			l.width = 3
 			l.points = pts
 			l.modulate.a = 0.0

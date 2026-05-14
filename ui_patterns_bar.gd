@@ -1,7 +1,7 @@
 extends PanelContainer
 
-@onready var list : Control = $MarginContainer/VBoxContainer/PanelContainer/MarginContainer/List
-@onready var number_text : Label = $MarginContainer/VBoxContainer/HBoxContainer/Label2
+@export var list : Control
+@export var number_text : Label
 
 const item_w = 78
 const item_h = 108
@@ -25,6 +25,7 @@ func get_ui(idx : int):
 func add_ui(p : Pattern):
 	var ui = G.pattern_ui_pb.instantiate()
 	ui.setup(p, false, 3)
+	ui.name = "Pattern%d" % (list.get_child_count() + 1)
 	list.add_child(ui)
 	p.ui = ui
 	var n = list.get_child_count()

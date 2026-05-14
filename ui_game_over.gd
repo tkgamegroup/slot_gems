@@ -11,18 +11,17 @@ extends Control
 func enter():
 	STooltip.close()
 	
+	desc_text.text = tr("game_over_" + G.game_over_mark)
+	G.game_over_mark = ""
+	max_matching_score_text.text = "%d" % G.history.max_matching_score
+	round_text.text = "%d" % G.current_round
+	seed_text.text = "%X" % G.game_rng.seed
 	self.self_modulate.a = 0.0
 	self.show()
 	panel.show()
 	
 	var tween = G.create_game_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
-	
-	desc_text.text = tr("game_over_" + G.game_over_mark)
-	G.game_over_mark = ""
-	max_matching_score_text.text = "%d" % G.history.max_matching_score
-	round_text.text = "%d" % G.current_round
-	seed_text.text = "%X" % G.game_rng.seed
 
 func exit(trans : bool = true):
 	panel.hide()

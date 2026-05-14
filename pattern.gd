@@ -78,7 +78,7 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 			for c in group:
 				var oc = Board.format_coord(Board.cube_to_offset(c_off + c))
 				var cell = Board.get_cell(oc)
-				if !cell || cell.frozen:
+				if !cell || cell.frozen > 0:
 					return [] as Array[Vector2i]
 				coords.append(oc)
 				if external_board.is_empty():

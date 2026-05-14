@@ -40,12 +40,14 @@ w_mount,Mount,坐骑
 w_mount_desc,Place a satisfied Item to this Item in order to form a combine Item. Basiclly new Item have the effects of both.,将一个满足条件的道具放到此道具上来组合一个新道具。通常新道具拥有两个道具的效果。
 w_star_chart,Star Chart,星图
 w_star_chart_desc,"Records the positions of the cells on the Board where Star rune Gems should appear. When achieved, those Gems are eliminated and trigger an effect. Additionally, the Star rune Gems on those cells gain w_floating.",记录了棋盘中应该出现有星星符文宝石的格子位置，当达成时，消除那些宝石并触发效果。另外为那些格子上的星星符文宝石提供w_floating。 
+w_frozen,Frozen,冰冻
+w_frozen_desc,Does not participate in matches. Will not fall when there are empty cells below. Loses 1 layer whenever a match occurs adjacent to it.,不参与匹配。不会因为底下有空的位置而下降。每次旁边有匹配发生减少1层。
 w_nullified,Nullified,无效化
 w_nullified_desc,Score and Mult getting from nullified will become 0.,从无效化中获取的分数跟倍率会变成0。
 w_in_mist,Shrouded In Mist,迷雾笼罩
 w_in_mist_desc,Color and rune unknown.,无法获知颜色与符文。
 w_floating,Floating,漂浮
-w_floating_desc,Gems with Floating will not fall when there are empty cells below.,在棋盘上时，不会因为底下有空的位置而下降。 
+w_floating_desc,Will not fall when there are empty cells below.,不会因为底下有空的位置而下降。 
 curse_red_no_score,Red gems do not score.,红色宝石不会得分。
 curse_orange_no_score,Orange gems do not score.,橙色宝石不会得分。
 curse_green_no_score,Green gems do not score.,绿色宝石不会得分。
@@ -58,10 +60,14 @@ game_over_not_reach_score,Not Reach Target Score,没有达到目标分数
 game_over_not_enough_gems,Not Enough Gems,宝石数量不足
 game_over_sin_lust,Effect Of Sin Lust,罪·色欲的效果
 game_over_sin_gluttony,Effect Of Sin Gluttony,罪·暴食的效果
+tt_cell_frozen,Frozen - %d,冰冻 · %d
+tt_cell_frozen_content,This cell is w_frozen.,这个格子被w_frozen。
 tt_cell_nullified,Nullified,无效化
 tt_cell_nullified_content,This cell is w_nullified.,这个格子被w_nullified。
 tt_cell_in_mist,In Mist,迷雾笼罩
 tt_cell_in_mist_content,This cell is w_in_mist.,这个格子被w_in_mist。
+tt_cell_floating,Floating,漂浮
+tt_cell_floating_content,This cell is w_floating.,这个格子在w_floating。
 wr_enchant_quantity_limit,Gem can have up to 2 enchantments,宝石最多拥有2个附魔
 wr_delete_gem_count_limit,You can’t have less than %d gems,你不能拥有低于%d个宝石
 wr_relics_count_limit,You can have up to %d relics,您最多拥有%d个遗物
@@ -74,6 +80,10 @@ ui_titile_new_game,New Game,新游戏
 ui_titile_collections,Collections,藏品
 ui_titile_options,Options,选项
 ui_titile_quit,Quit,退出
+ui_new_game_title,New Game,新游戏
+ui_new_game_tutorial,Tutorial,教程
+ui_new_game_new_game,New Game,新游戏
+ui_new_game_start,Start,开始
 ui_options_title,Options,选项
 ui_options_game,Game ,游戏
 ui_options_video,Video,视频
@@ -123,7 +133,7 @@ tt_game_upgrade_number_and_min_number,Minimum number of gems required to upgrade
 tt_game_bag_content,Your gems and items.,你的宝石跟道具。
 tt_game_bag_trade_content,Drop the item here to exchange another item.,把道具拖拽到这来交换另一个道具。
 tt_game_menu_title,Game Menu,游戏菜单
-tt_game_tutorial,Tutorial,教程
+tt_game_guide,Guide,指南
 ui_game_relics,Relics,遗物
 ui_game_patterns,Patterns,图案
 ui_game_rolls,Rolls,滚动次数
@@ -145,8 +155,8 @@ ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
 ui_bag_viewer_on_board,On Board,棋盘上
 ui_bag_viewer_in_hand,In Hand,手上
-ui_tutorial_page1," - Drag a gem from [color=cyan]Hand[/color] to [color=cyan]Board[/color] to swap them. (You start with 5 [color=cyan]Swaps[/color] per round)\n - Click the [color=cyan]Play button[/color] to match [color=cyan]Patterns[/color] and score.\n - You pass the round when you reach the target score. When you use up all the [color=cyan]Swaps[/color] but don’t reach the target score, you lose the game.", - 从[color=cyan]手上[/color]拖拽一个宝石到[color=cyan]棋盘[/color]上来交换。（一开始你每回合有5次[color=cyan]交换次数[/color]）\n – 点击[color=cyan]开始按钮[/color]来开始匹配[color=cyan]图案[/color]并得分。\n – 当你达到目标分数时，你通过回合。当你用完所有的[color=cyan]交换次数[/color]却没有达到目标分数，你游戏失败。
-ui_tutorial_page2," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url], also [/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_circle][img]res://images/rune_circle.png[/img][/url][url=rune_star][img]res://images/rune_star.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n – Here are some [color=cyan]Patterns[/color]. They will have specific color or rune requirements.", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url]，还有[url=w_wild][img]res://images/wild.png[/img][/url]。\n – 宝石有3种符文[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_circle][img]res://images/rune_circle.png[/img][/url][url=rune_star][img]res://images/rune_star.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n – 以下是一些[color=cyan]图案[/color]。它们会有特定的颜色或者符文需求。
+ui_guide_page1," - Drag a gem from [color=cyan]Hand[/color] to [color=cyan]Board[/color] to swap them. (You start with 5 [color=cyan]Swaps[/color] per round)\n - Click the [color=cyan]Play button[/color] to match [color=cyan]Patterns[/color] and score.\n - You pass the round when you reach the target score. When you use up all the [color=cyan]Swaps[/color] but don’t reach the target score, you lose the game.", - 从[color=cyan]手上[/color]拖拽一个宝石到[color=cyan]棋盘[/color]上来交换。（一开始你每回合有5次[color=cyan]交换次数[/color]）\n – 点击[color=cyan]开始按钮[/color]来开始匹配[color=cyan]图案[/color]并得分。\n – 当你达到目标分数时，你通过回合。当你用完所有的[color=cyan]交换次数[/color]却没有达到目标分数，你游戏失败。
+ui_guide_page2," - Gems come with 5 colors[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url], also [/url][url=w_wild][img]res://images/wild.png[/img][/url].\n - Gems can have 3 types of runes[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_circle][img]res://images/rune_circle.png[/img][/url][url=rune_star][img]res://images/rune_star.png[/img][/url], also[url=w_omni][img]res://images/rune_omni.png[/img][/url].\n – Here are some [color=cyan]Patterns[/color]. They will have specific color or rune requirements.", - 宝石有5种颜色[url=gem_red][img]res://images/red.png[/img][/url][url=gem_orange][img]res://images/orange.png[/img][/url][url=gem_green][img]res://images/green.png[/img][/url][url=gem_blue][img]res://images/blue.png[/img][/url][url=gem_magenta][img]res://images/magenta.png[/img][/url]，还有[url=w_wild][img]res://images/wild.png[/img][/url]。\n – 宝石有3种符文[url=rune_wave][img]res://images/rune_wave.png[/img][/url][url=rune_circle][img]res://images/rune_circle.png[/img][/url][url=rune_star][img]res://images/rune_star.png[/img][/url]，还有[url=w_omni][img]res://images/rune_omni.png[/img][/url]。\n – 以下是一些[color=cyan]图案[/color]。它们会有特定的颜色或者符文需求。
 ui_shop_item_nothing,Nothing,什么也\n不要
 ui_shop_item_return,Return,返还
 ui_shop_item_increase_swaps,Increase Swaps,增加\n交换次数
@@ -255,11 +265,11 @@ item_desc_Blueberry,Eliminate: Blue gems' base score +{add_value_i} if its value
 item_name_Grape,Grape,葡萄
 item_desc_Grape,Eliminate: Magenta gems' base score +{add_value_i} if its value is below {limit_i}.,消除：品红色宝石的基础分数如果在{limit_i}以下，则+{add_value_i}。
 item_name_Orange,Orange,橙子
-item_desc_Orange,Eliminate: (w_active) Turn a nearby Gem to orange color.,消除：(w_active)把1个附近的宝石变成橙色。
+item_desc_Orange,Eliminate: (w_active) Turn a adjacent Gem to orange color.,消除：(w_active)把1个附近的宝石变成橙色。
 item_name_Apple,Apple,苹果
 item_desc_Apple,Eliminate: 1 random color gems' base score +{add_value_i}.,消除：1个随机颜色宝石的基础分数+{add_value_i}。
 item_name_FishingPod,Fishing Pod,鱼竿
-item_desc_FishingPod,"[c_{bait_i}]With bait\nEliminate: (w_active) Fishing at a nearby gem with Wave rune. If success, score 100x its weight.",[c_{bait_i}]带有鱼饵\n消除：(w_active)在附近的一个带有海浪符文的宝石上钓鱼。如果成功，获得100x它的重量的分数。
+item_desc_FishingPod,"[c_{bait_i}]With bait\nEliminate: (w_active) Fishing at a adjacent gem with Wave rune. If success, score 100x its weight.",[c_{bait_i}]带有鱼饵\n消除：(w_active)在附近的一个带有海浪符文的宝石上钓鱼。如果成功，获得100x它的重量的分数。
 item_name_BettaFish,Betta Fish,斗鱼
 item_desc_BettaFish,Weight: [n10_{weight_i}]KG. \nEliminate: Score 100x weight.,重量：[n10_{weight_i}]KG。\n消除：获得100x重量的分数。
 item_name_ClownFish,Clown Fish,小丑鱼
@@ -385,3 +395,27 @@ relic_name_Pisces,Pisces,双鱼座
 relic_desc_Pisces,When [const_Pisces]: (w_active) Turn 2 random gems into w_wild temporarily.,当[const_Aries]时：(w_active) 使2个随机宝石临时地变为w_wild。
 relic_name_Sandcastle,Sandcastle,沙堡
 relic_desc_Sandcastle,Each socked Gem increase the base score of its color by 9.,每个镶嵌的宝石会使那个颜色的基础分数提高9。
+tutorial_script_1,"[H:M V:75%]Welcome, Adventurer.",[H:M V:75%]欢迎，冒险者。
+tutorial_script_2,[H:M V:75%]A mysterious journey lies ahead.\nEarn enough score to reach the next destination.,[H:M V:75%]一场神秘的旅程正等待着你。\n获得足够的分数以抵达下一个目的地。
+tutorial_script_3,"[H:M V:75%]To earn score, you need to complete the Patterns shown on the right.\nBrowse the Patterns you own.[T:PtternsBar]FOCUS[T:Pattern1]HOVER[T:Pattern2]HOVER[T:Pattern3]HOVER",[H:M V:75%]想要得分，你需要拼凑出右侧的图案。\n浏览你拥有的图案。[T:PatternsBar]FOCUS[T:Pattern1]HOVER[T:Pattern2]HOVER[T:Pattern3]HOVER
+tutorial_script_4,[H:M V:75%]Great.,[H:M V:75%]很好。
+tutorial_script_5,[]RESET_MASKS[H:M V:75%],[]RESET_MASKS[H:M V:75%]要完成图案，你可以从下方把手上的宝石拖拽到棋盘合适的位置上。
+tutorial_script_6,,[H:M V:75%]从下方拖拽宝石，尝试构成图案。[PX:475 PY:278 SX:1010 SY:762]FOCUS[T:Hand]ENABLE[]SWAP
+tutorial_script_7,,[LINE:10 COND:HAS_MATCHED_PATTERNS]IF
+tutorial_script_8,,[H:M V:75%]你选择了一个错误的目标。\n点击撤销按钮回到原先的状态。[T:Undo]ENABLE[T:Undo]CLICK
+tutorial_script_9,,[LINE:6]GOTO
+tutorial_script_10,,[H:M V:75%]很好。\n点击播放按钮开始消除宝石并得分。[T:Play]ENABLE[T:Play]CLICK
+tutorial_script_11,,[H:M V:75%]你可以多次使用播放，但是交换次数用完后进行播放将结算最后的分数。
+tutorial_script_12,,[H:M V:75%]记住，同一个宝石匹配到多个图案时，只会计算一次分数。
+tutorial_script_13,,[H:M V:75%]连锁可以使获得分数的倍率提高。\n在宝石消除后，下落的宝石再次构成图案，则称为连锁。
+tutorial_script_14,,[H:M V:75%]接下来我们尝试连锁。
+tutorial_script_15,,[SEED:6AA2F68]NEW_GAME
+tutorial_script_16,,[H:M V:75%]在两次交换中尝试连锁。[T:Hand]ENABLE[N:2]SWAP
+tutorial_script_17,,[LINE:21 COND:HAS_CHAINS]IF
+tutorial_script_18,,[H:M V:75%]你选择了一个错误的目标。\n点击撤销按钮回到原先的状态。[T:Undo]ENABLE[T:Undo]CLICK
+tutorial_script_19,,[H:M V:75%]再撤销一次。[T:Undo]ENABLE[T:Undo]CLICK
+tutorial_script_20,,[LINE:16]GOTO
+tutorial_script_21,,[H:M V:75%]很好。\n点击播放按钮。[T:Play]ENABLE[T:Play]CLICK
+tutorial_script_22,,[H:M V:75%]连锁是你获得高分的主要技巧，记得多多使用。
+tutorial_script_23,,[H:M V:75%]当你对棋盘不满意时，可以消耗一次交换次数来进行刷新。\n点击刷新按钮。[T:Shuffle]ENABLE[T:Shuffle]CLICK
+tutorial_script_24,,[H:M V:75%]教程结束。

@@ -52,7 +52,7 @@ theme/custom="uid://lm57pm3v4aq7"
 [internationalization]
 
 locale/translation_remaps={
-"res://images/tutorial/elements_en.png": PackedStringArray("res://images/tutorial/elements_zh.png:zh_CN")
+"res://images/guide/elements_en.png": PackedStringArray("res://images/guide/elements_zh.png:zh_CN")
 }
 locale/translations=PackedStringArray("res://language/language.en.translation", "res://language/language.zh.translation")
 locale/locale_filter_mode=0

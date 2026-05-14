@@ -5,6 +5,8 @@ extends Control
 @export var options_button : Button
 @export var main_menu_button : Button
 @export var quit_to_desktop_button : Button
+@export var seed_text : Label
+@export var copy_seed_button : Button
 @export var auto_place_items_button : Button
 @export var win_button : Button
 @export var lose_button : Button
@@ -14,6 +16,7 @@ func enter():
 	SSound.music_less_clear()
 	STooltip.close()
 	
+	seed_text.text = "%X" % G.game_rng.seed
 	self.self_modulate.a = 0.0
 	self.show()
 	panel.show()
@@ -67,6 +70,9 @@ func _ready() -> void:
 	quit_to_desktop_button.pressed.connect(func():
 		G.save_to_file()
 		get_tree().quit()
+	)
+	copy_seed_button.pressed.connect(func():
+		DisplayServer.clipboard_set(seed_text.text)
 	)
 	auto_place_items_button.pressed.connect(func():
 		SSound.music_more_clear()

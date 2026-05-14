@@ -312,7 +312,7 @@ func stop():
 		testing_label.text = ""
 	testing = false
 
-func time_out():
+func timeout():
 	if G.title_ui.visible || G.stage == G.Stage.Deploy || G.stage >= G.Stage.GameOver:
 		if G.title_ui.visible:
 			G.title_ui.hide()
@@ -419,8 +419,6 @@ func get_missing_one_places(board : Dictionary = {}):
 	return ret
 
 func move(board : Dictionary, hand : Array, moves : Array, coord : Vector2i, coord_offseted : Vector2i, index : int):
-	if hand[index].type == board[coord].type:
-		var a = 1
 	var temp = hand[index]
 	hand[index] = board[coord]
 	board[coord] = temp
@@ -552,28 +550,35 @@ func auto_play():
 			if !changed:
 				break
 	else:
-		if SUtils.temp_board_matched_cells(board).is_empty():
-			var eliminated_layers = []
-			var missings = get_missing_one_places(board)
-			var max_chains = 0
-			var max_chains_moves = []
-			debug_file = FileAccess.open("res://debug.txt", FileAccess.WRITE)
-			debug_file.store_string("=====Init=====\n")
-			debug_file.store_string("Board: " + var_to_str(board).replace("\n", "") + "\n")
-			debug_file.store_string("Missings: " + var_to_str(missings).replace("\n", "") + "\n")
-			debug_file.store_string("==============\n")
-			for p in missings:
-				var temp_board = board.duplicate(true)
-				var temp_hand = hand.duplicate(true)
-				var temp_eliminated_layers = eliminated_layers.duplicate(true)
-				var current_moves = []
-				var chains = evolve_board_to_max_chains(temp_board, temp_hand, temp_eliminated_layers, current_moves, swaps, p)
-				if chains > max_chains:
-					max_chains = chains
-					max_chains_moves = current_moves.duplicate(true)
-			moves = max_chains_moves.duplicate(true)
-			debug_file.store_string("FINAL MOVES: " + var_to_str(moves).replace("\n", "") + "\n")
-			debug_file.close()
+		var eliminated_layers = []
+		while true:
+			var matcheds = SUtils.temp_board_matched_cells(board)
+			if matcheds.is_empty():
+				board = SUtils.get_board_data()
+				break
+			collect_eliminated_layers(matcheds, eliminated_layers)
+			SUtils.temp_board_clear_matcheds(board)
+		
+		var missings = get_missing_one_places(board)
+		var max_chains = 0
+		var max_chains_moves = []
+		debug_file = FileAccess.open("res://debug.txt", FileAccess.WRITE)
+		debug_file.store_string("=====Init=====\n")
+		debug_file.store_string("Board: " + var_to_str(board).replace("\n", "") + "\n")
+		debug_file.store_string("Missings: " + var_to_str(missings).replace("\n", "") + "\n")
+		debug_file.store_string("==============\n")
+		for p in missings:
+			var temp_board = board.duplicate(true)
+			var temp_hand = hand.duplicate(true)
+			var temp_eliminated_layers = eliminated_layers.duplicate(true)
+			var current_moves = []
+			var chains = evolve_board_to_max_chains(temp_board, temp_hand, temp_eliminated_layers, current_moves, swaps, p)
+			if chains > max_chains:
+				max_chains = chains
+				max_chains_moves = current_moves.duplicate(true)
+		moves = max_chains_moves.duplicate(true)
+		debug_file.store_string("FINAL MOVES: " + var_to_str(moves).replace("\n", "") + "\n")
+		debug_file.close()
 	if moves.is_empty():
 		no_move_played += 1
 	else:
@@ -626,4 +631,4 @@ func _ready() -> void:
 		for d in listen_events:
 			if event == d.event:
 				d.times += 1
-	timer.timeout.connect(time_out)
+	timer.timeout.connect(timeout)
