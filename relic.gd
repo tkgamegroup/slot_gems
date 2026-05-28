@@ -20,7 +20,7 @@ func setup(n : String):
 	name = n
 	if name == "PaintingOfRed":
 		image_id = 1
-		extra["value_i"] = 27
+		extra["value_i"] = 24
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -31,7 +31,7 @@ func setup(n : String):
 					G.change_modifier("red_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfOrange":
 		image_id = 2
-		extra["value_i"] = 27
+		extra["value_i"] = 24
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -42,7 +42,7 @@ func setup(n : String):
 					G.change_modifier("orange_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfGreen":
 		image_id = 3
-		extra["value_i"] = 27
+		extra["value_i"] = 24
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -53,7 +53,7 @@ func setup(n : String):
 					G.change_modifier("green_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfBlue":
 		image_id = 4
-		extra["value_i"] = 27
+		extra["value_i"] = 24
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -64,7 +64,7 @@ func setup(n : String):
 					G.change_modifier("blue_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfMagenta":
 		image_id = 5
-		extra["value_i"] = 27
+		extra["value_i"] = 24
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -75,7 +75,7 @@ func setup(n : String):
 					G.change_modifier("magenta_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfWave":
 		image_id = 6
-		extra["value_i"] = 18
+		extra["value_i"] = 16
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -88,7 +88,7 @@ func setup(n : String):
 					G.add_score(extra["value_i"], Board.get_pos(c))
 	elif name == "PaintingOfCircle":
 		image_id = 7
-		extra["value_i"] = 18
+		extra["value_i"] = 16
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -101,7 +101,7 @@ func setup(n : String):
 					G.add_score(extra["value_i"], Board.get_pos(c))
 	elif name == "PaintingOfStar":
 		image_id = 8
-		extra["value_i"] = 18
+		extra["value_i"] = 16
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
@@ -117,10 +117,23 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("extra_range_i", 1)
+					G.change_modifier("extra_range_i", 1)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("extra_range_i", 0)
+					G.change_modifier("extra_range_i", -1)
+	elif name == "ScatterBlast":
+		image_id = 9
+		extra["range_i"] = 1
+		extra["power_i"] = 15
+		on_event = func(event : int, tween : Tween, data):
+			if event == C.Event.GainRelic:
+				if data == self:
+					G.change_modifier("extra_explode_range_i", +extra["range_i"])
+					G.change_modifier("extra_explode_power_i", -extra["power_i"])
+			elif event == C.Event.LostRelic:
+				if data == self:
+					G.change_modifier("extra_explode_range_i", -extra["range_i"])
+					G.change_modifier("extra_explode_power_i", +extra["power_i"])
 	elif name == "Recorder":
 		image_id = 10
 		price = 5

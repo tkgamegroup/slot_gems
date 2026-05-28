@@ -41,10 +41,8 @@ func show():
 		tween.kill()
 		tween = null
 	tween = G.create_game_tween()
-	var idx = 0
+	var gs = []
 	for m in matchings:
-		var gs = []
-		var color = Color(0.0, 0.0, 0.0, 1.0)
 		for c in m.coords:
 			var ok = false
 			for g in gs:
@@ -61,29 +59,31 @@ func show():
 				var g : Array[Vector2i] = []
 				g.append(c)
 				gs.append(g)
-		for g in gs:
-			var pts = SMath.weld_lines(SUtils.get_cells_border(g), 8.0)
-			var c = Vector2(0.0, 0.0)
-			for pt in pts:
-				c += pt
-			c /= pts.size()
-			for i in pts.size():
-				pts[i] = pts[i] - c
-			var l = G.dashed_line_pb.instantiate()
-			l.default_color = color
-			l.width = 3
-			l.points = pts
-			l.modulate.a = 0.0
-			l.scale = Vector2(2.0, 2.0)
-			l.position = c
-			var subtween = G.create_game_tween()
-			subtween.tween_interval(0.05 * idx)
-			subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
-			subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
-			tween.parallel()
-			tween.tween_subtween(subtween)
-			lines.append(l)
-			Board.ui.overlay.add_child(l)
+	var idx = 0
+	var color = Color(0.0, 0.0, 0.0, 1.0)
+	for g in gs:
+		var pts = SMath.weld_lines(SUtils.get_cells_border(g), 8.0)
+		var c = Vector2(0.0, 0.0)
+		for pt in pts:
+			c += pt
+		c /= pts.size()
+		for i in pts.size():
+			pts[i] = pts[i] - c
+		var l = G.dashed_line_pb.instantiate()
+		l.default_color = color
+		l.width = 3
+		l.points = pts
+		l.modulate.a = 0.0
+		l.scale = Vector2(2.0, 2.0)
+		l.position = c
+		var subtween = G.create_game_tween()
+		subtween.tween_interval(0.05 * idx)
+		subtween.tween_property(l, "scale", Vector2(1.0, 1.0), 0.2)
+		subtween.parallel().tween_property(l, "modulate:a", 1.0, 0.5)
+		tween.parallel()
+		tween.tween_subtween(subtween)
+		lines.append(l)
+		Board.ui.overlay.add_child(l)
 		idx += 1
 	tween.tween_callback(func():
 		tween = null

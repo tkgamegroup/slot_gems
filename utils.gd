@@ -111,7 +111,7 @@ static func parse_tagged_string(text: String) -> Array:
 		ret.append(Pair.new(current_tags.split(" "), current_string))
 	return ret
 
-const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_consumable", "w_place", "w_quick", "w_consumed", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_star_chart", "w_frozen", "w_nullified", "w_in_mist", "w_floating"]
+const words = ["w_wild", "w_omni", "w_eliminate", "w_active", "w_trigger", "w_durability", "w_place", "w_quick", "w_aura", "w_range", "w_power", "w_tradable", "w_mount", "w_star_chart", "w_frozen", "w_nullified", "w_in_mist", "w_floating"]
 static func format_text(text : String, with_color : bool, with_url : bool, used_words : Array = [], referenced_gems : Array = [], referenced_constellations : Array = []) -> String:
 	var ret = ""
 	ret = replacing_gem_tag(text, with_color, with_url, referenced_gems)
@@ -243,7 +243,7 @@ static func get_cells_border(coords : Array[Vector2i]):
 static func get_hand_data():
 	var ret = []
 	for g in Hand.grabs:
-		ret.append({"type":g.type, "rune":g.rune, "score":g.get_score()})
+		ret.append(Gem.create_temp_data(g))
 	return ret
 
 static func get_board_data():
@@ -253,9 +253,9 @@ static func get_board_data():
 			var c = Vector2i(x, y)
 			var g = Board.get_gem_at(c)
 			if g:
-				ret[c] = {"type":g.type, "rune":g.rune, "score":g.get_score()}
+				ret[c] = Gem.create_temp_data(g)
 			else:
-				ret[c] = {"type":Gem.None, "rune":Gem.None, "score":0}
+				ret[c] = Gem.create_temp_data(null)
 	return ret
 
 static func temp_board_matched_cells(board : Dictionary):
@@ -266,7 +266,7 @@ static func temp_board_matched_cells(board : Dictionary):
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y), 0, 0, board)
 				for c in res:
 					map[c] = 1
-	return map
+	return map.keys()
 
 static func temp_board_clear_matcheds(board : Dictionary):
 	var map = {}
@@ -304,3 +304,28 @@ static func temp_board_clear_matcheds(board : Dictionary):
 				var oi = board[cc]
 				board[cc] = null
 				board[c] = oi
+
+static func temp_board_potential_trigger_cells(board : Dictionary):
+	var map = {}
+	var matcheds = temp_board_matched_cells(board)
+	for c in matcheds:
+		map[c] = 1
+		for cc in Board.offset_adjacents(c):
+			if Board.is_valid(cc):
+				map[cc] = 1
+	for c in map.keys():
+		var g = board[c]
+		if g.name == "Bomb":
+			for cc in Board.offset_adjacents(c):
+				if Board.is_valid(cc):
+					map[cc] = 1
+	return map.keys()
+
+static func temp_board_trigger_cells(board : Dictionary):
+	var ret = {}
+	var p = temp_board_potential_trigger_cells(board)
+	for c in p:
+		var g = board[c]
+		if g.tags.has("trigger"):
+			ret[c] = 1
+	return ret.keys()

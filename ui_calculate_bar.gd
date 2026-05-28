@@ -43,8 +43,7 @@ func calculate_proc():
 			SSound.se_calc1.play()
 		)
 		SAnimation.jump(tween, chains_text, 4, 0.4 * G.time_scale, func():
-			#chains_text.text = "%.2f" % result["chain_mult"]
-			pass
+			chains_text.text.text = "%.2f" % result["chain_mult"]
 		)
 		tween.tween_property(cross1, "scale:x", 1.0, 0.1 * G.time_scale).from(0.0)
 		tween.tween_interval(0.3 * G.time_scale)

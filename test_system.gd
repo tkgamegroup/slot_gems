@@ -11,21 +11,35 @@ enum TaskSteps
 	GetResult
 }
 
+enum ActionType
+{
+	Manual,
+	OnlyShuffle,
+	AutoAI0, # just matching colors
+	AutoAI1, # try to max chains
+	AutoAI2  # try to max triggers
+}
+
+const folder = "G:/slot_gems/tests"
+
 var filename : String
 var samples : int = 1000
 var sample_idx : int
 var groups : int = 1
 var group_idx : int
 var process : int = 0
+var rounds : int = 1
 var headless : bool = false
 var use_save : bool = false
 var random_seed : bool = false
 var overwrite_target_score : int = -1
 var reroll : bool = false
-var variables : Array[Dictionary]
+var action_type : int = ActionType.AutoAI0
+var watches : Array[Dictionary]
+var inputs : Array[Dictionary]
 var listen_events : Array[Dictionary]
+var variables : Array[Dictionary]
 var extras : Array[Dictionary]
-var ai_level : int = 0
 
 var on_event : Callable
 var testing : bool = false
@@ -34,11 +48,12 @@ var step : int
 
 func format_filename():
 	if groups > 1:
-		return "res://tests/%s_g%d.csv" % [filename, group_idx]
-	return "res://tests/%s.csv" % filename
+		return "%s/%s_g%d.csv" % [folder, filename, group_idx]
+	return "%s/%s.csv" % [folder, filename]
 
 var file : FileAccess = null
-var debug_file : FileAccess = null
+var ai_debug : bool = false
+var ai_debug_file : FileAccess = null
 
 func begin_write():
 	if !filename.is_empty():
@@ -59,22 +74,37 @@ func write(s : String):
 
 func write_head():
 	begin_write()
-	var line = "Score"
-	for d in listen_events:
-		line += ",%s" % C.Event.find_key(d.event)
+	var line = ""
+	for i in rounds:
+		if !line.is_empty():
+			line += ","
+		line += "Score"
+		if rounds > 1:
+			line += "(r%d)" % (i + 1)
+		for d in listen_events:
+			line += ",%s" % C.Event.find_key(d.event)
+			if rounds > 1:
+				line += "(r%d)" % (i + 1)
 	write(line)
 	end_write()
 
+var record_line = ""
 func write_sample():
-	begin_write()
-	var line = "%d" % G.score
+	if !record_line.is_empty():
+		record_line += ","
+	record_line += "%d" % G.score
 	for d in listen_events:
-		line += ",%d" % d.times
-	write(line)
-	end_write()
+		record_line += ",%d" % d.times
+	if G.current_round == rounds:
+		begin_write()
+		write(record_line)
+		end_write()
 
 func write_game_status():
 	begin_write()
+	write("#Start Datetime: %s" % Time.get_datetime_string_from_system(false, true))
+	write("#Rounds: %d" % rounds)
+	write("#Action: %s" % str(ActionType.find_key(action_type)))
 	var cx = Board.cx
 	var cy = Board.cy
 	write("#Board Size: %dx%d(%d cells)" % [cx, cy, cx * cy])
@@ -84,7 +114,7 @@ func write_game_status():
 	var blue_num = 0
 	var magenta_num = 0
 	var wild_num = 0
-	var special_gems_str = ""
+	var special_gems = []
 	for g in G.gems:
 		if g.name == "":
 			match g.type:
@@ -95,33 +125,76 @@ func write_game_status():
 				Gem.ColorMagenta: magenta_num += 1
 				Gem.ColorWild: wild_num += 1
 		else:
-			if !special_gems_str.is_empty():
-				special_gems_str += ", "
-			special_gems_str += g.name
+			special_gems.append(g.name)
 	write("#Red: %d, Orange: %d, Green: %d, Blue: %d, Magenta: %d, Wild: %d" % [red_num, orange_num, green_num, blue_num, magenta_num, wild_num])
-	write("#Special Gems: %s" % special_gems_str)
+	if !special_gems.is_empty():
+		var s = ""
+		for n in special_gems:
+			if !s.is_empty():
+				s += ", "
+		write("#Special Gems: %s" % s)
 	var patterns_str = ""
 	for p in G.patterns:
 		if !patterns_str.is_empty():
 			patterns_str += ", "
 		patterns_str += p.name
 	write("#Patterns: %s" % patterns_str)
-	var relics_str = ""
+	var relics = []
 	for r in G.relics:
-		if !relics_str.is_empty():
-			relics_str += ", "
-		relics_str += r.name
-	write("#Relics: %s" % relics_str)
+		relics.append(r.name)
+	if !relics.is_empty():
+		var s = ""
+		for n in relics:
+			if !s.is_empty():
+				s += ", "
+		write("#Relics: %s" % s)
 	write("#Swaps: %d" % G.swaps_per_round)
 	var modifiers_str = ""
 	for k in G.modifiers.keys():
-		if G.modifiers[k] != 0:
+		if G.modifiers[k] != G.modifier_defaults[k]:
 			if !modifiers_str.is_empty():
 				modifiers_str += ", "
 			modifiers_str += "%s: %d" % [k, G.modifiers[k]]
 	if !modifiers_str.is_empty():
 		write("#Modifiers: %s" % modifiers_str)
+	if !special_gems.is_empty():
+		var dic = {}
+		for n in special_gems:
+			dic[n] = 1
+		for n in dic:
+			write("#Special Gem - %s: " % n)
+			var g = Gem.new()
+			g.setup(n)
+			var tt = g.get_tooltip()
+			write("#%s" % tt[0].first)
+			var sp = tt[0].second.split("\n")
+			for l in sp:
+				write("#%s" % l)
+	if !relics.is_empty():
+		var dic = {}
+		for n in relics:
+			dic[n] = 1
+		for n in dic:
+			write("#Relic - %s: " % n)
+			var r = Relic.new()
+			r.setup(n)
+			var tt = r.get_tooltip()
+			write("#%s" % tt[0].first)
+			var sp = tt[0].second.split("\n")
+			for l in sp:
+				write("#%s" % l)
 	end_write()
+
+func begin_write_ai():
+	ai_debug_file = FileAccess.open("res://ai_debug.txt", FileAccess.READ_WRITE)
+	ai_debug_file.seek_end()
+
+func end_write_ai():
+	ai_debug_file.close()
+	ai_debug_file = null
+
+func write_ai(s : String):
+	ai_debug_file.store_string(s + "\n")
 
 func read_result(fn : String):
 	var result = {}
@@ -130,49 +203,48 @@ func read_result(fn : String):
 	var n = 0
 	var file = FileAccess.open(fn, FileAccess.READ)
 	while !file.eof_reached():
-		var data = file.get_csv_line()
-		if !data[0].is_empty():
-			if data[0][0] == "#":
-				var line = ""
-				for t in data:
-					if !line.is_empty():
-						line += ","
-					line += t
-				result["comments"].append(line)
+		var csv_line = file.get_csv_line()
+		if !csv_line[0].is_empty():
+			if csv_line[0][0] == "#":
+				var comments = ""
+				for t in csv_line:
+					if !comments.is_empty():
+						comments += ","
+					comments += t
+				result["comments"].append(comments)
 			else:
 				if columns.is_empty():
-					columns = data
-					for i in data.size():
-						result[columns[i]] = {"avg":0.0,"max":-10000.0,"min":+10000.0,"max_i":-1,"min_i":-1,"datas":[]}
+					columns = csv_line
+					for i in csv_line.size():
+						result[columns[i]] = {"avg":0.0,"med":0.0,"max":0.0,"min":0.0,"max_i":-1,"min_i":-1,"datas":[]}
 				else:
-					for i in data.size():
-						var v = float(data[i])
+					for i in csv_line.size():
+						var v = float(csv_line[i])
 						var col = result[columns[i]]
-						col.avg += v
-						if v > col.max:
-							col.max = v
-							col.max_i = n
-						if v < col.min:
-							col.min = v
-							col.min_i = n
 						col.datas.append(v)
 					n += 1
 	for i in columns.size():
 		var col = result[columns[i]]
-		col.avg = col.avg / n
+		col.avg = SMath.array_avg(col.datas)
+		col.med = SMath.array_med(col.datas)
+		col.max_i = SMath.array_max_i(col.datas)
+		col.min_i = SMath.array_min_i(col.datas)
+		col.max = col.datas[col.max_i]
+		col.min = col.datas[col.min_i]
 	return result
 
 func load_config(name : String = "config"):
 	var config = ConfigFile.new()
-	if config.load("res://tests/%s.ini" % name) == OK:
+	if config.load("%s/%s.ini" % [folder, name]) == OK:
 		filename = config.get_value("", "filename", "")
+		rounds = config.get_value("", "rounds", 1)
 		samples = config.get_value("", "samples", 1)
 		groups = config.get_value("", "groups", 1)
 		process = config.get_value("", "process", 0)
 		headless = config.get_value("", "headless", false)
 		use_save = config.get_value("", "use_save", false)
 		reroll = config.get_value("", "reroll", false)
-		ai_level = config.get_value("", "ai_level", 0)
+		action_type = config.get_value("", "action_type", ActionType.AutoAI0)
 		variables = config.get_value("", "variables", [] as Array[Dictionary])
 		listen_events = config.get_value("", "listen_events", [] as Array[Dictionary])
 		extras = config.get_value("", "extras", [] as Array[Dictionary])
@@ -180,17 +252,18 @@ func load_config(name : String = "config"):
 func save_config(name : String = "config"):
 	var config = ConfigFile.new()
 	config.set_value("", "filename", filename)
+	config.set_value("", "rounds", rounds)
 	config.set_value("", "samples", samples)
 	config.set_value("", "groups", groups)
 	config.set_value("", "process", process)
 	config.set_value("", "headless", headless)
 	config.set_value("", "use_save", use_save)
 	config.set_value("", "reroll", reroll)
-	config.set_value("", "ai_level", ai_level)
+	config.set_value("", "action_type", action_type)
 	config.set_value("", "variables", variables)
 	config.set_value("", "listen_events", listen_events)
 	config.set_value("", "extras", extras)
-	config.save("res://tests/%s.ini" % name)
+	config.save("%s/%s.ini" % [folder, name])
 
 func has_matched_pattern():
 	for y in Board.cy:
@@ -200,6 +273,24 @@ func has_matched_pattern():
 				if !res.is_empty():
 					return true
 	return false
+
+func add_watch(type : String, name : String):
+	watches.append({"type":type,"name":name,"times":0})
+
+func remove_watch(name : String):
+	for w in watches:
+		if w.name == name:
+			watches.erase(w)
+			break
+
+func add_input(type : String, name : String, base : int, val1 : int, val2 : int):
+	inputs.append({"type":type,"name":name,"base":base,"val1":val1,"val2":val2})
+
+func remove_input(name : String):
+	for i in inputs:
+		if i.name == name:
+			inputs.erase(i)
+			break
 
 func add_listen_event(ev : int):
 	listen_events.append({"event":ev,"times":0})
@@ -286,24 +377,29 @@ func start(base_group : int = 0, groups_num : int = -1):
 	step = TaskSteps.Standby
 	testing = true
 	
-	if headless:
-		if groups_num == -1:
-			groups_num = groups
-		for i in groups_num:
-			group_idx = base_group + i
-			for j in samples:
-				sample_idx = j
-				reset()
-				if j == 0:
-					FileAccess.open(format_filename(), FileAccess.WRITE)
-					write_game_status()
-					write_head()
-				auto_play()
-				write_sample()
-				SUtils.remove_event_listeners(Board, self)
-		stop()
+	if action_type == ActionType.Manual:
+		if G.title_ui.visible:
+			G.title_ui.hide()
+		reset()
 	else:
-		timer.start()
+		if headless:
+			if groups_num == -1:
+				groups_num = groups
+			for i in groups_num:
+				group_idx = base_group + i
+				for j in samples:
+					sample_idx = j
+					reset()
+					if j == 0:
+						FileAccess.open(format_filename(), FileAccess.WRITE)
+						write_game_status()
+						write_head()
+					auto_play()
+					write_sample()
+					SUtils.remove_event_listeners(Board, self)
+			stop()
+		else:
+			timer.start()
 
 func stop():
 	timer.stop()
@@ -357,8 +453,21 @@ func timeout():
 			
 			write_sample()
 			
-			step = TaskSteps.Standby
-			SUtils.remove_event_listeners(Board, self)
+			if G.current_round == rounds:
+				step = TaskSteps.Standby
+				SUtils.remove_event_listeners(Board, self)
+			else:
+				if false && G.score < G.target_score:
+					var n = (rounds - G.current_round) * (1 + listen_events.size())
+					for i in n:
+						record_line += ",N/A"
+					begin_write()
+					write(record_line)
+					end_write()
+					step = TaskSteps.Standby
+				else:
+					G.next_round()
+					step = TaskSteps.Play
 
 func get_sorted_hand(hand : Array, color : int):
 	var ret = []
@@ -391,7 +500,7 @@ func has_missing_one_place(board : Dictionary = {}):
 						return true
 	return false
 
-func get_missing_one_places(board : Dictionary = {}):
+func get_missing_one_places(board):
 	var ret = []
 	for p in G.patterns:
 		for y in Board.cy:
@@ -418,6 +527,17 @@ func get_missing_one_places(board : Dictionary = {}):
 	)
 	return ret
 
+func get_missing_one_places_by_color(board, color : int):
+	var ret = []
+	for p in G.patterns:
+		for y in Board.cy:
+			for x in Board.cx:
+				var c = Vector2i(x, y)
+				var res : Array[Vector2i] = p.match_with(c, color, 0, board)
+				if !res.is_empty():
+					ret.append(res[0])
+	return ret
+
 func move(board : Dictionary, hand : Array, moves : Array, coord : Vector2i, coord_offseted : Vector2i, index : int):
 	var temp = hand[index]
 	hand[index] = board[coord]
@@ -427,15 +547,21 @@ func move(board : Dictionary, hand : Array, moves : Array, coord : Vector2i, coo
 func calc_move_matcheds_change(board : Dictionary, coord : Vector2i, g : Dictionary):
 	var n1 = SUtils.temp_board_matched_cells(board).size()
 	var temp = board[coord]
-	board[coord] = {"type":g.type, "rune":g.rune, "score":g.score}
+	board[coord] = g.duplicate(true)
 	var n2 = SUtils.temp_board_matched_cells(board).size()
 	board[coord] = temp
 	return n2 - n1
 
-func collect_eliminated_layers(matcheds : Dictionary, eliminated_layers : Array):
-	var coords = matcheds.keys()
+func calc_move_triggers(board : Dictionary, coord : Vector2i, g : Dictionary):
+	var temp = board[coord]
+	board[coord] = g.duplicate(true)
+	var n = SUtils.temp_board_trigger_cells(board).size()
+	board[coord] = temp
+	return n
+
+func collect_eliminated_layers(matcheds : Array, eliminated_layers : Array):
 	var layer = {}
-	for c in coords:
+	for c in matcheds:
 		layer.get_or_add(c.x, []).append(c.y)
 	for x in layer.keys():
 		layer[x].sort()
@@ -448,6 +574,12 @@ func elimination_contains(eliminated_layers : Array, coord : Vector2i):
 			for y in l[x]:
 				if coord == Vector2i(x, y):
 					return true
+	return false
+
+func elimination_contains_one_of(eliminated_layers : Array, coords : Array):
+	for c in coords:
+		if elimination_contains(eliminated_layers, c):
+			return true
 	return false
 
 func offset_by_elimination(eliminated_layers : Array, coord : Vector2i):
@@ -484,15 +616,24 @@ func evolve_board_to_max_chains(board : Dictionary, hand : Array, eliminated_lay
 			break
 	if !moves.is_empty():
 		var initial_board = board.duplicate(true)
-		debug_file.store_string("=====ATTAMP (%d, %d)<=> %d =====\n" % [moves[0].coord.x, moves[0].coord.y, moves[0].index])
+		if ai_debug:
+			begin_write_ai()
+			write_ai("=====ATTAMP (%d, %d)<=> %d =====" % [moves[0].coord.x, moves[0].coord.y, moves[0].index])
+			end_write_ai()
 		while true:
-			debug_file.store_string("Board: " + var_to_str(board).replace("\n", "") + "\n")
+			if ai_debug:
+				begin_write_ai()
+				write_ai("Board: " + var_to_str(board).replace("\n", ""))
+				end_write_ai()
 			var matcheds = SUtils.temp_board_matched_cells(board)
 			if matcheds.is_empty():
 				if swaps == 0:
 					break
 				var missings = get_missing_one_places(board)
-				debug_file.store_string("Missings: " + var_to_str(missings).replace("\n", "") + "\n")
+				if ai_debug:
+					begin_write_ai()
+					write_ai("Missings: " + var_to_str(missings).replace("\n", ""))
+					end_write_ai()
 				var ok = false
 				for p in missings:
 					if eliminated_layers.is_empty() || affected_by_elimination(eliminated_layers, p.all_coords):
@@ -502,7 +643,10 @@ func evolve_board_to_max_chains(board : Dictionary, hand : Array, eliminated_lay
 							for i in sorted_hand:
 								if swaps > 0:
 									swaps -= 1
-									debug_file.store_string("Pick: (%d, %d) <=> %d\n" % [p.coord.x, p.coord.y, i])
+									if ai_debug:
+										begin_write_ai()
+										write_ai("Pick: (%d, %d) <=> %d" % [p.coord.x, p.coord.y, i])
+										end_write_ai()
 									move(board, hand, moves, p.coord, coord, i)
 									ok = true
 									break
@@ -515,8 +659,11 @@ func evolve_board_to_max_chains(board : Dictionary, hand : Array, eliminated_lay
 				chains += 1
 				collect_eliminated_layers(matcheds, eliminated_layers)
 				SUtils.temp_board_clear_matcheds(board)
-		debug_file.store_string("MOVES: " + var_to_str(moves).replace("\n", "") + "\n")
-		debug_file.store_string("==========\n")
+		if ai_debug:
+			begin_write_ai()
+			write_ai("MOVES: " + var_to_str(moves).replace("\n", ""))
+			write_ai("==========")
+			end_write_ai()
 	return chains
 
 func swap_gems(coord : Vector2i, index : int):
@@ -533,52 +680,109 @@ func auto_play():
 	var swaps = G.swaps
 	var moves = []
 	
-	if ai_level == 0:
-		while true:
+	if action_type != ActionType.OnlyShuffle:
+		if action_type == ActionType.AutoAI0:
+			while true:
+				var changed = false
+				var missings = get_missing_one_places(board)
+				for p in missings:
+					if swaps > 0:
+						var sorted_hand = get_sorted_hand(hand, p.color)
+						for i in sorted_hand:
+							var coord = p.coord
+							if calc_move_matcheds_change(board, coord, hand[i]) > 0:
+								swaps -= 1
+								move(board, hand, moves, coord, coord, i)
+								changed = true
+								break
+				if !changed:
+					break
+		elif action_type == ActionType.AutoAI1:
+			var eliminated_layers = []
+			while true:
+				var matcheds = SUtils.temp_board_matched_cells(board)
+				if matcheds.is_empty():
+					board = SUtils.get_board_data()
+					break
+				collect_eliminated_layers(matcheds, eliminated_layers)
+				SUtils.temp_board_clear_matcheds(board)
+			
 			var missings = get_missing_one_places(board)
-			var changed = false
+			var max_chains = 0
+			var max_chains_moves = []
+			if ai_debug:
+				ai_debug_file = FileAccess.open("res://ai_debug.txt", FileAccess.WRITE)
+				ai_debug_file.close()
+				begin_write_ai()
+				write_ai("=====Init=====")
+				write_ai("Board: " + var_to_str(board).replace("\n", ""))
+				write_ai("Missings: " + var_to_str(missings).replace("\n", ""))
+				write_ai("==============")
+				end_write_ai()
 			for p in missings:
+				if elimination_contains_one_of(eliminated_layers, p.all_coords) || affected_by_elimination(eliminated_layers, p.all_coords):
+					continue
+				var temp_board = board.duplicate(true)
+				var temp_hand = hand.duplicate(true)
+				var temp_eliminated_layers = []
+				var current_moves = []
+				var chains = evolve_board_to_max_chains(temp_board, temp_hand, temp_eliminated_layers, current_moves, swaps, p)
+				if chains > max_chains:
+					max_chains = chains
+					max_chains_moves = current_moves.duplicate(true)
+			moves = max_chains_moves.duplicate(true)
+			if ai_debug:
+				begin_write_ai()
+				write_ai("FINAL MOVES: " + var_to_str(moves).replace("\n", ""))
+				end_write_ai()
+		elif action_type == ActionType.AutoAI2:
+			while true:
+				var changed = false
 				if swaps > 0:
-					var sorted_hand = get_sorted_hand(hand, p.color)
-					for i in sorted_hand:
-						var coord = p.coord
-						if calc_move_matcheds_change(board, coord, hand[i]) > 0:
-							swaps -= 1
-							move(board, hand, moves, coord, coord, i)
-							changed = true
-							break
-			if !changed:
-				break
-	else:
-		var eliminated_layers = []
-		while true:
-			var matcheds = SUtils.temp_board_matched_cells(board)
-			if matcheds.is_empty():
-				board = SUtils.get_board_data()
-				break
-			collect_eliminated_layers(matcheds, eliminated_layers)
-			SUtils.temp_board_clear_matcheds(board)
-		
-		var missings = get_missing_one_places(board)
-		var max_chains = 0
-		var max_chains_moves = []
-		debug_file = FileAccess.open("res://debug.txt", FileAccess.WRITE)
-		debug_file.store_string("=====Init=====\n")
-		debug_file.store_string("Board: " + var_to_str(board).replace("\n", "") + "\n")
-		debug_file.store_string("Missings: " + var_to_str(missings).replace("\n", "") + "\n")
-		debug_file.store_string("==============\n")
-		for p in missings:
-			var temp_board = board.duplicate(true)
-			var temp_hand = hand.duplicate(true)
-			var temp_eliminated_layers = eliminated_layers.duplicate(true)
-			var current_moves = []
-			var chains = evolve_board_to_max_chains(temp_board, temp_hand, temp_eliminated_layers, current_moves, swaps, p)
-			if chains > max_chains:
-				max_chains = chains
-				max_chains_moves = current_moves.duplicate(true)
-		moves = max_chains_moves.duplicate(true)
-		debug_file.store_string("FINAL MOVES: " + var_to_str(moves).replace("\n", "") + "\n")
-		debug_file.close()
+					var best_move = {}
+					var best_triggers = -1
+					for i in hand.size():
+						if hand[i].tags.has("trigger"):
+							var places = SUtils.temp_board_potential_trigger_cells(board)
+							for p in places:
+								var n = calc_move_triggers(board, p, hand[i])
+								if n > best_triggers:
+									best_move = {"coord":p,"idx":i}
+									best_triggers = n
+						elif hand[i].name == "C4":
+							var map = {}
+							var matcheds = SUtils.temp_board_matched_cells(board)
+							for c in matcheds:
+								map[c] = 1
+								for cc in Board.offset_adjacents(c):
+									if Board.is_valid(cc):
+										map[cc] = 1
+							var places = {}
+							for c in map.keys():
+								var g = board[c]
+								if g.name == "Bomb":
+									for cc in Board.offset_adjacents(c):
+										if Board.is_valid(cc):
+											places[cc] = 1
+							for p in places:
+								var n = calc_move_triggers(board, p, hand[i])
+								if n > best_triggers:
+									best_move = {"coord":p,"idx":i}
+									best_triggers = n
+						else:
+							var missings = get_missing_one_places_by_color(board, hand[i].type)
+							for p in missings:
+								var n = calc_move_triggers(board, p, hand[i])
+								if n > best_triggers:
+									best_move = {"coord":p,"idx":i}
+									best_triggers = n
+					if best_triggers >= 0:
+						move(board, hand, moves, best_move.coord, best_move.coord, best_move.idx)
+						swaps -= 1
+						changed = true
+				if !changed:
+					break
+	
 	if moves.is_empty():
 		no_move_played += 1
 	else:

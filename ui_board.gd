@@ -100,17 +100,13 @@ func enter(tween : Tween = null, trans : bool = true):
 		if !tween:
 			tween = G.create_game_tween()
 		tween.tween_callback(func():
-			self.material.set_shader_parameter("x_rot", -90.0)
 			self.show()
 		)
-		tween.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 	else:
-		self.material.set_shader_parameter("x_rot", 0.0)
 		self.show()
 	return tween
 
 func exit(tween : Tween):
-	tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 	tween.tween_callback(func():
 		self.hide()
 	)

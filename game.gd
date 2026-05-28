@@ -14,7 +14,7 @@ enum Stage
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 20
+const version_patch : int = 22
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -769,7 +769,7 @@ func process_command_line(cl : String):
 			win()
 		elif cmd == "lose":
 			lose()
-		elif cmd == "shopping":
+		elif cmd == "shop":
 			shop_ui.enter()
 		elif cmd == "freeze":
 			var coord = read_coord(tokens[1])
@@ -893,26 +893,32 @@ func process_command_line(cl : String):
 	cli_history.append(cl)
 
 func get_round_score(r : int):
-	if r <= 10:
-		return r * (2 * 300 + (r - 1) * 100) / 2
-	elif r <= 20:
-		var a = get_round_score(10)
-		var n = r - 10
-		for i in n:
-			var x = lerp(0.1, 0.3, i / 9.0)
-			var c = lerp(1000, 10000, i / 9.0)
-			a = (1.0 + x) * a + c
-		a = int(a / 500) * 500
-		return a
-	elif r <= 24:
-		var a = get_round_score(20)
-		var n = r - 10
-		for i in n:
-			var x = 0.5
-			var c = 30000
-			a = (1.0 + x) * a + c
-		a = int(a / 1000) * 1000
-		return a
+	if r <= 24:
+		match r:
+			1: return 250
+			2: return 400
+			3: return 750
+			4: return 1000
+			5: return 1500
+			6: return 2500
+			7: return 3250
+			8: return 4500
+			9: return 6500
+			10: return 7500
+			11: return 9250
+			12: return 12000
+			13: return 13250
+			14: return 15500
+			15: return 19000
+			16: return 20500
+			17: return 23500
+			18: return 28000
+			19: return 30000
+			20: return 34000
+			21: return 40000
+			22: return 42500
+			23: return 47500
+			24: return 55000
 	else:
 		return 1000000000
 
@@ -987,6 +993,11 @@ func end_transition(tween : Tween):
 		blocker_ui.hide()
 	)
 
+var modifier_defaults : Dictionary = {"red_bouns_i":0,"orange_bouns_i":0,"green_bouns_i":0,
+"blue_bouns_i":0,"magenta_bouns_i":0,"max_fatigue_i":40,"base_chain_i":0,
+"board_upper_lower_connected_i":0,"extra_range_i":0,"extra_explode_range_i":0,"extra_explode_power_i":0,
+"additional_active_times_i":0,"not_consume_repeat_count_chance_i":0,"additional_targets_i":0,"half_price_i":0}
+
 func cleanup():
 	if !(STest.testing && STest.headless):
 		self.remove_child(game_tweens)
@@ -1018,19 +1029,8 @@ func cleanup():
 	event_listeners.clear()
 	Board.event_listeners.clear()
 	modifiers.clear()
-	modifiers["red_bouns_i"] = 0
-	modifiers["orange_bouns_i"] = 0
-	modifiers["green_bouns_i"] = 0
-	modifiers["blue_bouns_i"] = 0
-	modifiers["magenta_bouns_i"] = 0
-	modifiers["played_i"] = 0
-	modifiers["base_chain_i"] = 0
-	modifiers["board_upper_lower_connected_i"] = 0
-	modifiers["extra_range_i"] = 0
-	modifiers["additional_active_times_i"] = 0
-	modifiers["not_consume_repeat_count_chance_i"] = 0
-	modifiers["additional_targets_i"] = 0
-	modifiers["half_price_i"] = 0
+	for m in modifier_defaults:
+		modifiers[m] = modifier_defaults[m]
 	
 	no_score_marks[Gem.None] = []
 	no_score_marks[Gem.None].push_front(false)
@@ -1123,93 +1123,93 @@ func start_game(saving : String = "", parms = {}):
 			r.setup("Sandcastle")
 			add_relic(r)
 		
-		const base_gem_num : int = 12
+		var default_gem_num = parms.get("default_gem_num", 12)
 		
-		var red_wave_num = parms.get("red_wave_num", base_gem_num)
+		var red_wave_num = parms.get("red_wave_num", default_gem_num)
 		for i in red_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var red_circle_num = parms.get("red_circle_num", base_gem_num)
+		var red_circle_num = parms.get("red_circle_num", default_gem_num)
 		for i in red_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var red_star_num = parms.get("red_star_num", base_gem_num)
+		var red_star_num = parms.get("red_star_num", default_gem_num)
 		for i in red_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorRed
 			g.rune = Gem.RuneStar
 			add_gem(g)
-		var orange_wave_num = parms.get("orange_wave_num", base_gem_num)
+		var orange_wave_num = parms.get("orange_wave_num", default_gem_num)
 		for i in orange_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var orange_circle_num = parms.get("orange_circle_num", base_gem_num)
+		var orange_circle_num = parms.get("orange_circle_num", default_gem_num)
 		for i in orange_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var orange_star_num = parms.get("orange_star_num", base_gem_num)
+		var orange_star_num = parms.get("orange_star_num", default_gem_num)
 		for i in orange_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorOrange
 			g.rune = Gem.RuneStar
 			add_gem(g)
-		var green_wave_num = parms.get("green_wave_num", base_gem_num)
+		var green_wave_num = parms.get("green_wave_num", default_gem_num)
 		for i in green_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var green_circle_num = parms.get("green_circle_num", base_gem_num)
+		var green_circle_num = parms.get("green_circle_num", default_gem_num)
 		for i in green_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var green_star_num = parms.get("green_star_num", base_gem_num)
+		var green_star_num = parms.get("green_star_num", default_gem_num)
 		for i in green_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorGreen
 			g.rune = Gem.RuneStar
 			add_gem(g)
-		var blue_wave_num = parms.get("blue_wave_num", base_gem_num)
+		var blue_wave_num = parms.get("blue_wave_num", default_gem_num)
 		for i in blue_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var blue_circle_num = parms.get("blue_circle_num", base_gem_num)
+		var blue_circle_num = parms.get("blue_circle_num", default_gem_num)
 		for i in blue_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var blue_star_num = parms.get("blue_star_num", base_gem_num)
+		var blue_star_num = parms.get("blue_star_num", default_gem_num)
 		for i in blue_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorBlue
 			g.rune = Gem.RuneStar
 			add_gem(g)
-		var magenta_wave_num = parms.get("magenta_wave_num", base_gem_num)
+		var magenta_wave_num = parms.get("magenta_wave_num", default_gem_num)
 		for i in magenta_wave_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneWave
 			add_gem(g)
-		var magenta_circle_num = parms.get("magenta_circle_num", base_gem_num)
+		var magenta_circle_num = parms.get("magenta_circle_num", default_gem_num)
 		for i in magenta_circle_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
 			g.rune = Gem.RuneCircle
 			add_gem(g)
-		var magenta_star_num = parms.get("magenta_star_num", base_gem_num)
+		var magenta_star_num = parms.get("magenta_star_num", default_gem_num)
 		for i in magenta_star_num:
 			var g = Gem.new()
 			g.type = Gem.ColorMagenta
@@ -1239,7 +1239,7 @@ func start_game(saving : String = "", parms = {}):
 		
 		for i in 0:
 			var g = Gem.new()
-			g.setup("Rainbow")
+			g.setup("Flag")
 			add_gem(g)
 	
 		Board.setup(board_size)
@@ -1367,7 +1367,6 @@ func round_begin():
 	
 	swaps = swaps_per_round
 	plays = plays_per_round
-	modifiers["played_i"] = 0
 	
 	if !(STest.testing && STest.headless):
 		if settlement_ui.visible:
@@ -1384,8 +1383,8 @@ func next_round(tween : Tween = null):
 	
 	if !(STest.testing && STest.headless):
 		if !tween:
+			begin_busy()
 			tween = create_game_tween()
-		
 		tween.tween_callback(func():
 			round_begin()
 		)
@@ -1394,8 +1393,6 @@ func next_round(tween : Tween = null):
 		tween.tween_callback(func():
 			for c in current_curses:
 				var coord = c.coord
-				if c.afflicted_gem:
-					coord = c.afflicted_gem.coord
 				SEffect.add_leading_line(Vector2(640.0, 224.0), Board.get_pos(coord))
 		)
 		tween.tween_interval(0.3)
@@ -1452,7 +1449,6 @@ func lose():
 
 func calc_game_state():
 	if STest.testing:
-		control_ui.update_preview()
 		end_busy()
 		return
 	if game_over_mark != "":
@@ -1486,7 +1482,6 @@ func play():
 	chains = modifiers["base_chain_i"]
 	score_mult = 1.0
 	filling_times = 0
-	modifiers["played_i"] = 1
 	time_scale = 1.0 / base_speed
 	
 	if !(STest.testing && STest.headless):
@@ -1985,16 +1980,17 @@ func _ready() -> void:
 	Board.clearing_finished.connect(func():
 		if !(STest.testing && STest.headless):
 			Board.ui.hide_entangled_lines()
-		Board.fill_blanks()
+		filling_times += 1
+		if gems.size() < Board.curr_min_gem_num:
+			game_over_mark = "not_enough_gems"
+			lose()
+		else:
+			Board.fill_blanks()
 	)
 	Board.filling_finished.connect(func():
 		if !(STest.testing && STest.headless):
 			Board.ui.show_entangled_lines()
-		filling_times += 1
-		if filling_times >= C.REFILL_TIMES_TO_STOP:
-			calc_game_state()
-		else:
-			Board.matching()
+		Board.matching()
 	)
 	Board.matching_finished.connect(func():
 		var processed = false
@@ -2028,7 +2024,10 @@ func _ready() -> void:
 				var g = Board.get_gem_at(c)
 				if g:
 					Buff.clear(g, [Buff.Duration.ThisMatching, Buff.Duration.ThisChain])
-					
+		
+		filling_times = 0
+		Board.down_proc()
+		
 		calc_game_state()
 	)
 	

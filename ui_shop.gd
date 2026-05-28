@@ -1,13 +1,11 @@
 extends Control
 
+@export var panel : Control
+@export var hide_button : Button
 @export var list1 : Control
 @export var list2 : Control
 @export var refresh_button : Control
 @export var exit_button : Button
-@export var staging_slot1 : G.UiStagingSlot
-@export var staging_slot2 : G.UiStagingSlot
-@export var staging_slot3 : G.UiStagingSlot
-@onready var staging_slots = [staging_slot1, staging_slot2, staging_slot3]
 
 const expand_board_base_price : int = 15
 var expand_board_price : int
@@ -242,32 +240,28 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	
 	self.disabled = true
 	
-	self.show()
-	self.material.set_shader_parameter("x_rot", -90.0)
+	tween.tween_callback(func():
+		self.show()
+	)
 	
 	G.control_ui.undo_button.disabled = true
 	G.control_ui.shuffle_button.disabled = true
 	G.control_ui.play_button.disabled = true
 	G.control_ui.last_play.hide()
-	for n in staging_slots:
-		n.disabled = true
 	G.stage = G.Stage.Shopping
 	
 	var sub1 = G.create_game_tween()
-	var sub2 = G.create_game_tween()
-	sub1.tween_property(self.material, "shader_parameter/x_rot", 0.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-	sub2.parallel().tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
-	sub2.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
-	sub2.tween_callback(func():
+	tween.tween_property(panel, "position:y", panel.position.y, 0.5).from(panel.position.y - 500).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	sub1.tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
+	sub1.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
+	sub1.tween_callback(func():
 		G.score = 0
 		G.game_ui.status_bar.round_text.text = tr("ui_shop_title")
 		G.game_ui.status_bar.round_target.text = "[wave amp=10.0 freq=-1.0]%s[/wave]" % tr("ui_shop_target")
 	)
-	sub2.tween_property(G.game_ui.status_bar.round_text, "modulate:a", 1.0, 0.3)
-	sub2.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 1.0, 0.3)
+	sub1.tween_property(G.game_ui.status_bar.round_text, "modulate:a", 1.0, 0.3)
+	sub1.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 1.0, 0.3)
 	tween.tween_subtween(sub1)
-	tween.parallel().tween_subtween(sub2)
-	tween.parallel().tween_property(G.background.material, "shader_parameter/color", Color(0.71, 0.703, 0.504), 0.8)
 	
 	refresh_price = refresh_base_price
 	refresh_button.text.text = "%s [img]res://images/coin.png[/img]%d" % [tr("ui_shop_refresh"), refresh_price]
@@ -275,7 +269,9 @@ func enter(tween : Tween = null, do_refresh : bool = true):
 	delete_price = 0
 	
 	if do_refresh:
-		refresh(tween)
+		var sub2 = G.create_game_tween()
+		refresh(sub2)
+		tween.parallel().tween_subtween(sub2)
 	tween.tween_callback(func():
 		self.disabled = false
 	)
@@ -289,18 +285,17 @@ func exit(tween : Tween = null, trans : bool = true):
 			tween = G.create_game_tween()
 		if release_stagings():
 			tween.tween_interval(0.4)
-		tween.tween_property(self.material, "shader_parameter/x_rot", 90.0, 0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-		tween.parallel().tween_property(G.background.material, "shader_parameter/color", Color(0.917, 0.921, 0.65), 0.8)
-		tween.parallel().tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
-		tween.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
+		var y = panel.position.y
+		tween.tween_property(panel, "position:y", y - 500, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_IN)
 		tween.tween_callback(func():
 			clear()
 			self.hide()
-			disabled = false
+			panel.position.y = y
 		)
-		if !Board.ui.visible:
-			Board.ui.enter(tween, true)
-			G.next_round(tween)
+		tween.tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
+		tween.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
+		Board.ui.enter(tween, true)
+		G.next_round(tween)
 	else:
 		release_stagings()
 		clear()
@@ -382,6 +377,16 @@ func save_to_data(data : Dictionary):
 func _ready() -> void:
 	self.pivot_offset = self.size * 0.5
 	
+	hide_button.pressed.connect(func():
+		SSound.se_click.play()
+		G.screen_shake_strength = 8.0
+		if panel.visible:
+			panel.hide()
+			hide_button.text = "Show"
+		else:
+			panel.show()
+			hide_button.text = "Hide"
+	)
 	exit_button.pressed.connect(func():
 		SSound.se_click.play()
 		G.screen_shake_strength = 8.0

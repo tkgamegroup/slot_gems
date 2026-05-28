@@ -51,6 +51,40 @@ static func index_sort_reverse(arr : Array) -> Array[int]:
 	)
 	return ret
 
+static func array_max_i(arr : Array) -> int:
+	var max_value = -1000000.0
+	var ret = -1
+	for i in arr.size():
+		if arr[i] > max_value:
+			max_value = arr[i]
+			ret = i
+	return ret
+
+static func array_min_i(arr : Array) -> int:
+	var min_value = +1000000.0
+	var ret = -1
+	for i in arr.size():
+		if arr[i] < min_value:
+			min_value = arr[i]
+			ret = i
+	return ret
+
+static func array_avg(arr : Array) -> float:
+	var ret = 0.0
+	for v in arr:
+		ret += v
+	ret /= arr.size()
+	return ret
+
+static func array_med(arr : Array) -> float:
+	var sorted = arr.duplicate()
+	sorted.sort()
+	var n = arr.size()
+	var mi = n / 2
+	if n % 2 == 1:
+		return sorted[mi]
+	return (sorted[mi - 1] + sorted[mi]) * 0.5
+
 static func get_shuffled_indices(n : int):
 	var ret = []
 	for i in n:

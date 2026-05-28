@@ -194,7 +194,7 @@ func set_gem_at(c : Vector2i, g : Gem):
 			if a.on_aura.is_valid():
 				a.on_aura.call(g)
 		if g.on_event.is_valid():
-			var h = Hook.new(-1, g, C.HostType.Gem, false)
+			var h = Hook.new(C.Event.Any, g, C.HostType.Gem, false)
 			event_listeners.append(h)
 		for h in event_listeners:
 			if h.event == C.Event.GemEntered || h.event == C.Event.Any:
@@ -258,7 +258,7 @@ func score_at(c : Vector2i, additional_score : int = 0, mult : float = 1.0):
 	if cell.nullified:
 		mult = 0.0
 	var g = cell.gem
-	if !g:
+	if !g || g.active:
 		return
 	if g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
 		if G.no_score_marks[g.type].front() || G.no_score_marks[g.rune].front():
@@ -396,12 +396,13 @@ func eliminate(_coords : Array[Vector2i], power : int, tween : Tween, reason : A
 			continue
 		var g = get_gem_at(c)
 		if g && !g.eliminated:
-			if tween:
-				tween.tween_callback(func():
+			if !g.active:
+				if tween:
+					tween.tween_callback(func():
+						score_at(c, power)
+					)
+				else:
 					score_at(c, power)
-				)
-			else:
-				score_at(c, power)
 			if g.on_eliminate.is_valid():
 				g.on_eliminate.call(c, reason, source, tween)
 				for h in event_listeners:
@@ -673,13 +674,15 @@ func clear_consumed():
 				else:
 					set_gem_at(c, null)
 					set_state_at(c, Cell.State.Normal)
-				if g.consumable:
-					if sub:
-						sub.tween_callback(func():
+				if g.durability > 0:
+					g.durability -= 1
+					if g.durability == 0:
+						if sub:
+							sub.tween_callback(func():
+								G.remove_gem(g)
+							)
+						else:
 							G.remove_gem(g)
-						)
-					else:
-						G.remove_gem(g)
 				if !G.performance_mode && !(STest.testing && STest.headless):
 					if g && g.name == "":
 						sub.tween_callback(func():
@@ -696,7 +699,7 @@ func clear_consumed():
 	else:
 		clearing_finished.emit()
 
-func down_proc(tween : Tween = null):
+func down_proc(tween : Tween = null, allow_new_gems : bool = true):
 	if !tween:
 		tween = G.create_game_tween()
 	var sound_played = {}
@@ -723,17 +726,25 @@ func down_proc(tween : Tween = null):
 				sub.tween_interval(delay * G.time_scale)
 			var cc = gems[0] if gems.size() > 0 else Vector2i(x, -1)
 			if cc.y < 0:
-				if sub:
-					sub.tween_callback(func():
-						set_gem_at(c, G.take_from_bag())
-					)
-					if !sound_played.has(delay):
+				if allow_new_gems:
+					if sub:
 						sub.tween_callback(func():
-							SSound.se_bubble_pop3.play()
+							set_gem_at(c, G.take_from_bag())
 						)
-						sound_played[delay] = 1
+						if !sound_played.has(delay):
+							sub.tween_callback(func():
+								SSound.se_bubble_pop3.play()
+							)
+							sound_played[delay] = 1
+					else:
+						set_gem_at(c, G.take_from_bag())
 				else:
-					set_gem_at(c, G.take_from_bag())
+					if sub:
+						sub.tween_callback(func():
+							set_gem_at(c, null)
+						)
+					else:
+						set_gem_at(c, null)
 			else:
 				gems.pop_front()
 				holes.append(cc)
@@ -782,15 +793,11 @@ var filling_tween : Tween = null
 func fill_blanks():
 	if filling_tween:
 		return
+	
 	filling_tween = G.create_game_tween()
 	
-	if G.gems.size() < Board.curr_min_gem_num:
-		G.game_over_mark = "not_enough_gems"
-		G.lose()
-		return
-	
 	var down_tween = G.create_game_tween()
-	down_proc(down_tween)
+	down_proc(down_tween, G.filling_times < G.modifiers["max_fatigue_i"])
 	
 	if filling_tween:
 		filling_tween.tween_subtween(down_tween)
@@ -1014,8 +1021,6 @@ func on_exploded(coords : Array[Vector2i], target_coord : Vector2i, range : int,
 			h.host.on_event.call(C.Event.Exploded, null, data)
 	
 	G.add_chain()
-	for c in coords:
-		score_at(c, power)
 
 func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, power : int, tween : Tween = null, source = null):
 	var outer_tween = (tween != null)
@@ -1031,8 +1036,8 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 			)
 			tween.tween_interval(0.15 * G.time_scale)
 	var coords : Array[Vector2i] = []
-	var r = range + G.modifiers["extra_range_i"]
-	var p = power
+	var r = range + G.modifiers["extra_range_i"] + G.modifiers["extra_explode_range_i"]
+	var p = power + G.modifiers["extra_explode_power_i"]
 	var fx_sz = Vector2(64.0, 64.0)
 	if r < 1:
 		fx_sz *= 0.5
@@ -1056,7 +1061,7 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 		)
 	else:
 		on_exploded(coords, target_coord, r, p, source)
-	eliminate(coords, 0, tween, ActiveReason.Gem, source)
+	eliminate(coords, p, tween, ActiveReason.Gem, source)
 	if !outer_tween && tween:
 		tween.tween_callback(G.end_busy)
 	return coords

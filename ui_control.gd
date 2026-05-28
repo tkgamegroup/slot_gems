@@ -61,7 +61,7 @@ func update_preview():
 			var g = Board.get_gem_at(c)
 			if g && g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
 				if !G.no_score_marks[g.type].front() && !G.no_score_marks[g.rune].front():
-					base += round(g.get_score() * m.pattern.mult)
+					base += g.get_score()
 	expected_score_text.text = "%d" % base
 	expected_score_panel.show()
 

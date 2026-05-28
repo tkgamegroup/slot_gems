@@ -60,11 +60,11 @@ var category : String
 var image_id : int
 var price : int = 5
 var power : int = 0
-var base_score : int = 4
+var base_score : int = 20
 var bonus_score : int = 0
 var score_mult : float = 1.0
 var trigger : bool = false
-var consumable : bool = false
+var durability : int = -1
 var eliminated : bool = false
 var active : bool = false
 var coord : Vector2i = Vector2i(-1, -1)
@@ -269,18 +269,22 @@ func get_score():
 func get_rank():
 	return type * 0xffff + rune * 0xff + (100.0 / max(base_score + bonus_score + score_mult, 0.1))
 
+func get_tooltip_title():
+	var title = ""
+	if name == "":
+		title = tr("gem")
+	else:
+		title = tr("item_name_" + name)
+	return title
+
 func get_tooltip():
 	var ret : Array[Pair] = []
-	var title = ""
+	var title = get_tooltip_title()
 	var content = ""
 	var in_mist = false
 	if coord.x != -1 && coord.y != -1:
 		var cell = Board.get_cell(coord)
 		in_mist = cell.in_mist
-	if name == "":
-		title = tr("gem")
-	else:
-		title = tr("item_name_" + name)
 	var basics = ""
 	if type != None:
 		var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
@@ -309,12 +313,20 @@ func get_tooltip():
 		content += "\nw_power: %d" % power
 	if trigger:
 		content += "\nw_trigger"
-	if consumable:
-		content += "\nw_consumable"
+	if durability >= 0:
+		content += "\nw_durability: %d" % durability
 	if name != "":
 		content += "\n" + tr("item_desc_" + name).format(extra)
 	ret.append(Pair.new(title, content))
 	return ret
+
+static func create_temp_data(g : Gem) -> Dictionary:
+	if g:
+		var tags = []
+		if g.trigger:
+			tags.append("trigger")
+		return {"name":g.name,"type":g.type, "rune":g.rune, "score":g.get_score(), "tags":tags}
+	return {"name":"","type":None, "rune":None, "score":0, "tags":[]}
 
 static var s_id : int = 0
 
@@ -328,87 +340,93 @@ func setup(n : String):
 		image_id = 11
 		category = "Gem"
 		price = 3
-		extra["value"] = 10
+		durability = 1
+		extra["value_i"] = 10
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					var value = extra["value"]
+					var value = extra["value_i"]
 					G.change_modifier("red_bouns_i", value)
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_red"), value], Board.get_pos(coord))
 				)
 			else:
-				G.change_modifier("red_bouns_i", extra["value"])
+				G.change_modifier("red_bouns_i", extra["value_i"])
 	elif name == "Heliodor":
 		type = ColorOrange
 		rune = None
 		image_id = 12
 		category = "Gem"
 		price = 3
-		extra["value"] = 10
+		durability = 1
+		extra["value_i"] = 10
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					var value = extra["value"]
+					var value = extra["value_i"]
 					G.change_modifier("orange_bouns_i", value)
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_orange"), value], Board.get_pos(coord))
 				)
 			else:
-				G.change_modifier("orange_bouns_i", extra["value"])
+				G.change_modifier("orange_bouns_i", extra["value_i"])
 	elif name == "Emerald":
 		type = ColorGreen
 		rune = None
 		image_id = 13
 		category = "Gem"
 		price = 3
-		extra["value"] = 10
+		durability = 1
+		extra["value_i"] = 10
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					var value = extra["value"]
+					var value = extra["value_i"]
 					G.change_modifier("green_bouns_i", value)
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_green"), value], Board.get_pos(coord))
 				)
 			else:
-				G.change_modifier("green_bouns_i", extra["value"])
+				G.change_modifier("green_bouns_i", extra["value_i"])
 	elif name == "Sapphire":
 		type = ColorBlue
 		rune = None
 		image_id = 14
 		category = "Gem"
 		price = 3
-		extra["value"] = 10
+		durability = 1
+		extra["value_i"] = 10
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					var value = extra["value"]
+					var value = extra["value_i"]
 					G.change_modifier("blue_bouns_i", value)
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_blue"), value], Board.get_pos(coord))
 				)
 			else:
-				G.change_modifier("blue_bouns_i", extra["value"])
+				G.change_modifier("blue_bouns_i", extra["value_i"])
 	elif name == "Amethyst":
 		type = ColorMagenta
 		rune = None
 		image_id = 15
 		category = "Gem"
 		price = 3
-		extra["value"] = 10
+		durability = 1
+		extra["value_i"] = 10
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					var value = extra["value"]
+					var value = extra["value_i"]
 					G.change_modifier("magenta_bouns_i", value)
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_magenta"), value], Board.get_pos(coord))
 				)
 			else:
-				G.change_modifier("magenta_bouns_i", extra["value"])
+				G.change_modifier("magenta_bouns_i", extra["value_i"])
 	elif name == "Flag":
 		type = None
 		rune = None
+		base_score = 0
 		image_id = 16
 		price = 2
-		extra["range_i"] = 1
-		extra["value_i"] = 80
+		extra["range_i"] = 2
+		extra["value_i"] = 146
 		on_event = func(event : int, tween : Tween, data):
 			match event: 
 				C.Event.GemEntered:
@@ -418,7 +436,8 @@ func setup(n : String):
 					if data == self:
 						Board.remove_aura(self)
 		on_aura = func(g : Gem):
-			if Board.offset_distance(coord, g.coord) <= extra["range_i"] + G.modifiers["extra_range_i"]:
+			var r = extra["range_i"] + G.modifiers["extra_range_i"]
+			if Board.offset_distance(coord, g.coord) <= r:
 				var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value_i"]}, Buff.Duration.OnBoard)
 				b.caster = self
 	elif name == "Coin":
@@ -441,7 +460,7 @@ func setup(n : String):
 		category = "Bomb"
 		trigger = true
 		price = 2
-		power = 8
+		power = 10
 		extra["range_i"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
@@ -459,33 +478,38 @@ func setup(n : String):
 		image_id = 19
 		category = "Bomb"
 		price = 3
-		power = 100
+		power = 140
 		extra["range_i"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if reason == Board.ActiveReason.Gem && source.category == "Bomb":
-				tween.tween_callback(func():
+				if tween:
+					tween.tween_callback(func():
+						Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					)
+				else:
 					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
-				)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range_i"], power, tween, self)
 	elif name == "Rainbow":
 		type = ColorWild
 		rune = None
+		base_score = 0
 		image_id = 20
 		category = "Normal"
 		price = 5
-		extra["value_f"] = 1.1
+		extra["value_i"] = 15
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":extra["value_f"]}, Buff.Duration.ThisMatching)
+					Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","add":extra["value_i"] * 0.01}, Buff.Duration.ThisMatching)
 					G.float_text("[color=FFBB00]%d%%[/color]" % int(G.gain_scaler * 100.0), Board.get_pos(coord))
 				)
 			else:
-				Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":extra["value_f"]}, Buff.Duration.ThisMatching)
+				Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","add":extra["value_i"] * 0.01}, Buff.Duration.ThisMatching)
 	elif name == "IaiCut":
 		type = None
 		rune = None
+		base_score = 0
 		image_id = 21
 		category = "Normal"
 		trigger = true
@@ -543,6 +567,7 @@ func setup(n : String):
 	elif name == "Lightning":
 		type = ColorBlue
 		rune = None
+		base_score = 0
 		image_id = 22
 		category = "Normal"
 		price = 5
@@ -887,7 +912,7 @@ func setup(n : String):
 		base_score = 1
 		image_id = 38
 		category = "Normal"
-		consumable = true
+		durability = 1
 		price = 4
 		on_event = func(event : int, tween : Tween, data):
 			match event: 
@@ -904,7 +929,7 @@ func setup(n : String):
 		rune = None
 		image_id = 39
 		category = "Normal"
-		consumable = true
+		durability = 1
 		price = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():

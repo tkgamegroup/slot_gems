@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=3 uid="uid://lm57pm3v4aq7"]
+[gd_resource type="Theme" load_steps=35 format=3 uid="uid://lm57pm3v4aq7"]
 
 [ext_resource type="Texture2D" uid="uid://srhk7v1lpvjr" path="res://images/checked.png" id="1_110ce"]
 [ext_resource type="FontFile" uid="uid://cp78tjuwu7qrs" path="res://fonts/Baloo2_Bold.ttf" id="1_cjfk0"]
@@ -86,6 +86,14 @@ bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1rmny"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mihib"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wdt2l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_howt0"]
+bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n3ikw"]
+bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wdt2l"]
 
@@ -176,6 +184,9 @@ CheckBox/styles/hover = SubResource("StyleBoxFlat_1rmny")
 CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_110ce")
 CheckBox/styles/normal = SubResource("StyleBoxEmpty_1rmny")
 CheckBox/styles/pressed = SubResource("StyleBoxEmpty_mihib")
+CheckButton/styles/focus = SubResource("StyleBoxEmpty_wdt2l")
+CheckButton/styles/hover = SubResource("StyleBoxFlat_howt0")
+CheckButton/styles/hover_pressed = SubResource("StyleBoxFlat_n3ikw")
 HBoxContainer/constants/separation = 4
 HSlider/icons/grabber = ExtResource("3_05tig")
 HSlider/icons/grabber_disabled = ExtResource("3_05tig")

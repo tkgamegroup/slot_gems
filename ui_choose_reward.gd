@@ -7,6 +7,7 @@ extends Control
 @export var reroll_button : Button
 @export var skip_button : Button
 
+var rewards : Array
 var callback : Callable
 
 func choose(idx : int):
@@ -19,50 +20,50 @@ func choose(idx : int):
 		if i != idx:
 			var ui : Control = reward_list.get_child(i)
 			ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			tween.parallel().tween_property(ui, "position", ui.position + Vector2(0, 1000), 0.2)
+			tween.parallel().tween_property(ui, "modulate:a", 0.0, 0.2)
 	var ui : Control = reward_list.get_child(idx)
 	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var img : Sprite2D = ui.icon_img
-	tween.tween_callback(func():
-		img.reparent(self)
-	)
 	tween.tween_property(ui, "modulate:a", 0, 0.2)
-	tween.parallel().tween_property(img, "position", ui.get_rect().get_center(), 0.3)
 	tween.tween_callback(func():
-		img.queue_free()
+		callback.call(rewards, idx)
+		callback = Callable()
 		exit()
 	)
-	callback.call(idx, tween, img)
 
-func enter(rewards : Array, _callback : Callable):
+func enter(_rewards : Array, _callback : Callable, tween : Tween = null):
+	rewards = _rewards
 	callback = _callback
 	
 	self.self_modulate.a = 0.0
-	self.show()
-	panel.show()
 	
-	var tween = G.create_game_tween()
-	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
-	
-	buttons_list.show()
 	for n in reward_list.get_children():
 		reward_list.remove_child(n)
 		n.queue_free()
 	for i in rewards.size():
 		var r = rewards[i]
 		var ui = G.reward_pb.instantiate()
-		ui.setup(r)
+		ui.setup(r.cate, r.object, r.quantity)
 		ui.gui_input.connect(func(event : InputEvent):
 			if event is InputEventMouseButton:
 				if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 					choose(i)
 		)
 		reward_list.add_child(ui)
+	
+	if !tween:
+		tween = G.create_game_tween()
+	tween.tween_callback(func():
+		self.show()
+		panel.show()
+		buttons_list.show()
+	)
+	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 
-func exit():
+func exit(tween : Tween = null):
 	panel.hide()
 	self.self_modulate.a = 1.0
-	var tween = G.create_game_tween()
+	if !tween:
+		tween = G.create_game_tween()
 	tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 	tween.tween_callback(func():
 		self.hide()

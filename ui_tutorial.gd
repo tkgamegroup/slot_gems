@@ -232,7 +232,7 @@ func timeout():
 					elif condition == "HAS_CHAINS":
 						var board = SUtils.get_board_data()
 						if SUtils.temp_board_matched_cells(board).size() > 0:
-							SUtils.temp_board_matched_cells(board)
+							SUtils.temp_board_clear_matcheds(board)
 							if SUtils.temp_board_matched_cells(board).size() > 0:
 								ok = true
 					if ok:

@@ -1,0 +1,16 @@
+#Start Datetime: 2026-05-25 15:49:49
+#Board Size: 30x10(300 cells)
+#Red: 120, Orange: 120, Green: 120, Blue: 120, Magenta: 120, Wild: 0
+#Special Gems: 
+#Patterns: \, |, /
+#Relics: 
+#Swaps: 5
+#Modifiers: extra_range_i: 1
+#Special Gem - Bomb: 
+#炸弹
+#分数: 0
+#w_power: 10
+#w_trigger
+#消除：(w_active) 爆炸并消除[n_1]环内的格子。
+Score,Eliminated,Matched,Chain
+68346,489,24,35
