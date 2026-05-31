@@ -81,8 +81,8 @@ func write_head():
 		line += "Score"
 		if rounds > 1:
 			line += "(r%d)" % (i + 1)
-		for d in listen_events:
-			line += ",%s" % C.Event.find_key(d.event)
+		for w in watches:
+			line += ",%s" % w.name
 			if rounds > 1:
 				line += "(r%d)" % (i + 1)
 	write(line)
@@ -93,8 +93,8 @@ func write_sample():
 	if !record_line.is_empty():
 		record_line += ","
 	record_line += "%d" % G.score
-	for d in listen_events:
-		record_line += ",%d" % d.times
+	for w in watches:
+		record_line += ",%d" % w.times
 	if G.current_round == rounds:
 		begin_write()
 		write(record_line)
@@ -245,6 +245,8 @@ func load_config(name : String = "config"):
 		use_save = config.get_value("", "use_save", false)
 		reroll = config.get_value("", "reroll", false)
 		action_type = config.get_value("", "action_type", ActionType.AutoAI0)
+		watches = config.get_value("", "watches", [] as Array[Dictionary])
+		inputs = config.get_value("", "inputs", [] as Array[Dictionary])
 		variables = config.get_value("", "variables", [] as Array[Dictionary])
 		listen_events = config.get_value("", "listen_events", [] as Array[Dictionary])
 		extras = config.get_value("", "extras", [] as Array[Dictionary])
@@ -260,9 +262,8 @@ func save_config(name : String = "config"):
 	config.set_value("", "use_save", use_save)
 	config.set_value("", "reroll", reroll)
 	config.set_value("", "action_type", action_type)
-	config.set_value("", "variables", variables)
-	config.set_value("", "listen_events", listen_events)
-	config.set_value("", "extras", extras)
+	config.set_value("", "watches", watches)
+	config.set_value("", "inputs", inputs)
 	config.save("%s/%s.ini" % [folder, name])
 
 func has_matched_pattern():
@@ -274,8 +275,8 @@ func has_matched_pattern():
 					return true
 	return false
 
-func add_watch(type : String, name : String):
-	watches.append({"type":type,"name":name,"times":0})
+func add_watch(type : String, name : String, ev : int):
+	watches.append({"type":type,"name":name,"ev":ev,"times":0})
 
 func remove_watch(name : String):
 	for w in watches:
@@ -283,8 +284,8 @@ func remove_watch(name : String):
 			watches.erase(w)
 			break
 
-func add_input(type : String, name : String, base : int, val1 : int, val2 : int):
-	inputs.append({"type":type,"name":name,"base":base,"val1":val1,"val2":val2})
+func add_input(type : String, name : String, base : int, group_inc : int, given_round : int):
+	inputs.append({"type":type,"name":name,"base":base,"group_inc":group_inc,"given_round":given_round})
 
 func remove_input(name : String):
 	for i in inputs:
@@ -321,22 +322,22 @@ func remove_extra(name : String):
 
 func reset():
 	var parms = {}
-	for v in variables:
-		var val = v.base + v.step * group_idx
-		if v.name.begins_with("modifiers/"):
-			parms.get_or_add("modifiers", []).append({"name":v.name.substr(10),"value":val})
-		else:
-			parms[v.name] = val
-	for d in extras:
-		if d.category == "gem":
-			var n = d.base_count + d.count_increase * group_idx
-			parms.get_or_add("extra_gems", []).append({"name":d.name,"num":n})
-		elif d.category == "pattern":
-			var n = d.base_count + d.count_increase * group_idx
-			parms.get_or_add("extra_patterns", []).append({"name":d.name,"num":n})
-		elif d.category == "relic":
-			var n = d.base_count + d.count_increase * group_idx
-			parms.get_or_add("extra_relics", []).append({"name":d.name,"num":n})
+	for i in inputs:
+		if i.type == "var":
+			var val = i.base + i.group_inc * group_idx
+			if i.name.begins_with("modifiers/"):
+				parms.get_or_add("modifiers", []).append({"name":i.name.substr(10),"value":val})
+			else:
+				parms[i.name] = val
+		elif i.type == "gem":
+			var n = i.base + i.group_inc * group_idx
+			parms.get_or_add("extra_gems", []).append({"name":i.name,"num":n})
+		elif i.type == "pattern":
+			var n = i.base + i.group_inc * group_idx
+			parms.get_or_add("extra_patterns", []).append({"name":i.name,"num":n})
+		elif i.type == "relic":
+			var n = i.base + i.group_inc * group_idx
+			parms.get_or_add("extra_relics", []).append({"name":i.name,"num":n})
 	G.start_game("1" if use_save else "", parms)
 	if random_seed || reroll:
 		G.random_seeds()
@@ -353,8 +354,8 @@ func reset():
 				Board.set_gem_at(Vector2i(x, y), G.take_from_bag())
 		for i in hands:
 			Hand.draw()
-	for d in listen_events:
-		d.times = 0
+	for w in watches:
+		w.times = 0
 	SUtils.add_event_listener(Board, C.Event.Any, self, C.HostType.Other)
 	
 	if !headless:
@@ -458,7 +459,7 @@ func timeout():
 				SUtils.remove_event_listeners(Board, self)
 			else:
 				if false && G.score < G.target_score:
-					var n = (rounds - G.current_round) * (1 + listen_events.size())
+					var n = (rounds - G.current_round) * (1 + watches.size())
 					for i in n:
 						record_line += ",N/A"
 					begin_write()
@@ -832,7 +833,13 @@ func auto_play():
 
 func _ready() -> void:
 	on_event = func(event : int, tween : Tween, data):
-		for d in listen_events:
-			if event == d.event:
-				d.times += 1
+		for w in watches:
+			if event == w.ev:
+				w.times += 1
+	
+	for fn in DirAccess.open(STest.folder).get_files():
+		if fn.ends_with(".ini"):
+			var name = fn.substr(0, fn.length() - 4)
+			load_config(name)
+			save_config(name)
 	timer.timeout.connect(timeout)

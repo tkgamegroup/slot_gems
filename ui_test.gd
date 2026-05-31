@@ -14,7 +14,12 @@ extends Panel
 @export var use_save_checkbox : Button
 @export var reroll_checkbox : Button
 @export var action_type_select : OptionButton
-@export var event_list : ItemList
+@export var watches_list : ItemList
+@export var watch_add_button : Button
+@export var watch_remove_button : Button
+@export var watch_type_edit : LineEdit
+@export var watch_name_edit : LineEdit
+@export var watch_event_select : OptionButton
 @export var variable_list : ItemList
 @export var variable_name_edit : LineEdit
 @export var variable_base_edit : LineEdit
@@ -104,11 +109,9 @@ func update_config_ui():
 	reroll_checkbox.set_pressed_no_signal(STest.reroll)
 	
 	action_type_select.selected = STest.action_type
-	event_list.clear()
+	watch_event_select.clear()
 	for i in C.Event.Count:
-		event_list.add_item(str(C.Event.find_key(i)))
-	for d in STest.listen_events:
-		event_list.select(d.event, false)
+		watch_event_select.add_item(str(C.Event.find_key(i)))
 	variable_list.clear()
 	for v in STest.variables:
 		variable_list.add_item(v.name)
@@ -118,6 +121,15 @@ func update_config_ui():
 	samples_edit.text = "%d" % STest.samples
 	groups_edit.text = "%d" % STest.groups
 	process_edit.text = "%d" % STest.process
+
+func on_watch_type_changed(idx : int):
+	var d = STest.watches[idx]
+	if d.type == "event":
+		watch_name_edit.hide()
+		watch_event_select.show()
+	else:
+		watch_name_edit.show()
+		watch_event_select.hide()
 
 func on_tab_changed(tab : int):
 	if tab == 0:
@@ -415,16 +427,19 @@ func _ready() -> void:
 		STest.reroll = v
 		save_config()
 	)
-	action_type_select.item_selected.connect(func(idx):
+	action_type_select.item_selected.connect(func(idx : int):
 		STest.action_type = idx
 		save_config()
 	)
-	event_list.multi_selected.connect(func(idx : int, selected : bool):
-		if selected:
-			STest.add_listen_event(idx)
-		else:
-			STest.remove_listen_event(idx)
-		save_config()
+	watches_list.item_selected.connect(func(idx : int):
+		var w = STest.watches[idx]
+	)
+	watch_event_select.item_selected.connect(func(idx : int):
+		var sel = watches_list.get_selected_items()
+		if !sel.is_empty():
+			var w = STest.watches[sel[0]]
+			w.ev = idx
+			save_config()
 	)
 	variable_list.item_selected.connect(func(idx : int):
 		var v = STest.variables[idx]
