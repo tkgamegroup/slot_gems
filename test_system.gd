@@ -37,9 +37,6 @@ var reroll : bool = false
 var action_type : int = ActionType.AutoAI0
 var watches : Array[Dictionary]
 var inputs : Array[Dictionary]
-var listen_events : Array[Dictionary]
-var variables : Array[Dictionary]
-var extras : Array[Dictionary]
 
 var on_event : Callable
 var testing : bool = false
@@ -247,9 +244,6 @@ func load_config(name : String = "config"):
 		action_type = config.get_value("", "action_type", ActionType.AutoAI0)
 		watches = config.get_value("", "watches", [] as Array[Dictionary])
 		inputs = config.get_value("", "inputs", [] as Array[Dictionary])
-		variables = config.get_value("", "variables", [] as Array[Dictionary])
-		listen_events = config.get_value("", "listen_events", [] as Array[Dictionary])
-		extras = config.get_value("", "extras", [] as Array[Dictionary])
 
 func save_config(name : String = "config"):
 	var config = ConfigFile.new()
@@ -291,33 +285,6 @@ func remove_input(name : String):
 	for i in inputs:
 		if i.name == name:
 			inputs.erase(i)
-			break
-
-func add_listen_event(ev : int):
-	listen_events.append({"event":ev,"times":0})
-
-func remove_listen_event(ev : int):
-	for d in listen_events:
-		if d.event == ev:
-			listen_events.erase(d)
-			break
-
-func add_variable(name : String, base : int, step : int):
-	variables.append({"name":name,"base":base,"step":step})
-
-func remove_variable(name : String):
-	for d in variables:
-		if d.name == name:
-			variables.erase(d)
-			break
-
-func add_extra(category : String, name : String, base_count : int, count_increase : int):
-	extras.append({"category":category,"name":name,"base_count":base_count,"count_increase":count_increase})
-
-func remove_extra(name : String):
-	for d in extras:
-		if d.name == name:
-			extras.erase(d)
 			break
 
 func reset():

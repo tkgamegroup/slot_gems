@@ -19,20 +19,16 @@ extends Panel
 @export var watch_remove_button : Button
 @export var watch_type_edit : LineEdit
 @export var watch_name_edit : LineEdit
+@export var watch_name_lb : Label
 @export var watch_event_select : OptionButton
-@export var variable_list : ItemList
-@export var variable_name_edit : LineEdit
-@export var variable_base_edit : LineEdit
-@export var variable_step_edit : LineEdit
-@export var variable_add_button : Button
-@export var variable_remove_button : Button
-@export var extra_list : ItemList
-@export var extra_category_edit : LineEdit
-@export var extra_name_edit : LineEdit
-@export var extra_base_count_edit : LineEdit
-@export var extra_count_increase_edit : LineEdit
-@export var extra_add_button : Button
-@export var extra_remove_button : Button
+@export var inputs_list : ItemList
+@export var input_type_edit : LineEdit
+@export var input_name_edit : LineEdit
+@export var input_base_edit : LineEdit
+@export var input_group_inc_edit : LineEdit
+@export var input_given_round_edit : LineEdit
+@export var input_add_button : Button
+@export var input_remove_button : Button
 @export var samples_edit : LineEdit
 @export var groups_edit : LineEdit
 @export var process_edit : LineEdit
@@ -109,15 +105,29 @@ func update_config_ui():
 	reroll_checkbox.set_pressed_no_signal(STest.reroll)
 	
 	action_type_select.selected = STest.action_type
+	watches_list.clear()
+	for w in STest.watches:
+		if w.type == "event":
+			watches_list.add_item(str(C.Event.find_key(w.ev)))
 	watch_event_select.clear()
 	for i in C.Event.Count:
 		watch_event_select.add_item(str(C.Event.find_key(i)))
-	variable_list.clear()
-	for v in STest.variables:
-		variable_list.add_item(v.name)
-	extra_list.clear()
-	for d in STest.extras:
-		extra_list.add_item(d.name)
+	watch_type_edit.text = ""
+	watch_name_edit.text = ""
+	watch_name_lb.text = "Name"
+	watch_type_edit.editable = false
+	watch_name_edit.editable = false
+	watch_event_select.disabled = true
+	watch_name_edit.show()
+	watch_event_select.hide()
+	inputs_list.clear()
+	for d in STest.inputs:
+		inputs_list.add_item(d.name)
+	input_type_edit.text = ""
+	input_name_edit.text = ""
+	input_base_edit.text = ""
+	input_group_inc_edit.text = ""
+	input_given_round_edit.text = ""
 	samples_edit.text = "%d" % STest.samples
 	groups_edit.text = "%d" % STest.groups
 	process_edit.text = "%d" % STest.process
@@ -127,9 +137,11 @@ func on_watch_type_changed(idx : int):
 	if d.type == "event":
 		watch_name_edit.hide()
 		watch_event_select.show()
+		watch_name_lb.text = "Event"
 	else:
 		watch_name_edit.show()
 		watch_event_select.hide()
+		watch_name_lb.text = "Name"
 
 func on_tab_changed(tab : int):
 	if tab == 0:
@@ -433,132 +445,157 @@ func _ready() -> void:
 	)
 	watches_list.item_selected.connect(func(idx : int):
 		var w = STest.watches[idx]
+		watch_type_edit.text = w.type
+		watch_name_edit.text = w.name
+		watch_event_select.selected = w.ev
+		watch_type_edit.editable = true
+		watch_name_edit.editable = true
+		watch_event_select.disabled = false
+		on_watch_type_changed(idx)
+		watch_add_button.disabled = true
+		watch_remove_button.disabled = false
+	)
+	watches_list.empty_clicked.connect(func(at_position: Vector2, mouse_button_index: int):
+		watches_list.deselect_all()
+		watch_type_edit.text = ""
+		watch_name_edit.text = ""
+		watch_name_lb.text = "Name"
+		watch_type_edit.editable = false
+		watch_name_edit.editable = false
+		watch_event_select.disabled = true
+		watch_name_edit.show()
+		watch_event_select.hide()
+		watch_add_button.disabled = false
+		watch_remove_button.disabled = true
+	)
+	watch_type_edit.text_changed.connect(func(text : String):
+		var sel = watches_list.get_selected_items()
+		if !sel.is_empty():
+			var w = STest.watches[sel[0]]
+			w.type = text
+			on_watch_type_changed(sel[0])
+			save_config()
+	)
+	watch_name_edit.text_changed.connect(func(text : String):
+		var sel = watches_list.get_selected_items()
+		if !sel.is_empty():
+			var w = STest.watches[sel[0]]
+			w.name = text
+			watches_list.set_item_text(sel[0], text)
+			save_config()
 	)
 	watch_event_select.item_selected.connect(func(idx : int):
 		var sel = watches_list.get_selected_items()
 		if !sel.is_empty():
 			var w = STest.watches[sel[0]]
 			w.ev = idx
+			watches_list.set_item_text(sel[0], str(C.Event.find_key(w.ev)))
 			save_config()
 	)
-	variable_list.item_selected.connect(func(idx : int):
-		var v = STest.variables[idx]
-		variable_name_edit.text = v.name
-		variable_base_edit.text = "%d" % v.base
-		variable_step_edit.text = "%d" % v.step
-		variable_name_edit.editable = true
-		variable_base_edit.editable = true
-		variable_step_edit.editable = true
-		variable_add_button.disabled = true
-		variable_remove_button.disabled = false
+	watch_add_button.pressed.connect(func():
+		STest.add_watch("var", "new", 0)
+		watches_list.add_item("new")
+		save_config()
+		watch_type_edit.text = ""
+		watch_name_edit.text = ""
+		watch_name_lb.text = "Name"
+		watch_type_edit.editable = false
+		watch_name_edit.editable = false
+		watch_event_select.disabled = true
+		watch_name_edit.show()
+		watch_event_select.hide()
 	)
-	variable_list.empty_clicked.connect(func(at_position: Vector2, mouse_button_index: int):
-		variable_list.deselect_all()
-		variable_name_edit.text = ""
-		variable_base_edit.text = ""
-		variable_step_edit.text = ""
-		variable_name_edit.editable = false
-		variable_base_edit.editable = false
-		variable_step_edit.editable = false
-		variable_add_button.disabled = false
-		variable_remove_button.disabled = true
-	)
-	variable_name_edit.text_changed.connect(func(text : String):
-		var sel = variable_list.get_selected_items()
+	watch_remove_button.pressed.connect(func():
+		var sel = watches_list.get_selected_items()
 		if !sel.is_empty():
-			STest.variables[sel[0]].name = variable_name_edit.text
-			variable_list.set_item_text(sel[0], variable_name_edit.text)
+			STest.watches.remove_at(sel[0])
+			watches_list.remove_item(sel[0])
 			save_config()
+			watch_type_edit.text = ""
+			watch_name_edit.text = ""
+			watch_name_lb.text = "Name"
+			watch_type_edit.editable = false
+			watch_name_edit.editable = false
+			watch_event_select.disabled = true
+			watch_name_edit.show()
+			watch_event_select.hide()
+			watch_add_button.disabled = false
+			watch_remove_button.disabled = true
 	)
-	variable_base_edit.text_changed.connect(func(text : String):
-		var sel = variable_list.get_selected_items()
+	inputs_list.item_selected.connect(func(idx : int):
+		var d = STest.inputs[idx]
+		input_type_edit.text = d.type
+		input_name_edit.text = d.name
+		input_base_edit.text = "%d" % d.base
+		input_group_inc_edit.text = "%d" % d.group_inc
+		input_given_round_edit.text = "%d" % d.given_round
+		input_type_edit.editable = true
+		input_name_edit.editable = true
+		input_base_edit.editable = true
+		input_group_inc_edit.editable = true
+		input_given_round_edit.editable = true
+		input_add_button.disabled = true
+		input_remove_button.disabled = false
+	)
+	inputs_list.empty_clicked.connect(func(at_position: Vector2, mouse_button_index: int):
+		inputs_list.deselect_all()
+		input_type_edit.text = ""
+		input_name_edit.text = ""
+		input_base_edit.text = ""
+		input_group_inc_edit.text = ""
+		input_given_round_edit.text = ""
+		input_type_edit.editable = false
+		input_name_edit.editable = false
+		input_base_edit.editable = false
+		input_group_inc_edit.editable = false
+		input_given_round_edit.editable = false
+		input_add_button.disabled = false
+		input_remove_button.disabled = true
+	)
+	input_type_edit.text_changed.connect(func(text : String):
+		var sel = inputs_list.get_selected_items()
 		if !sel.is_empty():
-			var v = STest.variables[sel[0]]
-			v.base = int(variable_base_edit.text)
+			STest.inputs[sel[0]].type = input_type_edit.text
 			save_config()
 	)
-	variable_step_edit.text_changed.connect(func(text : String):
-		var sel = variable_list.get_selected_items()
+	input_name_edit.text_changed.connect(func(text : String):
+		var sel = inputs_list.get_selected_items()
 		if !sel.is_empty():
-			var v = STest.variables[sel[0]]
-			v.step = int(variable_step_edit.text)
+			STest.inputs[sel[0]].name = input_name_edit.text
+			inputs_list.set_item_text(sel[0], input_name_edit.text)
 			save_config()
 	)
-	variable_add_button.pressed.connect(func():
-		STest.add_variable("new", 0, 0)
-		variable_list.add_item("new")
+	input_base_edit.text_changed.connect(func(text : String):
+		var sel = inputs_list.get_selected_items()
+		if !sel.is_empty():
+			var d = STest.inputs[sel[0]]
+			d.base = int(input_base_edit.text)
+			save_config()
+	)
+	input_group_inc_edit.text_changed.connect(func(text : String):
+		var sel = inputs_list.get_selected_items()
+		if !sel.is_empty():
+			var d = STest.inputs[sel[0]]
+			d.group_inc = int(input_group_inc_edit.text)
+			save_config()
+	)
+	input_given_round_edit.text_changed.connect(func(text : String):
+		var sel = inputs_list.get_selected_items()
+		if !sel.is_empty():
+			var d = STest.inputs[sel[0]]
+			d.given_round = int(input_given_round_edit.text)
+			save_config()
+	)
+	input_add_button.pressed.connect(func():
+		STest.add_input("", "new", 0, 0, -1)
+		inputs_list.add_item("new")
 		save_config()
 	)
-	variable_remove_button.pressed.connect(func():
-		var sel = variable_list.get_selected_items()
+	input_remove_button.pressed.connect(func():
+		var sel = inputs_list.get_selected_items()
 		if !sel.is_empty():
-			STest.variables.remove_at(sel[0])
-			variable_list.remove_item(sel[0])
-			save_config()
-	)
-	extra_list.item_selected.connect(func(idx : int):
-		var d = STest.extras[idx]
-		extra_category_edit.text = d.category
-		extra_name_edit.text = d.name
-		extra_base_count_edit.text = "%d" % d.base_count
-		extra_count_increase_edit.text = "%d" % d.count_increase
-		extra_category_edit.editable = true
-		extra_name_edit.editable = true
-		extra_base_count_edit.editable = true
-		extra_count_increase_edit.editable = true
-		extra_add_button.disabled = true
-		extra_remove_button.disabled = false
-	)
-	extra_list.empty_clicked.connect(func(at_position: Vector2, mouse_button_index: int):
-		extra_list.deselect_all()
-		extra_category_edit.text = ""
-		extra_name_edit.text = ""
-		extra_base_count_edit.text = ""
-		extra_count_increase_edit.text = ""
-		extra_category_edit.editable = false
-		extra_name_edit.editable = false
-		extra_base_count_edit.editable = false
-		extra_count_increase_edit.editable = false
-		extra_add_button.disabled = false
-		extra_remove_button.disabled = true
-	)
-	extra_category_edit.text_changed.connect(func(text : String):
-		var sel = extra_list.get_selected_items()
-		if !sel.is_empty():
-			STest.extras[sel[0]].category = extra_category_edit.text
-			save_config()
-	)
-	extra_name_edit.text_changed.connect(func(text : String):
-		var sel = extra_list.get_selected_items()
-		if !sel.is_empty():
-			STest.extras[sel[0]].name = extra_name_edit.text
-			extra_list.set_item_text(sel[0], extra_name_edit.text)
-			save_config()
-	)
-	extra_base_count_edit.text_changed.connect(func(text : String):
-		var sel = extra_list.get_selected_items()
-		if !sel.is_empty():
-			var d = STest.extras[sel[0]]
-			d.base_count = int(extra_base_count_edit.text)
-			save_config()
-	)
-	extra_count_increase_edit.text_changed.connect(func(text : String):
-		var sel = extra_list.get_selected_items()
-		if !sel.is_empty():
-			var d = STest.extras[sel[0]]
-			d.count_increase = int(extra_count_increase_edit.text)
-			save_config()
-	)
-	extra_add_button.pressed.connect(func():
-		STest.add_extra("", "new", 0, 0)
-		extra_list.add_item("new")
-		save_config()
-	)
-	extra_remove_button.pressed.connect(func():
-		var sel = extra_list.get_selected_items()
-		if !sel.is_empty():
-			STest.extras.remove_at(sel[0])
-			extra_list.remove_item(sel[0])
+			STest.inputs.remove_at(sel[0])
+			inputs_list.remove_item(sel[0])
 			save_config()
 	)
 	samples_edit.text_changed.connect(func(text : String):

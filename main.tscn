@@ -3201,7 +3201,7 @@ step = 0.01
 layout_mode = 2
 text = "ui_close"
 
-[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "config_list", "config_list_menu", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "rounds_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "action_type_select", "watches_list", "variable_list", "variable_name_edit", "variable_base_edit", "variable_step_edit", "variable_add_button", "variable_remove_button", "extra_list", "extra_category_edit", "extra_name_edit", "extra_base_count_edit", "extra_count_increase_edit", "extra_add_button", "extra_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "compare_controls", "compare_toggle", "compare_mult_edit", "reference_edit", "percentage_edit", "calc_result_edit", "test_result", "close_button")]
+[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "config_list", "config_list_menu", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "rounds_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "action_type_select", "watches_list", "watch_add_button", "watch_remove_button", "watch_type_edit", "watch_name_edit", "watch_name_lb", "watch_event_select", "inputs_list", "input_type_edit", "input_name_edit", "input_base_edit", "input_group_inc_edit", "input_given_round_edit", "input_add_button", "input_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "compare_controls", "compare_toggle", "compare_mult_edit", "reference_edit", "percentage_edit", "calc_result_edit", "test_result", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3225,19 +3225,20 @@ use_save_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBox
 reroll_checkbox = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/CheckBox3")
 action_type_select = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer4/OptionButton")
 watches_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/ItemList")
-variable_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/ItemList")
-variable_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit")
-variable_base_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit2")
-variable_step_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit3")
-variable_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2/Button")
-variable_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2/Button2")
-extra_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/ItemList")
-extra_category_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit")
-extra_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit2")
-extra_base_count_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit3")
-extra_count_increase_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer/LineEdit4")
-extra_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2/Button")
-extra_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2/Button2")
+watch_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer2/Button")
+watch_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer2/Button2")
+watch_type_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer/LineEdit")
+watch_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer/LineEdit2")
+watch_name_lb = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer/Label2")
+watch_event_select = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer/OptionButton")
+inputs_list = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/ItemList")
+input_type_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit")
+input_name_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit2")
+input_base_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit3")
+input_group_inc_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit4")
+input_given_round_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer/LineEdit5")
+input_add_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2/Button")
+input_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer2/Button2")
 samples_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit")
 groups_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit2")
 process_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit3")
@@ -3447,8 +3448,6 @@ custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 16
-select_mode = 2
-allow_reselect = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer"]
 layout_mode = 2
@@ -3487,88 +3486,12 @@ select_all_on_focus = true
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Name"
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Extras"
-
-[node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
-custom_minimum_size = Vector2(600, 200)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Add"
-
-[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer2"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-disabled = true
-text = "Remove"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3"]
-layout_mode = 2
-
-[node name="LineEdit" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-editable = false
-select_all_on_focus = true
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Cate"
-
-[node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-editable = false
-select_all_on_focus = true
-
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Name"
-
-[node name="LineEdit3" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-editable = false
-select_all_on_focus = true
-
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Base Count"
-
-[node name="LineEdit4" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-editable = false
-select_all_on_focus = true
-
-[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Count Inc"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2"]
 layout_mode = 2
@@ -3577,7 +3500,7 @@ size_flags_horizontal = 3
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Variables"
+text = "Inputs"
 
 [node name="ItemList" type="ItemList" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2"]
 custom_minimum_size = Vector2(600, 200)
@@ -3612,7 +3535,7 @@ select_all_on_focus = true
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Name"
+text = "Type"
 
 [node name="LineEdit2" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
@@ -3623,7 +3546,7 @@ select_all_on_focus = true
 [node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Base"
+text = "Name"
 
 [node name="LineEdit3" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
@@ -3634,7 +3557,29 @@ select_all_on_focus = true
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Step"
+text = "Base"
+
+[node name="LineEdit4" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label4" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Group Inc"
+
+[node name="LineEdit5" type="LineEdit" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+editable = false
+select_all_on_focus = true
+
+[node name="Label5" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Given Round"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New"]
 layout_mode = 2
