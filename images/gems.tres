@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://bpbwgcoq21dfi" path="res://images/items/bomb.png" id="16_33ova"]
 [ext_resource type="Texture2D" uid="uid://ck2hcbsdrppb0" path="res://images/items/c4.png" id="17_3d1gq"]
 [ext_resource type="Texture2D" uid="uid://cjlf2mtfw5vvs" path="res://images/items/rainbow.png" id="18_cjxlm"]
-[ext_resource type="Texture2D" uid="uid://j5h665p0cdaq" path="res://images/items/coin.png" id="18_jnp01"]
+[ext_resource type="Texture2D" uid="uid://j5h665p0cdaq" path="res://images/items/money_bag.png" id="18_jnp01"]
 [ext_resource type="Texture2D" uid="uid://dsg7rlnqly7rv" path="res://images/items/orange.png" id="19_2hlxw"]
 [ext_resource type="Texture2D" uid="uid://b5sxnv8vfemc4" path="res://images/items/lightning.png" id="20_c6tv1"]
 [ext_resource type="Texture2D" uid="uid://c1sbuytw6e6ow" path="res://images/items/iai_cut.png" id="21_3d1gq"]
@@ -116,6 +116,21 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("20_c6tv1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_jhgf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_jhgf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_jhgf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_jhgf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_jhgf3")
 }, {
 "duration": 1.0,
 "texture": ExtResource("24_jhgf3")

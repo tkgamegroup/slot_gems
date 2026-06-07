@@ -1,9 +1,10 @@
-[gd_resource type="Theme" load_steps=35 format=3 uid="uid://lm57pm3v4aq7"]
+[gd_resource type="Theme" load_steps=38 format=3 uid="uid://lm57pm3v4aq7"]
 
 [ext_resource type="Texture2D" uid="uid://srhk7v1lpvjr" path="res://images/checked.png" id="1_110ce"]
 [ext_resource type="FontFile" uid="uid://cp78tjuwu7qrs" path="res://fonts/Baloo2_Bold.ttf" id="1_cjfk0"]
 [ext_resource type="Texture2D" uid="uid://csw2ujy7ca20i" path="res://images/unchecked.png" id="2_05tig"]
 [ext_resource type="FontFile" uid="uid://vm58fvt8waip" path="res://fonts/Baloo2.ttf" id="2_vj6dk"]
+[ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="3_1rmny"]
 [ext_resource type="Texture2D" uid="uid://1sv7liij36k7" path="res://images/slider.png" id="3_05tig"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1x85"]
@@ -93,7 +94,13 @@ bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n3ikw"]
-bg_color = Color(0.47170883, 0.5737713, 0.640333, 1)
+bg_color = Color(0.37, 0.44799998, 0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mworl"]
+bg_color = Color(0.5121043, 0.6164312, 0.6807064, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vhp3g"]
+bg_color = Color(0.39960003, 0.48384, 0.54, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wdt2l"]
 
@@ -184,9 +191,13 @@ CheckBox/styles/hover = SubResource("StyleBoxFlat_1rmny")
 CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_110ce")
 CheckBox/styles/normal = SubResource("StyleBoxEmpty_1rmny")
 CheckBox/styles/pressed = SubResource("StyleBoxEmpty_mihib")
+CheckButton/icons/checked = ExtResource("3_1rmny")
+CheckButton/icons/unchecked = ExtResource("3_1rmny")
 CheckButton/styles/focus = SubResource("StyleBoxEmpty_wdt2l")
 CheckButton/styles/hover = SubResource("StyleBoxFlat_howt0")
 CheckButton/styles/hover_pressed = SubResource("StyleBoxFlat_n3ikw")
+CheckButton/styles/normal = SubResource("StyleBoxFlat_mworl")
+CheckButton/styles/pressed = SubResource("StyleBoxFlat_vhp3g")
 HBoxContainer/constants/separation = 4
 HSlider/icons/grabber = ExtResource("3_05tig")
 HSlider/icons/grabber_disabled = ExtResource("3_05tig")

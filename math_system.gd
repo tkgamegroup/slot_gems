@@ -77,6 +77,8 @@ static func array_avg(arr : Array) -> float:
 	return ret
 
 static func array_med(arr : Array) -> float:
+	if arr.is_empty():
+		return NAN
 	var sorted = arr.duplicate()
 	sorted.sort()
 	var n = arr.size()

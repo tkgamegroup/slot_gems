@@ -41,12 +41,6 @@ func update_cell(c : Vector2i):
 			ui.gem_ui.update(g)
 	else:
 		ui.gem_ui.reset()
-	if cell.state == Cell.State.Normal:
-		ui.gem_ui.position = Vector2(0, 0)
-		ui.gem_ui.scale = Vector2(1, 1)
-		ui.modulate = Color(1.0, 1.0, 1.0, 1.0)
-	elif cell.state == Cell.State.Consumed:
-		ui.modulate = Color(1.3, 1.3, 1.3, 1.0)
 	ui.pinned.visible = cell.pinned
 	if cell.frozen > 0:
 		ui.frozen.visible = true

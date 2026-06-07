@@ -2,11 +2,9 @@ extends Node
 
 enum ActiveReason
 {
-	Pattern,
+	Matching,
 	Gem,
-	Item,
 	Relic,
-	RcAction,
 	Duplicate
 }
 
@@ -40,8 +38,8 @@ var active_serial : int = 0
 var event_listeners : Array[Hook]
 
 signal filling_finished
-signal matching_finished
-signal clearing_finished
+signal playing_finished
+signal elimination_finished
 signal shuffle_finished
 
 # odd-q vertical layout shoves odd columns down
@@ -206,31 +204,6 @@ func set_gem_at(c : Vector2i, g : Gem):
 		ui.update_cell(c)
 	return og
 
-func get_state_at(c : Vector2i):
-	c = format_coord(c)
-	if !is_valid(c):
-		return 0
-	var idx = c.y * cx + c.x
-	return cells[idx].state
-
-func set_state_at(c : Vector2i, s : int, extra : Dictionary = {}):
-	c = format_coord(c)
-	if !is_valid(c):
-		return
-	var idx = c.y * cx + c.x
-	if cells[idx].state == s:
-		return false
-	cells[idx].state = s
-	if !(STest.testing && STest.headless):
-		ui.update_cell(c)
-	'''
-	if extra.has("pos"):
-		var tween = G.create_game_tween()
-		ui.burn.global_position = extra.pos
-		tween.tween_property(ui.burn, "position", Vector2(0, 0), 0.15)
-	'''
-	return true
-
 func filter(cb : Callable) -> Array[Vector2i]:
 	var ret : Array[Vector2i] = []
 	for cell in cells:
@@ -255,14 +228,14 @@ func get_active_effects_at(c : Vector2i):
 
 func score_at(c : Vector2i, additional_score : int = 0, mult : float = 1.0):
 	var cell = get_cell(c)
+	var g = cell.gem
+	if !g:
+		return
 	if cell.nullified:
 		mult = 0.0
-	var g = cell.gem
-	if !g || g.active:
-		return
 	if g.type >= Gem.ColorFirst && g.type <= Gem.ColorLast && g.rune >= Gem.RuneFirst && g.rune <= Gem.RuneLast:
 		if G.no_score_marks[g.type].front() || G.no_score_marks[g.rune].front():
-			return
+			mult = 0.0
 	var pos = get_pos(c)
 	G.add_score(round((g.get_score() + additional_score) * mult), pos)
 
@@ -380,53 +353,115 @@ func remove_aura(a : Gem):
 				if g:
 					Buff.remove_by_caster(g, a)
 
-func consume(coords : Array[Vector2i]):
-	for c in coords:
-		var g = get_gem_at(c)
-		if g && !g.active:
-			set_state_at(c, Cell.State.Consumed)
-			if !G.performance_mode && !(STest.testing && STest.headless) && g.name == "":
-				ui.get_cell(c).gem_ui.break_into_pieces()
-
-func eliminate(_coords : Array[Vector2i], power : int, tween : Tween, reason : ActiveReason, source = null, first : bool = false):
+func eliminate(_coords : Array, power : int, tween : Tween, reason : ActiveReason, source = null, first : bool = false):
 	var coords : Array[Vector2i] = []
 	for c in _coords:
 		var cell = get_cell(c)
-		if cell.frozen > 0 && power < cell.frozen:
-			continue
+		if cell.frozen == 0 || power >= cell.frozen:
+			coords.append(c)
+	var layers = []
+	for c in coords:
 		var g = get_gem_at(c)
-		if g && !g.eliminated:
-			if !g.active:
-				if tween:
-					tween.tween_callback(func():
+		if g:
+			var added = false
+			for l in layers:
+				if l.priority == g.eliminate_priority:
+					l.coords.append(c)
+					added = true
+					break
+			if !added:
+				layers.append({"priority":g.eliminate_priority,"coords":[c]})
+	layers.sort_custom(func(a, b):
+		return a.priority > b.priority
+	)
+	for l in layers:
+		var sub_l = G.create_game_tween()
+		for c in l.coords:
+			var g = get_gem_at(c)
+			if g && !g.eliminated && !g.active:
+				var out_of_durability = false
+				if g.durability > 0:
+					g.durability -= 1
+					if g.durability == 0:
+						out_of_durability = true
+				var sub = G.create_game_tween()
+				if sub:
+					sub.tween_callback(func():
 						score_at(c, power)
 					)
 				else:
 					score_at(c, power)
-			if g.on_eliminate.is_valid():
-				g.on_eliminate.call(c, reason, source, tween)
+				if out_of_durability:
+					if sub:
+						sub.tween_callback(func():
+							SSound.se_break2.play()
+						)
+				else:
+					if sub:
+						sub.tween_callback(func():
+							SSound.se_break.play()
+						)
+				if g.on_eliminate.is_valid():
+					if g.eliminate_priority > 0:
+						if sub:
+							var sp = AnimatedSprite2D.new()
+							var gem_ui = ui.get_cell(c).gem_ui
+							sub.tween_callback(func():
+								sp.sprite_frames = G.gem_frames
+								if gem_ui.gem_kind:
+									gem_ui.gem_kind_sp.hide()
+									sp.frame = gem_ui.gem_kind_sp.frame
+								else:
+									gem_ui.special_sp.hide()
+									sp.frame = gem_ui.special_sp.frame
+								sp.position = get_pos(c)
+								ui.cells_root.add_child(sp)
+							)
+							sub.tween_property(sp, "modulate:a", 0.0, 0.4 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+							sub.parallel().tween_property(sp, "scale", Vector2(3.0, 3.0), 0.4 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+							sub.tween_callback(func():
+								sp.queue_free()
+							)
+					g.on_eliminate.call(c, reason, source, sub)
+					for h in event_listeners:
+						if h.event == C.Event.EliminatedEffect || h.event == C.Event.Any:
+							h.host.on_event.call(C.Event.EliminatedEffect, sub, c)
+				g.eliminated = true
+				SMath.remove_if(get_cell(c).event_listeners, func(h : Hook):
+					if h.event == C.Event.Eliminated || h.event == C.Event.Any:
+						h.host.on_event.call(C.Event.Eliminated, sub, c)
+						return h.once
+					return false
+				)
 				for h in event_listeners:
-					if h.event == C.Event.EliminatedEffect || h.event == C.Event.Any:
-						h.host.on_event.call(C.Event.EliminatedEffect, tween, c)
-			g.eliminated = true
-			SMath.remove_if(get_cell(c).event_listeners, func(h : Hook):
-				if h.event == C.Event.Eliminated || h.event == C.Event.Any:
-					h.host.on_event.call(C.Event.Eliminated, tween, c)
-					return h.once
-				return false
-			)
-			for h in event_listeners:
-				var d = {"reason":reason,"source":source,"coord":c}
-				if h.event == C.Event.Eliminated || h.event == C.Event.Any:
-					h.host.on_event.call(C.Event.Eliminated, tween, d)
-			coords.append(c)
-	if tween:
-		tween.tween_interval(0.02)
-		tween.tween_callback(func():
-			consume(coords)
-		)
-	else:
-		consume(coords)
+					var d = {"reason":reason,"source":source,"coord":c}
+					if h.event == C.Event.Eliminated || h.event == C.Event.Any:
+						h.host.on_event.call(C.Event.Eliminated, sub, d)
+				if sub:
+					if !G.performance_mode && g.name == "":
+						sub.tween_callback(func():
+							var gem_ui = ui.get_cell(c).gem_ui
+							gem_ui.break_into_pieces()
+							gem_ui.move_pieces()
+						)
+						sub.tween_interval(0.4 * G.time_scale)
+					sub.tween_callback(func():
+						if !g.active:
+							set_gem_at(c, null)
+							if out_of_durability:
+								G.remove_gem(g)
+					)
+				else:
+					if !g.active:
+						set_gem_at(c, null)
+						if out_of_durability:
+							G.remove_gem(g)
+				if sub_l:
+					sub_l.parallel()
+					sub_l.tween_subtween(sub)
+		if tween:
+			tween.tween_subtween(sub_l)
+	
 	var extra_targets : Array[Vector2i] = []
 	for c in coords:
 		var g = get_gem_at(c)
@@ -490,9 +525,9 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	for h in event_listeners:
 		h.host.on_event.call(C.Event.Activated, null, ae)
 
-func after_matching():
+func after_playing():
 	if active_effects.is_empty():
-		matching_finished.emit()
+		playing_finished.emit()
 		active_serial = 0
 	else:
 		process_active_effect(active_effects[0])
@@ -516,19 +551,23 @@ func process_active_effect(ae : ActiveEffect):
 			text.modulate.a = 0.0
 		)
 	if ae.type == C.HostType.Gem:
-		var gem : Gem = ae.host
-		if gem.on_active.is_valid():
-			gem.on_active.call(ae.effect_index, ae.coord, tween)
+		var g : Gem = ae.host
+		if g.on_active.is_valid():
+			g.on_active.call(ae.effect_index, ae.coord, tween)
 		if tween:
 			tween.tween_callback(func():
 				if ae.times == 1:
-					gem.active = false
-					set_gem_at(gem.coord, null)
+					g.active = false
+					set_gem_at(g.coord, null)
+					if g.durability == 0:
+						G.remove_gem(g)
 			)
 		else:
 			if ae.times == 1:
-				gem.active = false
-				set_gem_at(gem.coord, null)
+				g.active = false
+				set_gem_at(g.coord, null)
+				if g.durability == 0:
+					G.remove_gem(g)
 	elif ae.type == C.HostType.Relic:
 		var relic : Relic = ae.host
 		if relic.on_active.is_valid():
@@ -541,14 +580,14 @@ func process_active_effect(ae : ActiveEffect):
 			else:
 				ae.times -= 1
 				text.text = "R"
+			elimination_finished.emit()
 		)
-		tween.tween_callback(clear_consumed)
 	else:
 		if ae.times == 1:
 			active_effects.remove_at(0)
 		else:
 			ae.times -= 1
-		clear_consumed()
+		elimination_finished.emit()
 
 func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
 	for h in event_listeners:
@@ -598,17 +637,19 @@ func setup(_hf_cy : int):
 	update_gem_quantity_limit()
 
 func resize(_hf_cy : int, tween : Tween):
-	if !tween:
+	var outter_tween = tween != null
+	if !outter_tween:
 		tween = G.create_game_tween()
 	var old_cells = cells.duplicate()
 	var old_cell_uis = []
 	var old_outline_uis = []
-	for n in ui.cells_root.get_children():
-		old_cell_uis.append(n)
-		ui.cells_root.remove_child(n)
-	for n in ui.outlines_root.get_children():
-		old_outline_uis.append(n)
-		ui.outlines_root.remove_child(n)
+	if tween:
+		for n in ui.cells_root.get_children():
+			old_cell_uis.append(n)
+			ui.cells_root.remove_child(n)
+		for n in ui.outlines_root.get_children():
+			old_outline_uis.append(n)
+			ui.outlines_root.remove_child(n)
 	var old_cx = cx
 	var old_cy = cy
 	cy = _hf_cy * 2
@@ -620,9 +661,10 @@ func resize(_hf_cy : int, tween : Tween):
 	for cell in old_cells:
 		cell.coord = cell.coord + offset
 	cells.clear()
-	var rect = ui.get_panel_rect(_hf_cy % 2 == 0)
-	tween.tween_property(ui.panel, "position", rect.position, 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-	tween.parallel().tween_property(ui.panel, "size", rect.size, 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+	if tween:
+		var rect = ui.get_panel_rect(_hf_cy % 2 == 0)
+		tween.tween_property(ui.panel, "position", rect.position, 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+		tween.parallel().tween_property(ui.panel, "size", rect.size, 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 	var cc = Vector2i(hfcx, hfcy)
 	for y in cy:
 		for x in cx:
@@ -632,72 +674,34 @@ func resize(_hf_cy : int, tween : Tween):
 				var cell = old_cells[i]
 				if cell.coord == c:
 					cells.append(cell)
-					ui.cells_root.add_child(old_cell_uis[i])
-					ui.outlines_root.add_child(old_outline_uis[i])
+					if tween:
+						ui.cells_root.add_child(old_cell_uis[i])
+						ui.outlines_root.add_child(old_outline_uis[i])
 					added = true
 					break
 			if !added:
 				add_cell(c)
 				var sub = G.create_game_tween()
-				var cell_ui = ui.cells_root.get_child(-1)
-				cell_ui.scale = Vector2(0.0, 0.0)
-				var outline_ui = ui.outlines_root.get_child(-1)
-				outline_ui.modulate.a = 0.0
-				var pos = outline_ui.position
-				outline_ui.position += (c - cc) * 10.0
-				var d = min(c.x, cx - c.x - 1)
-				sub.tween_interval((2 - d) * 0.3)
-				sub.tween_property(outline_ui, "modulate:a", 1.0, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-				sub.parallel().tween_property(outline_ui, "position", pos, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-				sub.tween_callback(func():
-					set_gem_at(c, G.take_from_bag())
-				)
-				sub.tween_property(cell_ui, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
-				tween.tween_subtween(sub)
-				tween.parallel()
-	update_gem_quantity_limit()
-
-func clear_consumed():
-	var tween = G.create_game_tween()
-	for y in cy:
-		for x in cx:
-			var c = Vector2i(x, y)
-			var s = get_state_at(c)
-			if s == Cell.State.Consumed:
-				var g = get_gem_at(c)
-				var sub = G.create_game_tween()
 				if sub:
+					var cell_ui = ui.cells_root.get_child(-1)
+					cell_ui.scale = Vector2(0.0, 0.0)
+					var outline_ui = ui.outlines_root.get_child(-1)
+					outline_ui.modulate.a = 0.0
+					var pos = outline_ui.position
+					outline_ui.position += (c - cc) * 10.0
+					var d = min(c.x, cx - c.x - 1)
+					sub.tween_interval((2 - d) * 0.3)
+					sub.tween_property(outline_ui, "modulate:a", 1.0, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+					sub.parallel().tween_property(outline_ui, "position", pos, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 					sub.tween_callback(func():
-						set_gem_at(c, null)
-						set_state_at(c, Cell.State.Normal)
+						set_gem_at(c, G.take_from_bag())
 					)
+					sub.tween_property(cell_ui, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+					tween.tween_subtween(sub)
+					tween.parallel()
 				else:
-					set_gem_at(c, null)
-					set_state_at(c, Cell.State.Normal)
-				if g.durability > 0:
-					g.durability -= 1
-					if g.durability == 0:
-						if sub:
-							sub.tween_callback(func():
-								G.remove_gem(g)
-							)
-						else:
-							G.remove_gem(g)
-				if !G.performance_mode && !(STest.testing && STest.headless):
-					if g && g.name == "":
-						sub.tween_callback(func():
-							#SSound.se_break.play()
-							ui.get_cell(c).gem_ui.move_pieces()
-						)
-						sub.tween_interval(0.4 * G.time_scale)
-				if tween:
-					tween.parallel().tween_subtween(sub)
-	if tween:
-		tween.tween_callback(func():
-			clearing_finished.emit()
-		)
-	else:
-		clearing_finished.emit()
+					set_gem_at(c, G.take_from_bag())
+	update_gem_quantity_limit()
 
 func down_proc(tween : Tween = null, allow_new_gems : bool = true):
 	if !tween:
@@ -857,46 +861,31 @@ func on_chain():
 func matching_proc():
 	var tween = G.create_game_tween()
 	
-	var pattern_matcheds_num = 0
 	var matched_cells = {}
 	for p in G.patterns:
 		for y in cy:
 			for x in cx:
 				var res : Array[Vector2i] = p.match_with(Vector2i(x, y))
 				if !res.is_empty():
-					if pattern_matcheds_num == 0:
-						if tween:
-							tween.tween_callback(func():
-								if !(STest.testing && STest.headless):
-									SSound.se_bubble_pop.play()
-								G.add_chain()
-							)
-						else:
-							G.add_chain()
-					pattern_matcheds_num += 1
 					p.add_exp(1)
 					
-					var sub = G.create_game_tween()
-					if sub:
-						sub.tween_interval(pattern_matcheds_num * 0.04 * G.time_scale)
 					for c in res:
-						var g = get_gem_at(c)
-						if !g.eliminated:
-							matched_cells[c] = 1
+						matched_cells[c] = 1
 					
 					for h in event_listeners:
 						if h.event == C.Event.Matched || h.event == C.Event.Any:
-							h.host.on_event.call(C.Event.Matched, sub, null)
-					
-					eliminate(res, 0, sub, ActiveReason.Pattern, p, true)
-					
-					if sub:
-						if pattern_matcheds_num > 0:
-							tween.parallel()
-						tween.tween_subtween(sub)
-						
-						G.time_scale *= 0.98
-						G.time_scale = max(0.2, G.time_scale)
+							h.host.on_event.call(C.Event.Matched, tween, null)
+	
+	if !matched_cells.is_empty():
+		if tween:
+			tween.tween_callback(func():
+				G.add_chain()
+			)
+		else:
+			G.add_chain()
+		
+		eliminate(matched_cells.keys(), 0, tween, ActiveReason.Matching, null, true)
+	
 	var adjacent_cells = {}
 	for c in matched_cells:
 		for cc in offset_adjacents(c):
@@ -905,18 +894,20 @@ func matching_proc():
 		unfreeze(c)
 	
 	if G.game_over_mark == "":
-		if pattern_matcheds_num == 0:
+		if matched_cells.is_empty():
 			if tween:
 				tween.tween_callback(func():
-					after_matching()
+					after_playing()
 				)
 			else:
-				after_matching()
+				after_playing()
 		else:
 			if tween:
-				tween.tween_callback(clear_consumed)
+				tween.tween_callback(func():
+					elimination_finished.emit()
+				)
 			else:
-				clear_consumed()
+				elimination_finished.emit()
 		if tween:
 			G.time_scale *= 0.98
 			G.time_scale = max(0.2, G.time_scale)

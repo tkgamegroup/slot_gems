@@ -29,8 +29,10 @@ func reset(_type : int = 0, _rune : int = 0, _image_id : int = 0):
 	gem_kind = false
 	charming = 0
 	sharp = 0
-	wild_sp.hide()
 	gem_kind_sp.show()
+	wild_sp.hide()
+	special_sp.show()
+	rune_sp.show()
 	update(null)
 
 func update(g : Gem):
@@ -57,15 +59,14 @@ func update(g : Gem):
 				gem_kind_sp.frame = image_id
 				special_sp.frame = 0
 			else:
-				gem_kind_sp.hide()
+				gem_kind_sp.frame = 0
 				special_sp.frame = image_id
 		else:
 			if type == Gem.ColorWild:
-				gem_kind_sp.hide()
+				gem_kind_sp.frame = 0
 				wild_sp.show()
 				rune_sp.modulate = Color(0.0, 0.0, 0.0, 0.66)
 			else:
-				gem_kind_sp.show()
 				wild_sp.hide()
 				rune_sp.modulate = Color(0.0, 0.0, 0.0, 0.66)
 			special_sp.frame = 0
@@ -90,7 +91,8 @@ func dissolve(duration : float):
 func break_into_pieces():
 	if pieces_tweens.is_empty():
 		if image_id == 0:
-			gem_kind_sp.hide()
+			gem_kind_sp.frame = 0
+			rune_sp.frame = 0
 			var tex = G.gem_frames.get_frame_texture("default", type - Gem.ColorFirst + 1)
 			pieces_tweens = SEffect.add_break_pieces(global_position, tex, G.game_ui.game_overlay, 0.5 * G.time_scale)
 			for t in pieces_tweens:

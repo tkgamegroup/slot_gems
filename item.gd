@@ -93,7 +93,7 @@ func setup(n : String):
 			return true
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.Eliminated:
-				Board.activate(self, C.HostType.Gem, 0, data, Board.ActiveReason.Item, self)
+				Board.activate(self, C.HostType.Gem, 0, data, Board.ActiveReason.Gem, self)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "EchoStone":
@@ -102,9 +102,9 @@ func setup(n : String):
 		extra["range"] = 1
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.Exploded:
-				Board.activate(self, C.HostType.Gem, 0, coord, Board.ActiveReason.Item, self)
+				Board.activate(self, C.HostType.Gem, 0, coord, Board.ActiveReason.Gem, self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			if reason == Board.ActiveReason.Item && source.category == "Bomb":
+			if reason == Board.ActiveReason.Gem && source.category == "Bomb":
 				tween.tween_callback(func():
 					Board.activate(self, C.HostType.Gem, 1, coord, reason, source)
 				)
@@ -118,7 +118,7 @@ func setup(n : String):
 					G.add_chain()
 					Board.score_at(SMath.pick_random(places, G.game_rng))
 				)
-				Board.eliminate([coord], 0, tween, Board.ActiveReason.Item, self)
+				Board.eliminate([coord], 0, tween, Board.ActiveReason.Gem, self)
 			elif effect_index == 1:
 				Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "Virus":
@@ -174,7 +174,7 @@ func setup(n : String):
 				
 				G.add_chain()
 			)
-			Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
+			Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "BlackHole":
 		image_id = 15
 		category = "Normal"
@@ -212,7 +212,7 @@ func setup(n : String):
 				tween.tween_callback(func():
 					G.add_chain()
 				)
-				Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
+				Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "WhiteHole":
 		image_id = 16
 		category = "Normal"
@@ -241,7 +241,7 @@ func setup(n : String):
 			tween.tween_callback(func():
 				G.add_chain()
 			)
-			Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
+			Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "Dog":
 		image_id = 18
 		category = "Animal"
@@ -286,7 +286,7 @@ func setup(n : String):
 					tween.tween_callback(func():
 						G.add_chain()
 					)
-					Board.eliminate([c], 0, tween, Board.ActiveReason.Item, self)
+					Board.eliminate([c], 0, tween, Board.ActiveReason.Gem, self)
 					bc = c
 	elif name == "Rooster":
 		image_id = 20
@@ -313,7 +313,7 @@ func setup(n : String):
 					for c in targets:
 						var i = Board.get_item_at(c)
 						if i:
-							Board.activate(i, 0, 0, c, Board.ActiveReason.Item, self)
+							Board.activate(i, 0, 0, c, Board.ActiveReason.Gem, self)
 					'''
 				)
 	elif name == "Rabbit":
@@ -364,7 +364,7 @@ func setup(n : String):
 							)
 						'''
 					)
-					Board.eliminate([c], 0, tween, Board.ActiveReason.Item, self)
+					Board.eliminate([c], 0, tween, Board.ActiveReason.Gem, self)
 					bc = c
 	elif name == "Fox":
 		image_id = 22
@@ -467,7 +467,7 @@ func setup(n : String):
 					tween.tween_callback(func():
 						G.add_chain()
 					)
-					Board.eliminate(coords, 0, tween, Board.ActiveReason.Item, self)
+					Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "HotDog":
 		image_id = 27
 		category = "Food"

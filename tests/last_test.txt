@@ -1,1 +1,1 @@
-test_lv24_24_bombs_ScatterBlast
+test_lv24_24_sausages

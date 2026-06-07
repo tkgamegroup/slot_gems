@@ -48,6 +48,10 @@ extends Panel
 @export var reference_edit : LineEdit
 @export var percentage_edit : LineEdit
 @export var calc_result_edit : LineEdit
+@export var filters : Control
+@export var round_start_edit : LineEdit
+@export var round_end_edit : LineEdit
+@export var column_filters : Control
 @export var test_result : GridContainer
 @export var close_button : Button
 
@@ -109,6 +113,8 @@ func update_config_ui():
 	for w in STest.watches:
 		if w.type == "event":
 			watches_list.add_item(str(C.Event.find_key(w.ev)))
+		else:
+			watches_list.add_item(w.name)
 	watch_event_select.clear()
 	for i in C.Event.Count:
 		watch_event_select.add_item(str(C.Event.find_key(i)))
@@ -249,7 +255,7 @@ func read_datas(idx : int):
 				var column = {"name":k,"avg":c.avg,"med":c.med,"max":c.max,"min":c.min,"max_i":max_i,"min_i":min_i,"datas":c.datas.duplicate()}
 				g.columns.append(column)
 
-func result_grid_add(txt : String):
+func result_add_cell(txt : String):
 	var lb = Label.new()
 	lb.text = txt
 	test_result.add_child(lb)
@@ -264,15 +270,33 @@ func calc_modify():
 	var b = float(int(percentage_edit.text) / 100.0)
 	calc_result_edit.text = "%.2f" % (a / b)
 
+func update_filters():
+	var round_start = int(round_start_edit.text) if !round_start_edit.text.is_empty() else -1
+	var round_end = int(round_end_edit.text) if !round_end_edit.text.is_empty() else -1
+	var col_n = column_filters.get_child_count()
+	var presseds = []
+	for i in col_n:
+		presseds.append(column_filters.get_child(i).button_pressed)
+	for i in test_result.get_child_count():
+		if i < 8:
+			continue
+		var lno = i / 8 - 1
+		var r = lno / col_n + 1
+		var v = true
+		if round_start != -1 && round_end != -1:
+			v = (r >= round_start && r <= round_end)
+		v = v && !presseds[lno % col_n]
+		test_result.get_child(i).visible = v
+
 func update_page(compare : bool = false):
 	if test_idx == -1:
 		return
 	var t = tests[test_idx]
 	var t2 = tests[compare_idx] if compare else null
-	var i = find_group(t, group_idx)
-	if i == -1:
+	var gi = find_group(t, group_idx)
+	if gi == -1:
 		return
-	var g = t.groups[i]
+	var g = t.groups[gi]
 	var i2 = find_group(t2, group_idx) if t2 else -1
 	var g2 = t2.groups[i2] if i2 != -1 else null
 	test_comment.clear()
@@ -288,30 +312,36 @@ func update_page(compare : bool = false):
 		else:
 			test_comment.text += l + "\n"
 	test_result.columns = 8
-	result_grid_add("Name")
-	result_grid_add("Avg")
-	result_grid_add("Med")
-	result_grid_add("Max")
-	result_grid_add("Max i")
-	result_grid_add("Min")
-	result_grid_add("Min i")
-	result_grid_add("N/A")
+	result_add_cell("Name")
+	result_add_cell("Avg")
+	result_add_cell("Med")
+	result_add_cell("Max")
+	result_add_cell("Max i")
+	result_add_cell("Min")
+	result_add_cell("Min i")
+	result_add_cell("N/A")
 	
+	var column_names = {}
 	for c in g.columns:
 		var c2 = find_column(g2, c.name) if g2 else null
-		result_grid_add(c.name)
-		if !c2:
-			result_grid_add("%.3f" % c.avg)
+		result_add_cell(c.name)
+		var n = c.name.split("(")[0]
+		if column_names.has(n):
+			column_names[n] += 1
 		else:
-			result_grid_add("%.3f(%.3f, %d%%)" % [c.avg, c2.avg * compare_mult, calc_effect_percentage(c.avg, c2.avg)])
+			column_names[n] = 1
 		if !c2:
-			result_grid_add("%.3f" % c.med)
+			result_add_cell("%.3f" % c.avg)
 		else:
-			result_grid_add("%.3f(%.3f, %d%%)" % [c.med, c2.med * compare_mult, calc_effect_percentage(c.med, c2.med)])
+			result_add_cell("%.3f(%.3f, %d%%)" % [c.avg, c2.avg * compare_mult, calc_effect_percentage(c.avg, c2.avg)])
 		if !c2:
-			result_grid_add("%.1f" % c.max)
+			result_add_cell("%.3f" % c.med)
 		else:
-			result_grid_add("%.1f(%.1f, %d%%)" % [c.max, c2.max * compare_mult, calc_effect_percentage(c.max, c2.max)])
+			result_add_cell("%.3f(%.3f, %d%%)" % [c.med, c2.med * compare_mult, calc_effect_percentage(c.med, c2.med)])
+		if !c2:
+			result_add_cell("%.1f" % c.max)
+		else:
+			result_add_cell("%.1f(%.1f, %d%%)" % [c.max, c2.max * compare_mult, calc_effect_percentage(c.max, c2.max)])
 		var max_i = c.max_i
 		var txt_max_i = LinkButton.new()
 		txt_max_i.text = "%d" % max_i
@@ -320,9 +350,9 @@ func update_page(compare : bool = false):
 			show_sample(max_i)
 		)
 		if !c2:
-			result_grid_add("%.1f" % c.min)
+			result_add_cell("%.1f" % c.min)
 		else:
-			result_grid_add("%.1f(%.1f, %d%%)" % [c.min, c2.min * compare_mult, calc_effect_percentage(c.min, c2.min)])
+			result_add_cell("%.1f(%.1f, %d%%)" % [c.min, c2.min * compare_mult, calc_effect_percentage(c.min, c2.min)])
 		var min_i = c.min_i
 		var txt_min_i = LinkButton.new()
 		txt_min_i.text = "%d" % min_i
@@ -330,7 +360,20 @@ func update_page(compare : bool = false):
 		txt_min_i.pressed.connect(func():
 			show_sample(min_i)
 		)
-		result_grid_add("N/A")
+		result_add_cell("N/A")
+	filters.hide()
+	round_start_edit.text = ""
+	round_end_edit.text = ""
+	for n in column_filters.get_children():
+		column_filters.remove_child(n)
+		n.queue_free()
+	for n in column_names:
+		if column_names[n] > 1:
+			filters.show()
+			var toggle = CheckButton.new()
+			toggle.text = n
+			toggle.pressed.connect(update_filters)
+			column_filters.add_child(toggle)
 
 func save_config():
 	var sel = config_list.get_selected_items()
@@ -495,7 +538,6 @@ func _ready() -> void:
 	watch_add_button.pressed.connect(func():
 		STest.add_watch("var", "new", 0)
 		watches_list.add_item("new")
-		save_config()
 		watch_type_edit.text = ""
 		watch_name_edit.text = ""
 		watch_name_lb.text = "Name"
@@ -504,13 +546,13 @@ func _ready() -> void:
 		watch_event_select.disabled = true
 		watch_name_edit.show()
 		watch_event_select.hide()
+		save_config()
 	)
 	watch_remove_button.pressed.connect(func():
 		var sel = watches_list.get_selected_items()
 		if !sel.is_empty():
 			STest.watches.remove_at(sel[0])
 			watches_list.remove_item(sel[0])
-			save_config()
 			watch_type_edit.text = ""
 			watch_name_edit.text = ""
 			watch_name_lb.text = "Name"
@@ -521,6 +563,7 @@ func _ready() -> void:
 			watch_event_select.hide()
 			watch_add_button.disabled = false
 			watch_remove_button.disabled = true
+			save_config()
 	)
 	inputs_list.item_selected.connect(func(idx : int):
 		var d = STest.inputs[idx]
@@ -655,6 +698,12 @@ func _ready() -> void:
 	)
 	percentage_edit.text_changed.connect(func(text : String):
 		calc_modify()
+	)
+	round_start_edit.text_changed.connect(func(text : String):
+		update_filters()
+	)
+	round_end_edit.text_changed.connect(func(text : String):
+		update_filters()
 	)
 	group_plus_button.pressed.connect(func():
 		if test_idx != -1:

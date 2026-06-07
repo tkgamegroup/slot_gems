@@ -80,7 +80,11 @@ func _ready() -> void:
 		G.screen_shake_strength = 8.0
 		play_button.disabled = true
 		play_button.mouse_exited.emit()
-		G.play()
+		var tween = G.create_game_tween()
+		tween.tween_interval(0.5)
+		tween.tween_callback(func():
+			G.play()
+		)
 	)
 	play_button.mouse_entered.connect(func():
 		if !play_button.disabled:

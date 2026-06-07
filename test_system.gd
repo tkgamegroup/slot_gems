@@ -16,8 +16,10 @@ enum ActionType
 	Manual,
 	OnlyShuffle,
 	AutoAI0, # just matching colors
-	AutoAI1, # try to max chains
-	AutoAI2  # try to max triggers
+	AutoAI1, # max out chains
+	AutoAI2, # max out triggers
+	AutoAI3, # put on auras
+	AutoAI4, # max out eliminate effects
 }
 
 const folder = "G:/slot_gems/tests"
@@ -79,7 +81,7 @@ func write_head():
 		if rounds > 1:
 			line += "(r%d)" % (i + 1)
 		for w in watches:
-			line += ",%s" % w.name
+			line += ",%s" % (str(C.Event.find_key(w.ev)) if w.type == "event" else w.name)
 			if rounds > 1:
 				line += "(r%d)" % (i + 1)
 	write(line)
@@ -91,11 +93,21 @@ func write_sample():
 		record_line += ","
 	record_line += "%d" % G.score
 	for w in watches:
-		record_line += ",%d" % w.times
+		if w.type == "event":
+			record_line += ",%d" % w.times
+		else:
+			if w.name == "gem_count":
+				record_line += ",%d" % G.gems.size()
+			elif w.name.begins_with("modifiers/"):
+				record_line += ",%d" % G.modifiers[w.name.substr(10)]
+			else:
+				record_line += ",%d" % G[w.name]
+		w.times = 0
 	if G.current_round == rounds:
 		begin_write()
 		write(record_line)
 		end_write()
+		record_line = ""
 
 func write_game_status():
 	begin_write()
@@ -129,6 +141,7 @@ func write_game_status():
 		for n in special_gems:
 			if !s.is_empty():
 				s += ", "
+			s += n
 		write("#Special Gems: %s" % s)
 	var patterns_str = ""
 	for p in G.patterns:
@@ -144,6 +157,7 @@ func write_game_status():
 		for n in relics:
 			if !s.is_empty():
 				s += ", "
+			s += n
 		write("#Relics: %s" % s)
 	write("#Swaps: %d" % G.swaps_per_round)
 	var modifiers_str = ""
@@ -226,8 +240,10 @@ func read_result(fn : String):
 		col.med = SMath.array_med(col.datas)
 		col.max_i = SMath.array_max_i(col.datas)
 		col.min_i = SMath.array_min_i(col.datas)
-		col.max = col.datas[col.max_i]
-		col.min = col.datas[col.min_i]
+		if col.max_i != -1:
+			col.max = col.datas[col.max_i]
+		if col.min_i != -1:
+			col.min = col.datas[col.min_i]
 	return result
 
 func load_config(name : String = "config"):
@@ -287,25 +303,45 @@ func remove_input(name : String):
 			inputs.erase(i)
 			break
 
-func reset():
+func process_inputs(round : int):
 	var parms = {}
 	for i in inputs:
-		if i.type == "var":
-			var val = i.base + i.group_inc * group_idx
-			if i.name.begins_with("modifiers/"):
-				parms.get_or_add("modifiers", []).append({"name":i.name.substr(10),"value":val})
-			else:
-				parms[i.name] = val
-		elif i.type == "gem":
-			var n = i.base + i.group_inc * group_idx
-			parms.get_or_add("extra_gems", []).append({"name":i.name,"num":n})
-		elif i.type == "pattern":
-			var n = i.base + i.group_inc * group_idx
-			parms.get_or_add("extra_patterns", []).append({"name":i.name,"num":n})
-		elif i.type == "relic":
-			var n = i.base + i.group_inc * group_idx
-			parms.get_or_add("extra_relics", []).append({"name":i.name,"num":n})
-	G.start_game("1" if use_save else "", parms)
+		var val = i.base + i.group_inc * group_idx
+		if i.given_round == round || (round != -1 && i.given_round == -2):
+			if i.type == "var":
+				if i.name.begins_with("modifiers/"):
+					parms.get_or_add("modifiers", []).append({"name":i.name.substr(10),"value":val})
+				elif i.name == "board_size" && round != -1:
+					G.board_size = val
+					Board.resize(val, null)
+				else:
+					parms[i.name] = val
+			elif i.type == "gem":
+				if i.name == "all_kinds":
+					G.add_all_kinds_of_gems(val)
+				else:
+					for j in val:
+						var g = Gem.new()
+						if i.name == "Wild":
+							g.type = Gem.ColorWild
+						else:
+							g.setup(i.name)
+						G.add_gem(g)
+			elif i.type == "pattern":
+				for j in val:
+					var p = Gem.new()
+					p.setup(i.name)
+					G.add_pattern(p)
+			elif i.type == "relic":
+				for j in val:
+					var r = Relic.new()
+					r.setup(i.name)
+					G.add_relic(r)
+	return parms
+
+func reset():
+	G.start_game("1" if use_save else "", process_inputs(-1))
+	process_inputs(1)
 	if random_seed || reroll:
 		G.random_seeds()
 	if overwrite_target_score != -1:
@@ -358,12 +394,20 @@ func start(base_group : int = 0, groups_num : int = -1):
 				for j in samples:
 					sample_idx = j
 					reset()
+					G.setup_first_round()
 					if j == 0:
 						FileAccess.open(format_filename(), FileAccess.WRITE)
 						write_game_status()
 						write_head()
-					auto_play()
-					write_sample()
+					while true:
+						auto_play()
+						write_sample()
+						if G.current_round >= rounds:
+							break
+						else:
+							G.round_end()
+							process_inputs(G.current_round + 1)
+							G.next_round()
 					SUtils.remove_event_listeners(Board, self)
 			stop()
 		else:
@@ -377,6 +421,8 @@ func stop():
 	testing = false
 
 func timeout():
+	if G.busy:
+		return
 	if G.title_ui.visible || G.stage == G.Stage.Deploy || G.stage >= G.Stage.GameOver:
 		if G.title_ui.visible:
 			G.title_ui.hide()
@@ -434,6 +480,8 @@ func timeout():
 					end_write()
 					step = TaskSteps.Standby
 				else:
+					G.round_end()
+					process_inputs(G.current_round + 1)
 					G.next_round()
 					step = TaskSteps.Play
 
@@ -468,7 +516,7 @@ func has_missing_one_place(board : Dictionary = {}):
 						return true
 	return false
 
-func get_missing_one_places(board):
+func get_missing_one_places(board : Dictionary, sort_by_y : bool = true):
 	var ret = []
 	for p in G.patterns:
 		for y in Board.cy:
@@ -482,17 +530,18 @@ func get_missing_one_places(board):
 						for cc in p.all_coords():
 							all_coords.append(Board.cube_to_offset(c_off + cc))
 						ret.append({"coord":res[0], "color":Gem.ColorFirst + i, "all_coords":all_coords})
-	ret.sort_custom(func(a, b):
-		var a_max_y = 10000
-		var b_max_y = 10000
-		for c in a.all_coords:
-			if c.y > a_max_y:
-				a_max_y = c.y
-		for c in b.all_coords:
-			if c.y > b_max_y:
-				b_max_y = c.y
-		return a_max_y > b_max_y
-	)
+	if sort_by_y:
+		ret.sort_custom(func(a, b):
+			var a_max_y = 10000
+			var b_max_y = 10000
+			for c in a.all_coords:
+				if c.y > a_max_y:
+					a_max_y = c.y
+			for c in b.all_coords:
+				if c.y > b_max_y:
+					b_max_y = c.y
+			return a_max_y > b_max_y
+		)
 	return ret
 
 func get_missing_one_places_by_color(board, color : int):
@@ -750,6 +799,84 @@ func auto_play():
 						changed = true
 				if !changed:
 					break
+		elif action_type == ActionType.AutoAI3:
+			while true:
+				var changed = false
+				var missings = get_missing_one_places(board, false)
+				var aura_places = []
+				var aura_affected_places = {}
+				for c in board:
+					var g = board[c]
+					if g.tags.has("aura"):
+						aura_places.append(c)
+						var r = g.extras["range_i"]
+						for i in range(1, r):
+							for cc in Board.offset_ring(c, i):
+								if aura_affected_places.has(cc):
+									aura_affected_places[cc] += 1
+								else:
+									aura_affected_places[cc] = 1
+				missings.sort_custom(func(a, b):
+					var a_value = 0
+					var b_value = 0
+					if !aura_places.has(a.coord):
+						for c in a.all_coords:
+							if aura_affected_places.has(c):
+								a_value += aura_affected_places[c]
+					else:
+						a_value = -100
+					if !aura_places.has(b.coord):
+						for c in b.all_coords:
+							if aura_affected_places.has(c):
+								b_value += aura_affected_places[c]
+					else:
+						b_value = -100
+					return a_value > b_value
+				)
+				for p in missings:
+					if swaps > 0:
+						var sorted_hand = get_sorted_hand(hand, p.color)
+						for i in sorted_hand:
+							var coord = p.coord
+							if calc_move_matcheds_change(board, coord, hand[i]) > 0:
+								swaps -= 1
+								move(board, hand, moves, coord, coord, i)
+								changed = true
+								break
+				if !changed:
+					break
+		elif action_type == ActionType.AutoAI4:
+			while true:
+				var changed = false
+				var missings = get_missing_one_places(board, false)
+				var eliminate_effects_places = []
+				for c in board:
+					var g = board[c]
+					if g.tags.has("eliminate_effect"):
+						eliminate_effects_places.append(c)
+				missings.sort_custom(func(a, b):
+					var a_value = 0
+					var b_value = 0
+					for c in a.all_coords:
+						if eliminate_effects_places.has(c):
+							a_value += 1
+					for c in b.all_coords:
+						if eliminate_effects_places.has(c):
+							b_value += 1
+					return a_value > b_value
+				)
+				for p in missings:
+					if swaps > 0:
+						var sorted_hand = get_sorted_hand(hand, p.color)
+						for i in sorted_hand:
+							var coord = p.coord
+							if calc_move_matcheds_change(board, coord, hand[i]) > 0:
+								swaps -= 1
+								move(board, hand, moves, coord, coord, i)
+								changed = true
+								break
+				if !changed:
+					break
 	
 	if moves.is_empty():
 		no_move_played += 1
@@ -804,9 +931,4 @@ func _ready() -> void:
 			if event == w.ev:
 				w.times += 1
 	
-	for fn in DirAccess.open(STest.folder).get_files():
-		if fn.ends_with(".ini"):
-			var name = fn.substr(0, fn.length() - 4)
-			load_config(name)
-			save_config(name)
 	timer.timeout.connect(timeout)

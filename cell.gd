@@ -2,15 +2,9 @@ extends RefCounted
 
 class_name Cell
 
-enum State
-{
-	Normal,
-	Consumed
-}
-
 var coord : Vector2i
 var gem : Gem = null
-var state : int = 0
+var consumed : bool = false
 var pinned : bool = false
 var frozen : int = 0
 var nullified : bool = false
