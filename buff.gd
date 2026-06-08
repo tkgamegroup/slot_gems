@@ -8,17 +8,7 @@ enum Type
 	ChangeColor,
 	ChangeRune,
 	ValueModifier,
-	Enchant,
-	Parasitical
-}
-
-enum Duration
-{
-	ThisChain,
-	ThisMatching,
-	ThisRound,
-	OnBoard,
-	Eternal
+	Enchant
 }
 
 var uid : int
@@ -29,6 +19,11 @@ var duration : int
 var data : Dictionary
 
 static var s_uid : int = 0
+
+static func on_value_changed(host, addr : String):
+	SUtils.calc_value_with_attrs(host, addr)
+	if host == G && addr.begins_with("attrs/"):
+		G.on_attr_changed(addr.split("/")[1])
 
 func die():
 	match type:
@@ -42,9 +37,9 @@ func die():
 				Board.ui.get_cell(host.coord).gem_ui.update(host)
 		Type.ValueModifier:
 			type = Type.None
-			SUtils.calc_value_with_modifiers(host, data["target"], data["sub_attr"])
+			on_value_changed(host, data["addr"])
 
-static func create(host, type : int, parms : Dictionary, duration : int = Duration.ThisMatching) -> Buff:
+static func create(host, type : int, parms : Dictionary, duration : int = C.Duration.ThisMatching, caster = null) -> Buff:
 	var b = Buff.new()
 	b.uid = s_uid
 	s_uid += 1
@@ -63,11 +58,9 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 			if host.coord.x != -1 && host.coord.y != -1:
 				Board.ui.get_cell(host.coord).gem_ui.update(host)
 		Type.ValueModifier:
-			var target = parms["target"]
-			var sub_attr = parms["sub_attr"] if parms.has("sub_attr") else ""
 			var first = true
 			for bb in host.buffs:
-				if bb.type == Type.ValueModifier && bb.data["target"] == target && bb.data["sub_attr"] == sub_attr:
+				if bb.type == Type.ValueModifier && bb.data["addr"] == parms["addr"]:
 					first = false
 					break
 			if first:
@@ -76,13 +69,9 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 				s_uid += 1
 				bb.type = type
 				bb.host = host
-				bb.duration = Duration.Eternal
-				bb.data["target"] = target
-				bb.data["sub_attr"] = sub_attr
-				if sub_attr == "":
-					bb.data["set"] = host[target]
-				else:
-					bb.data["set"] = host[sub_attr][target]
+				bb.duration = C.Duration.Eternal
+				bb.data["addr"] = parms["addr"]
+				bb.data["set"] = SUtils.get_value_by_addr(host, parms["addr"])
 				host.buffs.append(bb)
 			if parms.has("set"):
 				b.data["set"] = parms["set"]
@@ -90,17 +79,24 @@ static func create(host, type : int, parms : Dictionary, duration : int = Durati
 				b.data["add"] = parms["add"]
 			if parms.has("mult"):
 				b.data["mult"] = parms["mult"]
-			b.data["target"] = target
-			b.data["sub_attr"] = sub_attr
+			b.data["addr"] = parms["addr"]
 		Type.Enchant:
 			b.data["type"] = parms["type"]
 			b.data["bid"] = parms["bid"]
-		Type.Parasitical:
-			b.data["type"] = parms["type"]
 	host.buffs.append(b)
 	if type == Type.ValueModifier:
-		SUtils.calc_value_with_modifiers(host, b.data["target"], b.data["sub_attr"])
+		on_value_changed(host, b.data["addr"])
+	b.caster = caster
 	return b
+
+static func set_value(host, addr : String, v, duration : int = C.Duration.ThisMatching, caster = null) -> Buff:
+	return create(host, Type.ValueModifier, {"addr":addr,"set":v}, duration, caster)
+
+static func add_value(host, addr : String, v, duration : int = C.Duration.ThisMatching, caster = null) -> Buff:
+	return create(host, Type.ValueModifier, {"addr":addr,"add":v}, duration, caster)
+
+static func mult_value(host, addr : String, v, duration : int = C.Duration.ThisMatching, caster = null) -> Buff:
+	return create(host, Type.ValueModifier, {"addr":addr,"mult":v}, duration, caster)
 
 static func find_typed(host, type : int) -> Buff:
 	for b in host.buffs:

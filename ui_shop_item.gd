@@ -39,7 +39,7 @@ func setup(_cate : String, _object, _price : int, _quantity : int = 1, _no_butto
 	no_button = _no_button
 
 func refresh_price():
-	if G.modifiers["half_price_i"] > 0:
+	if G.attrs["half_price_i"] > 0:
 		price = int(original_price * 0.5)
 	else:
 		price = original_price
@@ -95,8 +95,8 @@ func buy(tween : Tween = null):
 			var sub = G.create_game_tween()
 			sub.tween_interval(i * 0.1)
 			if i == 0:
-				if Hand.grabs.size() > G.max_hand_grabs:
-					Hand.discard(Hand.grabs.size() - 1)
+				if Hand.gems.size() > G.hand_size:
+					Hand.discard(Hand.gems.size() - 1)
 				G.take_from_bag(gem)
 				var ui = Hand.add_gem(gem)
 				ui.hide()
@@ -153,9 +153,9 @@ func buy(tween : Tween = null):
 		tween.tween_interval(0.5)
 	elif cate == "increase_hand_size":
 		tween.tween_callback(func():
-			G.max_hand_grabs += 1
-			if Hand.grabs.size() < G.max_hand_grabs:
-				for i in (G.max_hand_grabs - Hand.grabs.size()):
+			G.hand_size += 1
+			if Hand.gems.size() < G.hand_size:
+				for i in (G.hand_size - Hand.gems.size()):
 					Hand.draw()
 		)
 		tween.tween_interval(0.5)

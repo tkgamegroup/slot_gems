@@ -2,14 +2,14 @@ extends Node
 
 var ui : G.UiHand = null
 
-var grabs : Array[Gem]
+var gems : Array[Gem]
 
 func add_gem(gem : Gem, pos : int = -1, no_ui : bool = false) -> G.UiHandSlot:
 	if pos == -1:
-		pos = grabs.size()
+		pos = gems.size()
 	gem.coord = Vector2i(pos, -1)
-	grabs.insert(pos, gem)
-	if no_ui || (STest.testing && STest.headless):
+	gems.insert(pos, gem)
+	if no_ui || G.is_headless():
 		return null
 	return ui.add_slot(gem, pos)
 
@@ -23,15 +23,15 @@ func draw(to_the_end : bool = true):
 	return slot
 
 func find(g : Gem):
-	return grabs.find(g)
+	return gems.find(g)
 
 func erase(idx : int):
-	var g = grabs[idx]
-	grabs.erase(g)
-	for i in grabs.size():
-		grabs[i].coord = Vector2i(i, -1)
+	var g = gems[idx]
+	gems.erase(g)
+	for i in gems.size():
+		gems[i].coord = Vector2i(i, -1)
 	
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.remove_slot(idx)
 	return g
 
@@ -50,11 +50,11 @@ func discard(idx : int):
 	)
 
 func clear():
-	for g in grabs:
+	for g in gems:
 		G.put_to_bag(g)
-	grabs.clear()
+	gems.clear()
 	
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.clear()
 
 func swap(coord : Vector2i, gem : Gem):

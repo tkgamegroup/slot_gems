@@ -12,12 +12,50 @@ extends Node
 @onready var lightning : PackedScene = load("res://fx_lightning.tscn")
 @onready var leading_line_pb : PackedScene = load("res://leading_line.tscn")
 
-func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width = 8.0):
+func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width : float = 8.0):
 	var l = SEffect.leading_line_pb.instantiate()
 	l.setup(p0, p1, 0.3, duration, width)
 	
 	l.z_index = 3
 	Board.ui.overlay.add_child(l)
+
+func effect_activate(target, tween : Tween, pos : Vector2, duration : float, hide_target : bool = false):
+	var sp = AnimatedSprite2D.new()
+	if !tween:
+		tween = G.create_game_tween()
+	tween.tween_callback(func():
+		if hide_target:
+			target.hide()
+		sp.sprite_frames = target.sprite_frames
+		sp.frame = target.frame
+		sp.position = pos
+	)
+	tween.tween_property(sp, "modulate:a", 0.0, duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.parallel().tween_property(sp, "scale", Vector2(3.0, 3.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.tween_callback(func():
+		sp.queue_free()
+	)
+	return sp
+
+func effect_recover(target, tween : Tween, pos : Vector2, duration : float, show_target : bool = false):
+	var sp = AnimatedSprite2D.new()
+	if !tween:
+		tween = G.create_game_tween()
+	tween.tween_callback(func():
+		sp.sprite_frames = target.sprite_frames
+		sp.frame = target.frame
+		sp.position = pos
+		sp.modulate.a = 0.0
+		sp.scale = Vector2(1.7, 1.7)
+	)
+	tween.tween_property(sp, "modulate:a", 1.0, duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	tween.parallel().tween_property(sp, "scale", Vector2(1.0, 1.0), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	tween.tween_callback(func():
+		if show_target:
+			target.show()
+		sp.queue_free()
+	)
+	return sp
 
 func add_explosion(pos : Vector2, size : Vector2, z_index : int, duration : float):
 	var sp = AnimatedSprite2D.new()

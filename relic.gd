@@ -25,10 +25,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("red_bouns_i", extra["value_i"])
+					Buff.add_value(G, "attrs/red_bouns_i", extra["value_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("red_bouns_i", -extra["value_i"])
+					Buff.remove_by_caster(G, self)
 	elif name == "PaintingOfOrange":
 		image_id = 2
 		extra["value_i"] = 24
@@ -36,10 +36,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("orange_bouns_i", extra["value_i"])
+					G.change_attr("orange_bouns_i", extra["value_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("orange_bouns_i", -extra["value_i"])
+					G.change_attr("orange_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfGreen":
 		image_id = 3
 		extra["value_i"] = 24
@@ -47,10 +47,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("green_bouns_i", extra["value_i"])
+					G.change_attr("green_bouns_i", extra["value_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("green_bouns_i", -extra["value_i"])
+					G.change_attr("green_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfBlue":
 		image_id = 4
 		extra["value_i"] = 24
@@ -58,10 +58,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("blue_bouns_i", extra["value_i"])
+					G.change_attr("blue_bouns_i", extra["value_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("blue_bouns_i", -extra["value_i"])
+					G.change_attr("blue_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfMagenta":
 		image_id = 5
 		extra["value_i"] = 24
@@ -69,10 +69,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("magenta_bouns_i", extra["value_i"])
+					G.change_attr("magenta_bouns_i", extra["value_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("magenta_bouns_i", -extra["value_i"])
+					G.change_attr("magenta_bouns_i", -extra["value_i"])
 	elif name == "PaintingOfWave":
 		image_id = 6
 		extra["value_i"] = 16
@@ -117,10 +117,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("extra_range_i", 1)
+					G.change_attr("extra_range_i", 1)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("extra_range_i", -1)
+					G.change_attr("extra_range_i", -1)
 	elif name == "ScatterBlast":
 		image_id = 9
 		extra["range_i"] = 1
@@ -128,52 +128,52 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_modifier("extra_explode_range_i", +extra["range_i"])
-					G.change_modifier("extra_explode_power_i", -extra["power_i"])
+					G.change_attr("extra_explode_range_i", +extra["range_i"])
+					G.change_attr("extra_explode_power_i", -extra["power_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_modifier("extra_explode_range_i", -extra["range_i"])
-					G.change_modifier("extra_explode_power_i", +extra["power_i"])
+					G.change_attr("extra_explode_range_i", -extra["range_i"])
+					G.change_attr("extra_explode_power_i", +extra["power_i"])
 	elif name == "Recorder":
 		image_id = 10
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("additional_active_times_i", 1)
+					G.set_attr("additional_active_times_i", 1)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("additional_active_times_i", 0)
+					G.set_attr("additional_active_times_i", 0)
 	elif name == "GhostAmmo":
 		image_id = 11
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("not_consume_repeat_count_chance_i", 50)
+					G.set_attr("not_consume_repeat_count_chance_i", 50)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("not_consume_repeat_count_chance_i", 0)
+					G.set_attr("not_consume_repeat_count_chance_i", 0)
 	elif name == "Multicast":
 		image_id = 12
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("additional_targets_i", 2)
+					G.set_attr("additional_targets_i", 2)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("additional_targets_i", 0)
+					G.set_attr("additional_targets_i", 0)
 	elif name == "MobiusStrip":
 		image_id = 13
 		price = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("board_upper_lower_connected_i", 1)
+					G.set_attr("board_upper_lower_connected_i", 1)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("board_upper_lower_connected_i", 0)
+					G.set_attr("board_upper_lower_connected_i", 0)
 	elif name == "Premeditation":
 		image_id = 14
 		price = 3
@@ -181,10 +181,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("base_chain_i", extra["value_i"])
+					G.set_attr("base_chain_i", extra["value_i"])
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("base_chain_i", 0)
+					G.set_attr("base_chain_i", 0)
 	elif name == "PentagramPower":
 		image_id = 15
 		price = 9
@@ -196,19 +196,19 @@ func setup(n : String):
 			elif event == C.Event.Chain:
 				if G.chains > 0 && G.chains % 5 == 0:
 					var v = extra["value_f"]
-					Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":v}, Buff.Duration.ThisChain)
+					Buff.create(G, Buff.Type.ValueModifier, {"addr":"gain_scaler","mult":v}, C.Duration.ThisChain)
 	elif name == "HalfPriceCoupon":
 		image_id = 16
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_modifier("half_price_i", 1)
+					G.set_attr("half_price_i", 1)
 					if G.shop_ui.visible:
 						G.shop_ui.refresh_prices()
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_modifier("half_price_i", 0)
+					G.set_attr("half_price_i", 0)
 					if G.shop_ui.visible:
 						G.shop_ui.refresh_prices()
 	elif name == "RockBottom":
@@ -319,7 +319,7 @@ func setup(n : String):
 				if try_to_activate_constellation("Gemini"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			if !Hand.grabs.is_empty():
+			if !Hand.gems.is_empty():
 				var idx = 0
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
@@ -327,7 +327,7 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.3 * G.time_scale)
 				tween.tween_callback(func():
-					G.duplicate_gem(null, Hand.grabs[idx], Hand.ui.get_slot(idx))
+					G.duplicate_gem(null, Hand.gems[idx], Hand.ui.get_slot(idx))
 				)
 	elif name == "Cancer":
 		image_id = 21
@@ -399,15 +399,15 @@ func setup(n : String):
 				if try_to_activate_constellation("Scorpio"):
 					pass
 		on_active = func(effect_index : int, _c : Vector2i, tween : Tween):
-			if !Hand.grabs.is_empty() && G.gems.size() - 1 >= Board.curr_min_gem_num:
-				var idx = Hand.grabs.size() - 1
+			if !Hand.gems.is_empty() && G.gems.size() - 1 >= Board.curr_min_gem_num:
+				var idx = Hand.gems.size() - 1
 				var ui_pos = ui.get_global_rect().get_center()
 				tween.tween_callback(func():
 					SEffect.add_leading_line(ui_pos, Hand.ui.get_pos(idx))
 				)
 				tween.tween_interval(0.3)
 				tween.tween_callback(func():
-					G.delete_gem(null, Hand.grabs[idx], Hand.ui.get_slot(idx).gem_ui)
+					G.delete_gem(null, Hand.gems[idx], Hand.ui.get_slot(idx).gem_ui)
 				)
 	elif name == "Sagittarius":
 		image_id = 26
@@ -518,7 +518,7 @@ func setup(n : String):
 					for c in targets:
 						var g = Board.get_gem_at(c)
 						if g && g.type != Gem.ColorWild:
-							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.OnBoard)
+							Buff.create(g, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, C.Duration.OnBoard)
 							ok = true
 					if ok:
 						SSound.se_vibra.play()
@@ -531,9 +531,9 @@ func setup(n : String):
 		on_socket = func(index : int, g : Gem):
 			var bouns = extra["bouns_i"]
 			if sockets[index]:
-				G.change_modifier(Gem.color_bouns_name(sockets[index].type), -bouns)
+				G.change_attr(Gem.color_bouns_name(sockets[index].type), -bouns)
 			if g:
-				G.change_modifier(Gem.color_bouns_name(g.type), bouns)
+				G.change_attr(Gem.color_bouns_name(g.type), bouns)
 
 static var constellation_star_coords : Dictionary = {}
 

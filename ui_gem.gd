@@ -22,6 +22,9 @@ var charming : int = 0
 var sharp : int = 0
 var pieces_tweens : Array[Tween]
 
+func get_sp():
+	return gem_kind_sp if gem_kind else special_sp
+
 func reset(_type : int = 0, _rune : int = 0, _image_id : int = 0):
 	type = _type
 	rune = _rune

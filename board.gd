@@ -144,7 +144,7 @@ func is_valid(c : Vector2i):
 func format_coord(c : Vector2i):
 	if is_valid(c):
 		return c
-	if G.modifiers["board_upper_lower_connected_i"] > 0:
+	if G.attrs["board_upper_lower_connected_i"] > 0:
 		if c.y < 0:
 			c.y = Board.cy + c.y
 		if c.y >= Board.cy:
@@ -200,7 +200,7 @@ func set_gem_at(c : Vector2i, g : Gem):
 	else:
 		cell.pinned = false
 		cell.frozen = 0
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.update_cell(c)
 	return og
 
@@ -249,7 +249,7 @@ func pin(c : Vector2i):
 		return false
 	if get_gem_at(c):
 		cell.pinned = true
-		if !(STest.testing && STest.headless):
+		if !G.is_headless():
 			ui.update_cell(c)
 		return true
 
@@ -259,7 +259,7 @@ func unpin(c : Vector2i):
 		return false
 	var idx = c.y * cx + c.x
 	cells[idx].pinned = false
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.update_cell(c)
 
 func freeze(c : Vector2i):
@@ -272,7 +272,7 @@ func freeze(c : Vector2i):
 		return false
 	if get_gem_at(c):
 		cell.frozen += 1
-		if !(STest.testing && STest.headless):
+		if !G.is_headless():
 			ui.update_cell(c)
 		return true
 	return false
@@ -287,7 +287,7 @@ func unfreeze(c : Vector2i):
 		return false
 	if get_gem_at(c):
 		cell.frozen -= 1
-		if !(STest.testing && STest.headless):
+		if !G.is_headless():
 			ui.update_cell(c)
 		return true
 	return false
@@ -301,7 +301,7 @@ func set_nullified(c : Vector2i, v : bool):
 	if cell.nullified == v:
 		return false
 	cell.nullified = v
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.update_cell(c)
 	return true
 
@@ -314,7 +314,7 @@ func set_in_mist(c : Vector2i, v : bool):
 	if cell.in_mist == v:
 		return false
 	cell.in_mist = v
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.update_cell(c)
 	return true
 
@@ -327,7 +327,7 @@ func set_floating(c : Vector2i, v : bool):
 	if cell.floating == v:
 		return false
 	cell.floating = v
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.update_cell(c)
 	return true
 
@@ -404,24 +404,9 @@ func eliminate(_coords : Array, power : int, tween : Tween, reason : ActiveReaso
 				if g.on_eliminate.is_valid():
 					if g.eliminate_priority > 0:
 						if sub:
-							var sp = AnimatedSprite2D.new()
 							var gem_ui = ui.get_cell(c).gem_ui
-							sub.tween_callback(func():
-								sp.sprite_frames = G.gem_frames
-								if gem_ui.gem_kind:
-									gem_ui.gem_kind_sp.hide()
-									sp.frame = gem_ui.gem_kind_sp.frame
-								else:
-									gem_ui.special_sp.hide()
-									sp.frame = gem_ui.special_sp.frame
-								sp.position = get_pos(c)
-								ui.cells_root.add_child(sp)
-							)
-							sub.tween_property(sp, "modulate:a", 0.0, 0.4 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-							sub.parallel().tween_property(sp, "scale", Vector2(3.0, 3.0), 0.4 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-							sub.tween_callback(func():
-								sp.queue_free()
-							)
+							var sp = SEffect.effect_activate(gem_ui.get_sp(), sub, get_pos(c), 0.4 * G.time_scale, true)
+							ui.cells_root.add_child(sp)
 					g.on_eliminate.call(c, reason, source, sub)
 					for h in event_listeners:
 						if h.event == C.Event.EliminatedEffect || h.event == C.Event.Any:
@@ -490,7 +475,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	if type == C.HostType.Gem:
 		var gem : Gem = host
 		gem.active = true
-		if !(STest.testing && STest.headless):
+		if !G.is_headless():
 			sp = active_effect_pb.instantiate()
 			sp.position = get_pos(c)
 			sp.z_index = 6
@@ -500,7 +485,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 		var relic : Relic = host
 		if !relic.on_active.is_valid():
 			return
-		if !(STest.testing && STest.headless):
+		if !G.is_headless():
 			sp = active_effect_pb.instantiate()
 			sp.global_position = relic.ui.get_global_rect().get_center()
 			sp.z_index = 6
@@ -512,11 +497,12 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	ae.type = type
 	ae.coord = c
 	ae.effect_index = effect_index
-	ae.times += G.modifiers["additional_active_times_i"]
+	ae.times += G.attrs["additional_active_times_i"]
 	ae.sp = sp
 	active_effects.append(ae)
 	
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
+		SSound.se_skill.play()
 		sp.scale = Vector2(0.0, 0.0)
 		var tween = G.create_game_tween()
 		tween.tween_property(sp, "scale", Vector2(1.0, 1.0), 0.15 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -553,21 +539,29 @@ func process_active_effect(ae : ActiveEffect):
 	if ae.type == C.HostType.Gem:
 		var g : Gem = ae.host
 		if g.on_active.is_valid():
-			g.on_active.call(ae.effect_index, ae.coord, tween)
+			var sub1 = G.create_game_tween()
+			if sub1:
+				var gem_ui = ui.get_cell(ae.coord).gem_ui
+				var sp = SEffect.effect_activate(gem_ui.get_sp(), sub1, get_pos(ae.coord), 0.4 * G.time_scale, true)
+				ui.cells_root.add_child(sp)
+			var sub2 = G.create_game_tween()
+			g.on_active.call(ae.effect_index, ae.coord, sub2)
+			tween.tween_subtween(sub1)
+			tween.parallel().tween_subtween(sub2)
 		if tween:
 			tween.tween_callback(func():
 				if ae.times == 1:
 					g.active = false
 					set_gem_at(g.coord, null)
-					if g.durability == 0:
-						G.remove_gem(g)
+				else:
+					var gem_ui = ui.get_cell(ae.coord).gem_ui
+					var sp = SEffect.effect_recover(gem_ui.get_sp(), null, get_pos(ae.coord), 0.2 * G.time_scale, true)
+					ui.cells_root.add_child(sp)
 			)
 		else:
 			if ae.times == 1:
 				g.active = false
 				set_gem_at(g.coord, null)
-				if g.durability == 0:
-					G.remove_gem(g)
 	elif ae.type == C.HostType.Relic:
 		var relic : Relic = ae.host
 		if relic.on_active.is_valid():
@@ -604,7 +598,7 @@ func clear():
 			var c = Vector2i(x, y)
 			set_gem_at(c, null)
 	cells.clear()
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.clear()
 	cx = 0
 	cy = 0
@@ -613,14 +607,14 @@ func add_cell(c : Vector2i):
 	var cell = Cell.new()
 	cell.coord = c
 	cells.append(cell)
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		ui.add_cell(ui.ui_coord(c))
 	return cell
 
 func update_gem_quantity_limit():
 	curr_min_gem_num = (cx * cy) + 10
 	next_min_gem_num = (cx + 6) * (cy + 2) + 20
-	if !(STest.testing && STest.headless):
+	if !G.is_headless():
 		G.game_ui.status_bar.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
 
 func setup(_hf_cy : int):
@@ -801,7 +795,7 @@ func fill_blanks():
 	filling_tween = G.create_game_tween()
 	
 	var down_tween = G.create_game_tween()
-	down_proc(down_tween, G.filling_times < G.modifiers["max_fatigue_i"])
+	down_proc(down_tween, G.filling_times < G.attrs["max_fatigue_i"])
 	
 	if filling_tween:
 		filling_tween.tween_subtween(down_tween)
@@ -1027,8 +1021,8 @@ func effect_explode(cast_pos : Vector2, target_coord : Vector2i, range : int, po
 			)
 			tween.tween_interval(0.15 * G.time_scale)
 	var coords : Array[Vector2i] = []
-	var r = range + G.modifiers["extra_range_i"] + G.modifiers["extra_explode_range_i"]
-	var p = power + G.modifiers["extra_explode_power_i"]
+	var r = range + G.attrs["extra_range_i"] + G.attrs["extra_explode_range_i"]
+	var p = power + G.attrs["extra_explode_power_i"]
 	var fx_sz = Vector2(64.0, 64.0)
 	if r < 1:
 		fx_sz *= 0.5

@@ -45,21 +45,6 @@ func setup(n : String):
 			for c in coords:
 				Board.pin(c)
 			return true
-	elif name == "ChainBomb":
-		image_id = 10
-		category = "Bomb"
-		extra["range"] = 1
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			if !Board.active_effects.is_empty():
-				var i = Board.active_effects.back().host
-				if i.name == "Chain Bomb":
-					Buff.create(self, Buff.Type.ValueModifier, {"target":"power","set":i.power + 2})
-					Buff.create(self, Buff.Type.ValueModifier, {"target":"range","sub_attr":"extra","set":i.extra["range"] + 1})
-			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
-			)
-		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "GoldenBomb":
 		image_id = 42
 		category = "Bomb"
@@ -481,12 +466,6 @@ func setup(n : String):
 		category = "Normal"
 		price = 4
 		on_quick = func(coord : Vector2i):
-			'''
-			var i = Board.get_item_at(coord)
-			if i:
-				Buff.create(i, Buff.Type.ValueModifier, {"target":"power","add":10}, Buff.Duration.ThisRound)
-				return true
-			'''
 			return false
 
 func get_tooltip():

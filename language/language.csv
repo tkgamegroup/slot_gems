@@ -316,8 +316,8 @@ item_name_Elephant,Elephant,大象
 item_desc_Elephant,Eliminate all cells this item traveled.,
 item_name_HotDog,Hot Dog,热狗
 item_desc_HotDog,Eliminate: +{value_i} score.,消除：+{value_i}分数。
-item_name_IaiCut,Iai Cut,居合斩
-item_desc_IaiCut,Eliminate: (w_active) Eliminate a row on a random direction.,消除：(w_active) 消除随机方向的1行。
+item_name_Blade,Blade,刀刃
+item_desc_Blade,Eliminate by other than ‘Blade’: (w_active) Eliminate a row on a random direction.,被‘刀刃’之外消除：(w_active) 消除随机方向的1行。
 item_name_Magnet,Magnet,磁铁
 item_desc_Magnet,"When an item is activated, move it to the closest 'Magnet'.",
 item_name_Rainbow,Rainbow,彩虹

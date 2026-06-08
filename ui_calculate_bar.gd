@@ -11,20 +11,21 @@ extends Control
 signal finished
 
 func appear():
-	if !(STest.testing && STest.headless):
-		panel.pivot_offset = Vector2(panel.size.x * 0.5, panel.size.y)
-		panel.scale = Vector2(0.0, 0.0)
-		
-		base_score_text.text = "0"
-		chains_text.set_value(0)
-		mult_text.text = "1.0"
-		cross1.scale.x = 0.0
-		cross2.scale.x = 0.0
-		
-		var tween = G.create_game_tween()
-		tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.3 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
-		
-		self.show()
+	if G.is_headless():
+		return
+	panel.pivot_offset = Vector2(panel.size.x * 0.5, panel.size.y)
+	panel.scale = Vector2(0.0, 0.0)
+	
+	base_score_text.text = "0"
+	chains_text.set_value(0)
+	mult_text.text = "1.0"
+	cross1.scale.x = 0.0
+	cross2.scale.x = 0.0
+	
+	var tween = G.create_game_tween()
+	tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.3 * G.time_scale).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUART)
+	
+	self.show()
 
 func get_result(result : Dictionary):
 	result["chain_mult"] = G.mult_from_chains(G.chains)
@@ -101,6 +102,7 @@ func calculate():
 		calculate_proc()
 
 func disappear():
-	if !(STest.testing && STest.headless):
-		calculated_text.hide()
-		self.hide()
+	if G.is_headless():
+		return
+	calculated_text.hide()
+	self.hide()

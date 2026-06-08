@@ -1,1 +1,1 @@
-test_lv24_24_sausages
+test_lv24_24_bombs

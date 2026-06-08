@@ -80,11 +80,11 @@ func _ready() -> void:
 				elif thing == "w_enchant_sharp":
 					G.enchant_gem(slot.gem, "w_enchant_sharp")
 				elif thing == "w_wild":
-					var bid = Buff.create(slot.gem, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, Buff.Duration.Eternal)
-					Buff.create(slot.gem, Buff.Type.Enchant, {"type":"w_wild","bid":bid}, Buff.Duration.Eternal)
+					var bid = Buff.create(slot.gem, Buff.Type.ChangeColor, {"color":Gem.ColorWild}, C.Duration.Eternal)
+					Buff.create(slot.gem, Buff.Type.Enchant, {"type":"w_wild","bid":bid}, C.Duration.Eternal)
 				elif thing == "w_omni":
-					var bid = Buff.create(slot.gem, Buff.Type.ChangeRune, {"rune":Gem.RuneOmni}, Buff.Duration.Eternal)
-					Buff.create(slot.gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, Buff.Duration.Eternal)
+					var bid = Buff.create(slot.gem, Buff.Type.ChangeRune, {"rune":Gem.RuneOmni}, C.Duration.Eternal)
+					Buff.create(slot.gem, Buff.Type.Enchant, {"type":"w_omni","bid":bid}, C.Duration.Eternal)
 			elif type == "w_delete":
 				G.delete_gem(null, slot.gem, slot.gem_ui, "craft_slot")
 				slot.gem = null

@@ -3244,7 +3244,7 @@ step = 0.01
 layout_mode = 2
 text = "ui_close"
 
-[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "config_list", "config_list_menu", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "rounds_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "action_type_select", "watches_list", "watch_add_button", "watch_remove_button", "watch_type_edit", "watch_name_edit", "watch_name_lb", "watch_event_select", "inputs_list", "input_type_edit", "input_name_edit", "input_base_edit", "input_group_inc_edit", "input_given_round_edit", "input_add_button", "input_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "compare_controls", "compare_toggle", "compare_mult_edit", "reference_edit", "percentage_edit", "calc_result_edit", "filters", "round_start_edit", "round_end_edit", "column_filters", "test_result", "close_button")]
+[node name="Test" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("tab_container", "config_list", "config_list_menu", "config_add_button", "config_remove_button", "config_duplicate_button", "config_name_edit", "config_rename_button", "filename_edit", "rounds_edit", "headless_checkbox", "use_save_checkbox", "reroll_checkbox", "action_type_select", "watches_list", "watch_add_button", "watch_remove_button", "watch_type_edit", "watch_name_edit", "watch_name_lb", "watch_event_select", "inputs_list", "input_type_edit", "input_name_edit", "input_base_edit", "input_group_inc_edit", "input_given_round_edit", "input_add_button", "input_remove_button", "samples_edit", "groups_edit", "process_edit", "start_button", "try_button", "test_list", "group_edit", "group_plus_button", "group_mimus_button", "name_edit", "rename_button", "fit_result", "group_avg", "test_comment", "compare_controls", "compare_toggle", "compare_mult_edit", "reference_edit", "percentage_edit", "calc_result_edit", "filters", "round_start_edit", "round_end_edit", "column_filters", "test_result", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3285,7 +3285,8 @@ input_remove_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HB
 samples_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit")
 groups_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit2")
 process_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/LineEdit3")
-start_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/Button")
+start_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/HBoxContainer/Button")
+try_button = NodePath("PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/HBoxContainer/Button2")
 test_list = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/ItemList")
 group_edit = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/LineEdit")
 group_plus_button = NodePath("PanelContainer/VBoxContainer/TabContainer/Tests/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Button")
@@ -3325,7 +3326,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_n5t1e")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 12
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -3460,21 +3461,19 @@ layout_mode = 2
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer4"]
 layout_mode = 2
-item_count = 7
-popup/item_0/text = "Manual"
+item_count = 6
+popup/item_0/text = "Only Shuffle"
 popup/item_0/id = 0
-popup/item_1/text = "Only Shuffle"
+popup/item_1/text = " Just Matching Colors"
 popup/item_1/id = 1
-popup/item_2/text = "Auto AI0 - Just Matching Colors"
+popup/item_2/text = "Max Out Chains"
 popup/item_2/id = 2
-popup/item_3/text = "Auto AI1 - Max Out Chains"
+popup/item_3/text = "Max Out Triggers"
 popup/item_3/id = 3
-popup/item_4/text = "Auto AI2 - Max Out Triggers"
+popup/item_4/text = "Put On Auras"
 popup/item_4/id = 4
-popup/item_5/text = "Auto AI3 - Put On Auras"
+popup/item_5/text = "Max Out Eliminate Effects"
 popup/item_5/id = 5
-popup/item_6/text = "Auto AI4 - Max Out Eliminate Effects"
-popup/item_6/id = 6
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer4"]
 layout_mode = 2
@@ -3669,12 +3668,23 @@ text = "Process"
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 22
 text = "Start"
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer3/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 22
+text = "Try Out"
 
 [node name="Tests" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer"]
 visible = false

@@ -160,23 +160,36 @@ static func remove_event_listeners(target, host):
 		if target.event_listeners[i].host == host:
 			target.event_listeners.remove_at(i)
 
-static func calc_value_with_modifiers(obj : Object, target : String, sub_attr : String = ""):
+static func parse_addr(target, addr : String):
+	var sp = addr.split("/")
+	var t = target
+	while sp.size() > 1:
+		t = t[sp[0]]
+		sp.remove_at(0)
+	return Pair.new(t, sp[0])
+
+static func get_value_by_addr(target, addr : String):
+	var p = parse_addr(target, addr)
+	return p.first[p.second]
+
+static func set_value_by_addr(target, addr : String, value):
+	var p = parse_addr(target, addr)
+	p.first[p.second] = value
+
+static func calc_value_with_attrs(target, addr : String):
 	var v = 0
-	for b in obj.buffs:
-		if b.type == Buff.Type.ValueModifier && b.data["target"] == target && b.data["sub_attr"] == sub_attr:
+	for b in target.buffs:
+		if b.type == Buff.Type.ValueModifier && b.data["addr"] == addr:
 			if b.data.has("set"):
 				v = b.data["set"]
 			if b.data.has("add"):
 				v += b.data["add"]
 			if b.data.has("mult"):
 				v *= b.data["mult"]
-	if sub_attr == "":
-		obj[target] = v
-	else:
-		obj[sub_attr][target] = v
+	set_value_by_addr(target, addr, v)
 
 static func calc_repeat_count(v : int):
-	var save_chance = G.modifiers["not_consume_repeat_count_chance_i"]
+	var save_chance = G.attrs["not_consume_repeat_count_chance_i"]
 	if save_chance == 0:
 		return v
 	for i in 64:
@@ -242,7 +255,7 @@ static func get_cells_border(coords : Array[Vector2i]):
 
 static func get_hand_data():
 	var ret = []
-	for g in Hand.grabs:
+	for g in Hand.gems:
 		ret.append(Gem.create_temp_data(g))
 	return ret
 

@@ -43,6 +43,15 @@ enum HostType
 	Other
 }
 
+enum Duration
+{
+	ThisChain,
+	ThisMatching,
+	ThisRound,
+	OnBoard,
+	Eternal
+}
+
 enum TutorialScript
 {
 	None,

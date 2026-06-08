@@ -30,31 +30,31 @@ extends PanelContainer
 
 func _ready() -> void:
 	red_bouns_container.mouse_entered.connect(func():
-		STooltip.show(red_bouns_container, 0, [Pair.new(tr("tt_red_base_score"), "%d" % G.modifiers["red_bouns_i"])])
+		STooltip.show(red_bouns_container, 0, [Pair.new(tr("tt_red_base_score"), "%d" % G.attrs["red_bouns_i"])])
 	)
 	red_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	orange_bouns_container.mouse_entered.connect(func():
-		STooltip.show(orange_bouns_container, 0, [Pair.new(tr("tt_orange_base_score"), "%d" % G.modifiers["orange_bouns_i"])])
+		STooltip.show(orange_bouns_container, 0, [Pair.new(tr("tt_orange_base_score"), "%d" % G.attrs["orange_bouns_i"])])
 	)
 	orange_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	green_bouns_container.mouse_entered.connect(func():
-		STooltip.show(green_bouns_container, 0, [Pair.new(tr("tt_green_base_score"), "%d" % G.modifiers["green_bouns_i"])])
+		STooltip.show(green_bouns_container, 0, [Pair.new(tr("tt_green_base_score"), "%d" % G.attrs["green_bouns_i"])])
 	)
 	green_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	blue_bouns_container.mouse_entered.connect(func():
-		STooltip.show(blue_bouns_container, 0, [Pair.new(tr("tt_blue_base_score"), "%d" % G.modifiers["blue_bouns_i"])])
+		STooltip.show(blue_bouns_container, 0, [Pair.new(tr("tt_blue_base_score"), "%d" % G.attrs["blue_bouns_i"])])
 	)
 	blue_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
 	)
 	magenta_bouns_container.mouse_entered.connect(func():
-		STooltip.show(magenta_bouns_container, 0, [Pair.new(tr("tt_magenta_base_score"), "%d" % G.modifiers["magenta_bouns_i"])])
+		STooltip.show(magenta_bouns_container, 0, [Pair.new(tr("tt_magenta_base_score"), "%d" % G.attrs["magenta_bouns_i"])])
 	)
 	magenta_bouns_container.mouse_exited.connect(func():
 		STooltip.close()
@@ -69,7 +69,7 @@ func _ready() -> void:
 		STooltip.show(board_size_container, 3, [Pair.new(tr("tt_game_board_size_title"), tr("tt_game_board_size_content"))])
 	)
 	hand_container.mouse_entered.connect(func():
-		STooltip.show(hand_container, 3, [Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % G.max_hand_grabs)])
+		STooltip.show(hand_container, 3, [Pair.new(tr("tt_game_hand_title"), tr("tt_game_hand_content") % G.hand_size)])
 	)
 	coins_container.mouse_entered.connect(func():
 		STooltip.show(coins_container, 3, [Pair.new(tr("tt_game_coins_title"), "%d" % G.coins)])

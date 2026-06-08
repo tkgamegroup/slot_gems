@@ -38,9 +38,9 @@ var disabled : bool = false:
 
 func release_stagings():
 	var has = false
-	if Hand.grabs.size() > G.max_hand_grabs:
-		for i in Hand.grabs.size() - G.max_hand_grabs:
-			Hand.discard(Hand.grabs.size() - 1)
+	if Hand.gems.size() > G.hand_size:
+		for i in Hand.gems.size() - G.hand_size:
+			Hand.discard(Hand.gems.size() - 1)
 		has = true
 	return has
 
@@ -67,7 +67,7 @@ func buy_randomly():
 			return item.buy()
 	return false
 
-const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "MoneyBag", "Bomb", "C4", "Rainbow", "Orange", "IaiCut", "Lightning", "EnergyDrink", "Badge", "Magnet", "Volcano", "PolishingPowder"]
+const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "MoneyBag", "Bomb", "C4", "Rainbow", "Orange", "Blade", "Lightning", "EnergyDrink", "Badge", "Magnet", "Volcano", "PolishingPowder"]
 const relics_pool = ["PaintingOfRed", "PaintingOfOrange", "PaintingOfGreen", "PaintingOfBlue", "PaintingOfMagenta", "PaintingOfWave", "PaintingOfCircle", "PaintingOfStar", "Amplifier", "Recorder", "GhostAmmo", "Multicast", "MobiusStrip", "Premeditation", "PentagramPower", "HalfPriceCoupon"]
 
 const patterns_pool = ["\\", "|", "/", "O", "√", "X", "Island"]

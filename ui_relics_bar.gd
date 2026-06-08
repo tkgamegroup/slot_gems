@@ -55,6 +55,7 @@ func remove_ui(r : Relic):
 	list.remove_child(r.ui)
 	r.ui.queue_free()
 	r.ui = null
+	number_text.text = "(%d/%d)" % [list.get_child_count(), G.MaxRelics]
 
 func clear():
 	if list:

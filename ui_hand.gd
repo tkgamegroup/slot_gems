@@ -55,7 +55,7 @@ func clear():
 		n.queue_free()
 
 func resize():
-	var n = max(G.max_hand_grabs, 5)
+	var n = max(G.hand_size, 5)
 	custom_minimum_size = Vector2(item_w * n + gap * (n - 1), 48)
 	size = Vector2(0.0, 0.0)
 
@@ -80,7 +80,7 @@ func _process(delta: float) -> void:
 	var x_off = 0
 	var _gap = gap
 	
-	var w0 : float = G.max_hand_grabs * (item_w + gap) - gap
+	var w0 : float = G.hand_size * (item_w + gap) - gap
 	var w1 : float = 0.0
 	for i in n:
 		var ui = get_slot(i)
@@ -98,7 +98,7 @@ func _process(delta: float) -> void:
 			var p0 = ui.position
 			var p1 = Vector2(x_off, y)
 			ui.position = lerp(p0, p1, 0.2 * ui.elastic)
-			if i >= G.max_hand_grabs:
+			if i >= G.hand_size:
 				ui.position += Vector2(sin(tt * 2.0 + i * 3.14) * 1.0, sin(tt + 0.57 + i * 3.14) * 2.0) 
 			if (p0 - ui.position).length() > 50.0 && (ui.position - p1).length() < 300.0:
 				G.control_ui.start_shake(4.0, 0.5)
@@ -114,10 +114,10 @@ func _process(delta: float) -> void:
 				new_idx = i
 				break
 		if new_idx != -1 && new_idx != drag_idx:
-			var g1 = Hand.grabs[drag_idx]
-			var g2 = Hand.grabs[new_idx]
-			Hand.grabs[drag_idx] = g2
-			Hand.grabs[new_idx] = g1
+			var g1 = Hand.gems[drag_idx]
+			var g2 = Hand.gems[new_idx]
+			Hand.gems[drag_idx] = g2
+			Hand.gems[new_idx] = g1
 			g1.coord.x = new_idx
 			g2.coord.x = drag_idx
 			list.move_child(Drag.ui, new_idx)

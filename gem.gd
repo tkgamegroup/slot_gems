@@ -250,17 +250,17 @@ static func rune_combo_contains(combo : int, v : int):
 func get_base_score():
 	var ret = base_score
 	if type >= ColorFirst && type <= ColorLast:
-		ret += G.modifiers[color_bouns_name(type)]
+		ret += G.attrs[color_bouns_name(type)]
 	elif type >= ColorComboFirst && type <= ColorComboLast:
 		var sum = 0
 		var cols = split_color_combo(type)
 		for c in cols:
-			sum += G.modifiers[color_bouns_name(c)]
+			sum += G.attrs[color_bouns_name(c)]
 		ret += ceil(sum / float(cols.size()))
 	elif type == ColorWild:
 		var sum = 0
 		for i in ColorCount:
-			sum += G.modifiers[color_bouns_name(ColorFirst + i)]
+			sum += G.attrs[color_bouns_name(ColorFirst + i)]
 		ret += ceil(sum / float(ColorCount)) 
 	return ret
 
@@ -289,7 +289,7 @@ func get_tooltip():
 	var basics = ""
 	if type != None:
 		var color_change = Buff.find_typed(self, Buff.Type.ChangeColor)
-		if color_change && color_change.duration != Buff.Duration.Eternal:
+		if color_change && color_change.duration != C.Duration.Eternal:
 			basics += "[color=GRAY][s]%s[/s][/color] %s" % [type_display_name(color_change.data["original_color_i"]), type_display_name(type)]
 		else:
 			basics += type_display_name(type)
@@ -357,10 +357,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("red_bouns_i", value)
+					G.change_attr("red_bouns_i", value)
 				)
 			else:
-				G.change_modifier("red_bouns_i", value)
+				G.change_attr("red_bouns_i", value)
 			return true
 	elif name == "Heliodor":
 		type = ColorOrange
@@ -380,10 +380,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("orange_bouns_i", value)
+					G.change_attr("orange_bouns_i", value)
 				)
 			else:
-				G.change_modifier("orange_bouns_i", value)
+				G.change_attr("orange_bouns_i", value)
 			return true
 	elif name == "Emerald":
 		type = ColorGreen
@@ -403,10 +403,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("green_bouns_i", value)
+					G.change_attr("green_bouns_i", value)
 				)
 			else:
-				G.change_modifier("green_bouns_i", value)
+				G.change_attr("green_bouns_i", value)
 			return true
 	elif name == "Sapphire":
 		type = ColorBlue
@@ -426,10 +426,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("blue_bouns_i", value)
+					G.change_attr("blue_bouns_i", value)
 				)
 			else:
-				G.change_modifier("blue_bouns_i", value)
+				G.change_attr("blue_bouns_i", value)
 			return true
 	elif name == "Amethyst":
 		type = ColorMagenta
@@ -449,10 +449,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("magenta_bouns_i", value)
+					G.change_attr("magenta_bouns_i", value)
 				)
 			else:
-				G.change_modifier("magenta_bouns_i", value)
+				G.change_attr("magenta_bouns_i", value)
 			return true
 	elif name == "Flag":
 		type = None
@@ -471,9 +471,9 @@ func setup(n : String):
 					if data == self:
 						Board.remove_aura(self)
 		on_aura = func(g : Gem):
-			var r = extra["range_i"] + G.modifiers["extra_range_i"]
+			var r = extra["range_i"] + G.attrs["extra_range_i"]
 			if Board.offset_distance(coord, g.coord) <= r:
-				var b = Buff.create(g, Buff.Type.ValueModifier, {"target":"bonus_score","add":extra["value_i"]}, Buff.Duration.OnBoard)
+				var b = Buff.create(g, Buff.Type.ValueModifier, {"addr":"bonus_score","add":extra["value_i"]}, C.Duration.OnBoard)
 				b.caster = self
 	elif name == "MoneyBag":
 		type = ColorOrange
@@ -554,12 +554,12 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":1.0 + value * 0.01}, Buff.Duration.ThisMatching)
+					Buff.create(G, Buff.Type.ValueModifier, {"addr":"gain_scaler","mult":1.0 + value * 0.01}, C.Duration.ThisMatching)
 				)
 			else:
-				Buff.create(G, Buff.Type.ValueModifier, {"target":"gain_scaler","mult":1.0 + value * 0.01}, Buff.Duration.ThisMatching)
+				Buff.create(G, Buff.Type.ValueModifier, {"addr":"gain_scaler","mult":1.0 + value * 0.01}, C.Duration.ThisMatching)
 			return true
-	elif name == "IaiCut":
+	elif name == "Blade":
 		type = None
 		rune = None
 		base_score = 0
@@ -569,11 +569,10 @@ func setup(n : String):
 		price = 5
 		power = 0
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			if reason == Board.ActiveReason.Gem && source.name == "IaiCut":
+			if reason == Board.ActiveReason.Gem && source.name == "Blade":
 				return
 			if tween:
 				tween.tween_callback(func():
-					SSound.se_skill.play()
 					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
 				)
 			else:
@@ -582,7 +581,7 @@ func setup(n : String):
 			var cc = Board.offset_to_cube(coord)
 			var arr = [0, 1, 2]
 			var coords : Array[Vector2i] = []
-			var times = min(1 + G.modifiers["additional_targets_i"], 3)
+			var times = min(1 + G.attrs["additional_targets_i"], 3)
 			for i in times:
 				var sub_coords : Array[Vector2i] = []
 				var d = SMath.pick_and_remove(arr, G.game_rng)
@@ -780,10 +779,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("red_bouns_i", value)
+					G.change_attr("red_bouns_i", value)
 				)
 			else:
-				G.change_modifier("red_bouns_i", value)
+				G.change_attr("red_bouns_i", value)
 			return true
 	elif name == "Pineapple":
 		type = ColorOrange
@@ -802,10 +801,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("orange_bouns_i", value)
+					G.change_attr("orange_bouns_i", value)
 				)
 			else:
-				G.change_modifier("orange_bouns_i", value)
+				G.change_attr("orange_bouns_i", value)
 			return true
 	elif name == "Kiwi":
 		type = ColorGreen
@@ -824,10 +823,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("green_bouns_i", value)
+					G.change_attr("green_bouns_i", value)
 				)
 			else:
-				G.change_modifier("green_bouns_i", value)
+				G.change_attr("green_bouns_i", value)
 			return true
 	elif name == "Blueberry":
 		type = ColorBlue
@@ -846,10 +845,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("blue_bouns_i", value)
+					G.change_attr("blue_bouns_i", value)
 				)
 			else:
-				G.change_modifier("blue_bouns_i", value)
+				G.change_attr("blue_bouns_i", value)
 			return true
 	elif name == "Grape":
 		type = ColorMagenta
@@ -868,10 +867,10 @@ func setup(n : String):
 				)
 				tween.tween_interval(0.4 * G.time_scale)
 				tween.tween_callback(func():
-					G.change_modifier("magenta_bouns_i", value)
+					G.change_attr("magenta_bouns_i", value)
 				)
 			else:
-				G.change_modifier("magenta_bouns_i", value)
+				G.change_attr("magenta_bouns_i", value)
 			return true
 	elif name == "Apple":
 		type = ColorRed
@@ -884,13 +883,13 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			var add_value = extra["add_value_i"]
 			var cands = ["red", "orange", "green", "blue", "magenta"]
-			var times = 1 + G.modifiers["additional_targets_i"]
+			var times = 1 + G.attrs["additional_targets_i"]
 			for i in times:
 				if i > 0:
 					tween.tween_interval(0.3 * G.time_scale)
 				tween.tween_callback(func():
 					var target = SMath.pick_random(cands)
-					G.change_modifier("%s_bouns_i" % target, add_value)
+					G.change_attr("%s_bouns_i" % target, add_value)
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_%s" % target), add_value], Board.get_pos(coord))
 				)
 			return true
@@ -923,7 +922,7 @@ func setup(n : String):
 				if g && g.type != Gem.ColorOrange && g.type != Gem.ColorWild && !g.active:
 					cands.append(c)
 			if !cands.is_empty():
-				var targets = SMath.pick_n_random(cands, 1 + G.modifiers["additional_targets_i"], G.game_rng)
+				var targets = SMath.pick_n_random(cands, 1 + G.attrs["additional_targets_i"], G.game_rng)
 				tween.tween_callback(func():
 					for target in targets:
 						var fx = SEffect.add_splash(Board.get_pos(coord), Board.get_pos(target), Color.ORANGE, 3, 0.5 * G.time_scale)
@@ -963,7 +962,7 @@ func setup(n : String):
 				ui.z_index = 3
 				ui.pivot_offset = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.75
 				var has_bait = extra["bait_i"] > 0
-				var times = 1 + G.modifiers["additional_targets_i"]
+				var times = 1 + G.attrs["additional_targets_i"]
 				for i in times:
 					var target = SMath.pick_random(cands, G.game_rng)
 					var target_pos = Board.get_pos(target)
@@ -1234,7 +1233,7 @@ func setup(n : String):
 			var pos = Board.get_pos(coord)
 			var coords : Array[Vector2i] = []
 			var cands = []
-			var r = 1 + G.modifiers["extra_range_i"]
+			var r = 1 + G.attrs["extra_range_i"]
 			for i in r:
 				for c in Board.offset_ring(coord, r):
 					if Board.is_valid(c) && !cands.has(c):
@@ -1243,7 +1242,7 @@ func setup(n : String):
 			for i in times:
 				if !cands.is_empty():
 					var arr = []
-					for c in SMath.pick_n_random(cands, 2 + G.modifiers["additional_targets_i"], G.game_rng):
+					for c in SMath.pick_n_random(cands, 2 + G.attrs["additional_targets_i"], G.game_rng):
 						arr.append(Pair.new(c, null))
 						coords.append(c)
 					if tween:

@@ -13,13 +13,12 @@ enum TaskSteps
 
 enum ActionType
 {
-	Manual,
 	OnlyShuffle,
-	AutoAI0, # just matching colors
-	AutoAI1, # max out chains
-	AutoAI2, # max out triggers
-	AutoAI3, # put on auras
-	AutoAI4, # max out eliminate effects
+	AI0, # just matching colors
+	AI1, # max out chains
+	AI2, # max out triggers
+	AI3, # put on auras
+	AI4, # max out eliminate effects
 }
 
 const folder = "G:/slot_gems/tests"
@@ -36,9 +35,10 @@ var use_save : bool = false
 var random_seed : bool = false
 var overwrite_target_score : int = -1
 var reroll : bool = false
-var action_type : int = ActionType.AutoAI0
+var action_type : int = ActionType.AI0
 var watches : Array[Dictionary]
 var inputs : Array[Dictionary]
+var try_out : bool = false
 
 var on_event : Callable
 var testing : bool = false
@@ -98,8 +98,8 @@ func write_sample():
 		else:
 			if w.name == "gem_count":
 				record_line += ",%d" % G.gems.size()
-			elif w.name.begins_with("modifiers/"):
-				record_line += ",%d" % G.modifiers[w.name.substr(10)]
+			elif w.name.begins_with("attrs/"):
+				record_line += ",%d" % G.attrs[w.name.substr(10)]
 			else:
 				record_line += ",%d" % G[w.name]
 		w.times = 0
@@ -117,6 +117,7 @@ func write_game_status():
 	var cx = Board.cx
 	var cy = Board.cy
 	write("#Board Size: %dx%d(%d cells)" % [cx, cy, cx * cy])
+	write("#Hand Size: %d" % G.hand_size)
 	var red_num = 0
 	var orange_num = 0
 	var green_num = 0
@@ -160,14 +161,14 @@ func write_game_status():
 			s += n
 		write("#Relics: %s" % s)
 	write("#Swaps: %d" % G.swaps_per_round)
-	var modifiers_str = ""
-	for k in G.modifiers.keys():
-		if G.modifiers[k] != G.modifier_defaults[k]:
-			if !modifiers_str.is_empty():
-				modifiers_str += ", "
-			modifiers_str += "%s: %d" % [k, G.modifiers[k]]
-	if !modifiers_str.is_empty():
-		write("#Modifiers: %s" % modifiers_str)
+	var attrs_str = ""
+	for k in G.attrs.keys():
+		if G.attrs[k] != G.modifier_defaults[k]:
+			if !attrs_str.is_empty():
+				attrs_str += ", "
+			attrs_str += "%s: %d" % [k, G.attrs[k]]
+	if !attrs_str.is_empty():
+		write("#Attrs: %s" % attrs_str)
 	if !special_gems.is_empty():
 		var dic = {}
 		for n in special_gems:
@@ -257,7 +258,7 @@ func load_config(name : String = "config"):
 		headless = config.get_value("", "headless", false)
 		use_save = config.get_value("", "use_save", false)
 		reroll = config.get_value("", "reroll", false)
-		action_type = config.get_value("", "action_type", ActionType.AutoAI0)
+		action_type = config.get_value("", "action_type", ActionType.AI0)
 		watches = config.get_value("", "watches", [] as Array[Dictionary])
 		inputs = config.get_value("", "inputs", [] as Array[Dictionary])
 
@@ -309,8 +310,8 @@ func process_inputs(round : int):
 		var val = i.base + i.group_inc * group_idx
 		if i.given_round == round || (round != -1 && i.given_round == -2):
 			if i.type == "var":
-				if i.name.begins_with("modifiers/"):
-					parms.get_or_add("modifiers", []).append({"name":i.name.substr(10),"value":val})
+				if i.name.begins_with("attrs/"):
+					parms.get_or_add("attrs", []).append({"name":i.name.substr(6),"value":val})
 				elif i.name == "board_size" && round != -1:
 					G.board_size = val
 					Board.resize(val, null)
@@ -350,16 +351,17 @@ func reset():
 		for y in Board.cy:
 			for x in Board.cx:
 				Board.set_gem_at(Vector2i(x, y), null)
-		var hands = Hand.grabs.size()
-		Hand.clear()
 		for y in Board.cy:
 			for x in Board.cx:
 				Board.set_gem_at(Vector2i(x, y), G.take_from_bag())
+		var hands = Hand.gems.size()
+		Hand.clear()
 		for i in hands:
 			Hand.draw()
 	for w in watches:
 		w.times = 0
-	SUtils.add_event_listener(Board, C.Event.Any, self, C.HostType.Other)
+	if !try_out:
+		SUtils.add_event_listener(Board, C.Event.Any, self, C.HostType.Other)
 	
 	if !headless:
 		var time_str = ""
@@ -369,10 +371,11 @@ func reset():
 			time_str = "%02d:%02d:%02d" % [int(seconds / 3600.0), int(fmod(seconds, 3600.0) / 60.0), int(fmod(seconds, 60.0))]
 		testing_label.text = "%d/%d %d/%d %s" % [sample_idx + 1, samples, group_idx + 1, groups, time_str]
 
-func start(base_group : int = 0, groups_num : int = -1):
+func start(base_group : int = 0, groups_num : int = -1, _try_out : bool = false):
 	random_seed = false
 	overwrite_target_score = 9999999
 	reroll = false
+	try_out = _try_out
 	
 	sample_idx = -1
 	group_idx = 0
@@ -381,7 +384,7 @@ func start(base_group : int = 0, groups_num : int = -1):
 	step = TaskSteps.Standby
 	testing = true
 	
-	if action_type == ActionType.Manual:
+	if try_out:
 		if G.title_ui.visible:
 			G.title_ui.hide()
 		reset()
@@ -684,7 +687,7 @@ func evolve_board_to_max_chains(board : Dictionary, hand : Array, eliminated_lay
 	return chains
 
 func swap_gems(coord : Vector2i, index : int):
-	var g1 = Hand.grabs[index]
+	var g1 = Hand.gems[index]
 	Hand.erase(index)
 	var g2 = Board.set_gem_at(coord, g1)
 	G.take_from_bag(g2)
@@ -698,7 +701,7 @@ func auto_play():
 	var moves = []
 	
 	if action_type != ActionType.OnlyShuffle:
-		if action_type == ActionType.AutoAI0:
+		if action_type == ActionType.AI0:
 			while true:
 				var changed = false
 				var missings = get_missing_one_places(board)
@@ -714,7 +717,7 @@ func auto_play():
 								break
 				if !changed:
 					break
-		elif action_type == ActionType.AutoAI1:
+		elif action_type == ActionType.AI1:
 			var eliminated_layers = []
 			while true:
 				var matcheds = SUtils.temp_board_matched_cells(board)
@@ -752,7 +755,7 @@ func auto_play():
 				begin_write_ai()
 				write_ai("FINAL MOVES: " + var_to_str(moves).replace("\n", ""))
 				end_write_ai()
-		elif action_type == ActionType.AutoAI2:
+		elif action_type == ActionType.AI2:
 			while true:
 				var changed = false
 				if swaps > 0:
@@ -799,7 +802,7 @@ func auto_play():
 						changed = true
 				if !changed:
 					break
-		elif action_type == ActionType.AutoAI3:
+		elif action_type == ActionType.AI3:
 			while true:
 				var changed = false
 				var missings = get_missing_one_places(board, false)
@@ -845,7 +848,7 @@ func auto_play():
 								break
 				if !changed:
 					break
-		elif action_type == ActionType.AutoAI4:
+		elif action_type == ActionType.AI4:
 			while true:
 				var changed = false
 				var missings = get_missing_one_places(board, false)
@@ -903,7 +906,7 @@ func auto_play():
 				var tween2 = G.create_game_tween()
 				tween2.tween_property(slot1, "global_position", pos, 0.5)
 				tween2.tween_callback(func():
-					var g1 = Hand.grabs[m.index]
+					var g1 = Hand.gems[m.index]
 					Hand.erase(m.index)
 					var g2 = Board.set_gem_at(m.coord, g1)
 					var slot2 = Hand.add_gem(g2, m.index)

@@ -33,6 +33,7 @@ extends Panel
 @export var groups_edit : LineEdit
 @export var process_edit : LineEdit
 @export var start_button : Button
+@export var try_button : Button
 @export var test_list : ItemList
 @export var group_edit : LineEdit
 @export var group_plus_button : Button
@@ -677,6 +678,10 @@ func _ready() -> void:
 		var last_test = FileAccess.open("%s/last_test.txt" % STest.folder, FileAccess.WRITE)
 		last_test.store_string(config_name_edit.text)
 		last_test.close()
+	)
+	try_button.pressed.connect(func():
+		exit()
+		STest.start(0, -1, true)
 	)
 	test_list.item_selected.connect(func(idx : int):
 		on_test_selected(idx)

@@ -1,21 +1,17 @@
 extends Node
 
 func fade_in(n, tween : Tween, s0 : float, s1 : float, duration : float):
-	n.scale = Vector2(s0, s0)
-	n.modulate.a = 0.0
 	if s0 != s1:
-		tween.tween_property(n, "scale", Vector2(s1, s1), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(n, "scale", Vector2(s1, s1), duration).from(Vector2(s0, s0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 		tween.parallel()
-	tween.tween_property(n, "modulate:a", 1.0, duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(n, "modulate:a", 1.0, duration).from(0.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	return tween
 
 func fade_out(n, tween : Tween, s0 : float, s1 : float, duration : float):
-	n.scale = Vector2(s0, s0)
-	n.modulate.a = 1.0
 	if s0 != s1:
-		tween.tween_property(n, "scale", Vector2(s1, s1), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(n, "scale", Vector2(s1, s1), duration).from(Vector2(s0, s0)).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 		tween.parallel()
-	tween.tween_property(n, "modulate:a", 0.0, duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(n, "modulate:a", 0.0, duration).from(1.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	return tween
 
 func move_to(tween : Tween, target, p : Vector2, duration : float):

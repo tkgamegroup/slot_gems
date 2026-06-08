@@ -38,8 +38,8 @@ func start_shake(strength : float, pos : float = 0.0):
 
 func update_preview():
 	preview.find_all_matchings()
-	for i in Hand.grabs.size():
-		var g = Hand.grabs[i]
+	for i in Hand.gems.size():
+		var g = Hand.gems[i]
 		var ui = Hand.ui.get_slot(i)
 		ui.preview.find_missing_ones(g.type, g.rune)
 	
