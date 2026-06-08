@@ -36,10 +36,12 @@ enum Event
 	Any
 }
 
-enum HostType
+enum ObjectType
 {
+	Game,
 	Gem,
 	Relic,
+	Pattern,
 	Other
 }
 

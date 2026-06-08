@@ -2,6 +2,8 @@ extends RefCounted
 
 class_name Pattern
 
+const object_type : int = C.ObjectType.Pattern
+
 var name : String
 var coord_groups : Array[Array]
 var recipes : Array

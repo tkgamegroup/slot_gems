@@ -2,6 +2,8 @@ extends RefCounted
 
 class_name Relic
 
+const object_type : int = C.ObjectType.Relic
+
 var name : String
 var image_id : int
 var description : String
@@ -36,10 +38,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_attr("orange_bouns_i", extra["value_i"])
+					Buff.add_value(G, "attrs/orange_bouns_i", extra["value_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_attr("orange_bouns_i", -extra["value_i"])
+					Buff.remove_by_caster(G, self)
 	elif name == "PaintingOfGreen":
 		image_id = 3
 		extra["value_i"] = 24
@@ -47,10 +49,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_attr("green_bouns_i", extra["value_i"])
+					Buff.add_value(G, "attrs/green_bouns_i", extra["value_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_attr("green_bouns_i", -extra["value_i"])
+					Buff.remove_by_caster(G, self)
 	elif name == "PaintingOfBlue":
 		image_id = 4
 		extra["value_i"] = 24
@@ -58,10 +60,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_attr("blue_bouns_i", extra["value_i"])
+					Buff.add_value(G, "attrs/blue_bouns_i", extra["value_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_attr("blue_bouns_i", -extra["value_i"])
+					Buff.remove_by_caster(G, self)
 	elif name == "PaintingOfMagenta":
 		image_id = 5
 		extra["value_i"] = 24
@@ -69,10 +71,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_attr("magenta_bouns_i", extra["value_i"])
+					Buff.add_value(G, "attrs/magenta_bouns_i", extra["value_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_attr("magenta_bouns_i", -extra["value_i"])
+					Buff.remove_by_caster(G, self)
 	elif name == "PaintingOfWave":
 		image_id = 6
 		extra["value_i"] = 16
@@ -80,7 +82,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.Eliminated, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.Eliminated, self)
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
@@ -93,7 +95,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.Eliminated, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.Eliminated, self)
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
@@ -106,7 +108,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.Eliminated, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.Eliminated, self)
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
@@ -117,10 +119,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_attr("extra_range_i", 1)
+					Buff.add_value(G, "attrs/extra_range_i", 1, C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_attr("extra_range_i", -1)
+					Buff.remove_by_caster(G, self)
 	elif name == "ScatterBlast":
 		image_id = 9
 		extra["range_i"] = 1
@@ -128,52 +130,51 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.change_attr("extra_explode_range_i", +extra["range_i"])
-					G.change_attr("extra_explode_power_i", -extra["power_i"])
+					Buff.add_value(G, "attrs/extra_explode_range_i", +extra["range_i"], C.Duration.Eternal, self)
+					Buff.add_value(G, "attrs/extra_explode_power_i", -extra["power_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.change_attr("extra_explode_range_i", -extra["range_i"])
-					G.change_attr("extra_explode_power_i", +extra["power_i"])
+					Buff.remove_by_caster(G, self)
 	elif name == "Recorder":
 		image_id = 10
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_attr("additional_active_times_i", 1)
+					Buff.add_value(G, "attrs/additional_active_times_i", 1, C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_attr("additional_active_times_i", 0)
+					Buff.remove_by_caster(G, self)
 	elif name == "GhostAmmo":
 		image_id = 11
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_attr("not_consume_repeat_count_chance_i", 50)
+					Buff.set_value(G, "attrs/not_consume_repeat_count_chance_i", 50, C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_attr("not_consume_repeat_count_chance_i", 0)
+					Buff.remove_by_caster(G, self)
 	elif name == "Multicast":
 		image_id = 12
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_attr("additional_targets_i", 2)
+					Buff.add_value(G, "attrs/additional_targets_i", 2, C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_attr("additional_targets_i", 0)
+					Buff.remove_by_caster(G, self)
 	elif name == "MobiusStrip":
 		image_id = 13
 		price = 10
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_attr("board_upper_lower_connected_i", 1)
+					Buff.set_value(G, "attrs/board_upper_lower_connected_i", 1, C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_attr("board_upper_lower_connected_i", 0)
+					Buff.remove_by_caster(G, self)
 	elif name == "Premeditation":
 		image_id = 14
 		price = 3
@@ -181,10 +182,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_attr("base_chain_i", extra["value_i"])
+					Buff.set_value(G, "attrs/base_chain_i", extra["value_i"], C.Duration.Eternal, self)
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_attr("base_chain_i", 0)
+					Buff.remove_by_caster(G, self)
 	elif name == "PentagramPower":
 		image_id = 15
 		price = 9
@@ -192,23 +193,22 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.Chain, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.Chain, self)
 			elif event == C.Event.Chain:
 				if G.chains > 0 && G.chains % 5 == 0:
-					var v = extra["value_f"]
-					Buff.create(G, Buff.Type.ValueModifier, {"addr":"gain_scaler","mult":v}, C.Duration.ThisChain)
+					Buff.mult_value(G, "gain_scaler", extra["value_f"], C.Duration.ThisChain, self)
 	elif name == "HalfPriceCoupon":
 		image_id = 16
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					G.set_attr("half_price_i", 1)
+					Buff.set_value(G, "attrs/half_price_i", 1, C.Duration.Eternal, self)
 					if G.shop_ui.visible:
 						G.shop_ui.refresh_prices()
 			elif event == C.Event.LostRelic:
 				if data == self:
-					G.set_attr("half_price_i", 0)
+					Buff.remove_by_caster(G, self)
 					if G.shop_ui.visible:
 						G.shop_ui.refresh_prices()
 	elif name == "RockBottom":
@@ -216,8 +216,8 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.GemBaseScoreChanged, self, C.HostType.Relic)
-					SUtils.add_event_listener(Board, C.Event.GemBonusScoreChanged, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.GemBaseScoreChanged, self)
+					SUtils.add_event_listener(Board, C.Event.GemBonusScoreChanged, self)
 			elif event == C.Event.GemBaseScoreChanged || event == C.Event.GemBonusScoreChanged:
 				if data["value"] < 0:
 					data["value"] = 0
@@ -230,10 +230,10 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(G, C.Event.RoundBegin, self, C.HostType.Relic)
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
-					SUtils.add_event_listener(Board, C.Event.GemEntered, self, C.HostType.Relic)
-					SUtils.add_event_listener(Board, C.Event.GemLeft, self, C.HostType.Relic)
+					SUtils.add_event_listener(G, C.Event.RoundBegin, self)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
+					SUtils.add_event_listener(Board, C.Event.GemEntered, self)
+					SUtils.add_event_listener(Board, C.Event.GemLeft, self)
 			elif event == C.Event.GemEntered:
 				var coords = get_constellation_star_coords("Aries", true)
 				var g = data as Gem
@@ -258,7 +258,7 @@ func setup(n : String):
 					)
 					tween.tween_interval(1.0 * G.time_scale)
 					tween.tween_callback(func():
-						Board.activate(self, C.HostType.Relic, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
+						Board.activate(self, 0, Vector2i(-1, -1), Board.ActiveReason.Relic, self)
 					)
 					return true
 				return false
@@ -304,7 +304,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Taurus"):
 					pass
@@ -314,7 +314,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Gemini"):
 					pass
@@ -334,7 +334,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Cancer"):
 					pass
@@ -356,7 +356,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Leo"):
 					pass
@@ -367,7 +367,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Virgo"):
 					pass
@@ -376,7 +376,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Libra"):
 					pass
@@ -394,7 +394,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Scorpio"):
 					pass
@@ -415,7 +415,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Sagittarius"):
 					pass
@@ -446,7 +446,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Capricorn"):
 					pass
@@ -457,7 +457,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Aquarius"):
 					pass
@@ -493,7 +493,7 @@ func setup(n : String):
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.GainRelic:
 				if data == self:
-					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self, C.HostType.Relic)
+					SUtils.add_event_listener(Board, C.Event.BeforeMatching, self)
 			elif event == C.Event.BeforeMatching:
 				if try_to_activate_constellation("Pisces"):
 					pass
@@ -527,13 +527,11 @@ func setup(n : String):
 		image_id = 30
 		price = 5
 		sockets.resize(3)
-		extra["bouns_i"] = 10
+		extra["bonus_i"] = 10
 		on_socket = func(index : int, g : Gem):
-			var bouns = extra["bouns_i"]
-			if sockets[index]:
-				G.change_attr(Gem.color_bouns_name(sockets[index].type), -bouns)
-			if g:
-				G.change_attr(Gem.color_bouns_name(g.type), bouns)
+			Buff.remove_by_caster(G, self)
+			for s in sockets:
+				Buff.add_value(G, "attrs/" + Gem.color_bouns_name(s.type), extra["bouns_i"], C.Duration.Eternal, self)
 
 static var constellation_star_coords : Dictionary = {}
 

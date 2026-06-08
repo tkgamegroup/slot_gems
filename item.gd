@@ -51,7 +51,7 @@ func setup(n : String):
 		extra["range"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			if G.coins >= 6:
@@ -73,12 +73,12 @@ func setup(n : String):
 			for i in setup_range + 1:
 				for c in Board.offset_ring(coord, i):
 					if Board.is_valid(c):
-						SUtils.add_event_listener(Board.get_cell(c), C.Event.Eliminated, self, C.HostType.Gem, true)
+						SUtils.add_event_listener(Board.get_cell(c), C.Event.Eliminated, self, true)
 						coords.append(c)
 			return true
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.Eliminated:
-				Board.activate(self, C.HostType.Gem, 0, data, Board.ActiveReason.Gem, self)
+				Board.activate(self, 0, data, Board.ActiveReason.Gem, self)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range"], power, tween, self)
 	elif name == "EchoStone":
@@ -87,11 +87,11 @@ func setup(n : String):
 		extra["range"] = 1
 		on_event = func(event : int, tween : Tween, data):
 			if event == C.Event.Exploded:
-				Board.activate(self, C.HostType.Gem, 0, coord, Board.ActiveReason.Gem, self)
+				Board.activate(self, 0, coord, Board.ActiveReason.Gem, self)
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if reason == Board.ActiveReason.Gem && source.category == "Bomb":
 				tween.tween_callback(func():
-					Board.activate(self, C.HostType.Gem, 1, coord, reason, source)
+					Board.activate(self, 1, coord, reason, source)
 				)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			if effect_index == 0:
@@ -126,7 +126,7 @@ func setup(n : String):
 				'''
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var color = Board.get_gem_at(coord).type
@@ -165,10 +165,10 @@ func setup(n : String):
 		category = "Normal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
-			if Board.active_effects.back().host == self:
+			if Board.active_effects.back().caster == self:
 				var coords : Array[Vector2i] = []
 				for y in Board.cy:
 					for x in Board.cx:
@@ -204,7 +204,7 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if Board.active_effects.is_empty():
 				tween.tween_callback(func():
-					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, 0, coord, reason, source)
 				)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var coords : Array[Vector2i] = []
@@ -237,8 +237,8 @@ func setup(n : String):
 				return gem && gem.category == "Animal"
 			)
 			for ae in Board.active_effects:
-				if ae.host.category == "Animal":
-					targets.append(ae.host)
+				if ae.caster.category == "Animal":
+					targets.append(ae.caster)
 			tween.tween_callback(func():
 				G.add_score(extra["value"] * targets.size(), Board.get_pos(coord))
 			)
@@ -249,7 +249,7 @@ func setup(n : String):
 		extra["repeat"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var coords : Array[Vector2i] = []
@@ -278,7 +278,7 @@ func setup(n : String):
 		category = "Animal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var targets = Board.filter(func(gem : Gem):
@@ -306,7 +306,7 @@ func setup(n : String):
 		extra["repeat"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var coords : Array[Vector2i] = []
@@ -332,7 +332,7 @@ func setup(n : String):
 						if !item:
 							var ae = Board.get_active_at(c)
 							if ae:
-								item = ae.host
+								item = ae.caster
 						if item && item != self && item.name == "Rabbit":
 							var sp = AnimatedSprite2D.new()
 							sp.position = Board.get_pos(coord)
@@ -391,7 +391,7 @@ func setup(n : String):
 		category = "Animal"
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween, item_ui : Node2D):
 			var targets = Board.filter(func(gem : Gem):

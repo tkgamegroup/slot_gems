@@ -41,6 +41,8 @@ enum
 	RuneAny
 }
 
+const object_type : int = C.ObjectType.Gem
+
 const ColorFirst = ColorRed
 const ColorLast = ColorMagenta
 const ColorCount = ColorLast - ColorFirst + 1
@@ -511,10 +513,10 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, 0, coord, reason, source)
 				)
 			else:
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range_i"], power, tween, self)
 	elif name == "C4":
@@ -530,10 +532,10 @@ func setup(n : String):
 			if reason == Board.ActiveReason.Gem && source.category == "Bomb":
 				if tween:
 					tween.tween_callback(func():
-						Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+						Board.activate(self, 0, coord, reason, source)
 					)
 				else:
-					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, 0, coord, reason, source)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			Board.effect_explode(Board.get_pos(coord), coord, extra["range_i"], power, tween, self)
 	elif name == "Rainbow":
@@ -573,10 +575,10 @@ func setup(n : String):
 				return
 			if tween:
 				tween.tween_callback(func():
-					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, 0, coord, reason, source)
 				)
 			else:
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cc = Board.offset_to_cube(coord)
 			var arr = [0, 1, 2]
@@ -630,10 +632,10 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, 0, coord, reason, source)
 				)
 			else:
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var targets = Board.filter(func(gem : Gem):
 				return gem && gem != self && gem.name == "Lightning"
@@ -913,7 +915,7 @@ func setup(n : String):
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cands = []
@@ -948,7 +950,7 @@ func setup(n : String):
 		extra["bait_i"] = 0
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 			)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var cands = []
@@ -1114,7 +1116,7 @@ func setup(n : String):
 			match event: 
 				C.Event.GainGem:
 					if data == self:
-						SUtils.add_event_listener(G, C.Event.RoundEnd, self, C.HostType.Gem)
+						SUtils.add_event_listener(G, C.Event.RoundEnd, self)
 				C.Event.LostGem:
 					if data == self:
 						SUtils.remove_event_listeners(G, self)
@@ -1144,7 +1146,7 @@ func setup(n : String):
 			match event:
 				C.Event.GainGem:
 					if data == self:
-						G.event_listeners.append(Hook.new(C.Event.BeforeScoreCalculating, self, C.HostType.Gem, false))
+						SUtils.add_event_listener(G, C.Event.BeforeScoreCalculating, self)
 				C.Event.LostGem:
 					if data == self:
 						SUtils.remove_event_listeners(G, self)
@@ -1225,10 +1227,10 @@ func setup(n : String):
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			if tween:
 				tween.tween_callback(func():
-					Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+					Board.activate(self, 0, coord, reason, source)
 				)
 			else:
-				Board.activate(self, C.HostType.Gem, 0, coord, reason, source)
+				Board.activate(self, 0, coord, reason, source)
 		on_active = func(effect_index : int, coord : Vector2i, tween : Tween):
 			var pos = Board.get_pos(coord)
 			var coords : Array[Vector2i] = []
@@ -1277,7 +1279,7 @@ func setup(n : String):
 			match event:
 				C.Event.GainGem:
 					if data == self:
-						G.event_listeners.append(Hook.new(C.Event.RoundEnd, self, C.HostType.Gem, false))
+						SUtils.add_event_listener(G, C.Event.RoundEnd, self)
 				C.Event.LostGem:
 					if data == self:
 						SUtils.remove_event_listeners(G, self)

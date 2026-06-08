@@ -178,10 +178,8 @@ func set_gem_at(c : Vector2i, g : Gem):
 	if og:
 		for h in event_listeners:
 			if h.event == C.Event.GemLeft || h.event == C.Event.Any:
-				h.host.on_event.call(C.Event.GemLeft, null, og)
-		SMath.remove_if(event_listeners, func(h : Hook):
-			return h.host == og
-		)
+				h.caster.on_event.call(C.Event.GemLeft, null, og)
+		SUtils.remove_event_listeners(self, og)
 		G.put_to_bag(og)
 	cell.gem = g
 	if g:
@@ -192,11 +190,10 @@ func set_gem_at(c : Vector2i, g : Gem):
 			if a.on_aura.is_valid():
 				a.on_aura.call(g)
 		if g.on_event.is_valid():
-			var h = Hook.new(C.Event.Any, g, C.HostType.Gem, false)
-			event_listeners.append(h)
+			SUtils.add_event_listener(self, C.Event.Any, g)
 		for h in event_listeners:
 			if h.event == C.Event.GemEntered || h.event == C.Event.Any:
-				h.host.on_event.call(C.Event.GemEntered, null, g)
+				h.caster.on_event.call(C.Event.GemEntered, null, g)
 	else:
 		cell.pinned = false
 		cell.frozen = 0
@@ -410,18 +407,18 @@ func eliminate(_coords : Array, power : int, tween : Tween, reason : ActiveReaso
 					g.on_eliminate.call(c, reason, source, sub)
 					for h in event_listeners:
 						if h.event == C.Event.EliminatedEffect || h.event == C.Event.Any:
-							h.host.on_event.call(C.Event.EliminatedEffect, sub, c)
+							h.caster.on_event.call(C.Event.EliminatedEffect, sub, c)
 				g.eliminated = true
 				SMath.remove_if(get_cell(c).event_listeners, func(h : Hook):
 					if h.event == C.Event.Eliminated || h.event == C.Event.Any:
-						h.host.on_event.call(C.Event.Eliminated, sub, c)
+						h.caster.on_event.call(C.Event.Eliminated, sub, c)
 						return h.once
 					return false
 				)
 				for h in event_listeners:
 					var d = {"reason":reason,"source":source,"coord":c}
 					if h.event == C.Event.Eliminated || h.event == C.Event.Any:
-						h.host.on_event.call(C.Event.Eliminated, sub, d)
+						h.caster.on_event.call(C.Event.Eliminated, sub, d)
 				if sub:
 					if !G.performance_mode && g.name == "":
 						sub.tween_callback(func():
@@ -470,10 +467,10 @@ func eliminate(_coords : Array, power : int, tween : Tween, reason : ActiveReaso
 	if !extra_targets.is_empty():
 		eliminate(extra_targets, 0, tween, reason, source, false)
 
-func activate(host, type : int, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
+func activate(caster, effect_index : int, c : Vector2i, reason : ActiveReason, source = null):
 	var sp : Node2D = null
-	if type == C.HostType.Gem:
-		var gem : Gem = host
+	if caster.object_type == C.ObjectType.Gem:
+		var gem : Gem = caster
 		gem.active = true
 		if !G.is_headless():
 			sp = active_effect_pb.instantiate()
@@ -481,8 +478,8 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 			sp.z_index = 6
 			sp.get_child(1).text = "%d" % active_serial
 			ui.overlay.add_child(sp)
-	elif type == C.HostType.Relic:
-		var relic : Relic = host
+	elif caster.object_type == C.ObjectType.Relic:
+		var relic : Relic = caster
 		if !relic.on_active.is_valid():
 			return
 		if !G.is_headless():
@@ -493,8 +490,8 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 			G.game_ui.game_overlay.add_child(sp)
 	
 	var ae = ActiveEffect.new()
-	ae.host = host
-	ae.type = type
+	ae.caster = caster
+	ae.caster_type = caster.object_type
 	ae.coord = c
 	ae.effect_index = effect_index
 	ae.times += G.attrs["additional_active_times_i"]
@@ -509,7 +506,7 @@ func activate(host, type : int, effect_index : int, c : Vector2i, reason : Activ
 	
 	active_serial += 1
 	for h in event_listeners:
-		h.host.on_event.call(C.Event.Activated, null, ae)
+		h.caster.on_event.call(C.Event.Activated, null, ae)
 
 func after_playing():
 	if active_effects.is_empty():
@@ -536,7 +533,7 @@ func process_active_effect(ae : ActiveEffect):
 		tween.tween_callback(func():
 			text.modulate.a = 0.0
 		)
-	if ae.type == C.HostType.Gem:
+	if ae.type == C.ObjectType.Gem:
 		var g : Gem = ae.host
 		if g.on_active.is_valid():
 			var sub1 = G.create_game_tween()
@@ -562,7 +559,7 @@ func process_active_effect(ae : ActiveEffect):
 			if ae.times == 1:
 				g.active = false
 				set_gem_at(g.coord, null)
-	elif ae.type == C.HostType.Relic:
+	elif ae.type == C.ObjectType.Relic:
 		var relic : Relic = ae.host
 		if relic.on_active.is_valid():
 			relic.on_active.call(ae.effect_index, ae.coord, tween)
@@ -585,7 +582,7 @@ func process_active_effect(ae : ActiveEffect):
 
 func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
 	for h in event_listeners:
-		h.host.on_event.call(C.Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
+		h.caster.on_event.call(C.Event.ItemMoved, tween, {"item":item,"from":from,"to":to})
 
 func clear_active_effects():
 	for ae in active_effects:
@@ -850,7 +847,7 @@ func shuffle():
 func on_chain():
 	for h in event_listeners:
 		if h.event == C.Event.Chain || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.Chain, null, null)
+			h.caster.on_event.call(C.Event.Chain, null, null)
 
 func matching_proc():
 	var tween = G.create_game_tween()
@@ -868,7 +865,7 @@ func matching_proc():
 					
 					for h in event_listeners:
 						if h.event == C.Event.Matched || h.event == C.Event.Any:
-							h.host.on_event.call(C.Event.Matched, tween, null)
+							h.caster.on_event.call(C.Event.Matched, tween, null)
 	
 	if !matched_cells.is_empty():
 		if tween:
@@ -914,7 +911,7 @@ func matching():
 		var sub = G.create_game_tween()
 		if sub:
 			sub.tween_interval(delay * G.time_scale)
-		if h.host.on_event.call(C.Event.BeforeMatching, sub, null):
+		if h.caster.on_event.call(C.Event.BeforeMatching, sub, null):
 			preprocess = true
 			if tween:
 				tween.parallel()
@@ -1003,7 +1000,7 @@ func on_exploded(coords : Array[Vector2i], target_coord : Vector2i, range : int,
 	var data = {"coord":target_coord,"range":range,"power":power,"source":source}
 	for h in event_listeners:
 		if h.event == C.Event.Exploded || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.Exploded, null, data)
+			h.caster.on_event.call(C.Event.Exploded, null, data)
 	
 	G.add_chain()
 

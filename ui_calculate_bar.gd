@@ -90,7 +90,7 @@ func calculate():
 		var sub = G.create_game_tween()
 		if sub:
 			sub.tween_interval(delay * G.time_scale)
-		if h.host.on_event.call(C.Event.BeforeScoreCalculating, sub, null):
+		if h.caster.on_event.call(C.Event.BeforeScoreCalculating, sub, null):
 			if tween:
 				tween.parallel()
 				tween.tween_subtween(sub)

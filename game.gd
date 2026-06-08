@@ -12,9 +12,11 @@ enum Stage
 	Shopping
 }
 
+const object_type : int = C.ObjectType.Game
+
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 25
+const version_patch : int = 26
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -359,7 +361,7 @@ func add_gem(g : Gem):
 		g.on_event.call(C.Event.GainGem, null, g)
 	for h in event_listeners:
 		if h.event == C.Event.GainGem || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.GainGem, null, g)
+			h.caster.on_event.call(C.Event.GainGem, null, g)
 	
 	gems.append(g)
 	bag_gems.append(g)
@@ -382,7 +384,7 @@ func remove_gem(g : Gem):
 		g.on_event.call(C.Event.LostGem, null, g)
 	for h in event_listeners:
 		if h.event == C.Event.LostGem || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.LostGem, null, g)
+			h.caster.on_event.call(C.Event.LostGem, null, g)
 	
 	if !is_headless():
 		game_ui.status_bar.gem_count_text.text = "%d" % gems.size()
@@ -433,7 +435,7 @@ func on_attr_changed(name):
 			game_ui.status_bar.magenta_bouns_text.set_value(attrs["magenta_bouns_i"])
 	for h in event_listeners:
 		if h.event == C.Event.ModifierChanged || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.ModifierChanged, null, {"name":name,"value":attrs[name]})
+			h.caster.on_event.call(C.Event.ModifierChanged, null, {"name":name,"value":attrs[name]})
 
 func set_attr(name : String, v):
 	attrs[name] = v
@@ -446,21 +448,21 @@ func change_attr(name : String, v):
 func gem_add_base_score(g : Gem, v : int):
 	for h in event_listeners:
 		if h.event == C.Event.GemBaseScoreChanged || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.GemBaseScoreChanged, null, {"gem":g,"value":v})
+			h.caster.on_event.call(C.Event.GemBaseScoreChanged, null, {"gem":g,"value":v})
 	g.base_score += v
 	return v
 
 func gem_add_bonus_score(g : Gem, v : int):
 	for h in event_listeners:
 		if h.event == C.Event.GemBonusScoreChanged || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.GemBonusScoreChanged, null, {"gem":g,"value":v})
+			h.caster.on_event.call(C.Event.GemBonusScoreChanged, null, {"gem":g,"value":v})
 	g.bonus_score += v
 	return 
 
 func add_pattern(p : Pattern):
 	for h in event_listeners:
 		if h.event == C.Event.GainPattern || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.GainPattern, null, p)
+			h.caster.on_event.call(C.Event.GainPattern, null, p)
 	
 	patterns.append(p)
 	if !is_headless():
@@ -471,7 +473,7 @@ func add_relic(r : Relic):
 		r.on_event.call(C.Event.GainRelic, null, r)
 	for h in event_listeners:
 		if h.event == C.Event.GainRelic || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.GainRelic, null, r)
+			h.caster.on_event.call(C.Event.GainRelic, null, r)
 	
 	relics.append(r)
 	if !is_headless():
@@ -486,7 +488,7 @@ func remove_relic(r : Relic):
 		r.on_event.call(C.Event.LostRelic, null, r)
 	for h in event_listeners:
 		if h.event == C.Event.LostRelic || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.LostRelic, null, r)
+			h.caster.on_event.call(C.Event.LostRelic, null, r)
 	
 	SUtils.remove_event_listeners(G, r)
 	SUtils.remove_event_listeners(Board, r)
@@ -1339,7 +1341,7 @@ func round_begin():
 	
 	for h in event_listeners:
 		if h.event == C.Event.RoundBegin || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.RoundBegin, null, null)
+			h.caster.on_event.call(C.Event.RoundBegin, null, null)
 
 func next_round(tween : Tween = null):
 	build_round_curses()
@@ -1392,7 +1394,7 @@ func round_end():
 		Board.ui.hide_entangled_lines()
 	for h in event_listeners:
 		if h.event == C.Event.RoundEnd || h.event == C.Event.Any:
-			h.host.on_event.call(C.Event.RoundEnd, null, null)
+			h.caster.on_event.call(C.Event.RoundEnd, null, null)
 	if !is_headless():
 		calculator_bar_ui.disappear()
 		control_ui.swaps_text.show_change = false
@@ -1481,10 +1483,10 @@ func save_to_file(name : String = "1"):
 	
 	var save_hook = func(h : Hook, d : Dictionary):
 		d["event"] = h.event
-		d["host_type"] = h.host_type
-		match h.host_type:
-			C.HostType.Gem: d["host"] = G.gems.find(h.host)
-			C.HostType.Relic: d["host"] = G.relics.find(h.host)
+		d["caster_type"] = h.caster_type
+		match h.caster_type:
+			C.ObjectType.Gem: d["caster"] = G.gems.find(h.caster)
+			C.ObjectType.Relic: d["caster"] = G.relics.find(h.caster)
 		d["once"] = h.once
 	
 	var data = {}
@@ -1625,22 +1627,24 @@ func save_to_file(name : String = "1"):
 	file.store_string(JSON.stringify(data, "\t", false))
 	file.close()
 
+func load_hook(d : Dictionary):
+	var caster_type = int(d["caster_type"])
+	var caster_idx = int(d["caster"])
+	var caster = null
+	match caster_type:
+		C.ObjectType.Game: caster = G
+		C.ObjectType.Gem: caster = G.gems[caster_idx]
+		C.ObjectType.Relic: caster = G.relics[caster_idx]
+		C.ObjectType.Pattern: caster = G.patterns[caster_idx]
+	var h = Hook.new(int(d["event"]), caster, caster_type, d["once"])
+	return h
+
 func load_from_file(name : String = "1"):
 	print("load save %s\n" % name)
 	
 	var file = FileAccess.open("user://save%s.json" % name, FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
 	file.close()
-	
-	var load_hook = func(d : Dictionary):
-		var host_type = int(d["host_type"])
-		var host_idx = int(d["host"])
-		var host = null
-		match host_type:
-			C.HostType.Gem: host = G.gems[host_idx]
-			C.HostType.Relic: host = G.relics[host_idx]
-		var h = Hook.new(int(d["event"]), host, host_type, d["once"])
-		return h
 	
 	G.game_rng.seed = int(data["game_rng_seed"])
 	G.game_rng.state = int(data["game_rng_state"])
@@ -1660,15 +1664,13 @@ func load_from_file(name : String = "1"):
 	G.target_score = int(data["target_score"])
 	G.reward = int(data["reward"])
 	G.current_curses.clear()
-	var current_curses = data["current_curses"]
-	for curse in current_curses:
+	for d in data["current_curses"]:
 		var c = Curse.new()
-		c.type = curse["type"]
-		c.coord = str_to_var("Vector2i" + curse["coord"])
+		c.type = d["type"]
+		c.coord = str_to_var("Vector2i" + d["coord"])
 		G.current_curses.append(c)
 	G.round_curses.clear()
-	var round_curses = data["round_curses"]
-	for d in round_curses:
+	for d in data["round_curses"]:
 		var lc = []
 		for curse in d:
 			var c = Curse.new()
@@ -1679,85 +1681,75 @@ func load_from_file(name : String = "1"):
 	G.chains = int(data["chains"])
 	G.score_mult = data["score_mult"]
 	update_round_text(current_round)
-	var game_buffs = data["buffs"]
-	for buff in game_buffs:
-		Buff.load_from_data(G, buff)
-	var saved_attrs = SUtils.read_dictionary(data["attrs"])
-	for k in saved_attrs:
-		G.set_attr(k, saved_attrs[k])
+	for d in data["buffs"]:
+		Buff.load_from_data(G, d)
+	var attrs_data = SUtils.read_dictionary(data["attrs"])
+	for k in attrs_data:
+		G.set_attr(k, attrs_data[k])
 	G.coins = int(data["coins"])
 	
 	Board.cx = int(data["cx"])
 	Board.cy = int(data["cy"])
 	
-	var gems = data["gems"]
-	for gem in gems:
+	for d in data["gems"]:
 		var g = Gem.new()
-		g.name = gem["name"]
+		g.name = d["name"]
 		if g.name != "":
 			g.setup(g.name)
-		g.type = int(gem["type"])
-		g.rune = int(gem["rune"])
-		g.base_score = int(gem["base_score"])
-		g.bonus_score = int(gem["bonus_score"])
-		g.score_mult = gem["score_mult"]
-		g.coord = str_to_var("Vector2i" + gem["coord"])
-		g.board_stamp = int(gem["board_stamp"])
-		g.bag_stamp = int(gem["bag_stamp"])
-		var buffs = gem["buffs"]
-		for buff in buffs:
-			Buff.load_from_data(g, buff)
-		g.extra = SUtils.read_dictionary(gem["extra"])
+		g.type = int(d["type"])
+		g.rune = int(d["rune"])
+		g.base_score = int(d["base_score"])
+		g.bonus_score = int(d["bonus_score"])
+		g.score_mult = d["score_mult"]
+		g.coord = str_to_var("Vector2i" + d["coord"])
+		g.board_stamp = int(d["board_stamp"])
+		g.bag_stamp = int(d["bag_stamp"])
+		for dd in d["buffs"]:
+			Buff.load_from_data(g, dd)
+		g.extra = SUtils.read_dictionary(d["extra"])
 		G.gems.append(g)
-	var bag_gems = data["bag_gems"]
-	for idx in bag_gems:
+	for idx in data["bag_gems"]:
 		G.bag_gems.append(G.gems[idx])
-	var patterns = data["patterns"]
-	for pattern in patterns:
+	for d in data["patterns"]:
 		var p = Pattern.new()
-		p.setup(pattern["name"])
-		p.mult = int(pattern["mult"])
-		p.lv = int(pattern["lv"])
-		p.exp = int(pattern["exp"])
-		p.max_exp = int(pattern["max_exp"])
+		p.setup(d["name"])
+		p.mult = int(d["mult"])
+		p.lv = int(d["lv"])
+		p.exp = int(d["exp"])
+		p.max_exp = int(d["max_exp"])
 		G.patterns.append(p)
 		game_ui.patterns_bar.add_ui(p)
-	var relics = data["relics"]
-	for relic in relics:
+	for d in data["relics"]:
 		var r = Relic.new()
-		r.setup(relic["name"])
-		r.extra = SUtils.read_dictionary(relic["extra"])
+		r.setup(d["name"])
+		r.extra = SUtils.read_dictionary(d["extra"])
 		G.relics.append(r)
 		game_ui.relics_bar.add_ui(r)
-	var game_event_listeners = data["event_listeners"]
-	for hook in game_event_listeners:
-		var h = load_hook.call(hook)
+	for hook in data["event_listeners"]:
+		var h = load_hook(hook)
 		G.event_listeners.append(h)
-	var board_event_listeners = data["board_event_listeners"]
-	for hook in board_event_listeners:
-		var h = load_hook.call(hook)
+	for hook in data["board_event_listeners"]:
+		var h = load_hook(hook)
 		Board.event_listeners.append(h)
-	var hand = data["hand"]
-	for idx in hand:
+	for idx in data["hand"]:
 		var g = G.gems[int(idx)]
 		Hand.gems.append(g)
 		Hand.ui.add_slot(g)
-	var cells = data["cells"]
-	for cell in cells:
-		var coord = str_to_var("Vector2i" + cell["coord"])
+	for d in data["cells"]:
+		var coord = str_to_var("Vector2i" + d["coord"])
 		var c = Board.add_cell(coord)
 		var ui = Board.ui.get_cell(coord)
-		var gem_idx = int(cell["gem"])
+		var gem_idx = int(d["gem"])
 		if gem_idx != -1:
 			var g = G.gems[gem_idx]
 			c.gem = g
-		if cell["consumed"]:
+		if d["consumed"]:
 			Board.consume(coord)
-		if cell["pinned"]:
+		if d["pinned"]:
 			Board.pin(coord)
-		if cell["frozen"] > 0:
+		if d["frozen"] > 0:
 			Board.freeze(coord)
-		if cell["nullified"]:
+		if d["nullified"]:
 			Board.nullify(coord)
 		Board.ui.update_cell(coord)
 	
@@ -1965,7 +1957,7 @@ func _ready() -> void:
 		var processed = false
 		for h in event_listeners:
 			if h.event == C.Event.MatchingFinished || h.event == C.Event.Any:
-				processed = h.host.on_event.call(C.Event.MatchingFinished, null, null)
+				processed = h.caster.on_event.call(C.Event.MatchingFinished, null, null)
 				if processed:
 					break
 		if !processed:

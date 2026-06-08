@@ -21,6 +21,8 @@ enum ActionType
 	AI4, # max out eliminate effects
 }
 
+const object_type : int = C.ObjectType.Other
+
 const folder = "G:/slot_gems/tests"
 
 var filename : String
@@ -361,7 +363,7 @@ func reset():
 	for w in watches:
 		w.times = 0
 	if !try_out:
-		SUtils.add_event_listener(Board, C.Event.Any, self, C.HostType.Other)
+		SUtils.add_event_listener(Board, C.Event.Any, self)
 	
 	if !headless:
 		var time_str = ""

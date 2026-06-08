@@ -3,12 +3,12 @@ extends RefCounted
 class_name Hook
 
 var event : int
-var host
-var host_type : int
+var caster
+var caster_type : int
 var once : bool
 
-func _init(_event : int, _host, _host_type : int, _once : bool) -> void:
+func _init(_event : int, _caster, _caster_type : int, _once : bool) -> void:
 	event = _event
-	host = _host
-	host_type = _host_type
+	caster = _caster
+	caster_type = _caster_type
 	once = _once

@@ -152,12 +152,12 @@ static func read_dictionary(d : Dictionary):
 			ret[k] = d[k]
 	return ret
 
-static func add_event_listener(target, event : int, host, host_type : int, once : bool = false):
-	target.event_listeners.append(Hook.new(event, host, host_type, once))
+static func add_event_listener(target, event : int, caster, once : bool = false):
+	target.event_listeners.append(Hook.new(event, caster, caster.object_type, once))
 
-static func remove_event_listeners(target, host):
+static func remove_event_listeners(target, caster):
 	for i in range(target.event_listeners.size() - 1, -1, -1):
-		if target.event_listeners[i].host == host:
+		if target.event_listeners[i].caster == caster:
 			target.event_listeners.remove_at(i)
 
 static func parse_addr(target, addr : String):
