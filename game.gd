@@ -16,7 +16,7 @@ const object_type : int = C.ObjectType.Game
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 26
+const version_patch : int = 27
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4

@@ -494,7 +494,7 @@ func activate(caster, effect_index : int, c : Vector2i, reason : ActiveReason, s
 	ae.caster_type = caster.object_type
 	ae.coord = c
 	ae.effect_index = effect_index
-	ae.times += G.attrs["additional_active_times_i"]
+	ae.max_times += G.attrs["additional_active_times_i"]
 	ae.sp = sp
 	active_effects.append(ae)
 	
@@ -532,9 +532,12 @@ func process_active_effect(ae : ActiveEffect):
 			tween.tween_interval(0.05 * G.time_scale)
 		tween.tween_callback(func():
 			text.modulate.a = 0.0
+			ae.executed_times += 1
 		)
-	if ae.type == C.ObjectType.Gem:
-		var g : Gem = ae.host
+	else:
+		ae.executed_times += 1
+	if ae.caster_type == C.ObjectType.Gem:
+		var g : Gem = ae.caster
 		if g.on_active.is_valid():
 			var sub1 = G.create_game_tween()
 			if sub1:
@@ -545,39 +548,47 @@ func process_active_effect(ae : ActiveEffect):
 			g.on_active.call(ae.effect_index, ae.coord, sub2)
 			tween.tween_subtween(sub1)
 			tween.parallel().tween_subtween(sub2)
-		if tween:
-			tween.tween_callback(func():
-				if ae.times == 1:
-					g.active = false
-					set_gem_at(g.coord, null)
-				else:
-					var gem_ui = ui.get_cell(ae.coord).gem_ui
-					var sp = SEffect.effect_recover(gem_ui.get_sp(), null, get_pos(ae.coord), 0.2 * G.time_scale, true)
-					ui.cells_root.add_child(sp)
-			)
-		else:
-			if ae.times == 1:
-				g.active = false
-				set_gem_at(g.coord, null)
-	elif ae.type == C.ObjectType.Relic:
-		var relic : Relic = ae.host
+	elif ae.caster_type == C.ObjectType.Relic:
+		var relic : Relic = ae.caster
 		if relic.on_active.is_valid():
 			relic.on_active.call(ae.effect_index, ae.coord, tween)
 	if tween:
 		tween.tween_callback(func():
-			if ae.times == 1:
+			if ae.executed_times == ae.max_times:
+				if ae.caster_type == C.ObjectType.Gem:
+					var g : Gem = ae.caster
+					g.active = false
+					set_gem_at(g.coord, null)
 				active_effects.remove_at(0)
 				ae.sp.queue_free()
 			else:
-				ae.times -= 1
+				if ae.caster_type == C.ObjectType.Gem:
+					var gem_ui = ui.get_cell(ae.coord).gem_ui
+					var sp = SEffect.effect_recover(gem_ui.get_sp(), null, get_pos(ae.coord), 0.2 * G.time_scale, true)
+					ui.cells_root.add_child(sp)
+				text.modulate.a = 1.0
 				text.text = "R"
+				
+				var base = 1
+				for b in G.buffs:
+					if b.type == Buff.Type.ValueModifier && b.data["addr"] == "attrs/additional_active_times_i":
+						if b.data.has("add"):
+							base += b.data["add"]
+							if ae.executed_times + 1 <= base:
+								if b.caster.object_type == C.ObjectType.Relic:
+									var ui = G.game_ui.relics_bar.get_ui(G.relics.find(b.caster))
+									var sp = SEffect.effect_activate(ui.sp, null, ui.get_global_rect().get_center(), 0.4 * G.time_scale)
+									G.game_ui.game_overlay.add_child(sp)
+								break
 			elimination_finished.emit()
 		)
 	else:
-		if ae.times == 1:
+		if ae.caster_type == C.ObjectType.Gem:
+			var g : Gem = ae.caster
+			g.active = false
+			set_gem_at(g.coord, null)
+		if ae.executed_times == ae.max_times:
 			active_effects.remove_at(0)
-		else:
-			ae.times -= 1
 		elimination_finished.emit()
 
 func item_moved(item : Item, tween : Tween, from : Vector2i, to : Vector2i):
