@@ -343,8 +343,13 @@ func process_inputs(round : int):
 	return parms
 
 func reset():
-	G.start_game("1" if use_save else "", process_inputs(-1))
+	if use_save:
+		G.load_from_file("1")
+	else:
+		G.new_game(process_inputs(-1))
 	process_inputs(1)
+	G.enter_game()
+	G.start_first_round()
 	if random_seed || reroll:
 		G.random_seeds()
 	if overwrite_target_score != -1:
@@ -399,7 +404,7 @@ func start(base_group : int = 0, groups_num : int = -1, _try_out : bool = false)
 				for j in samples:
 					sample_idx = j
 					reset()
-					G.setup_first_round()
+					G.start_first_round()
 					if j == 0:
 						FileAccess.open(format_filename(), FileAccess.WRITE)
 						write_game_status()

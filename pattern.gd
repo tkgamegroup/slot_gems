@@ -108,7 +108,7 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 						elif c == Gem.ColorWild:
 							for j in color_count.size():
 								color_count[j] += 1
-						else:
+						elif c != Gem.None:
 							color_count[c - Gem.ColorFirst] += 1
 					var sorted_indices = SMath.index_sort_reverse(color_count)
 					if val == Gem.ColorAny:
@@ -138,7 +138,7 @@ func match_with(off : Vector2i, check_color : int = Gem.None, check_rune : int =
 						elif r == Gem.RuneOmni:
 							for j in rune_count.size():
 								rune_count[j] += 1
-						else:
+						elif r != Gem.None:
 							rune_count[r - Gem.RuneFirst] += 1
 					var sorted_indices = SMath.index_sort_reverse(rune_count)
 					if val == Gem.RuneAny:

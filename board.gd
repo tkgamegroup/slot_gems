@@ -25,17 +25,12 @@ var cells : Array[Cell]
 var curr_min_gem_num : int
 var next_min_gem_num : int
 
-@onready var active_effect_pb = load("res://ui_active_effect.tscn")
-
-var ui : G.UiBoard = null
-
-var num_tasks : int
-var show_coords : bool = false
-
 var auras : Array[Gem] = []
 var active_effects : Array[ActiveEffect] = []
 var active_serial : int = 0
 var event_listeners : Array[Hook]
+
+var ui : G.UiBoard = null
 
 signal filling_finished
 signal playing_finished
@@ -473,7 +468,7 @@ func activate(caster, effect_index : int, c : Vector2i, reason : ActiveReason, s
 		var gem : Gem = caster
 		gem.active = true
 		if !G.is_headless():
-			sp = active_effect_pb.instantiate()
+			sp = G.active_effect_pb.instantiate()
 			sp.position = get_pos(c)
 			sp.z_index = 6
 			sp.get_child(1).text = "%d" % active_serial
@@ -483,7 +478,7 @@ func activate(caster, effect_index : int, c : Vector2i, reason : ActiveReason, s
 		if !relic.on_active.is_valid():
 			return
 		if !G.is_headless():
-			sp = active_effect_pb.instantiate()
+			sp = G.active_effect_pb.instantiate()
 			sp.global_position = relic.ui.get_global_rect().get_center()
 			sp.z_index = 6
 			sp.get_child(1).text = "%d" % active_serial
@@ -625,14 +620,17 @@ func update_gem_quantity_limit():
 	if !G.is_headless():
 		G.game_ui.status_bar.gem_count_limit_text.text = "%d/%d" % [next_min_gem_num, curr_min_gem_num]
 
-func setup(_hf_cy : int):
-	clear()
-	
-	cy = _hf_cy * 2
-	cx = cy * cx_mult
+func set_cx_cy(_cx : int, _cy : int):
+	cx = _cx
+	cy = _cy
 	hfcx = cx / 2
 	hfcy = cy / 2
 	center = Vector2i(hfcx, hfcy)
+
+func setup(_hf_cy : int):
+	clear()
+	set_cx_cy(_hf_cy * 2 * cx_mult, _hf_cy * 2)
+	
 	for y in cy:
 		for x in cx:
 			add_cell(Vector2i(x, y))

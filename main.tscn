@@ -1,4 +1,4 @@
-[gd_scene load_steps=197 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=187 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -6,40 +6,29 @@
 [ext_resource type="AudioStream" uid="uid://vjqrtptu17gb" path="res://sounds/select.wav" id="4_fvcw6"]
 [ext_resource type="AudioStream" uid="uid://b2o1cfcq5mnt6" path="res://sounds/click.wav" id="4_j3q78"]
 [ext_resource type="Texture2D" uid="uid://bqdsl4chhcc1h" path="res://images/gem_red.png" id="4_mieac"]
-[ext_resource type="AudioStream" uid="uid://cdbsvo83ubsau" path="res://sounds/board_setup.wav" id="5_43hdn"]
 [ext_resource type="Texture2D" uid="uid://do6b6cyshhe7t" path="res://images/gem_green.png" id="6_1pecc"]
 [ext_resource type="AudioStream" uid="uid://cppphhvtr7mif" path="res://sounds/roll.wav" id="6_5xeb6"]
-[ext_resource type="AudioStream" uid="uid://d0vbvx1gvhi4t" path="res://sounds/slot_button.wav" id="7_17ivb"]
 [ext_resource type="Texture2D" uid="uid://vtgmwfo14dwb" path="res://images/gem_blue.png" id="7_lex75"]
-[ext_resource type="AudioStream" uid="uid://dlhp0bbwk311u" path="res://sounds/tom.wav" id="8_30oiv"]
 [ext_resource type="AudioStream" uid="uid://b00rjgk5valep" path="res://sounds/coins.wav" id="9_6w1lu"]
 [ext_resource type="AudioStream" uid="uid://cmj7s22kwg5l4" path="res://sounds/zap.wav" id="9_di110"]
 [ext_resource type="Script" uid="uid://di8ymjsldc2u" path="res://ui_title.gd" id="9_te575"]
 [ext_resource type="Script" uid="uid://d00blbhwfg7fg" path="res://ui_control.gd" id="10_4wyqg"]
-[ext_resource type="AudioStream" uid="uid://cljdyrasxmhf2" path="res://sounds/brush.wav" id="10_jsr5e"]
 [ext_resource type="AudioStream" uid="uid://v5aplcpuq6co" path="res://sounds/vibra.wav" id="11_0r14j"]
-[ext_resource type="AudioStream" uid="uid://blsvsx0rc354p" path="res://sounds/marimba1.wav" id="11_34ol3"]
+[ext_resource type="AudioStream" uid="uid://beh3k4nrytsk5" path="res://sounds/bubble_transition.wav" id="11_k1udn"]
 [ext_resource type="AudioStream" uid="uid://b7r0ixrqgi65s" path="res://sounds/explode.wav" id="12_773c0"]
-[ext_resource type="AudioStream" uid="uid://bjbj0vdx3uahe" path="res://sounds/marimba2.wav" id="12_c2n8d"]
 [ext_resource type="Script" uid="uid://djc6e44a5dl2s" path="res://ui_shop.gd" id="12_uajbh"]
-[ext_resource type="AudioStream" uid="uid://dxrento0vw7yw" path="res://sounds/marimba3.wav" id="13_wy5fy"]
 [ext_resource type="AudioStream" uid="uid://b15g6hf86srgs" path="res://sounds/open_bag.wav" id="14_5dllo"]
-[ext_resource type="AudioStream" uid="uid://c1mjs4eltygse" path="res://sounds/marimba4.wav" id="14_gx4rg"]
 [ext_resource type="Script" uid="uid://b7wmshnf31luj" path="res://ui_options.gd" id="14_kw2dv"]
-[ext_resource type="AudioStream" uid="uid://vyhn3pqm3uy8" path="res://sounds/marimba5.wav" id="15_5dllo"]
 [ext_resource type="Script" uid="uid://de6vkry3bftwv" path="res://ui_in_game_menu.gd" id="15_clbdl"]
 [ext_resource type="AudioStream" uid="uid://dprs6ie463ffp" path="res://sounds/bubble.wav" id="15_iwwqi"]
 [ext_resource type="AudioStream" uid="uid://dd4jyygyy82gv" path="res://sounds/close_bag.wav" id="15_phcyf"]
 [ext_resource type="AudioStream" uid="uid://c3fkob8w6mgrd" path="res://sounds/start_burning.wav" id="16_6pavh"]
 [ext_resource type="AudioStream" uid="uid://fjdlbct2avjr" path="res://sounds/drag_item.wav" id="16_birbe"]
 [ext_resource type="Script" uid="uid://bbahec5ioj1ii" path="res://ui_game_over.gd" id="16_iphee"]
-[ext_resource type="AudioStream" uid="uid://cyuysyfw7ysg3" path="res://sounds/marimba6.wav" id="16_phcyf"]
-[ext_resource type="AudioStream" uid="uid://c68dxcr62ys5x" path="res://sounds/marimba7.wav" id="17_birbe"]
 [ext_resource type="AudioStream" uid="uid://4qd2vxmu3s2u" path="res://sounds/lightning_connect.wav" id="17_dvs8d"]
 [ext_resource type="AudioStream" uid="uid://pr4m2gwcl6kw" path="res://sounds/drop_item.wav" id="17_f1p13"]
 [ext_resource type="AudioStream" uid="uid://b73xkcur0fkfi" path="res://sounds/end_burning.wav" id="17_tmu32"]
 [ext_resource type="Script" uid="uid://dem0qyoc8kmf5" path="res://ui_settlement.gd" id="17_ykjhx"]
-[ext_resource type="AudioStream" uid="uid://dfb8ca3ufdrea" path="res://sounds/marimba8.wav" id="18_4obbf"]
 [ext_resource type="AudioStream" uid="uid://bnfmwbpunud0i" path="res://sounds/lightning_fail.wav" id="18_bul2v"]
 [ext_resource type="AudioStream" uid="uid://b3wdrb7m6bi8r" path="res://sounds/skill.wav" id="18_f1p13"]
 [ext_resource type="AudioStream" uid="uid://ctj72fmpe5n0h" path="res://sounds/calc1.wav" id="20_5dllo"]
@@ -117,6 +106,7 @@
 [ext_resource type="Script" uid="uid://cp6q3cm2rmofc" path="res://ui_tutorial.gd" id="100_8dc3g"]
 [ext_resource type="Texture2D" uid="uid://dfrvs7hoy8xua" path="res://images/down.png" id="102_smeu8"]
 [ext_resource type="Script" uid="uid://yfu3obay4eym" path="res://ui_tooltips.gd" id="106_wat4s"]
+[ext_resource type="Texture2D" uid="uid://suahj33gcsoc" path="res://images/big_bubble.png" id="106_ywjan"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uatky"]
 random_pitch = 1.1
@@ -650,19 +640,6 @@ shader_parameter/pixel_strength = -2.0
 [node name="TransBG" type="ColorRect" parent="."]
 color = Color(0.8, 0.8666667, 0.6862745, 1)
 
-[node name="Control" type="Control" parent="TransBG"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TransBG/Control"]
-visible = false
-
 [node name="SFX" type="Node" parent="."]
 
 [node name="Select" type="AudioStreamPlayer" parent="SFX"]
@@ -676,28 +653,14 @@ stream = ExtResource("4_j3q78")
 volume_db = -5.0
 bus = &"SFX"
 
-[node name="BoardSetup" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("5_43hdn")
-volume_db = -12.0
-bus = &"SFX"
-
 [node name="Roll" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("6_5xeb6")
 volume_db = -7.496
 bus = &"SFX"
 
-[node name="Slot" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("7_17ivb")
-volume_db = -5.622
-bus = &"SFX"
-
 [node name="Coin" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("9_6w1lu")
 volume_db = -3.0
-bus = &"SFX"
-
-[node name="Tom" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("8_30oiv")
 bus = &"SFX"
 
 [node name="Zap" type="AudioStreamPlayer" parent="SFX"]
@@ -707,52 +670,8 @@ pitch_scale = 0.5
 max_polyphony = 10
 bus = &"SFX"
 
-[node name="Brush" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("10_jsr5e")
-bus = &"SFX"
-
 [node name="Vibra" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("11_0r14j")
-bus = &"SFX"
-
-[node name="Marimba1" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("11_34ol3")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba2" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("12_c2n8d")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba3" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("13_wy5fy")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba4" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("14_gx4rg")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba5" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("15_5dllo")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba6" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("16_phcyf")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba7" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("17_birbe")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="Marimba8" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("18_4obbf")
-volume_db = -8.0
 bus = &"SFX"
 
 [node name="Bubble" type="AudioStreamPlayer" parent="SFX"]
@@ -775,6 +694,11 @@ bus = &"SFX"
 [node name="BubblePop3" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("22_41lik")
 volume_db = -20.0
+bus = &"SFX"
+
+[node name="BubbleTransition" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("11_k1udn")
+max_polyphony = 10
 bus = &"SFX"
 
 [node name="Break" type="AudioStreamPlayer" parent="SFX"]
@@ -1915,6 +1839,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Round" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 1
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
@@ -1927,6 +1852,7 @@ scroll_active = false
 horizontal_alignment = 1
 
 [node name="Target" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/GameUI/VBoxContainer/MarginContainer/TopBar/VBoxContainer/MarginContainer/StatusBar/HBoxContainer/VBoxContainer2"]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 1
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
@@ -4449,6 +4375,22 @@ grow_vertical = 2
 offset_right = 40.0
 offset_bottom = 36.0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
+
+[node name="TransBubbles" type="CPUParticles2D" parent="."]
+position = Vector2(0, 1080)
+emitting = false
+amount = 500
+texture = ExtResource("106_ywjan")
+lifetime = 0.6
+emission_shape = 3
+emission_rect_extents = Vector2(1920, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 2000.0
+initial_velocity_max = 2000.0
+scale_amount_min = 0.25
+scale_amount_max = 0.8
 
 [node name="PostProcessing" type="CanvasLayer" parent="."]
 

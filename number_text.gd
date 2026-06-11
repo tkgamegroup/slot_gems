@@ -14,47 +14,50 @@ extends Control
 		self.size = self.custom_minimum_size
 
 var value : int
-var show_change : bool = true
 
 var tween : Tween = null
 
+func clear_animation():
+	if tween:
+		tween.custom_step(100.0)
+		tween = null
+
 func set_value(v : int):
 	if v == value:
-		return
-	if !show_change:
-		value = v
-		text.text = "%d" % value
 		return
 	
 	if tween:
 		tween.custom_step(100.0)
 		tween = null
-	var d = v - value
-	if d >= 0:
-		change.text = "+%d" % d
-		change_bg.color = Color(0.0, 0.496, 0.853)
+	tween = G.create_game_tween()
+	if tween:
+		var d = v - value
+		if d >= 0:
+			change.text = "+%d" % d
+			change_bg.color = Color(0.0, 0.496, 0.853)
+		else:
+			change.text = "%d" % d
+			change_bg.color = Color(0.866, 0.083, 0.0)
+		change.pivot_offset = change.size * 0.5
+		change.scale = Vector2(0.0, 0.0)
+		change_panel.show()
+		value = v
+		tween.tween_property(text, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(change_bg, "modulate:a", 1.0, 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(change, "scale", Vector2(1.0, 1.0), 0.1).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_interval(0.5)
+		tween.tween_callback(func():
+			text.text = "%d" % value
+		)
+		tween.tween_property(change_bg, "modulate:a", 0.0, 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(text, "modulate:a", 1.0, 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.parallel().tween_property(change, "scale", Vector2(0.0, 0.0), 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
+		tween.tween_callback(func():
+			change_panel.hide()
+			tween = null
+		)
 	else:
-		change.text = "%d" % d
-		change_bg.color = Color(0.866, 0.083, 0.0)
-	change.pivot_offset = change.size * 0.5
-	change.scale = Vector2(0.0, 0.0)
-	change_panel.show()
-	value = v
-	tween = G.create_tween()
-	tween.tween_property(text, "modulate:a", 0.0, 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.parallel().tween_property(change_bg, "modulate:a", 1.0, 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.parallel().tween_property(change, "scale", Vector2(1.0, 1.0), 0.1).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.tween_interval(0.5)
-	tween.tween_callback(func():
-		text.text = "%d" % value
-	)
-	tween.tween_property(change_bg, "modulate:a", 0.0, 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.parallel().tween_property(text, "modulate:a", 1.0, 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.parallel().tween_property(change, "scale", Vector2(0.0, 0.0), 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUART)
-	tween.tween_callback(func():
-		change_panel.hide()
-		tween = null
-	)
+		value = v
 
 var hint_tween : Tween = null
 func hint():

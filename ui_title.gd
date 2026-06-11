@@ -36,11 +36,15 @@ func _ready() -> void:
 		SSound.music_more_clear()
 		G.screen_shake_strength = 8.0
 		
+		G.begin_busy()
 		var tween = G.create_tween()
-		G.begin_transition(tween)
 		exit(tween)
 		tween.tween_callback(func():
-			G.start_game("1")
+			G.load_from_file("1")
+		)
+		G.begin_transition(tween)
+		tween.tween_callback(func():
+			G.enter_game()
 		)
 		G.end_transition(tween)
 	)

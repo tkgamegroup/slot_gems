@@ -100,10 +100,15 @@ func enter(tween : Tween = null, trans : bool = true):
 		self.show()
 	return tween
 
-func exit(tween : Tween):
-	tween.tween_callback(func():
+func exit(tween : Tween, trans : bool = true):
+	if trans:
+		if !tween:
+			tween = G.create_game_tween()
+		tween.tween_callback(func():
+			self.hide()
+		)
+	else:
 		self.hide()
-	)
 	return tween
 
 func show_entangled_lines():

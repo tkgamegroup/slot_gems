@@ -42,12 +42,7 @@ func _ready() -> void:
 		G.exit_game()
 		exit()
 		
-		var tween = G.create_game_tween()
-		G.begin_transition(tween)
-		tween.tween_callback(func():
-			G.start_game()
-		)
-		G.end_transition(tween)
+		G.start_game("", {})
 	)
 	#new_run.mouse_entered.connect(SSound.se_select.play)
 	main_menu_button.pressed.connect(func():

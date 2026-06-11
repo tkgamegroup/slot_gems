@@ -40,16 +40,24 @@ func start_new_game():
 	var sel = list.get_selected_items()
 	if sel.is_empty():
 		return
-	var tween = G.create_tween()
-	G.begin_transition(tween)
-	exit(tween, true)
-	G.title_ui.exit(tween)
 	if sel[0] == 0:
 		seed_edit.text = "566DC5"
+	G.begin_busy()
+	var tween = G.create_tween()
+	exit(tween, true)
+	G.title_ui.exit(tween)
 	tween.tween_callback(func():
-		G.start_game("", {"seed":seed_edit.text.hex_to_int()})
+		G.new_game({"seed":seed_edit.text.hex_to_int()})
+	)
+	G.begin_transition(tween)
+	tween.tween_callback(func():
+		G.enter_game()
 	)
 	G.end_transition(tween)
+	tween.tween_interval(0.4)
+	tween.tween_callback(func():
+		G.start_first_round()
+	)
 	if sel[0] == 0:
 		tween.tween_callback(func():
 			G.tutorial_ui.start()

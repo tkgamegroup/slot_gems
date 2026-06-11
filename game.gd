@@ -16,7 +16,7 @@ const object_type : int = C.ObjectType.Game
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 27
+const version_patch : int = 29
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -70,6 +70,7 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 @onready var trail_pb : PackedScene = load("res://trail.tscn")
 @onready var cell_pb : PackedScene = load("res://ui_cell.tscn")
 @onready var outline_pb : PackedScene = load("res://ui_outline.tscn")
+@onready var active_effect_pb = load("res://ui_active_effect.tscn")
 @onready var dashed_line_pb : PackedScene = load("res://dashed_line.tscn")
 @onready var entangled_line_pb : PackedScene = load("res://entangled_line.tscn")
 @onready var constellation_pb : PackedScene = load("res://ui_constellation.tscn")
@@ -92,7 +93,7 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 @onready var background : Node2D = $/root/Main/SubViewportContainer/SubViewport/Background
 @onready var crt : Control = $/root/Main/PostProcessing/ColorRect
 @onready var trans_bg : Control = $/root/Main/TransBG
-@onready var trans_sp : AnimatedSprite2D = $/root/Main/TransBG/Control/AnimatedSprite2D
+@onready var trans_bubbles : CPUParticles2D = $/root/Main/TransBubbles
 @onready var subviewport_container : SubViewportContainer = $/root/Main/SubViewportContainer
 @onready var subviewport : SubViewport = $/root/Main/SubViewportContainer/SubViewport
 @onready var canvas : CanvasLayer = $/root/Main/SubViewportContainer/SubViewport/Canvas
@@ -122,7 +123,12 @@ const UiTooltips = preload("res://ui_tooltips.gd")
 const resolution : Vector2i = Vector2i(1920, 1080)
 var mouse_pos : Vector2
 var screen_offset : Vector2
+var hovering_coord : Vector2i = Vector2i(-1, -1)
 var game_tweens : Node = null
+var base_speed : float = 1.0
+var time_scale : float = 1.0 / base_speed
+var staging_nodes : Array
+var busy : bool = false
 
 var stage : int = Stage.None
 var game_rng : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -206,10 +212,9 @@ var chains : int = 0:
 	set(v):
 		chains = v
 		if !is_headless():
-			if chains < 2:
-				calculator_bar_ui.chains_text.show_change = false
 			calculator_bar_ui.chains_text.set_value(chains)
-			calculator_bar_ui.chains_text.show_change = true
+			if chains < 2:
+				calculator_bar_ui.chains_text.clear_animation()
 			
 			if chains >= 2:
 				if chains_tween:
@@ -308,16 +313,9 @@ var attrs : Dictionary
 var game_over_mark : String = ""
 var invincible : bool = false
 
-var base_speed : float = 1.0
-var time_scale : float = 1.0 / base_speed
-
-var busy : bool = false
-
 var history : History = History.new()
 
 signal swap_finished
-
-var hovering_coord : Vector2i = Vector2i(-1, -1)
 
 var paint_mode : String = "off"
 var paint_brush1 : int = Gem.ColorWhite
@@ -972,23 +970,17 @@ func end_busy():
 
 func begin_transition(tween : Tween):
 	blocker_ui.show()
-	trans_sp.sprite_frames = null
-	trans_sp.frame = 0
-	tween.tween_property(subviewport_container.material, "shader_parameter/offset", 1.0, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_callback(func():
+		SSound.se_bubble_transition.play()
+		trans_bubbles.emitting = true
+	)
+	tween.tween_interval(0.4)
+	tween.tween_callback(func():
+		trans_bubbles.emitting = false
+	)
 
 func end_transition(tween : Tween):
-	tween.tween_callback(func():
-		match randi() % 2:
-			0: 
-				trans_sp.sprite_frames = G.gem_frames
-				trans_sp.frame = randi_range(1, 41)
-			1: 
-				trans_sp.sprite_frames = G.relic_frames
-				trans_sp.frame = randi_range(1, 14)
-		trans_sp.scale = Vector2(0.0, 0.0)
-	)
-	tween.tween_property(trans_sp, "scale", Vector2(3.0, 3.0), 0.2).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(subviewport_container.material, "shader_parameter/offset", 2.0, 0.4).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_interval(0.4)
 	tween.tween_callback(func():
 		blocker_ui.hide()
 	)
@@ -1118,136 +1110,132 @@ func add_all_kinds_of_gems(num : int):
 		g.rune = Gem.RuneStar
 		add_gem(g)
 
-func start_game(saving : String = "", parms = {}):
+func new_game(parms : Dictionary):
 	stage = Stage.None
-	
 	cleanup()
-	
-	if !is_headless():
-		game_ui.status_bar.board_size_text.show_change = false
-		game_ui.status_bar.hand_text.show_change = false
-		game_ui.status_bar.coins_text.show_change = false
-		control_ui.swaps_text.show_change = false
-	
-	if saving == "":
-		var seed = parms.get("seed", 0)
-		if seed == 0:
-			random_seeds()
-		else:
-			game_rng.seed = seed
-			round_rng.seed = game_rng.seed + 1
-			shop_rng.seed = game_rng.seed + 2
 		
-		score = 0
-		base_score = 0
-		target_score = 0
-		reward = 0
-		current_curses.clear()
-		round_curses.clear()
-		score_mult = 1.0
-		gain_scaler = 1.0
-		chains = 0
-		current_round = 0
-		board_size = parms.get("board_size", 3)
-		swaps_per_round = parms.get("swaps_per_round", 5)
-		plays_per_round = 0
-		draws_per_roll = 5
-		hand_size = parms.get("hand_size", 5)
-		coins = parms.get("coins", 10)
-		
-		for m in parms.get("attrs", []):
-			set_attr(m.name, m.value)
-		
-		if !is_headless():
-			update_round_text(current_round)
-		
-		var no_default_patterns = parms.get("no_default_patterns", 0)
-		if !no_default_patterns:
-			for i in 1:
-				var p = Pattern.new()
-				p.setup("\\")
-				add_pattern(p)
-			for i in 1:
-				var p = Pattern.new()
-				p.setup("|")
-				add_pattern(p)
-			for i in 1:
-				var p = Pattern.new()
-				p.setup("/")
-				add_pattern(p)
-		
-		'''
-		for i in 1:
-			var p = Pattern.new()
-			p.setup("Island")
-			add_pattern(p)
-		for i in 1:
-			var p = Pattern.new()
-			p.setup("Y")
-			add_pattern(p)
-		'''
-		
-		for i in 0:
-			var r = Relic.new()
-			r.setup("Aries")
-			add_relic(r)
-		for i in 0:
-			var r = Relic.new()
-			r.setup("Sandcastle")
-			add_relic(r)
-		
-		var default_gem_num = parms.get("default_gem_num", 12)
-		add_all_kinds_of_gems(default_gem_num)
-		
-		for i in 0:
-			var g = Gem.new()
-			g.setup("Ruby")
-			add_gem(g)
-		for i in 0:
-			var g = Gem.new()
-			g.setup("Bomb")
-			add_gem(g)
-	
-		Board.setup(board_size)
-		history.init()
-		
-		if !is_headless():
-			control_ui.enter()
-			
-			# setting here so that text positions will be all right
-			game_ui.status_bar.round_text.modulate.a = 0.0
-			game_ui.status_bar.round_target.modulate.a = 0.0
-			begin_busy()
-			var tween = create_game_tween()
-			tween.tween_interval(1.1)
-			tween.tween_callback(func():
-				Board.ui.enter(null, false)
-				setup_first_round()
-			)
+	var seed = parms.get("seed", 0)
+	if seed == 0:
+		random_seeds()
 	else:
-		if !is_headless():
-			game_ui.status_bar.round_text.modulate.a = 1.0
-			game_ui.status_bar.round_target.modulate.a = 1.0
-		load_from_file(saving)
-		history.init()
+		game_rng.seed = seed
+		round_rng.seed = game_rng.seed + 1
+		shop_rng.seed = game_rng.seed + 2
 	
-	if !is_headless():
-		game_ui.status_bar.board_size_text.show_change = true
-		game_ui.status_bar.hand_text.show_change = true
-		game_ui.status_bar.coins_text.show_change = true
-		control_ui.swaps_text.show_change = true
-		control_ui.undo_button.disabled = true
-		game_ui.show()
+	score = 0
+	base_score = 0
+	target_score = 0
+	reward = 0
+	current_curses.clear()
+	round_curses.clear()
+	score_mult = 1.0
+	gain_scaler = 1.0
+	chains = 0
+	current_round = 0
+	board_size = parms.get("board_size", 3)
+	swaps_per_round = parms.get("swaps_per_round", 5)
+	plays_per_round = 0
+	draws_per_roll = 5
+	hand_size = parms.get("hand_size", 5)
+	coins = parms.get("coins", 10)
+	
+	for m in parms.get("attrs", []):
+		set_attr(m.name, m.value)
+	
+	var no_default_patterns = parms.get("no_default_patterns", 0)
+	if !no_default_patterns:
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("\\")
+			add_pattern(p)
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("|")
+			add_pattern(p)
+		for i in 1:
+			var p = Pattern.new()
+			p.setup("/")
+			add_pattern(p)
+	
+	'''
+	for i in 1:
+		var p = Pattern.new()
+		p.setup("Island")
+		add_pattern(p)
+	for i in 1:
+		var p = Pattern.new()
+		p.setup("Y")
+		add_pattern(p)
+	'''
+	
+	for i in 0:
+		var r = Relic.new()
+		r.setup("Aries")
+		add_relic(r)
+	for i in 0:
+		var r = Relic.new()
+		r.setup("Sandcastle")
+		add_relic(r)
+	
+	var default_gem_num = parms.get("default_gem_num", 12)
+	add_all_kinds_of_gems(default_gem_num)
+	
+	for i in 0:
+		var g = Gem.new()
+		g.setup("Ruby")
+		add_gem(g)
+	for i in 0:
+		var g = Gem.new()
+		g.setup("Bomb")
+		add_gem(g)
 
-func setup_first_round():
+	Board.setup(board_size)
+	Board.update_gem_quantity_limit()
+	history.init()
+
+func start_game(saving : String, parms : Dictionary):
+	begin_busy()
+	var tween = G.create_tween()
+	tween.tween_callback(func():
+		if saving == "":
+			new_game(parms)
+		else:
+			load_from_file(saving)
+	)
+	if !is_headless():
+		tween.tween_callback(func():
+			enter_game()
+		)
+	if saving != "":
+		tween.tween_interval(0.4)
+		tween.tween_callback(func():
+			start_first_round()
+		)
+	else:
+		tween.tween_callback(func():
+			end_busy()
+		)
+
+func start_first_round():
 	Board.down_proc()
 	for i in hand_size:
 		Hand.draw()
 	next_round(null)
 
+func enter_game():
+	Board.ui.enter(null, false)
+	game_ui.status_bar.gem_count_text.text = "%d" % gems.size()
+	game_ui.status_bar.board_size_text.clear_animation()
+	game_ui.status_bar.hand_text.clear_animation()
+	game_ui.status_bar.coins_text.clear_animation()
+	game_ui.show()
+	control_ui.swaps_text.clear_animation()
+	control_ui.undo_button.disabled = true
+	control_ui.enter()
+
 func exit_game():
 	if Board.ui.visible:
-		Board.ui.hide()
+		Board.ui.exit(null, false)
 	if calculator_bar_ui.visible:
 		calculator_bar_ui.disappear()
 	if shop_ui.visible:
@@ -1256,7 +1244,10 @@ func exit_game():
 		settlement_ui.exit(false)
 	if upgrade_ui.visible:
 		upgrade_ui.exit(false)
+	
 	control_ui.exit()
+	game_ui.status_bar.round_text.modulate.a = 0.0
+	game_ui.status_bar.round_target.modulate.a = 0.0
 	game_ui.hide()
 	
 	cleanup()
@@ -1397,8 +1388,6 @@ func round_end():
 			h.caster.on_event.call(C.Event.RoundEnd, null, null)
 	if !is_headless():
 		calculator_bar_ui.disappear()
-		control_ui.swaps_text.show_change = false
-		control_ui.swaps_text.show_change = true
 		control_ui.undo_button.disabled = true
 		control_ui.expected_score_panel.hide()
 
@@ -1646,6 +1635,9 @@ func load_from_file(name : String = "1"):
 	var data = JSON.parse_string(file.get_as_text())
 	file.close()
 	
+	stage = Stage.None
+	cleanup()
+	
 	G.game_rng.seed = int(data["game_rng_seed"])
 	G.game_rng.state = int(data["game_rng_state"])
 	G.round_rng.seed = int(data["round_rng_seed"])
@@ -1688,8 +1680,7 @@ func load_from_file(name : String = "1"):
 		G.set_attr(k, attrs_data[k])
 	G.coins = int(data["coins"])
 	
-	Board.cx = int(data["cx"])
-	Board.cy = int(data["cy"])
+	Board.set_cx_cy(int(data["cx"]), int(data["cy"]))
 	
 	for d in data["gems"]:
 		var g = Gem.new()
@@ -1753,34 +1744,37 @@ func load_from_file(name : String = "1"):
 			Board.nullify(coord)
 		Board.ui.update_cell(coord)
 	
-	Board.update_gem_quantity_limit()
-	game_ui.status_bar.gem_count_text.text = "%d" % gems.size()
-	
-	control_ui.enter()
-	
 	var stage = data["stage"]
 	if stage == "":
 		G.stage = Stage.Deploy
-		Board.ui.enter(null, false)
-		control_ui.update_preview()
-		control_ui.play_button.disabled = false
-		if swaps == 0:
-			control_ui.show_last_play()
+		if !is_headless():
+			control_ui.update_preview()
+			control_ui.play_button.disabled = false
+			if swaps == 0:
+				control_ui.show_last_play()
 	else:
 		if stage == "settlement":
 			G.stage = Stage.Settlement
-			Board.ui.enter(null, false)
 			settlement_ui.load_from_data(data)
-			settlement_ui.show()
+			if !is_headless():
+				settlement_ui.show()
 		elif stage == "upgrade":
 			G.stage = Stage.Upgrade
-			Board.ui.enter(null, false)
 			upgrade_ui.load_from_data(data)
-			upgrade_ui.show()
+			if !is_headless():
+				upgrade_ui.show()
 		elif stage == "shopping":
 			G.stage = Stage.Shopping
 			shop_ui.load_from_data(data)
-			shop_ui.enter(null, false)
+			if !is_headless():
+				shop_ui.enter(null, false)
+	
+	Board.update_gem_quantity_limit()
+	history.init()
+	
+	if !is_headless():
+		game_ui.status_bar.round_text.modulate.a = 1.0
+		game_ui.status_bar.round_target.modulate.a = 1.0
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -1929,6 +1923,8 @@ func _ready() -> void:
 	
 	game_tweens = Node.new()
 	self.add_child(game_tweens)
+	
+	trans_bubbles.position = Vector2(0, resolution.y)
 	
 	Board.ui = $/root/Main/SubViewportContainer/SubViewport/Canvas/Board
 	Board.elimination_finished.connect(func():
