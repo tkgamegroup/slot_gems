@@ -14,21 +14,9 @@ func choose(idx : int):
 	SSound.se_click.play()
 	G.screen_shake_strength = 8.0
 	buttons_list.hide()
-	var tween = G.create_game_tween()
-	var n = reward_list.get_child_count()
-	for i in n:
-		if i != idx:
-			var ui : Control = reward_list.get_child(i)
-			ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			tween.parallel().tween_property(ui, "modulate:a", 0.0, 0.2)
-	var ui : Control = reward_list.get_child(idx)
-	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tween.tween_property(ui, "modulate:a", 0, 0.2)
-	tween.tween_callback(func():
-		callback.call(rewards, idx)
-		callback = Callable()
-		exit()
-	)
+	callback.call(rewards, idx)
+	callback = Callable()
+	exit()
 
 func enter(_rewards : Array, _callback : Callable, tween : Tween = null):
 	rewards = _rewards

@@ -2,7 +2,8 @@ extends Control
 
 @export var bg : Control
 @export var content : Control
-@export var title_txt : Label
+@export var name_txt : Label
+@export var quantity_txt : Label
 
 var cate : String
 var object
@@ -14,26 +15,25 @@ func setup(_cate : String, _object, _quantity : int = 1):
 	quantity = _quantity
 
 func _ready() -> void:
-	var title = ""
+	var name = ""
 	if cate == "gem":
 		var ctrl = Control.new()
 		ctrl.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
+		ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var ui = G.gem_ui_pb.instantiate()
 		ui.update(object)
 		ctrl.add_child(ui)
-		ctrl.mouse_entered.connect(func():
-			SSound.se_select.play()
-			STooltip.show(ui, 0, object.get_tooltip())
+		self.mouse_entered.connect(func():
+			STooltip.show(self, 0, object.get_tooltip())
 		)
-		ctrl.mouse_exited.connect(func():
+		self.mouse_exited.connect(func():
 			STooltip.close()
 		)
 		content.add_child(ctrl)
-		title = "Get %s" % object.get_tooltip_title()
+		name = object.get_tooltip_title()
 	
-	if quantity > 1:
-		title += " X%d" % quantity
-	title_txt.text = title
+	quantity_txt.text = "X%d" % quantity
+	name_txt.text = name
 	
 	self.mouse_entered.connect(func():
 		SSound.se_select.play()

@@ -151,7 +151,7 @@ func refresh(tween : Tween = null):
 	for i in 2:
 		if relics_pool2.is_empty() && patterns_pool2.is_empty():
 			break
-		if G.shop_rng.randf() > 0.3 && !relics_pool2.is_empty():
+		if G.shop_rng.randf() > 0.0 && !relics_pool2.is_empty():
 			tween.tween_interval(0.04)
 			tween.tween_callback(func():
 				var ui = G.shop_item_pb.instantiate()
@@ -160,7 +160,7 @@ func refresh(tween : Tween = null):
 				ui.setup("relic", relic, relic.price)
 				list1.add_child(ui)
 			)
-		elif !patterns_pool2.is_empty():
+		elif false && !patterns_pool2.is_empty():
 			tween.tween_interval(0.04)
 			tween.tween_callback(func():
 				var ui = G.shop_item_pb.instantiate()

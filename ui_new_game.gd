@@ -54,7 +54,7 @@ func start_new_game():
 		G.enter_game()
 	)
 	G.end_transition(tween)
-	tween.tween_interval(0.4)
+	tween.tween_interval(0.8)
 	tween.tween_callback(func():
 		G.start_first_round()
 	)

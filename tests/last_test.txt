@@ -1,1 +1,1 @@
-test_lv24_24_bombs
+test_lv1to24_PolishingPowder

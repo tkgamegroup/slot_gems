@@ -1,14 +1,29 @@
 extends Control
 
 @export var panel : Control
+@export var widgets_root : Control
 @export var tab_container : TabContainer
-@export var round1_title : Label
-@export var round2_title : Label
-@export var round3_title : Label
-@export var round1_desc : RichTextLabel
-@export var round2_desc : RichTextLabel
-@export var round3_desc : RichTextLabel
+@export var rounds_list : GridContainer
 @export var close_button : Button
+
+func idx_to_pos(i : int):
+	var y = i / 6
+	var x = i % 6
+	return y * 6 + (x if y % 2 == 0 else 5 - x)
+
+func add_widgets():
+	var line = G.dashed_line_pb.instantiate()
+	line.width = 3
+	widgets_root.add_child(line)
+	for i in 23:
+		var p0 = rounds_list.get_child(idx_to_pos(i)).get_rect().get_center()
+		var p1 = rounds_list.get_child(idx_to_pos(i + 1)).get_rect().get_center()
+		line.add_point(p0)
+		line.add_point(p1)
+		var w = G.round_widget_pb.instantiate()
+		w.setup(i + 1)
+		w.position = (p0 + p1) * 0.5
+		widgets_root.add_child(w)
 
 func enter():
 	self.self_modulate.a = 0.0
@@ -18,18 +33,17 @@ func enter():
 	var tween = G.create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
 	
-	var r = G.current_round
-	if !G.shop_ui.visible:
-		r -= 1
-	r = int(r / 3) * 3 + 1
-	round1_title.text = tr("ui_game_round") % r
-	round1_desc.text = G.get_round_desc(r)
-	r += 1
-	round2_title.text = tr("ui_game_round") % r
-	round2_desc.text = G.get_round_desc(r)
-	r += 1
-	round3_title.text = tr("ui_game_round") % r
-	round3_desc.text = G.get_round_desc(r)
+	for n in rounds_list.get_children():
+		rounds_list.remove_child(n)
+		n.queue_free()
+	for n in widgets_root.get_children():
+		widgets_root.remove_child(n)
+		n.queue_free()
+	for i in 24:
+		var ui = G.round_info_pb.instantiate()
+		ui.setup(idx_to_pos(i) + 1)
+		rounds_list.add_child(ui)
+	add_widgets.call_deferred()
 
 func exit():
 	panel.hide()

@@ -84,7 +84,6 @@ func calculate():
 		return
 	
 	var tween = G.create_game_tween()
-	var preprocess = false
 	var delay = 0.0
 	for h in G.event_listeners:
 		var sub = G.create_game_tween()
@@ -94,9 +93,8 @@ func calculate():
 			if tween:
 				tween.parallel()
 				tween.tween_subtween(sub)
-			preprocess = true
 			delay += 0.2
-	if preprocess && tween:
+	if delay > 0.0 && tween:
 		tween.tween_callback(calculate_proc)
 	else:
 		calculate_proc()

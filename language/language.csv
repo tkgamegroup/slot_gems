@@ -147,7 +147,7 @@ ui_game_last_play,Last Play,最后播放
 tt_game_play_title,Play,播放
 tt_game_play_content,Start matching patterns and get score.,开始匹配图案并得分。
 tt_game_filling_times_title,Fatigue,疲劳
-tt_game_filling_times_content,How many fillings were performed during this matching stage.\nStops matching stage when reaching 40.,在这次匹配阶段进行过多少次填充。达到40时停止匹配阶段。
+tt_game_filling_times_content,How many refills were performed during this playing stage.\nNo new gems spawn after 40.,在这次播放阶段进行过多少次补充。在40之后不再补充新宝石。
 tt_at_least_score,At Least Score: %d,最少得分：%d
 ui_bag_viewer_title,Bag,包
 ui_bag_viewer_gems,Gems,宝石
@@ -159,12 +159,18 @@ ui_shop_item_nothing,Nothing,什么也\n不要
 ui_shop_item_return,Return,返还
 ui_shop_item_increase_swaps,Increase Swaps,增加\n交换次数
 ui_shop_item_increase_hand_size,Increase Hand Size,增加\n手牌数
+ui_shop,Shop,商店
 ui_shop_title,SHOP,商店
 ui_shop_target,Improve your run,变得更强吧
 ui_shop_refresh,Refresh,刷新
 ui_shop_next_round,Next Round,下一回合
 ui_buy,Buy,购买
 ui_sell,Sell %d,出售 %d
+ui_chest,Treasure Chest,宝箱
+tt_chest1_desc,Upgrade Board,升级棋盘
+tt_chest2_desc,Get a new pattern,获得一个图案
+tt_chest3_desc,Upgrade Board,升级棋盘
+tt_chest4_desc,Upgrade your pattern,升级一个图案
 ui_in_game_menu_title,Menu,菜单
 ui_in_game_menu_resume,Resume,继续
 ui_in_game_menu_options,Options,选项
@@ -177,7 +183,7 @@ ui_settlement_title,Settlement,结算
 ui_settlement_round_rewards,Round Reward,回合奖励
 ui_settlement_swap_rewards,Swaps,交换次数
 ui_settlement_interest,Interest,利息
-ui_settlement_cash_out,Cash Out %d,提现 %d
+ui_settlement_receive,Receive,收取
 ui_upgrade_title,Choose An Upgrade,选择一个升级
 ui_upgrade_board,Board Size\nUpgrade,棋盘大小\n升级
 ui_upgrade_board_insufficient_quantity_title,Not Enough Gems,宝石数量不足
@@ -339,7 +345,7 @@ item_desc_EnergyDrink,Eliminate: Swaps +1.,消除：交换次数+1。
 item_name_Volcano,Volcano,火山
 item_desc_Volcano,Eliminate: (w_active) Eliminate 2 random cells within [n_2]-ring. Repeat 2 times.,消除：(w_active)消除[n_2]环内的2个随机格子。重复2次。
 item_name_PolishingPowder,Polishing Powder,抛光粉
-item_desc_PolishingPowder,"At the end of each round and this Item is in the bag: If a Gem did not leave the Bag during that round, its Base Score +1.",在每回合结束时并且此物品在背包中时：若1个宝石在那一回合没有离开背包，它的基础分数+1。
+item_desc_PolishingPowder,"At the end of each round and this Gem is in the bag: For each Gem in the Bag, its Base Score +1.",在每回合结束时并且此宝石在背包中：每个背包中的宝石的基础分数+1。
 relic,Relic,遗物
 relic_name_PaintingOfRed,"Composition with Red, Blue and Yellow",红、蓝、黄构图
 relic_desc_PaintingOfRed,Red gems' base score +{value_i}.,红色宝石的基础分数+{value_i}。

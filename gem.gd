@@ -182,8 +182,8 @@ static func type_color(t : int) -> Color:
 		None: return Color(0, 0, 0, 0)
 		ColorRed: return Color(0.83, 0.07, 0.09, 1.0)
 		ColorOrange: return Color(1.0, 0.71, 0.16)
-		ColorGreen: return Color(0.61, 0.75, 0.25)
-		ColorBlue: return Color(0.56, 0.87, 0.96)
+		ColorGreen: return Color(0.50, 0.87, 0.51)
+		ColorBlue: return Color(0.50, 0.79, 0.87)
 		ColorMagenta: return Color(0.88, 0.20, 0.80)
 		ColorWhite: return Color(0.99, 0.99, 0.99)
 		ColorBlack: return Color(0.27, 0.27, 0.27)
@@ -332,8 +332,8 @@ static func create_temp_data(g : Gem) -> Dictionary:
 			tags.append("aura")
 		if g.on_eliminate.is_valid():
 			tags.append("eliminate_effect")
-		return {"name":g.name,"type":g.type, "rune":g.rune, "score":g.get_score(), "tags":tags, "extras":g.extra.duplicate(true)}
-	return {"name":"","type":None, "rune":None, "score":0, "tags":[], "extras":{}}
+		return {"name":g.name,"category":g.category,"type":g.type,"rune":g.rune,"score":g.get_score(),"tags":tags,"extras":g.extra.duplicate(true)}
+	return {"name":"","category":"","type":None,"rune":None,"score":0,"tags":[],"extras":{}}
 
 static var s_id : int = 0
 
@@ -482,7 +482,7 @@ func setup(n : String):
 		rune = None
 		base_score = 0
 		image_id = 17
-		category = "Normal"
+		category = "Special"
 		price = 2
 		eliminate_priority = 1
 		extra["value_lower_i"] = 1
@@ -543,7 +543,7 @@ func setup(n : String):
 		rune = None
 		base_score = 0
 		image_id = 20
-		category = "Normal"
+		category = "Special"
 		price = 5
 		eliminate_priority = 4
 		extra["value_i"] = 20
@@ -566,7 +566,7 @@ func setup(n : String):
 		rune = None
 		base_score = 0
 		image_id = 21
-		category = "Normal"
+		category = "Special"
 		trigger = true
 		price = 5
 		power = 0
@@ -625,7 +625,7 @@ func setup(n : String):
 		rune = None
 		base_score = 0
 		image_id = 22
-		category = "Normal"
+		category = "Special"
 		price = 5
 		power = 1
 		extra["range_i"] = 5
@@ -679,7 +679,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 23
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["value_i"] = 1800
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -697,7 +697,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 24
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["value_i"] = 1800
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -715,7 +715,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 25
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["value_i"] = 1800
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -733,7 +733,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 26
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["value_i"] = 1800
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -751,7 +751,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 27
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["value_i"] = 1800
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -769,7 +769,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 28
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["value_i"] = 24
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -791,7 +791,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 29
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["value_i"] = 24
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -813,7 +813,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 30
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["value_i"] = 24
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -835,7 +835,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 31
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["value_i"] = 24
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -857,7 +857,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 32
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["value_i"] = 24
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -879,7 +879,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 33
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["add_value_i"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -900,7 +900,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 33
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 5
 		extra["add_value_i"] = 2
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -911,7 +911,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 34
-		category = "Normal"
+		category = "Special"
 		price = 3
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
 			tween.tween_callback(func():
@@ -945,7 +945,7 @@ func setup(n : String):
 		rune = None
 		base_score = 0
 		image_id = 35
-		category = "Normal"
+		category = "Special"
 		trigger = true
 		extra["bait_i"] = 0
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -962,13 +962,13 @@ func setup(n : String):
 				var pos = Board.get_pos(coord)
 				var ui = Board.ui.get_cell(coord)
 				ui.z_index = 3
-				ui.pivot_offset = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.75
+				ui.pivot_offset = Vector2(C.TILE_SZ, C.TILE_SZ) * 0.75
 				var has_bait = extra["bait_i"] > 0
 				var times = 1 + G.attrs["additional_targets_i"]
 				for i in times:
 					var target = SMath.pick_random(cands, G.game_rng)
 					var target_pos = Board.get_pos(target)
-					tween.tween_property(ui, "position", target_pos - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5, 0.15 * G.time_scale)
+					tween.tween_property(ui, "position", target_pos - Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5, 0.15 * G.time_scale)
 					tween.tween_property(ui, "rotation_degrees", -30.0, 0.15 * G.time_scale)
 					tween.tween_property(ui, "rotation_degrees", 0.0, 0.15 * G.time_scale)
 					tween.tween_property(ui, "rotation_degrees", -30.0, 0.15 * G.time_scale)
@@ -1025,14 +1025,14 @@ func setup(n : String):
 				tween.tween_callback(func():
 					ui.position = pos
 					ui.z_index = 0
-					ui.pivot_offset = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+					ui.pivot_offset = Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 				)
 	elif name == "BettaFish":
 		type = ColorRed
 		rune = None
 		base_score = 1
 		image_id = 36
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["weight_i"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -1045,7 +1045,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 37
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["weight_i"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -1058,7 +1058,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 38
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["weight_i"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -1071,7 +1071,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 39
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["weight_i"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -1084,7 +1084,7 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 40
-		category = "Normal"
+		category = "Special"
 		eliminate_priority = 1
 		extra["weight_i"] = 1
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -1097,19 +1097,19 @@ func setup(n : String):
 		rune = None
 		base_score = 1
 		image_id = 41
-		category = "Normal"
+		category = "Special"
 	elif name == "EmptyCan":
 		type = ColorBlue
 		rune = None
 		base_score = 1
 		image_id = 42
-		category = "Normal"
+		category = "Special"
 	elif name == "Wine":
 		type = ColorMagenta
 		rune = None
 		base_score = 1
 		image_id = 43
-		category = "Normal"
+		category = "Special"
 		durability = 1
 		price = 4
 		on_event = func(event : int, tween : Tween, data):
@@ -1126,7 +1126,7 @@ func setup(n : String):
 		type = ColorGreen
 		rune = None
 		image_id = 44
-		category = "Normal"
+		category = "Special"
 		durability = 1
 		price = 1
 		eliminate_priority = 1
@@ -1140,7 +1140,7 @@ func setup(n : String):
 		type = None
 		rune = None
 		image_id = 45
-		category = "Normal"
+		category = "Special"
 		price = 2
 		on_event = func(event : int, tween : Tween, data):
 			match event:
@@ -1162,7 +1162,7 @@ func setup(n : String):
 		type = ColorRed
 		rune = None
 		image_id = 46
-		category = "Normal"
+		category = "Special"
 		price = 2
 		on_event = func(event : int, tween : Tween, data):
 			match event: 
@@ -1221,7 +1221,7 @@ func setup(n : String):
 		type = ColorRedOrange
 		rune = None
 		image_id = 47
-		category = "Normal"
+		category = "Special"
 		price = 5
 		power = 4
 		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
@@ -1269,11 +1269,11 @@ func setup(n : String):
 						G.add_chain()
 					Board.eliminate(coords, 0, tween, Board.ActiveReason.Gem, self)
 	elif name == "PolishingPowder":
-		type = None
+		type = ColorOrange
 		rune = None
 		base_score = 0
 		image_id = 48
-		category = "Normal"
+		category = "Special"
 		price = 5
 		on_event = func(event : int, tween : Tween, data):
 			match event:
@@ -1285,7 +1285,21 @@ func setup(n : String):
 						SUtils.remove_event_listeners(G, self)
 				C.Event.RoundEnd:
 					if coord.x == -1 && coord.y == -1:
-						for g in G.bag_gems:
-							if g.name == "" || g.name == "Gem":
-								if g.bag_stamp < G.current_round:
+						if tween:
+							tween.tween_callback(func():
+								SSound.se_skill.play()
+								var sp = SEffect.ghost_effect_activate(G.gem_frames, image_id, null, G.game_ui.status_bar.bag_button.get_global_rect().get_center(), 0.4 * G.time_scale, 0.5)
+								G.game_ui.game_overlay.add_child(sp)
+							)
+							tween.tween_interval(0.4 * G.time_scale)
+							tween.tween_callback(func():
+								SSound.se_upgrade.play()
+								for g in G.bag_gems:
+									if g.name == "" || g.name == "Gem":
+										g.base_score += 1
+							)
+						else:
+							for g in G.bag_gems:
+								if g.name == "" || g.name == "Gem":
 									g.base_score += 1
+						return true

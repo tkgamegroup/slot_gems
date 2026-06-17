@@ -108,9 +108,15 @@ func move_pieces():
 	pieces_tweens.clear()
 
 func _ready() -> void:
-	self.custom_minimum_size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
-	self.pivot_offset = Vector2(C.SPRITE_SZ, C.SPRITE_SZ) * 0.5
-	sub_viewport.size = Vector2(C.SPRITE_SZ, C.SPRITE_SZ)
+	self.custom_minimum_size = Vector2(C.TILE_SZ, C.TILE_SZ)
+	self.pivot_offset = Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
+	sub_viewport.size = Vector2(C.TILE_SZ, C.TILE_SZ)
+	gem_kind_sp.scale = Vector2(C.SPRITE_TO_TILE, C.SPRITE_TO_TILE)
+	wild_sp.scale = Vector2(C.SPRITE_TO_TILE, C.SPRITE_TO_TILE)
+	special_sp.scale = Vector2(C.SPRITE_TO_TILE, C.SPRITE_TO_TILE)
+	rune_sp.scale = Vector2(C.SPRITE_TO_TILE, C.SPRITE_TO_TILE)
+	charming_fx.position = Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
+	sharp_fx.position = Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 	
 	update(null)
 

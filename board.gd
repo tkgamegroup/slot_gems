@@ -779,10 +779,10 @@ func down_proc(tween : Tween = null, allow_new_gems : bool = true):
 				var t = ((c.y + 2.0) / cy)
 				t *= t
 				t *= 0.2
-				var start_pos = get_pos(cc) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+				var start_pos = get_pos(cc) - Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 				if cc.y < 0:
-					start_pos.y -= C.BOARD_TILE_SZ
-				var end_pos = get_pos(c) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+					start_pos.y -= C.TILE_SZ
+				var end_pos = get_pos(c) - Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 				sub.tween_property(cell_ui, "position", end_pos, t * G.time_scale).from(start_pos).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 				sub.tween_callback(func():
 					#SSound.se_bubble_pop3.play()
@@ -914,19 +914,16 @@ func matching_proc():
 
 func matching():
 	var tween = G.create_game_tween()
-	var preprocess = false
 	var delay = 0.0
 	for h in event_listeners:
 		var sub = G.create_game_tween()
 		if sub:
 			sub.tween_interval(delay * G.time_scale)
 		if h.caster.on_event.call(C.Event.BeforeMatching, sub, null):
-			preprocess = true
 			if tween:
 				tween.parallel()
 				tween.tween_subtween(sub)
-				delay += 0.2
-	if preprocess && tween:
+	if delay > 0.0 && tween:
 		tween.tween_callback(matching_proc)
 	else:
 		matching_proc()

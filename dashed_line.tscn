@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ch6v8gpkvaxjc" path="res://images/dashed_line.png" id="1_ggofr"]
 
 [node name="DashedLine" type="Line2D"]
+texture_filter = 1
 texture_repeat = 2
 width = 20.0
 texture = ExtResource("1_ggofr")

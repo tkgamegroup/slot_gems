@@ -1,0 +1,10 @@
+#Start Datetime: 2026-06-12 23:37:18
+#Rounds: 24
+#Action: AI0
+#Board Size: 18x6(108 cells)
+#Hand Size: 5
+#Red: 36, Orange: 36, Green: 36, Blue: 36, Magenta: 36, Wild: 0
+#Patterns: \, |, /
+#Swaps: 5
+Score(r1),Score(r2),Score(r3),Score(r4),Score(r5),Score(r6),Score(r7),Score(r8),Score(r9),Score(r10),Score(r11),Score(r12),Score(r13),Score(r14),Score(r15),Score(r16),Score(r17),Score(r18),Score(r19),Score(r20),Score(r21),Score(r22),Score(r23),Score(r24)
+1160,260,160,880,380,412,380,160,507,507,320,360,80,160,240,400,507,160,507,340,960,634,160,160

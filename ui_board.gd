@@ -60,9 +60,10 @@ func clear():
 		n.queue_free()
 
 func add_cell(c : Vector2i):
-	var pos = get_pos(c) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+	var pos = get_pos(c) - Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 	
 	var outline = G.outline_pb.instantiate()
+	outline.scale = Vector2(C.SPRITE_TO_TILE, C.SPRITE_TO_TILE)
 	outline.position = pos
 	outlines_root.add_child(outline)
 	
@@ -76,13 +77,13 @@ func get_panel_rect(even : bool, border : bool = true):
 		for x in Board.cx:
 			tilemap.set_cell(ui_coord(Vector2i(x, y)), 1, Vector2i(0, 0))
 	var used = tilemap.get_used_rect()
-	var p = tilemap.map_to_local(used.position) - Vector2(C.BOARD_TILE_SZ * 0.5, C.BOARD_TILE_SZ * 1.0)
-	var s = tilemap.map_to_local(used.end) - p - Vector2(C.BOARD_TILE_SZ * 0.25, C.BOARD_TILE_SZ * 0.5)
+	var p = tilemap.map_to_local(used.position) - Vector2(C.TILE_SZ * 0.5, C.TILE_SZ * 1.0)
+	var s = tilemap.map_to_local(used.end) - p - Vector2(C.TILE_SZ * 0.25, C.TILE_SZ * 0.5)
 	if border:
-		p -= Vector2(C.BOARD_TILE_SZ * 0.25, C.BOARD_TILE_SZ * 0.5)
-		s += Vector2(C.BOARD_TILE_SZ * 0.5, C.BOARD_TILE_SZ * 1.0)
+		p -= Vector2(C.TILE_SZ * 0.25, C.TILE_SZ * 0.5)
+		s += Vector2(C.TILE_SZ * 0.5, C.TILE_SZ * 1.0)
 	if even:
-		p.y += C.BOARD_TILE_SZ * 0.5
+		p.y += C.TILE_SZ * 0.5
 	return Rect2(p, s)
 
 func enter(tween : Tween = null, trans : bool = true):
@@ -159,35 +160,32 @@ func _input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	self.pivot_offset = get_viewport_rect().size * 0.5
+	tilemap.tile_set.tile_size = Vector2i(C.TILE_SZ, C.TILE_SZ)
+	hover_ui.scale = Vector2(C.SPRITE_TO_TILE, C.SPRITE_TO_TILE)
 	Drag.add_target("gem", self, func(payload, ev : String, extra : Dictionary):
 		if ev == "peek":
 			pass
 		elif ev == "peek_exited":
 			pass
 		else:
-			if G.swaps > 0:
-				var slot1 = payload as G.UiHandSlot
-				var coord = extra["coord"]
-				var g2 = Board.get_gem_at(coord)
-				if Board.get_cell(coord).in_mist:
-					SSound.se_error.play()
-					G.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
-					return false
-				'''
-				var i = Board.get_item_at(coord)
-				if i && (i.name == "SinLust" || i.name == "SinGluttony" || i.name == "SinGreed" || i.name == "SinWrath" || i.name == "SinEnvy"):
-					SSound.se_error.play()
-					G.banner_ui.show_tip(tr("wr_ban_swapping_sin"), "", 1.0)
-					return false
-				'''
-				G.swaps -= 1
-				
-				G.swap_hand_and_board(slot1, coord)
-				G.action_stack.append(Pair.new(coord, g2))
-				if !G.tutorial_ui.visible:
-					G.control_ui.undo_button.disabled = false
-				return true
-			else:
-				G.control_ui.swaps_text.hint()
+			if !G.shop_ui.visible:
+				if G.swaps > 0:
+					var slot1 = payload as G.UiHandSlot
+					var coord = extra["coord"]
+					var g2 = Board.get_gem_at(coord)
+					if Board.get_cell(coord).in_mist:
+						SSound.se_error.play()
+						G.banner_ui.show_tip(tr("wr_ban_swapping_in_mist"), "", 1.0)
+						return false
+					
+					G.swaps -= 1
+					
+					G.swap_hand_and_board(slot1, coord)
+					G.action_stack.append(Pair.new(coord, g2))
+					if !G.tutorial_ui.visible:
+						G.control_ui.undo_button.disabled = false
+					return true
+				else:
+					G.control_ui.swaps_text.hint()
 		return false
 	)

@@ -1,6 +1,8 @@
 extends Control
 
 @export var panel : PanelContainer
+@export var title1 : Label
+@export var title2 : Label
 @export var button : Button
 @export var button_text : RichTextLabel
 @export var list : VBoxContainer
@@ -23,6 +25,10 @@ func enter():
 	self.show()
 	panel.modulate.a = 1.0
 	panel.show()
+	title1.modulate.a = 1.0
+	title1.show()
+	title2.modulate.a = 1.0
+	title2.hide()
 	
 	var tween = G.get_tree().create_tween()
 	tween.tween_property(self, "self_modulate:a", 1.0, 0.3)
@@ -38,7 +44,7 @@ func enter():
 	tween.tween_callback(func():
 		var ui_s = G.settlement_item_pb.instantiate()
 		ui_s.name_str = tr("ui_settlement_round_rewards")
-		ui_s.value_str = "%d[img]res://images/coin.png[/img]" % G.reward
+		ui_s.value_str = "[img]res://images/coin.png[/img]%d" % G.reward
 		list.add_child(ui_s)
 	)
 	coin_rewards += G.reward
@@ -47,7 +53,7 @@ func enter():
 		tween.tween_callback(func():
 			var ui_s = G.settlement_item_pb.instantiate()
 			ui_s.name_str = tr("ui_settlement_swap_rewards")
-			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % G.swaps
+			ui_s.value_str = "[img]res://images/coin.png[/img]%d" % G.swaps
 			list.add_child(ui_s)
 		)
 		coin_rewards += G.swaps
@@ -56,7 +62,7 @@ func enter():
 		tween.tween_callback(func():
 			var ui_s = G.settlement_item_pb.instantiate()
 			ui_s.name_str = tr("ui_settlement_interest")
-			ui_s.value_str = "%d[img]res://images/coin.png[/img]" % int(G.coins / 10)
+			ui_s.value_str = "[img]res://images/coin.png[/img]%d" % int(G.coins / 10)
 			list.add_child(ui_s)
 		)
 		coin_rewards += int(G.coins / 10)
@@ -66,57 +72,22 @@ func enter():
 		button.modulate.a = 1.0
 		button.disabled = false
 	)
-	button_text.text = "%s[img]res://images/coin.png[/img]" % (tr("ui_settlement_cash_out") % coin_rewards)
+	button_text.text = "%s [img]res://images/coin.png[/img]%d" % [tr("ui_settlement_receive"), coin_rewards]
 
 const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "Bomb"]
 
-func choose_reward(rewards : Array, idx : int):
-	var tween = G.create_game_tween()
-	if rewards[idx].cate == "gem":
-		for i in rewards[idx].quantity:
-			var gem = Gem.new()
-			G.copy_gem(rewards[idx].object, gem)
-			G.add_gem(gem)
-			var sub = G.create_game_tween()
-			sub.tween_interval(i * 0.1)
-			var ui = G.create_gem_ui(gem, G.choose_reward_ui.reward_list.get_child(idx).content.get_global_rect().get_center())
-			sub.tween_property(ui, "scale", Vector2(0.7, 0.7), 0.4)
-			sub.parallel()
-			SAnimation.quadratic_curve_to(sub, ui, G.game_ui.status_bar.bag_button.global_position, Vector2(0.5, 0.2), 0.4)
-			sub.tween_callback(func():
-				ui.queue_free()
-			)
-			if i > 0:
-				tween.parallel()
-			tween.tween_subtween(sub)
-	tween.tween_callback(func():
-		G.shop_ui.enter()
-	)
-
-func exit(trans : bool = true):
-	G.coins += coin_rewards
-	
+func exit(tween : Tween = null, trans : bool = true):
 	clear()
 	
 	if trans:
 		panel.hide()
 		self.self_modulate.a = 1.0
-		
-		var tween = G.create_game_tween()
+		if !tween:
+			tween = G.create_game_tween()
 		tween.tween_property(self, "self_modulate:a", 0.0, 0.3)
 		tween.tween_callback(func():
 			self.hide()
 		)
-		var rewards = []
-		for i in 3:
-			var g = Gem.new()
-			g.setup(SMath.pick_random(items_pool))
-			var r = {}
-			r.cate = "gem"
-			r.object = g
-			r.quantity = 1
-			rewards.append(r)
-		G.choose_reward_ui.enter(rewards, choose_reward, tween)
 	else:
 		self.hide()
 
@@ -145,6 +116,56 @@ func save_to_data(data : Dictionary):
 func _ready() -> void:
 	button.pressed.connect(func():
 		SSound.se_coin.play()
-		exit()
+		G.coins += coin_rewards
+		
+		button.hide()
+		clear()
+		
+		var tween = G.create_game_tween()
+		tween.tween_property(title1, "modulate:a", 0.0, 0.2)
+		tween.tween_callback(func():
+			title1.hide()
+			title2.modulate.a = 0.0
+			title2.show()
+		)
+		tween.tween_property(title2, "modulate:a", 1.0, 0.2)
+		for i in 3:
+			var g = Gem.new()
+			g.setup(SMath.pick_random(items_pool))
+			var n = 1
+			var ui = G.reward_pb.instantiate()
+			ui.setup("gem", g, n)
+			ui.modulate.a = 0.0
+			ui.gui_input.connect(func(event : InputEvent):
+				if event is InputEventMouseButton:
+					if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+						var tween2 = G.create_game_tween()
+						tween2.tween_callback(func():
+							exit()
+						)
+						for j in n:
+							var gem = Gem.new()
+							G.copy_gem(g, gem)
+							G.add_gem(gem)
+							var pos = G.game_ui.status_bar.bag_button.get_global_rect().get_center()
+							pos -= Vector2(C.SPRITE_SZ, C.SPRITE_SZ) * 0.5
+							var sp = G.create_gem_ui(g, pos + Vector2(0.0, 100.0))
+							var sub = G.create_game_tween()
+							sub.tween_interval(j * 0.1)
+							sub.tween_property(sp.get_sp(), "modulate:a", 0.2, 0.7).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+							sub.parallel().tween_property(sp, "scale", Vector2(0.3, 0.3), 0.7)
+							sub.parallel().tween_property(sp, "position", pos + Vector2(0.0, 20.0), 0.7).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+							sub.tween_callback(func():
+								sp.queue_free()
+							)
+							if j > 0:
+								tween2.parallel()
+							tween2.tween_subtween(sub)
+						tween2.tween_callback(func():
+							G.shop_ui.enter()
+						)
+			)
+			list.add_child(ui)
+			tween.tween_property(ui, "modulate:a", 1.0, 0.2)
 	)
-	#button.mouse_entered.connect(SSound.se_select.play)
+	button.mouse_entered.connect(SSound.se_select.play)

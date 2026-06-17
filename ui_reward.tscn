@@ -4,55 +4,54 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tkut8"]
 bg_color = Color(0.2946093, 0.3729165, 0.5042204, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uxi2v"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.8736079, 0.78737587, 0.30475053, 1)
+bg_color = Color(0.3789255, 0.5405586, 0.7070985, 1)
 
-[node name="UiReward" type="Panel" node_paths=PackedStringArray("bg", "content", "title_txt")]
-custom_minimum_size = Vector2(240, 360)
-offset_right = 240.0
-offset_bottom = 360.0
+[node name="UiReward" type="PanelContainer" node_paths=PackedStringArray("bg", "content", "name_txt", "quantity_txt")]
+offset_right = 122.0
+offset_bottom = 78.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_tkut8")
 script = ExtResource("1_3gn8b")
 bg = NodePath("BG")
-content = NodePath("VBoxContainer/Content")
-title_txt = NodePath("VBoxContainer/Title")
+content = NodePath("MarginContainer/HBoxContainer/Content")
+name_txt = NodePath("MarginContainer/HBoxContainer/Name")
+quantity_txt = NodePath("MarginContainer/HBoxContainer/Label2")
 
 [node name="BG" type="Panel" parent="."]
 visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_uxi2v")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
 alignment = 1
 
-[node name="Content" type="CenterContainer" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Get"
+
+[node name="Name" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.92534, 0.768212, 0.373357, 1)
+text = "ABC"
+
+[node name="Content" type="CenterContainer" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 
-[node name="Title" type="Label" parent="VBoxContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "ABC"
+text = "X1"

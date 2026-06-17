@@ -19,6 +19,7 @@ enum ActionType
 	AI2, # max out triggers
 	AI3, # put on auras
 	AI4, # max out eliminate effects
+	AI5  # eliminate specials
 }
 
 const object_type : int = C.ObjectType.Other
@@ -100,6 +101,11 @@ func write_sample():
 		else:
 			if w.name == "gem_count":
 				record_line += ",%d" % G.gems.size()
+			elif w.name == "avg_gem_score":
+				var sum = 0.0
+				for g in G.gems:
+					sum += g.get_score()
+				record_line += ",%f" % (sum / G.gems.size())
 			elif w.name.begins_with("attrs/"):
 				record_line += ",%d" % G.attrs[w.name.substr(10)]
 			else:
@@ -348,7 +354,8 @@ func reset():
 	else:
 		G.new_game(process_inputs(-1))
 	process_inputs(1)
-	G.enter_game()
+	if !headless || try_out:
+		G.enter_game()
 	G.start_first_round()
 	if random_seed || reroll:
 		G.random_seeds()
@@ -404,7 +411,6 @@ func start(base_group : int = 0, groups_num : int = -1, _try_out : bool = false)
 				for j in samples:
 					sample_idx = j
 					reset()
-					G.start_first_round()
 					if j == 0:
 						FileAccess.open(format_filename(), FileAccess.WRITE)
 						write_game_status()
@@ -469,7 +475,7 @@ func timeout():
 						step = TaskSteps.Play
 		elif step == TaskSteps.GetResult:
 			if G.settlement_ui.visible:
-				G.settlement_ui.exit(false)
+				G.settlement_ui.exit(null, false)
 			if G.game_over_ui.visible:
 				G.game_over_ui.exit(false)
 			if G.shop_ui.visible:
@@ -887,6 +893,38 @@ func auto_play():
 								break
 				if !changed:
 					break
+		elif action_type == ActionType.AI5:
+			while true:
+				var changed = false
+				var missings = get_missing_one_places(board, false)
+				var special_places = []
+				for c in board:
+					var g = board[c]
+					if g.category == "Special":
+						special_places.append(c)
+				missings.sort_custom(func(a, b):
+					var a_value = 0
+					var b_value = 0
+					for c in a.all_coords:
+						if special_places.has(c):
+							a_value += 1
+					for c in b.all_coords:
+						if special_places.has(c):
+							b_value += 1
+					return a_value > b_value
+				)
+				for p in missings:
+					if swaps > 0:
+						var sorted_hand = get_sorted_hand(hand, p.color)
+						for i in sorted_hand:
+							var coord = p.coord
+							if calc_move_matcheds_change(board, coord, hand[i]) > 0:
+								swaps -= 1
+								move(board, hand, moves, coord, coord, i)
+								changed = true
+								break
+				if !changed:
+					break
 	
 	if moves.is_empty():
 		no_move_played += 1
@@ -906,7 +944,7 @@ func auto_play():
 		G.begin_busy()
 		var tween = G.create_game_tween()
 		for m in moves:
-			var pos = Board.get_pos(m.coord) - Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+			var pos = Board.get_pos(m.coord) - Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 			tween.tween_callback(func():
 				var slot1 = Hand.ui.get_slot(m.index)
 				slot1.elastic = -1.0

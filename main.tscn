@@ -468,17 +468,6 @@ expand_margin_bottom = 20.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yvsr8"]
 bg_color = Color(1, 1, 1, 0.14901961)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m74q3"]
-bg_color = Color(0.56356424, 0.649551, 0.67108095, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-expand_margin_left = 16.0
-expand_margin_top = 16.0
-expand_margin_right = 16.0
-expand_margin_bottom = 16.0
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcxqu"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
 expand_margin_left = 20.0
@@ -579,6 +568,9 @@ expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5tghd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_am8a1"]
+bg_color = Color(0.22466457, 0.25678727, 0.31773037, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wvev2"]
 
@@ -2580,7 +2572,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_m0hxn")
 text = "ui_close"
 
-[node name="RunInfo" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "tab_container", "round1_title", "round2_title", "round3_title", "round1_desc", "round2_desc", "round3_desc", "close_button")]
+[node name="RunInfo" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "widgets_root", "tab_container", "rounds_list", "close_button")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -2590,13 +2582,9 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_l0gw7")
 script = ExtResource("88_yjja3")
 panel = NodePath("PanelContainer")
+widgets_root = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/MarginContainer/Widgets")
 tab_container = NodePath("PanelContainer/VBoxContainer/TabContainer")
-round1_title = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Label")
-round2_title = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer/Label")
-round3_title = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer/Label")
-round1_desc = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/Label2")
-round2_desc = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer/Label2")
-round3_desc = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer/Label2")
+rounds_list = NodePath("PanelContainer/VBoxContainer/TabContainer/Stage/MarginContainer/GridContainer")
 close_button = NodePath("PanelContainer/VBoxContainer/Button")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo"]
@@ -2635,87 +2623,22 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage"]
 layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 16
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer"]
+[node name="Widgets" type="Control" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 48
+mouse_filter = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_m74q3")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
-theme_override_font_sizes/font_size = 22
-text = "Round 1"
-
-[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 22
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-
-[node name="PanelContainer2" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_m74q3")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
-theme_override_font_sizes/font_size = 22
-text = "Round 2"
-
-[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 22
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-
-[node name="PanelContainer3" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_m74q3")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
-theme_override_font_sizes/font_size = 22
-text = "Round 3"
-
-[node name="Label2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer/TabContainer/Stage/VBoxContainer/HBoxContainer/PanelContainer3/VBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 22
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
+mouse_filter = 2
+theme_override_constants/h_separation = 72
+theme_override_constants/v_separation = 72
+columns = 6
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/RunInfo/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -3387,7 +3310,7 @@ layout_mode = 2
 
 [node name="OptionButton" type="OptionButton" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer4"]
 layout_mode = 2
-item_count = 6
+item_count = 7
 popup/item_0/text = "Only Shuffle"
 popup/item_0/id = 0
 popup/item_1/text = " Just Matching Colors"
@@ -3400,6 +3323,8 @@ popup/item_4/text = "Put On Auras"
 popup/item_4/id = 4
 popup/item_5/text = "Max Out Eliminate Effects"
 popup/item_5/id = 5
+popup/item_6/text = "Eliminate Specials"
+popup/item_6/id = 6
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Test/PanelContainer/VBoxContainer/TabContainer/New/HBoxContainer/VBoxContainer2/HBoxContainer4"]
 layout_mode = 2
@@ -3883,7 +3808,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_fdcf1")
 text = "ui_game_over_main_menu"
 
-[node name="Settlement" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "button", "button_text", "list", "particles")]
+[node name="Settlement" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "title1", "title2", "button", "button_text", "list", "particles")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3893,6 +3818,8 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sn1fb")
 script = ExtResource("17_ykjhx")
 panel = NodePath("PanelContainer")
+title1 = NodePath("PanelContainer/VBoxContainer/Label")
+title2 = NodePath("PanelContainer/VBoxContainer/Label2")
 button = NodePath("PanelContainer/VBoxContainer/Button")
 button_text = NodePath("PanelContainer/VBoxContainer/Button/RichTextLabel")
 list = NodePath("PanelContainer/VBoxContainer/VBoxContainer")
@@ -3921,6 +3848,14 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "ui_settlement_title"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/Canvas/Settlement/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Choose A Reward"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -4024,7 +3959,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("36_c2aw5")
 panel = NodePath("PanelContainer")
-reward_list = NodePath("PanelContainer/VBoxContainer/HBoxContainer")
+reward_list = NodePath("PanelContainer/MarginContainer/VBoxContainer/VBoxContainer")
 buttons_list = NodePath("MarginContainer/HBoxContainer")
 hide_button = NodePath("MarginContainer/HBoxContainer/Button")
 reroll_button = NodePath("MarginContainer/HBoxContainer/Button2")
@@ -4045,13 +3980,29 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_5tghd")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer"]
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer"]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_styles/panel = SubResource("StyleBoxFlat_am8a1")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 36
+text = "Choose A Reward"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/Canvas/ChooseReward"]
 layout_mode = 1

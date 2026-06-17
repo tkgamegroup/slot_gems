@@ -20,17 +20,24 @@ func add_leading_line(p0 : Vector2, p1 : Vector2, duration : float = 0.3, width 
 	Board.ui.overlay.add_child(l)
 
 func effect_activate(target, tween : Tween, pos : Vector2, duration : float, hide_target : bool = false):
-	var sp = AnimatedSprite2D.new()
 	if !tween:
 		tween = G.create_game_tween()
 	tween.tween_callback(func():
 		if hide_target:
 			target.hide()
-		sp.sprite_frames = target.sprite_frames
-		sp.frame = target.frame
+	)
+	return ghost_effect_activate(target.sprite_frames, target.frame, tween, pos, duration)
+
+func ghost_effect_activate(sprite_frames : SpriteFrames, frame : int, tween : Tween, pos : Vector2, duration : float, start_alpha : float = 1.0):
+	var sp = AnimatedSprite2D.new()
+	if !tween:
+		tween = G.create_game_tween()
+	tween.tween_callback(func():
+		sp.sprite_frames = sprite_frames
+		sp.frame = frame
 		sp.position = pos
 	)
-	tween.tween_property(sp, "modulate:a", 0.0, duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(sp, "modulate:a", 0.0, duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD).from(start_alpha)
 	tween.parallel().tween_property(sp, "scale", Vector2(3.0, 3.0), duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	tween.tween_callback(func():
 		sp.queue_free()
@@ -158,7 +165,7 @@ func add_lighning(p0 : Vector2, p1 : Vector2, z_index : int, duration : float):
 	return fx
 
 func add_break_pieces(pos : Vector2, texture : Texture, parent, duration : float, num_extra_points : int = 8) -> Array[Tween]:
-	var size = Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ)
+	var size = Vector2(C.TILE_SZ, C.TILE_SZ)
 	var points = []
 	points.append(Vector2(0, 0))
 	points.append(Vector2(size.x, 0))
@@ -168,7 +175,7 @@ func add_break_pieces(pos : Vector2, texture : Texture, parent, duration : float
 		points.append(Vector2(randf() * size.x, randf() * size.y))
 	var indices = Geometry2D.triangulate_delaunay(points)
 	var tweens : Array[Tween] = []
-	pos += Vector2(C.BOARD_TILE_SZ, C.BOARD_TILE_SZ) * 0.5
+	pos += Vector2(C.TILE_SZ, C.TILE_SZ) * 0.5
 	for i in range(0, indices.size(), 3):
 		var poly = Polygon2D.new()
 		var verts = []

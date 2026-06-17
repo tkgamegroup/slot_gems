@@ -1,7 +1,8 @@
 extends Node
 
-const SPRITE_SZ : int = 72
-const BOARD_TILE_SZ : int = SPRITE_SZ
+const SPRITE_SZ : float = 72.0
+const TILE_SZ : float = 72.0
+const SPRITE_TO_TILE : float = TILE_SZ / SPRITE_SZ
 const UI_BOARD_CENTER : Vector2i = Vector2i(18, 7)
 const RESOLUTION : Vector2i = Vector2i(1920, 1080)
 

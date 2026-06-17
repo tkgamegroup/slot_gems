@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://c5vc3krm6g14g"]
+
+[ext_resource type="Script" uid="uid://ck1kwf6spiudx" path="res://ui_round_info.gd" id="1_sx22o"]
+[ext_resource type="Texture2D" uid="uid://d3mjp371l8nd0" path="res://images/check_icon.png" id="2_3v734"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iljxp"]
+bg_color = Color(0.56356424, 0.649551, 0.67108095, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3v734"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="UiRoundInfo" type="PanelContainer" node_paths=PackedStringArray("title_txt", "desc_txt", "passed_mark", "current_mark")]
+offset_right = 100.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_iljxp")
+script = ExtResource("1_sx22o")
+title_txt = NodePath("MarginContainer/VBoxContainer/Label")
+desc_txt = NodePath("MarginContainer/VBoxContainer/Label2")
+passed_mark = NodePath("TextureRect")
+current_mark = NodePath("Panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.7314581, 0.8114886, 0.85346687, 1)
+theme_override_font_sizes/font_size = 22
+text = "Round 1"
+
+[node name="Label2" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+texture = ExtResource("2_3v734")
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3v734")
