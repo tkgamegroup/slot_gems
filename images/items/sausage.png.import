@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bul5ucbvff75x"
-path="res://.godot/imported/grape.png-900f4d7e0402489ab58f0189efa287ea.ctex"
+uid="uid://rurd8ady38fp"
+path="res://.godot/imported/sausage.png-86edd764197e3c64ae97e799e8e5a4bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/items/grape.png"
-dest_files=["res://.godot/imported/grape.png-900f4d7e0402489ab58f0189efa287ea.ctex"]
+source_file="res://images/items/sausage.png"
+dest_files=["res://.godot/imported/sausage.png-86edd764197e3c64ae97e799e8e5a4bb.ctex"]
 
 [params]
 

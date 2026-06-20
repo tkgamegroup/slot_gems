@@ -49,7 +49,7 @@ func setup(n : String):
 	elif name == "Island":
 		coord_groups.append([Vector3i(1, -1, 0)])
 		coord_groups.append([Vector3i(0, 0, 0), Vector3i(1, 0, -1), Vector3i(2, -1, -1)])
-		recipes.append([Gem.RuneCircle, Gem.RuneWave])
+		recipes.append([Gem.RuneTree, Gem.RuneWave])
 
 func all_coords() -> Array[Vector3i]:
 	var ret : Array[Vector3i] = []

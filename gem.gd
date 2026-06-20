@@ -32,7 +32,7 @@ enum
 	ColorGreenBlueMagenta,
 	ColorAny,
 	RuneWave,
-	RuneCircle,
+	RuneTree,
 	RuneStar,
 	RuneOmni,
 	RuneWaveCircle,
@@ -204,7 +204,7 @@ static func type_img(t : int):
 static func rune_name(r : int):
 	match r:
 		RuneWave: return "Wave"
-		RuneCircle: return "Circle"
+		RuneTree: return "Tree"
 		RuneStar: return "Star"
 		RuneOmni: return "Omni"
 		RuneAny: return "Any"
@@ -214,7 +214,7 @@ static func name_to_rune(s : String):
 	match s:
 		"None": return None
 		"Wave": return RuneWave
-		"Circle": return RuneCircle
+		"Tree": return RuneTree
 		"Star": return RuneStar
 		"Omni": return RuneOmni
 		"Any": return RuneAny
@@ -223,7 +223,7 @@ static func name_to_rune(s : String):
 static func rune_display_name(r : int):
 	match r:
 		RuneWave: return G.tr("rune_wave")
-		RuneCircle: return G.tr("rune_circle")
+		RuneTree: return G.tr("rune_tree")
 		RuneStar: return G.tr("rune_star")
 		RuneOmni: return "w_omni"
 		RuneAny: return G.tr("rune_any")
@@ -232,7 +232,7 @@ static func rune_display_name(r : int):
 static func rune_img(r : int):
 	match r:
 		RuneWave: return "res://images/rune_wave.png"
-		RuneCircle: return "res://images/rune_circle.png"
+		RuneTree: return "res://images/rune_tree.png"
 		RuneStar: return "res://images/rune_star.png"
 		RuneOmni: return "res://images/rune_omni.png"
 	return ""
@@ -240,11 +240,11 @@ static func rune_img(r : int):
 static func rune_combo_contains(combo : int, v : int):
 	match combo:
 		RuneWaveCircle:
-			return v == RuneWave || v == RuneCircle
+			return v == RuneWave || v == RuneTree
 		RuneWaveStar:
 			return v == RuneWave || v == RuneStar
 		RuneCircleStar:
-			return v == RuneCircle || v == RuneStar
+			return v == RuneTree || v == RuneStar
 		RuneAny:
 			return true
 	return false
@@ -334,6 +334,8 @@ static func create_temp_data(g : Gem) -> Dictionary:
 			tags.append("eliminate_effect")
 		return {"name":g.name,"category":g.category,"type":g.type,"rune":g.rune,"score":g.get_score(),"tags":tags,"extras":g.extra.duplicate(true)}
 	return {"name":"","category":"","type":None,"rune":None,"score":0,"tags":[],"extras":{}}
+
+const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "Bomb", "Rainbow", "Strawberry", "Pineapple", "Kiwi", "Blueberry", "Grapes", "Sausage", "Cheese"]
 
 static var s_id : int = 0
 
@@ -459,7 +461,7 @@ func setup(n : String):
 	elif name == "Flag":
 		type = None
 		rune = None
-		base_score = 0
+		base_score = 5
 		image_id = 16
 		price = 2
 		extra["range_i"] = 2
@@ -480,7 +482,7 @@ func setup(n : String):
 	elif name == "MoneyBag":
 		type = ColorOrange
 		rune = None
-		base_score = 0
+		base_score = 5
 		image_id = 17
 		category = "Special"
 		price = 2
@@ -503,7 +505,7 @@ func setup(n : String):
 	elif name == "Bomb":
 		type = None
 		rune = None
-		base_score = 0
+		base_score = 10
 		image_id = 18
 		category = "Bomb"
 		trigger = true
@@ -522,7 +524,7 @@ func setup(n : String):
 	elif name == "C4":
 		type = None
 		rune = None
-		base_score = 0
+		base_score = 10
 		image_id = 19
 		category = "Bomb"
 		price = 3
@@ -541,7 +543,7 @@ func setup(n : String):
 	elif name == "Rainbow":
 		type = ColorWild
 		rune = None
-		base_score = 0
+		base_score = 10
 		image_id = 20
 		category = "Special"
 		price = 5
@@ -564,7 +566,7 @@ func setup(n : String):
 	elif name == "Blade":
 		type = None
 		rune = None
-		base_score = 0
+		base_score = 10
 		image_id = 21
 		category = "Special"
 		trigger = true
@@ -623,7 +625,7 @@ func setup(n : String):
 	elif name == "Lightning":
 		type = ColorBlue
 		rune = None
-		base_score = 0
+		base_score = 10
 		image_id = 22
 		category = "Special"
 		price = 5
@@ -677,7 +679,7 @@ func setup(n : String):
 	elif name == "Sausage":
 		type = ColorRed
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 23
 		category = "Special"
 		eliminate_priority = 1
@@ -695,7 +697,7 @@ func setup(n : String):
 	elif name == "Cheese":
 		type = ColorOrange
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 24
 		category = "Special"
 		eliminate_priority = 1
@@ -713,7 +715,7 @@ func setup(n : String):
 	elif name == "MatchaCake":
 		type = ColorGreen
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 25
 		category = "Special"
 		eliminate_priority = 1
@@ -731,7 +733,7 @@ func setup(n : String):
 	elif name == "BlueSoda":
 		type = ColorBlue
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 26
 		category = "Special"
 		eliminate_priority = 1
@@ -749,7 +751,7 @@ func setup(n : String):
 	elif name == "Macaron":
 		type = ColorMagenta
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 27
 		category = "Special"
 		eliminate_priority = 1
@@ -767,7 +769,7 @@ func setup(n : String):
 	elif name == "Strawberry":
 		type = ColorRed
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 28
 		category = "Special"
 		eliminate_priority = 5
@@ -789,7 +791,7 @@ func setup(n : String):
 	elif name == "Pineapple":
 		type = ColorOrange
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 29
 		category = "Special"
 		eliminate_priority = 5
@@ -811,7 +813,7 @@ func setup(n : String):
 	elif name == "Kiwi":
 		type = ColorGreen
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 30
 		category = "Special"
 		eliminate_priority = 5
@@ -833,7 +835,7 @@ func setup(n : String):
 	elif name == "Blueberry":
 		type = ColorBlue
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 31
 		category = "Special"
 		eliminate_priority = 5
@@ -852,10 +854,10 @@ func setup(n : String):
 			else:
 				G.change_attr("blue_bouns_i", value)
 			return true
-	elif name == "Grape":
+	elif name == "Grapes":
 		type = ColorMagenta
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 32
 		category = "Special"
 		eliminate_priority = 5
@@ -877,7 +879,7 @@ func setup(n : String):
 	elif name == "Apple":
 		type = ColorRed
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 33
 		category = "Special"
 		eliminate_priority = 5
@@ -895,21 +897,10 @@ func setup(n : String):
 					G.float_text("[color=FFBB00]%s +%d[/color]" % [tr("gem_%s" % target), add_value], Board.get_pos(coord))
 				)
 			return true
-	elif name == "BellPepper":
-		type = ColorRed
-		rune = None
-		base_score = 1
-		image_id = 33
-		category = "Special"
-		eliminate_priority = 5
-		extra["add_value_i"] = 2
-		on_eliminate = func(coord : Vector2i, reason : int, source, tween : Tween):
-			var add_value = extra["add_value_i"]
-			return true
 	elif name == "Orange":
 		type = ColorOrange
 		rune = None
-		base_score = 1
+		base_score = 20
 		image_id = 34
 		category = "Special"
 		price = 3
@@ -943,7 +934,7 @@ func setup(n : String):
 	elif name == "FishingPod":
 		type = None
 		rune = None
-		base_score = 0
+		base_score = 10
 		image_id = 35
 		category = "Special"
 		trigger = true
@@ -1030,7 +1021,7 @@ func setup(n : String):
 	elif name == "BettaFish":
 		type = ColorRed
 		rune = None
-		base_score = 1
+		base_score = 10
 		image_id = 36
 		category = "Special"
 		eliminate_priority = 1
@@ -1043,7 +1034,7 @@ func setup(n : String):
 	elif name == "ClownFish":
 		type = ColorOrange
 		rune = None
-		base_score = 1
+		base_score = 10
 		image_id = 37
 		category = "Special"
 		eliminate_priority = 1
@@ -1056,7 +1047,7 @@ func setup(n : String):
 	elif name == "Turtle":
 		type = ColorGreen
 		rune = None
-		base_score = 1
+		base_score = 10
 		image_id = 38
 		category = "Special"
 		eliminate_priority = 1
@@ -1069,7 +1060,7 @@ func setup(n : String):
 	elif name == "BlueTang":
 		type = ColorBlue
 		rune = None
-		base_score = 1
+		base_score = 10
 		image_id = 39
 		category = "Special"
 		eliminate_priority = 1
@@ -1082,7 +1073,7 @@ func setup(n : String):
 	elif name == "Starfish":
 		type = ColorMagenta
 		rune = None
-		base_score = 1
+		base_score = 10
 		image_id = 40
 		category = "Special"
 		eliminate_priority = 1

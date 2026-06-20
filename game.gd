@@ -16,7 +16,7 @@ const object_type : int = C.ObjectType.Game
 
 const version_major : int = 1
 const version_minor : int = 0
-const version_patch : int = 30
+const version_patch : int = 31
 
 const MaxRelics : int = 5
 const MaxPatterns : int = 4
@@ -1103,6 +1103,18 @@ func new_game(parms : Dictionary):
 		add_pattern(p)
 	'''
 	
+	for i in 20:
+		var g = Gem.new()
+		g.setup(SMath.pick_random(Gem.items_pool))
+		add_gem(g)
+	for i in 0:
+		var g = Gem.new()
+		g.setup("Ruby")
+		add_gem(g)
+	for i in 0:
+		var g = Gem.new()
+		g.setup("Bomb")
+		add_gem(g)
 	for i in 0:
 		var r = Relic.new()
 		r.setup("Aries")
@@ -1114,15 +1126,6 @@ func new_game(parms : Dictionary):
 	
 	var default_gem_num = parms.get("default_gem_num", 12)
 	add_all_kinds_of_gems(default_gem_num)
-	
-	for i in 0:
-		var g = Gem.new()
-		g.setup("Ruby")
-		add_gem(g)
-	for i in 0:
-		var g = Gem.new()
-		g.setup("Bomb")
-		add_gem(g)
 
 	Board.setup(board_size)
 	Board.update_gem_quantity_limit()

@@ -74,8 +74,6 @@ func enter():
 	)
 	button_text.text = "%s [img]res://images/coin.png[/img]%d" % [tr("ui_settlement_receive"), coin_rewards]
 
-const items_pool = ["Ruby", "Heliodor", "Emerald", "Sapphire", "Amethyst", "Flag", "Bomb"]
-
 func exit(tween : Tween = null, trans : bool = true):
 	clear()
 	
@@ -131,7 +129,7 @@ func _ready() -> void:
 		tween.tween_property(title2, "modulate:a", 1.0, 0.2)
 		for i in 3:
 			var g = Gem.new()
-			g.setup(SMath.pick_random(items_pool))
+			g.setup(SMath.pick_random(Gem.items_pool))
 			var n = 1
 			var ui = G.reward_pb.instantiate()
 			ui.setup("gem", g, n)
@@ -139,6 +137,7 @@ func _ready() -> void:
 			ui.gui_input.connect(func(event : InputEvent):
 				if event is InputEventMouseButton:
 					if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+						SSound.se_click.play()
 						var tween2 = G.create_game_tween()
 						tween2.tween_callback(func():
 							exit()
@@ -152,10 +151,11 @@ func _ready() -> void:
 							var sp = G.create_gem_ui(g, pos + Vector2(0.0, 100.0))
 							var sub = G.create_game_tween()
 							sub.tween_interval(j * 0.1)
-							sub.tween_property(sp.get_sp(), "modulate:a", 0.2, 0.7).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-							sub.parallel().tween_property(sp, "scale", Vector2(0.3, 0.3), 0.7)
-							sub.parallel().tween_property(sp, "position", pos + Vector2(0.0, 20.0), 0.7).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+							sub.tween_property(sp.get_sp(), "modulate:a", 0.6, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+							sub.parallel().tween_property(sp, "scale", Vector2(0.5, 0.5), 0.4)
+							sub.tween_property(sp, "position", pos + Vector2(0.0, 20.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 							sub.tween_callback(func():
+								SSound.se_item_pickup.play()
 								sp.queue_free()
 							)
 							if j > 0:

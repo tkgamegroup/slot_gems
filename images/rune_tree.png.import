@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccs02rjm6bk0u"
-path="res://.godot/imported/bell_pepper.png-e993f834343665d436b9b39cacdb0937.ctex"
+uid="uid://cu1rt4xk7q85q"
+path="res://.godot/imported/rune_tree.png-ca084e5ce8c0a0bd0fa04db133feec0d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/items/bell_pepper.png"
-dest_files=["res://.godot/imported/bell_pepper.png-e993f834343665d436b9b39cacdb0937.ctex"]
+source_file="res://images/rune_tree.png"
+dest_files=["res://.godot/imported/rune_tree.png-ca084e5ce8c0a0bd0fa04db133feec0d.ctex"]
 
 [params]
 

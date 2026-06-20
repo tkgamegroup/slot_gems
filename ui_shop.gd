@@ -294,8 +294,10 @@ func exit(tween : Tween = null, trans : bool = true):
 		)
 		tween.tween_property(G.game_ui.status_bar.round_text, "modulate:a", 0.0, 0.3)
 		tween.parallel().tween_property(G.game_ui.status_bar.round_target, "modulate:a", 0.0, 0.3)
-		Board.ui.enter(tween, true)
-		G.next_round(tween)
+		if G.treasure_arrive_rounds.has(G.current_round):
+			G.upgrade_ui.enter()
+		else:
+			G.next_round(tween)
 	else:
 		release_stagings()
 		clear()

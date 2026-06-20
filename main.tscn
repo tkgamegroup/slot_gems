@@ -1,4 +1,4 @@
-[gd_scene load_steps=187 format=3 uid="uid://c7yh3twd5o1w4"]
+[gd_scene load_steps=189 format=3 uid="uid://c7yh3twd5o1w4"]
 
 [ext_resource type="Shader" uid="uid://fpbmr3lkywbn" path="res://materials/background.gdshader" id="1_gsejj"]
 [ext_resource type="Texture2D" uid="uid://b3mtiv3ukgvui" path="res://images/white.png" id="2_tqnxt"]
@@ -37,7 +37,9 @@
 [ext_resource type="Script" uid="uid://cejdm385qie14" path="res://ui_board.gd" id="21_34ol3"]
 [ext_resource type="AudioStream" uid="uid://btf6smvh1tnth" path="res://sounds/bubble_pop2.wav" id="21_lwnsi"]
 [ext_resource type="AudioStream" uid="uid://dclq4u83610do" path="res://sounds/calc2.wav" id="21_phcyf"]
+[ext_resource type="AudioStream" uid="uid://cnocxlpodw2gs" path="res://sounds/dropping_bag.wav" id="21_ywjan"]
 [ext_resource type="AudioStream" uid="uid://lc6e6xuhbvm8" path="res://sounds/bubble_pop3.wav" id="22_41lik"]
+[ext_resource type="AudioStream" uid="uid://bmid4jg0mwjvx" path="res://sounds/item_pickup.wav" id="22_m74q3"]
 [ext_resource type="AudioStream" uid="uid://2khtvdvdvbr0" path="res://sounds/enchant.wav" id="23_birbe"]
 [ext_resource type="AudioStream" uid="uid://cpkkextbq8y8f" path="res://sounds/break.wav" id="23_jbvwl"]
 [ext_resource type="AudioStream" uid="uid://3wg5uqxalyav" path="res://sounds/trash.wav" id="24_f1p13"]
@@ -732,6 +734,17 @@ bus = &"SFX"
 
 [node name="CloseBag" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("15_phcyf")
+bus = &"SFX"
+
+[node name="DroppingBag" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("21_ywjan")
+volume_db = -4.0
+pitch_scale = 2.5
+bus = &"SFX"
+
+[node name="ItemPickup" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("22_m74q3")
+volume_db = 8.0
 bus = &"SFX"
 
 [node name="DragItem" type="AudioStreamPlayer" parent="SFX"]
@@ -3900,7 +3913,7 @@ scale_amount_min = 10.0
 scale_amount_max = 10.0
 color_initial_ramp = SubResource("Gradient_x84n0")
 
-[node name="Upgrade" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "list", "button")]
+[node name="Upgrade" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "upgrade_board_ui")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -3910,10 +3923,10 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wat4s")
 script = ExtResource("94_sn1fb")
 panel = NodePath("PanelContainer")
-list = NodePath("PanelContainer/VBoxContainer/HBoxContainer")
-button = NodePath("PanelContainer/VBoxContainer/Button")
+upgrade_board_ui = NodePath("PanelContainer/VBoxContainer/UpgradeBoard")
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade"]
+custom_minimum_size = Vector2(800, 600)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -3938,17 +3951,75 @@ text = "ui_upgrade_title"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer"]
+[node name="UpgradeBoard" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 16
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 32)
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-theme_override_styles/focus = SubResource("StyleBoxEmpty_exsg7")
-text = "ui_confirm"
+size_flags_vertical = 4
+text = "You have a chance to upgrade your Board. This will give you some disadvantages too."
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Current:
+- Board Size: x (xxx Cells)
+- Gems Count: xxx
+
+- Shuffle Cost: x Swaps"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "After:
+- Board Size: x (xxx Cells)
+- Minimum Gems Count: xxx
+(xxx new Gems will be added)
+- Shuffle Cost: x Swaps"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Yes"
+
+[node name="Button2" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradeBoard/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No"
+
+[node name="NewPattern" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/NewPattern"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/NewPattern"]
+layout_mode = 2
+
+[node name="UpgradePattern" type="VBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradePattern"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradePattern"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/Canvas/Upgrade/PanelContainer/VBoxContainer/UpgradePattern"]
+layout_mode = 2
 
 [node name="ChooseReward" type="Panel" parent="SubViewportContainer/SubViewport/Canvas" node_paths=PackedStringArray("panel", "reward_list", "buttons_list", "hide_button", "reroll_button", "skip_button")]
 visible = false

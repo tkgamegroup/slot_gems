@@ -99,7 +99,7 @@ func setup(n : String):
 			elif event == C.Event.Eliminated:
 				var c = data["coord"]
 				var g = Board.get_gem_at(c)
-				if g && g.rune == Gem.RuneCircle || g.rune == Gem.RuneOmni:
+				if g && g.rune == Gem.RuneTree || g.rune == Gem.RuneOmni:
 					G.add_score(extra["value_i"], Board.get_pos(c))
 	elif name == "PaintingOfStar":
 		image_id = 8

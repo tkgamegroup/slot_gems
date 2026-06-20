@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cu1rt4xk7q85q"
-path="res://.godot/imported/rune_circle.png-f52c6d4308ae1e6eaf4bcec64d247b9b.ctex"
+uid="uid://bul5ucbvff75x"
+path="res://.godot/imported/grapes.png-0ea30a6139fc8e3e1e9bb4d8b1cd4ef9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/rune_circle.png"
-dest_files=["res://.godot/imported/rune_circle.png-f52c6d4308ae1e6eaf4bcec64d247b9b.ctex"]
+source_file="res://images/items/grapes.png"
+dest_files=["res://.godot/imported/grapes.png-0ea30a6139fc8e3e1e9bb4d8b1cd4ef9.ctex"]
 
 [params]
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c7tktk0cua5ae" path="res://images/blank.png" id="1_fku6t"]
 [ext_resource type="Texture2D" uid="uid://bil43w0xe883m" path="res://images/rune_wave.png" id="2_7dsvm"]
-[ext_resource type="Texture2D" uid="uid://cu1rt4xk7q85q" path="res://images/rune_circle.png" id="3_u8fhl"]
+[ext_resource type="Texture2D" uid="uid://cu1rt4xk7q85q" path="res://images/rune_tree.png" id="3_u8fhl"]
 [ext_resource type="Texture2D" uid="uid://03641uiumwkc" path="res://images/rune_star.png" id="4_5ny60"]
 [ext_resource type="Texture2D" uid="uid://cmcx8t2hv88dh" path="res://images/rune_omni.png" id="5_7dsvm"]
 

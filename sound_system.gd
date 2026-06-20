@@ -26,6 +26,7 @@ var music_eq_t : float = 0.0
 @onready var se_trash : AudioStreamPlayer = $/root/Main/SFX/Trash
 @onready var se_open_bag : AudioStreamPlayer = $/root/Main/SFX/OpenBag
 @onready var se_close_bag : AudioStreamPlayer = $/root/Main/SFX/CloseBag
+@onready var se_item_pickup : AudioStreamPlayer = $/root/Main/SFX/ItemPickup
 @onready var se_drag_item : AudioStreamPlayer = $/root/Main/SFX/DragItem
 @onready var se_drop_item : AudioStreamPlayer = $/root/Main/SFX/DropItem
 @onready var se_skill : AudioStreamPlayer = $/root/Main/SFX/Skill

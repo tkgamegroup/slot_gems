@@ -28,7 +28,7 @@ static func apply_curses():
 			"curse_wave_no_score":
 				G.no_score_marks[Gem.RuneWave].push_front(true)
 			"curse_circle_no_score":
-				G.no_score_marks[Gem.RuneCircle].push_front(true)
+				G.no_score_marks[Gem.RuneTree].push_front(true)
 			"curse_star_no_score":
 				G.no_score_marks[Gem.RuneStar].push_front(true)
 
@@ -47,6 +47,6 @@ func remove():
 		"curse_wave_no_score":
 			G.no_score_marks[Gem.RuneWave].pop_front()
 		"curse_circle_no_score":
-			G.no_score_marks[Gem.RuneCircle].pop_front()
+			G.no_score_marks[Gem.RuneTree].pop_front()
 		"curse_star_no_score":
 			G.no_score_marks[Gem.RuneStar].pop_front()
